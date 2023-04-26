@@ -1,0 +1,177 @@
+{
+    "it": [
+        {
+            "action" : "category",
+            "items" : [
+                {
+                    "keymatch" : [
+                        "oviesse","zalando","kik"
+                    ],
+                    "uuid" : "635bd3409933b"
+                },
+                {
+                    "keymatch" : [
+                        "kena","wind","telecom","mytim"
+                    ],
+                    "uuid" : "635bd34917feb"
+                },
+                {
+                    "keymatch" : [
+                        "caffe"
+                    ],
+                    "uuid" : "635bd34005b12"
+                },
+                {
+                    "keymatch" : [
+                        "mela blu","MC DONALD'S","alice pizza"
+                    ],
+                    "uuid" : "635bd33fe2db1"
+                },
+                {
+                    "keymatch" : [
+                        "gigante","carrefour"
+                    ],
+                    "uuid" : "635bd34005b12"
+                },
+                {
+                    "keymatch" : [
+                        "addebito"
+                    ],
+                    "uuid" : "635bd34ca2820"
+                },
+                {
+                    "keymatch" : [
+                        "obi","leroy","brico"
+                    ],
+                    "uuid" : "635bd342c0b1e"
+                },
+                {
+                    "keymatch" : [
+                        "AMZN","ali express","alixpress","heroku","amazon"
+                    ],
+                    "uuid" : "635bd348c7799"
+                },
+                {
+                    "keymatch" : [
+                        "EMV CARTE ITALIANE"
+                    ],
+                    "uuid" : "635bd3456ea7b"
+                },
+                {
+                    "keymatch" : [
+                        "WWW.VERTI.IT"
+                    ],
+                    "uuid" : "635bd343ee87a"
+                },
+                {
+                    "keymatch" : [
+                        "ACOMEA"
+                    ],
+                    "uuid" : "635bd34a6103c"
+                },
+                {
+                    "keymatch" : [
+                        "INPS"
+                    ],
+                    "uuid" : "635bd34ac3e9b"
+                },
+                {
+                    "keymatch" : [
+                        "distributore"
+                    ],
+                    "uuid" : "635bd34410996"
+                },
+                {
+                    "keymatch" : [
+                        "cedal"
+                    ],
+                    "uuid" : "635bd347738ec"
+                },
+                {
+                    "keymatch" : [
+                        "rata mutuo"
+                    ],
+                    "uuid" : "635bd342d7fed"
+                },
+                {
+                    "keymatch" : [
+                        "farmacia"
+                    ],
+                    "uuid" : "635bd341b4fd1"
+                },
+                {
+                    "keymatch" : [
+                        "agos","findomestic","AMERICAN EXPRESS"
+                    ],
+                    "uuid" : "635bd3499f86c"
+                },
+                {
+                    "keymatch" : [
+                        "canone gestione"
+                    ],
+                    "uuid" : "635bd349cce90"
+                },
+                {
+                    "keymatch" : [
+                        "bollo"
+                    ],
+                    "uuid" : "635bd349b66a4"
+                },
+                {
+                    "keymatch" : [
+                        "aubay"
+                    ],
+                    "uuid" : "6357ff2aaf8eb"
+                }
+            ]
+        },
+        {
+            "action" : "label",
+            "items" : [
+                {
+                    "keymatch" : [
+                        "gigante"
+                    ],
+                    "uuid" : "63639be447896"
+                },
+                {
+                    "keymatch" : [
+                        "AMZN","amazon"
+                    ],
+                    "uuid" : "63639be495f9b"
+                },
+                {
+                    "keymatch" : [
+                        "heroku","zalando","shein","patpat","AMZN","amazon","pat pat"
+                    ],
+                    "uuid" : "63639be498d0b"
+                },
+                {
+                    "keymatch" : [
+                        "patpat","pat pat"
+                    ],
+                    "uuid" : "63639c361cef0"
+                },
+                {
+                    "keymatch" : [
+                        "shein"
+                    ],
+                    "uuid" : "63639c0bb7643"
+                },
+                {
+                    "keymatch" : [
+                        "zalando"
+                    ],
+                    "uuid" : "63639beb7f729"
+                },
+                {
+                    "keymatch" : [
+                        "tedi"
+                    ],
+                    "uuid" : "63639be5184c5"
+                }
+            ]
+        }
+    ]
+    
+}

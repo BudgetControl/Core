@@ -1,0 +1,403 @@
+{
+  "it": [
+    {
+      "category": {
+        "label": "cibo-&-bevande",
+        "icon": "fas fa-hamburger",
+        "uuid": "635bd33fab82e"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd33fc645d",
+          "name": "bar-&-locali"
+        },
+        {
+          "uuid": "635bd33fe2db1",
+          "name": "ristoranti & fast-food"
+        },
+        {
+          "uuid": "635bd34005b12",
+          "name": "spesa"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "shopping",
+        "icon": "fas fa-shopping-cart",
+        "uuid": "635bd34082904"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd3409933b",
+          "name": "abbigliamento & scarpe"
+        },
+        {
+          "uuid": "635bd340b1bd5",
+          "name": "animali domestici"
+        },
+        {
+          "uuid": "635bd34156a8a",
+          "name": "bellezza & benessere"
+        },
+        {
+          "uuid": "635bd3417082b",
+          "name": "cancelleria & utensili"
+        },
+        {
+          "uuid": "635bd34187428",
+          "name": "casa & giardino"
+        },
+        {
+          "uuid": "635bd3419e3bc",
+          "name": "elettronica, accessori"
+        },
+        {
+          "uuid": "635bd341b4fd1",
+          "name": "farmacia"
+        },
+        {
+          "uuid": "635bd341cc935",
+          "name": "figli"
+        },
+        {
+          "uuid": "635bd341e3f4d",
+          "name": "gioielli & accessori"
+        },
+        {
+          "uuid": "635bd342061d0",
+          "name": "regali"
+        },
+        {
+          "uuid": "635bd3421c9df",
+          "name": "aiuto familiare"
+        },
+        {
+          "uuid": "635bd34234923",
+          "name": "tempo libero"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Casa",
+        "icon": "fas fa-home",
+        "uuid": "635bd3424b7b8"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34262b0a",
+          "name": "affitto"
+        },
+        {
+          "uuid": "635bd34279fdd",
+          "name": "assicurazione immobili"
+        },
+        {
+          "uuid": "635bd3429166f",
+          "name": "condominio"
+        },
+        {
+          "uuid": "635bd342a923b",
+          "name": "energia & utenze"
+        },
+        {
+          "uuid": "635bd342c0b1e",
+          "name": "manutenzione"
+        },
+        {
+          "uuid": "635bd342d7fed",
+          "name": "mutuo"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Trasporti",
+        "icon": "fas fa-subway",
+        "uuid": "635bd3436347d"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd3437b202",
+          "name": "taxi"
+        },
+        {
+          "uuid": "635bd34391f8a",
+          "name": "trasporto pubblico"
+        },
+        {
+          "uuid": "635bd343a9a52",
+          "name": "viaggi"
+        },
+        {
+          "uuid": "635bd343c1e24",
+          "name": "viaggi di lavoro"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Veicoli",
+        "icon": "fas fa-car-alt",
+        "uuid": "635bd343d8220"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd343ee87a",
+          "name": "assicurazione veicoli"
+        },
+        {
+          "uuid": "635bd34410996",
+          "name": "carburante"
+        },
+        {
+          "uuid": "635bd34427667",
+          "name": "manutenzione veicoli"
+        },
+        {
+          "uuid": "635bd3443e70c",
+          "name": "noleggi"
+        },
+        {
+          "uuid": "635bd34455430",
+          "name": "parcheggio"
+        },
+        {
+          "uuid": "635bd3456ea7b",
+          "name": "pedaggi"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Instrattenimento",
+        "icon": "fas fa-cloud-sun",
+        "uuid": "635bd3458b904"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34673e16",
+          "name": "alcol"
+        },
+        {
+          "uuid": "635bd3468a7df",
+          "name": "tabacco"
+        },
+        {
+          "uuid": "635bd346a22da",
+          "name": "cultura, eventi sportivi"
+        },
+        {
+          "uuid": "635bd346b8ce8",
+          "name": "donazioni, carità"
+        },
+        {
+          "uuid": "635bd346cf022",
+          "name": "eventi"
+        },
+        {
+          "uuid": "635bd346e4ea6",
+          "name": "matrimonio"
+        },
+        {
+          "uuid": "635bd347080fa",
+          "name": "formazione, sviluppo"
+        },
+        {
+          "uuid": "635bd3471e92f",
+          "name": "hobby"
+        },
+        {
+          "uuid": "635bd34735340",
+          "name": "libri, audio, abbonamenti"
+        },
+        {
+          "uuid": "635bd3475c224",
+          "name": "lotterie & gioco d'azzardo"
+        },
+        {
+          "uuid": "635bd347738ec",
+          "name": "salute"
+        },
+        {
+          "uuid": "635bd34789d6c",
+          "name": "sport, fitness"
+        },
+        {
+          "uuid": "635bd347a4aa1",
+          "name": "tv & streaming"
+        },
+        {
+          "uuid": "635bd34818d9b",
+          "name": "vacanze"
+        },
+        {
+          "uuid": "635bd3489a8e7",
+          "name": "alberghi"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Comunicazione PC",
+        "icon": "fas fa-laptop",
+        "uuid": "635bd348b183f"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd348c7799",
+          "name": "internet"
+        },
+        {
+          "uuid": "635bd348de1cb",
+          "name": "servizi postali"
+        },
+        {
+          "uuid": "635bd34901262",
+          "name": "software, app & giochi"
+        },
+        {
+          "uuid": "635bd34917feb",
+          "name": "telefono"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Spese finanziarie",
+        "icon": "fas fa-hand-holding-usd",
+        "uuid": "635bd3492e995"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34945b39",
+          "name": "assegno familiare"
+        },
+        {
+          "uuid": "635bd3495c208",
+          "name": "assicurazioni"
+        },
+        {
+          "uuid": "635bd34972877",
+          "name": "consulenza"
+        },
+        {
+          "uuid": "635bd34988c32",
+          "name": "multe"
+        },
+        {
+          "uuid": "635bd3499f86c",
+          "name": "prestiti & interessi"
+        },
+        {
+          "uuid": "635bd349b66a4",
+          "name": "tasse"
+        },
+        {
+          "uuid": "635bd349cce90",
+          "name": "tasse, commissioni"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Investimenti",
+        "icon": "fas fa-file-invoice-dollar",
+        "uuid": "635bd349e3b38"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34a05b27",
+          "name": "beni immobili"
+        },
+        {
+          "uuid": "635bd34a1cb95",
+          "name": "beni mobili"
+        },
+        {
+          "uuid": "635bd34a33e4b",
+          "name": "investimenti finanziari"
+        },
+        {
+          "uuid": "635bd34a4a6eb",
+          "name": "riscossioni"
+        },
+        {
+          "uuid": "635bd34a6103c",
+          "name": "risparmi"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Introiti",
+        "icon": "fas fa-euro-sign",
+        "uuid": "635bd34a79940"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34a92396",
+          "name": "assegni"
+        },
+        {
+          "uuid": "635bd34aac024",
+          "name": "coupon"
+        },
+        {
+          "uuid": "635bd34ac3e9b",
+          "name": "assegno familiare"
+        },
+        {
+          "uuid": "635bd34ada18a",
+          "name": "entrate da affitto"
+        },
+        {
+          "uuid": "635bd34af17aa",
+          "name": "interessi, dividendi"
+        },
+        {
+          "uuid": "635bd34b14b4a",
+          "name": "lotterie & gioco d'azzardo"
+        },
+        {
+          "uuid": "635bd34b2bcd4",
+          "name": "prestiti, noleggi"
+        },
+        {
+          "uuid": "635bd34bdce92",
+          "name": "quote & sovvenzioni"
+        },
+        {
+          "uuid": "635bd34c00eec",
+          "name": "regali"
+        },
+        {
+          "uuid": "635bd34ca2820",
+          "name": "rimborsi (tasse, acquisti)"
+        },
+        {
+          "uuid": "6357ff2aaf8eb",
+          "name": "stipendio"
+        },
+        {
+          "uuid": "6357ff2ab1a47",
+          "name": "vendite"
+        }
+      ]
+    },
+    {
+      "category": {
+        "label": "Altro",
+        "icon": "fas fa-question",
+        "uuid": "635bd34d0dfc4"
+      },
+      "subCateogy": [
+        {
+          "uuid": "635bd34d25f01",
+          "name": "altro"
+        }
+      ]
+    }
+  ]
+}
