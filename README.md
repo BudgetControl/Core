@@ -1,4 +1,4 @@
-# Budget tracker V2 App
+# Budget tracker V2 App - BackAnd application
 Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
 ## Requirment
