@@ -29,8 +29,33 @@ Some develop information
 Front-end is developed with Vue Notus template Back-end is developed with laravel
 
 ## Tecnology
-php - laravel 10
-
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"$
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
+    
+## Directoy
+_App
+__BudgetTracker --> all methods of budget applications
+___Constants
+___Enums
+___Excpetions
+___Factories
+___Helpers
+___Http
+___Interfaces
+___Jobs
+___Models
+___Providers
+___Services
+___Rules
+__FuleTracker --> all methods of fuel tracker
+.....
+.....
+    
 ## Autori
 * Marco De Felice
 
