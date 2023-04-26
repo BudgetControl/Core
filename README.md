@@ -1,38 +1,34 @@
-# Pokemon test App
-Piccola e preve applicazione di TEST per permettere la creazione e modifica di un team polemon
+# Budget tracker V2 App
+Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
-## Requisiti
-php versione >= 8.2
+## Requirment
+php version >= 8.2
 
 Installazione
-* Clona il repository sul tuo computer con il comando git clone https://github.com/NOME-REPOSITORY.git.
-* Entra nella directory del repository con il comando cd NOME-REPOSITORY.
-* Creazione del container dockerfile
-  docker-compose up -d
+* Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
+* Enter the repository directory with the command cd REPOSITORY-NAME.
+* Creation of the dockerfile container
+   docker-compose up -d
 
-## Utilizzo
-* Lancia il server su http://localhost:8888
-* Accedi alla pagina di creazione delle squadre.
-* Seleziona i Pokémon che desideri aggiungere alla tua squadra cliccando sul bottone GottaCatch.
-* Visualizza la tua squadra nella pagina delle squadre salvate.
 
-## API
-* GET /api/getPokemons ritorna in modo randomico un pokemon
-* POST /api/savePokemon aggiorna o crea un nuovo dato
-* DELETE /api/savePokemon elimina il dato specifico
+Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
-### Struttura delle directory
-_ node_modules: contiene tutte le dipendenze del progetto installate tramite npm.
-_ public: contiene file statici accessibili direttamente dal client (es. immagini, file CSS, JavaScript).
-_ data: contiene i dati salvati dall'applicazione in formato JSON
-_ components: contiene i componenti dell'applicazione.
-__ buttons: contiene i pulsanti e le action dell'applicazione.
-__ cards: contiene le card specifiche e stilizzate
-__ table: contiene tabelle ed elementi tabellari per le pagine
-_ pages: contiene le views dell'applicazione
-_ services: qui vengono implementati tutti i vari servizi
+About budget traker
+BudgetTracker is developed by Marco De Felice, like a Open Source project
 
-## Tecnologie utilizzate
+Contributing
+Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.
+
+Security Vulnerabilities
+If you discover a security vulnerability within Budget tracker, please send an e-mail to marco.defelice890@gmail.com. All security vulnerabilities will be promptly addressed.
+
+License
+The Budget tracker is open-sourced software licensed under the MIT license.
+
+Some develop information
+Front-end is developed with Vue Notus template Back-end is developed with laravel
+
+## Tecnology
 php - laravel 10
 
 ## Autori
