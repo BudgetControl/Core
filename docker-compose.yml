@@ -47,3 +47,7 @@ services:
         - REDIS_MASTER_PORT_NUMBER=${REDIS_PORT}
         - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
         - REDIS_PASSWORD=${REDIS_PASSWORD_REPLICA}
+networks: 
+  default: 
+    external: 
+      name: budget-tracker-net

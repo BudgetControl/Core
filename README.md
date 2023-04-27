@@ -17,9 +17,24 @@ Installazione
 * Visualizza la tua squadra nella pagina delle squadre salvate.
 
 ## API
-* GET /api/getPokemons ritorna in modo randomico un pokemon
-* POST /api/savePokemon aggiorna o crea un nuovo dato
-* DELETE /api/savePokemon elimina il dato specifico
+* GET /api/incoming 
+* GET /api/expenses 
+* GET /api/debit 
+* GET /api/transfer 
+* GET /api/planning-recursively
+* GET /api/payee 
+* GET /api/entry
+* GET /api/categories 
+* GET /api/accounts
+* GET /api/labels 
+* GET /api/currencies
+* GET /api/model 
+* GET /api/paymentstype
+* GET /api/account/{id} --> retrivei nformation by account ID
+
+* DELETE /api/entry 
+* DELETE /api/planning-recursively
+* DELETE /api/payee 
 
 ### Struttura delle directory
 _ node_modules: contiene tutte le dipendenze del progetto installate tramite npm.
