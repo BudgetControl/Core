@@ -13,22 +13,19 @@ php version >= 8.2
 ### Usage
 * Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
 
-
-Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
-
-About budget traker
+### About budget traker
 BudgetTracker is developed by Marco De Felice, like a Open Source project
 
-Contributing
+### Contributing
 Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.
 
-Security Vulnerabilities
+### Security Vulnerabilities
 If you discover a security vulnerability within Budget tracker, please send an e-mail to marco.defelice890@gmail.com. All security vulnerabilities will be promptly addressed.
 
-License
+### License
 The Budget tracker is open-sourced software licensed under the MIT license.
 
-Some develop information
+### Some develop information
 Front-end is developed with Vue Notus template Back-end is developed with laravel
 
 ## Tecnology
