@@ -4,11 +4,14 @@ Opens Source MIT license project. Your Finances in One Place Set unlimited daily
 ## Requirment
 php version >= 8.2
 
-Installazione
+###Installations
 * Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
 * Enter the repository directory with the command cd REPOSITORY-NAME.
 * Creation of the dockerfile container
    docker-compose up -d
+   
+### Usage
+* Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
 
 
 Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
