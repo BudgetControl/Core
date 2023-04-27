@@ -55,6 +55,26 @@ ___Rules
 __FuleTracker --> all methods of fuel tracker
 .....
 .....
+
+## API
+* GET /api/incoming 
+* GET /api/expenses 
+* GET /api/debit 
+* GET /api/transfer 
+* GET /api/planning-recursively
+* GET /api/payee 
+* GET /api/entry
+* GET /api/categories 
+* GET /api/accounts
+* GET /api/labels 
+* GET /api/currencies
+* GET /api/model 
+* GET /api/paymentstype
+* GET /api/account/{id} --> retrivei nformation by account ID
+
+* DELETE /api/entry 
+* DELETE /api/planning-recursively
+* DELETE /api/payee 
     
 ## Autori
 * Marco De Felice
