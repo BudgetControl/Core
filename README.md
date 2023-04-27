@@ -38,21 +38,21 @@ Front-end is developed with Vue Notus template Back-end is developed with larave
 </p>
     
 ## Directoy
-_App
-__BudgetTracker --> all methods of budget applications
-___Constants
-___Enums
-___Excpetions
-___Factories
-___Helpers
-___Http
-___Interfaces
-___Jobs
-___Models
-___Providers
-___Services
-___Rules
-__FuleTracker --> all methods of fuel tracker
++App
+++BudgetTracker --> all methods of budget applications
++++Constants
++++Enums
++++Excpetions
++++Factories
++++Helpers
++++Http
++++Interfaces
++++Jobs
++++Models
+++++Providers
+++++Services
++++Rules
+++FuleTracker --> all methods of fuel tracker
 .....
 .....
 
