@@ -12,7 +12,7 @@ services:
         MYSQL_PASSWORD: ${DB_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
       ports:
-        - '127.0.0.1:33306:3306'
+        - 33306:3306
     bemodule:
       image: docker.io/bitnami/laravel:10
       ports:
