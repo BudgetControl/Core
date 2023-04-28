@@ -31,6 +31,10 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
+            Route::middleware('budget-tracker')
+                ->prefix('api/budget-tracker')
+                ->group(base_path('routes/budget-tracker.php'));
+
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });

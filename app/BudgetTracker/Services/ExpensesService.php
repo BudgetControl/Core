@@ -15,6 +15,10 @@ use App\Rules\AmountMinor;
  */
 class ExpensesService extends EntryService implements EntryInterface
 {
+    function __construct()
+    {
+      $this->data = Expenses::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Expenses->value);
+    }
 
     /**
      * save a resource

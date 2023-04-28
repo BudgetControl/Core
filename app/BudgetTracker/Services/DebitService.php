@@ -14,8 +14,12 @@ use Exception;
 /**
  * Summary of SaveEntryService
  */
-class DebitService implements EntryInterface
+class DebitService extends EntryService implements EntryInterface
 {
+    function __construct()
+    {
+      $this->data = Debit::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Debit->value);
+    }
 
     /**
      * save a resource

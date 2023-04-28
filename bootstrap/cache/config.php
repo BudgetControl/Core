@@ -256,11 +256,7 @@
     ),
     'allowed_origins' => 
     array (
-      0 => 'https://it-budget-tracker.herokuapp.com',
-      1 => 'http://localhost:8080',
-      2 => 'http://it-budget-tracker.herokuapp.com',
-      3 => 'http://localhost:8888',
-      4 => 'http://93.186.251.130:8080',
+      0 => 'http://budget-tracker.marcodefelice.it',
     ),
     'allowed_origins_patterns' => 
     array (
@@ -292,7 +288,7 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => 'budget_tracker_v2-database-1',
+        'host' => 'budget_tracker_v2-be-database-1',
         'port' => '3306',
         'database' => 'budgetV2',
         'username' => 'root',
@@ -312,7 +308,7 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => 'budget_tracker_v2-database-1',
+        'host' => 'budget_tracker_v2-be-database-1',
         'port' => '3306',
         'database' => 'budgetV2',
         'username' => 'root',
@@ -327,7 +323,7 @@
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
-        'host' => 'budget_tracker_v2-database-1',
+        'host' => 'budget_tracker_v2-be-database-1',
         'port' => '3306',
         'database' => 'budgetV2',
         'username' => 'root',

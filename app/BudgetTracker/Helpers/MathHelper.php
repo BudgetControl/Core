@@ -31,13 +31,13 @@ class MathHelper
     /**
     * sum of costo
     * @param \Illuminate\Database\Eloquent\Collection|array|\App\BudgetTracker\Models\Entry $data
-    * @return int
+    * @return float
     */
-    static public function sum( \Illuminate\Database\Eloquent\Collection|array|\App\BudgetTracker\Models\Entry $data): int
+    static public function sum( \Illuminate\Database\Eloquent\Collection|array|\App\BudgetTracker\Models\Entry $data): float
     {
-      $cost = 0;
+      $cost = (float) 0.00;
       foreach ($data as $value) {
-        $cost = $value->amount + $cost;
+        $cost = (float) $value->amount + $cost;
       }
       return round($cost,2);
     }
