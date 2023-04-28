@@ -96,7 +96,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/incoming' => 
+      '/api/incoming' => 
       array (
         0 => 
         array (
@@ -132,7 +132,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/expenses' => 
+      '/api/expenses' => 
       array (
         0 => 
         array (
@@ -168,7 +168,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/debit' => 
+      '/api/debit' => 
       array (
         0 => 
         array (
@@ -204,7 +204,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/transfer' => 
+      '/api/transfer' => 
       array (
         0 => 
         array (
@@ -240,7 +240,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/planning-recursively' => 
+      '/api/planning-recursively' => 
       array (
         0 => 
         array (
@@ -276,7 +276,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/payee' => 
+      '/api/payee' => 
       array (
         0 => 
         array (
@@ -312,7 +312,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/entry' => 
+      '/api/entry' => 
       array (
         0 => 
         array (
@@ -348,7 +348,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/categories' => 
+      '/api/categories' => 
       array (
         0 => 
         array (
@@ -384,7 +384,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/accounts' => 
+      '/api/accounts' => 
       array (
         0 => 
         array (
@@ -420,7 +420,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/labels' => 
+      '/api/labels' => 
       array (
         0 => 
         array (
@@ -456,7 +456,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/currencies' => 
+      '/api/currencies' => 
       array (
         0 => 
         array (
@@ -492,7 +492,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/model' => 
+      '/api/model' => 
       array (
         0 => 
         array (
@@ -528,7 +528,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/paymentstype' => 
+      '/api/paymentstype' => 
       array (
         0 => 
         array (
@@ -564,13 +564,13 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/api/budget-tracker/search' => 
+      '/api/search' => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'generated::k9WlH2hqSIaw8Mjl',
+            '_route' => 'generated::dUiMauQOdiVWcfd1',
           ),
           1 => NULL,
           2 => 
@@ -589,7 +589,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::WHgJOENSiWxTR7Xj',
+            '_route' => 'generated::nku3hfNNNJGCzAen',
           ),
           1 => NULL,
           2 => 
@@ -606,11 +606,11 @@ app('router')->setCompiledRoutes(
     ),
     2 => 
     array (
-      0 => '{^(?|/api/budget\\-tracker/(?|incoming/([^/]++)(?|(*:51))|e(?|xpenses/([^/]++)(?|(*:82))|ntry/(?|([^/]++)(?|(*:109))|account/([^/]++)(*:134)))|debit/([^/]++)(?|(*:161))|transfer/([^/]++)(?|(*:190))|p(?|lanning\\-recursively/([^/]++)(?|(*:235))|ay(?|ee/([^/]++)(?|(*:263))|mentstype/([^/]++)(?|(*:293))))|c(?|ategories/([^/]++)(?|(*:329))|urrencies/([^/]++)(?|(*:359)))|accounts/([^/]++)(?|(*:389))|labels/([^/]++)(?|(*:416))|model/([^/]++)(?|(*:442))|stats/month\\-wallet/([^/]++)(?:/([^/]++))?(*:493)))/?$}sDu',
+      0 => '{^(?|/api/(?|incoming/([^/]++)(?|(*:35))|e(?|xpenses/([^/]++)(?|(*:66))|ntry/(?|([^/]++)(?|(*:93))|account/([^/]++)(*:117)))|debit/([^/]++)(?|(*:144))|transfer/([^/]++)(?|(*:173))|p(?|lanning\\-recursively/([^/]++)(?|(*:218))|ay(?|ee/([^/]++)(?|(*:246))|mentstype/([^/]++)(?|(*:276))))|c(?|ategories/([^/]++)(?|(*:312))|urrencies/([^/]++)(?|(*:342)))|accounts/([^/]++)(?|(*:372))|labels/([^/]++)(?|(*:399))|model/([^/]++)(?|(*:425))|stats/([^/]++)(?:/([^/]++)(?:/([^/]++)(?:/([^/]++)(?:/([^/]++))?)?)?)?(*:504)))/?$}sDu',
     ),
     3 => 
     array (
-      51 => 
+      35 => 
       array (
         0 => 
         array (
@@ -672,7 +672,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      82 => 
+      66 => 
       array (
         0 => 
         array (
@@ -734,7 +734,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      109 => 
+      93 => 
       array (
         0 => 
         array (
@@ -796,13 +796,13 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      134 => 
+      117 => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'generated::eSRVPaELBafVNOeR',
+            '_route' => 'generated::phgS98MCxxr9ll1i',
           ),
           1 => 
           array (
@@ -819,7 +819,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      161 => 
+      144 => 
       array (
         0 => 
         array (
@@ -881,7 +881,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      190 => 
+      173 => 
       array (
         0 => 
         array (
@@ -943,7 +943,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      235 => 
+      218 => 
       array (
         0 => 
         array (
@@ -1005,7 +1005,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      263 => 
+      246 => 
       array (
         0 => 
         array (
@@ -1067,7 +1067,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      293 => 
+      276 => 
       array (
         0 => 
         array (
@@ -1129,7 +1129,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      329 => 
+      312 => 
       array (
         0 => 
         array (
@@ -1191,7 +1191,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      359 => 
+      342 => 
       array (
         0 => 
         array (
@@ -1253,7 +1253,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      389 => 
+      372 => 
       array (
         0 => 
         array (
@@ -1315,7 +1315,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      416 => 
+      399 => 
       array (
         0 => 
         array (
@@ -1377,7 +1377,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      442 => 
+      425 => 
       array (
         0 => 
         array (
@@ -1439,19 +1439,25 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      493 => 
+      504 => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'generated::JBPlvbGRptHWTlZY',
+            '_route' => 'generated::n5oaGukF4r7PfkY9',
+            'year' => NULL,
+            'month' => NULL,
+            'day' => NULL,
             'planned' => NULL,
           ),
           1 => 
           array (
             0 => 'type',
-            1 => 'planned',
+            1 => 'year',
+            2 => 'month',
+            3 => 'day',
+            4 => 'planned',
           ),
           2 => 
           array (
@@ -1632,18 +1638,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/incoming',
+      'uri' => 'api/incoming',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'incoming.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1668,18 +1674,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/incoming',
+      'uri' => 'api/incoming',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'incoming.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1705,18 +1711,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/incoming/{incoming}',
+      'uri' => 'api/incoming/{incoming}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'incoming.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1742,18 +1748,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/incoming/{incoming}',
+      'uri' => 'api/incoming/{incoming}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'incoming.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1778,18 +1784,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/incoming/{incoming}',
+      'uri' => 'api/incoming/{incoming}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'incoming.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\IncomingController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1815,18 +1821,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/expenses',
+      'uri' => 'api/expenses',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'expenses.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1851,18 +1857,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/expenses',
+      'uri' => 'api/expenses',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'expenses.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1888,18 +1894,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/expenses/{expense}',
+      'uri' => 'api/expenses/{expense}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'expenses.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1925,18 +1931,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/expenses/{expense}',
+      'uri' => 'api/expenses/{expense}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'expenses.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1961,18 +1967,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/expenses/{expense}',
+      'uri' => 'api/expenses/{expense}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'expenses.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ExpensesController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -1998,18 +2004,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/debit',
+      'uri' => 'api/debit',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'debit.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2034,18 +2040,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/debit',
+      'uri' => 'api/debit',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'debit.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2071,18 +2077,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/debit/{debit}',
+      'uri' => 'api/debit/{debit}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'debit.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2108,18 +2114,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/debit/{debit}',
+      'uri' => 'api/debit/{debit}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'debit.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2144,18 +2150,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/debit/{debit}',
+      'uri' => 'api/debit/{debit}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'debit.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\DebitController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2181,18 +2187,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/transfer',
+      'uri' => 'api/transfer',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'transfer.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2217,18 +2223,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/transfer',
+      'uri' => 'api/transfer',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'transfer.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2254,18 +2260,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/transfer/{transfer}',
+      'uri' => 'api/transfer/{transfer}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'transfer.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2291,18 +2297,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/transfer/{transfer}',
+      'uri' => 'api/transfer/{transfer}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'transfer.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2327,18 +2333,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/transfer/{transfer}',
+      'uri' => 'api/transfer/{transfer}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'transfer.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\TransferController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2364,18 +2370,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/planning-recursively',
+      'uri' => 'api/planning-recursively',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'planning-recursively.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2400,18 +2406,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/planning-recursively',
+      'uri' => 'api/planning-recursively',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'planning-recursively.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2437,18 +2443,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/planning-recursively/{planning_recursively}',
+      'uri' => 'api/planning-recursively/{planning_recursively}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'planning-recursively.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2474,18 +2480,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/planning-recursively/{planning_recursively}',
+      'uri' => 'api/planning-recursively/{planning_recursively}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'planning-recursively.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2510,18 +2516,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/planning-recursively/{planning_recursively}',
+      'uri' => 'api/planning-recursively/{planning_recursively}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'planning-recursively.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PlanningRecursivelyController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2547,18 +2553,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/payee',
+      'uri' => 'api/payee',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'payee.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2583,18 +2589,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/payee',
+      'uri' => 'api/payee',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'payee.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2620,18 +2626,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/payee/{payee}',
+      'uri' => 'api/payee/{payee}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'payee.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2657,18 +2663,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/payee/{payee}',
+      'uri' => 'api/payee/{payee}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'payee.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2693,18 +2699,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/payee/{payee}',
+      'uri' => 'api/payee/{payee}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'payee.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PayeeController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2730,18 +2736,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/entry',
+      'uri' => 'api/entry',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'entry.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2766,18 +2772,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/entry',
+      'uri' => 'api/entry',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'entry.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2803,18 +2809,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/entry/{entry}',
+      'uri' => 'api/entry/{entry}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'entry.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2840,18 +2846,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/entry/{entry}',
+      'uri' => 'api/entry/{entry}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'entry.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2876,18 +2882,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/entry/{entry}',
+      'uri' => 'api/entry/{entry}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'entry.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\EntryController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2913,18 +2919,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/categories',
+      'uri' => 'api/categories',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'categories.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2949,18 +2955,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/categories',
+      'uri' => 'api/categories',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'categories.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -2986,18 +2992,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/categories/{category}',
+      'uri' => 'api/categories/{category}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'categories.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3023,18 +3029,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/categories/{category}',
+      'uri' => 'api/categories/{category}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'categories.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3059,18 +3065,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/categories/{category}',
+      'uri' => 'api/categories/{category}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'categories.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CategoryController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3096,18 +3102,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/accounts',
+      'uri' => 'api/accounts',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'accounts.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3132,18 +3138,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/accounts',
+      'uri' => 'api/accounts',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'accounts.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3169,18 +3175,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/accounts/{account}',
+      'uri' => 'api/accounts/{account}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'accounts.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3206,18 +3212,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/accounts/{account}',
+      'uri' => 'api/accounts/{account}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'accounts.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3242,18 +3248,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/accounts/{account}',
+      'uri' => 'api/accounts/{account}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'accounts.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\AccountController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3279,18 +3285,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/labels',
+      'uri' => 'api/labels',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'labels.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3315,18 +3321,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/labels',
+      'uri' => 'api/labels',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'labels.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3352,18 +3358,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/labels/{label}',
+      'uri' => 'api/labels/{label}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'labels.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3389,18 +3395,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/labels/{label}',
+      'uri' => 'api/labels/{label}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'labels.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3425,18 +3431,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/labels/{label}',
+      'uri' => 'api/labels/{label}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'labels.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\LabelController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3462,18 +3468,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/currencies',
+      'uri' => 'api/currencies',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'currencies.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3498,18 +3504,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/currencies',
+      'uri' => 'api/currencies',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'currencies.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3535,18 +3541,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/currencies/{currency}',
+      'uri' => 'api/currencies/{currency}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'currencies.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3572,18 +3578,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/currencies/{currency}',
+      'uri' => 'api/currencies/{currency}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'currencies.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3608,18 +3614,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/currencies/{currency}',
+      'uri' => 'api/currencies/{currency}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'currencies.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\CurrencyController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3645,18 +3651,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/model',
+      'uri' => 'api/model',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'model.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3681,18 +3687,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/model',
+      'uri' => 'api/model',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'model.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3718,18 +3724,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/model/{model}',
+      'uri' => 'api/model/{model}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'model.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3755,18 +3761,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/model/{model}',
+      'uri' => 'api/model/{model}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'model.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3791,18 +3797,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/model/{model}',
+      'uri' => 'api/model/{model}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'model.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\ModelController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3828,18 +3834,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/paymentstype',
+      'uri' => 'api/paymentstype',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'paymentstype.index',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@index',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@index',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3864,18 +3870,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/paymentstype',
+      'uri' => 'api/paymentstype',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'paymentstype.store',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@store',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@store',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3901,18 +3907,18 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/paymentstype/{paymentstype}',
+      'uri' => 'api/paymentstype/{paymentstype}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'paymentstype.show',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@show',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@show',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3938,18 +3944,18 @@ app('router')->setCompiledRoutes(
         0 => 'PUT',
         1 => 'PATCH',
       ),
-      'uri' => 'api/budget-tracker/paymentstype/{paymentstype}',
+      'uri' => 'api/paymentstype/{paymentstype}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'paymentstype.update',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@update',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@update',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -3974,18 +3980,18 @@ app('router')->setCompiledRoutes(
       array (
         0 => 'DELETE',
       ),
-      'uri' => 'api/budget-tracker/paymentstype/{paymentstype}',
+      'uri' => 'api/paymentstype/{paymentstype}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'as' => 'paymentstype.destroy',
         'uses' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@destroy',
         'controller' => 'App\\BudgetTracker\\Http\\Controllers\\PaymentTypeController@destroy',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
@@ -4004,27 +4010,27 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::k9WlH2hqSIaw8Mjl' => 
+    'generated::dUiMauQOdiVWcfd1' => 
     array (
       'methods' => 
       array (
         0 => 'POST',
       ),
-      'uri' => 'api/budget-tracker/search',
+      'uri' => 'api/search',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
         'uses' => '\\App\\BudgetTracker\\Http\\Controllers\\SearchEntriesController@find',
         'controller' => '\\App\\BudgetTracker\\Http\\Controllers\\SearchEntriesController@find',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
-        'as' => 'generated::k9WlH2hqSIaw8Mjl',
+        'as' => 'generated::dUiMauQOdiVWcfd1',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4040,29 +4046,29 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::eSRVPaELBafVNOeR' => 
+    'generated::phgS98MCxxr9ll1i' => 
     array (
       'methods' => 
       array (
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/entry/account/{id}',
+      'uri' => 'api/entry/account/{id}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'api',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:125:"function (string $id) {
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:123:"function (string $id) {
     return \\App\\BudgetTracker\\Http\\Controllers\\EntryController::getEntriesFromAccount((int) $id);
 }";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000004f40000000000000000";}}',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api',
         'where' => 
         array (
         ),
-        'as' => 'generated::eSRVPaELBafVNOeR',
+        'as' => 'generated::phgS98MCxxr9ll1i',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4078,51 +4084,64 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::JBPlvbGRptHWTlZY' => 
+    'generated::n5oaGukF4r7PfkY9' => 
     array (
       'methods' => 
       array (
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'api/budget-tracker/stats/month-wallet/{type}/{planned?}',
+      'uri' => 'api/stats/{type}/{year?}/{month?}/{day?}/{planned?}',
       'action' => 
       array (
         'middleware' => 
         array (
-          0 => 'budget-tracker',
+          0 => 'stats',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:693:"function(string $type, string $planned = \'\') {
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:1131:"function(string $type, string $year = \'\',string $month = \'\', int $day = 0, string $planned = \'\') {
 
+
+try {
+
+    $year = $year === \'\' ? \\date(\'Y\',\\time()) : $year;
+    $startDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
+    $endDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
     $planned = $planned === \'planned\' ? true: false;
 
-    try {
-        $startDate = new \\DateTime();
-        $endDate = new \\DateTime();
-        $stats = new \\App\\BudgetTracker\\Http\\Controllers\\StatsController();
+    $start = $startDate->modify(\'first day of this month\')->getTimestamp();
+    $end = $endDate->modify(\'last day of this month\')->getTimestamp();
+
     
-        $stats->setDateStart(
-            \\date(\'Y/m/d H:i:s\',$startDate->modify(\'first day of this month\')->getTimestamp())
-        )
-        ->setDateEnd(
-            \\date(\'Y/m/d H:i:s\',$endDate->modify(\'last day of this month\')->getTimestamp())
-        );
-    
-        return $stats->$type($planned);
-
-    } catch(\\Exception $e) {
-
-        return \\response("Ops an error occured...",500);
-
+    if($day !== 0) {
+        $monthNumber = \\date_parse($month)[\'month\'];
+        $start = \\strtotime("$year/$monthNumber/$day");
+        $end = \\strtotime("$year/$monthNumber/$day");
     }
 
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e20000000000000000";}}',
+    $stats = new \\App\\BudgetTracker\\Http\\Controllers\\StatsController();
+
+    $stats->setDateStart(
+        \\date(\'Y/m/d H:i:s\',$start)
+    )
+    ->setDateEnd(
+        \\date(\'Y/m/d H:i:s\',$end)
+    );
+
+    return $stats->$type($planned);
+
+} catch(\\Exception $e) {
+    \\var_Dump($e->getMessage());
+    return \\response("Ops an error occured... check url params",500);
+
+}
+
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e30000000000000000";}}',
         'namespace' => NULL,
-        'prefix' => 'api/budget-tracker',
+        'prefix' => 'api/stats',
         'where' => 
         array (
         ),
-        'as' => 'generated::JBPlvbGRptHWTlZY',
+        'as' => 'generated::n5oaGukF4r7PfkY9',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4138,7 +4157,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::WHgJOENSiWxTR7Xj' => 
+    'generated::nku3hfNNNJGCzAen' => 
     array (
       'methods' => 
       array (
@@ -4154,13 +4173,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:44:"function () {
     return \\view(\'welcome\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e50000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e60000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::WHgJOENSiWxTR7Xj',
+        'as' => 'generated::nku3hfNNNJGCzAen',
       ),
       'fallback' => false,
       'defaults' => 

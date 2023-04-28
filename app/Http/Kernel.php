@@ -44,8 +44,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'budget-tracker' => [
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget-tracker',
+        'stats' => [
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]
     ];
