@@ -101,7 +101,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
     protected function isPlanning(DateTime $dateTime): bool
     {
         $today = new \DateTime();
-        if ($dateTime->getTimestamp() < $today->getTimestamp()) {
+        if ($dateTime->getTimestamp() > $today->getTimestamp()) {
             return true;
         }
 
