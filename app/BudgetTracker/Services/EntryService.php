@@ -108,7 +108,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
         return false;
     }
 
-    /**
+   /**
    * save labels data
    * @param array $labels
    * 

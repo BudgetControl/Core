@@ -13,7 +13,7 @@ use League\Config\Exception\ValidationException;
 /**
  * Summary of SaveEntryService
  */
-class PlanningRecursivelyService implements EntryInterface
+class PlanningRecursivelyService extends EntryService implements EntryInterface
 {
 
     /**
@@ -41,11 +41,17 @@ class PlanningRecursivelyService implements EntryInterface
                 $entry = PlannedEntries::find($data['id']);
             }
 
-            foreach ($data as $k => $v) {
-                $entry->$k = $v;
-            }
+            $entry->account_id = $data['account_id'];
+            $entry->amount = $data['amount'];
+            $entry->category_id = $data['category_id'];
+            $entry->currency_id = $data['currency_id'];
+            $entry->date_time = $data['date_time'];
+            $entry->note = $data['note'];
+            $entry->payment_type = $data['payment_type'];
 
             $entry->save();
+
+            $this->attachLabels($data['label'], $entry);
             
         } catch (\Exception $e) {
             $error = uniqid();
