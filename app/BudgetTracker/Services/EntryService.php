@@ -151,18 +151,18 @@ class EntryService extends Math\EntriesMath implements EntryInterface
   }
 
 
-  /** 
-   * chek if is planned entry
-   * @param DateTime $dateTime
-   * 
-   * @return bool
-   */
-  protected function isPlanning(DateTime $dateTime): bool
-  {
-    $today = new \DateTime();
-    if ($dateTime->getTimestamp() < $today->getTimestamp()) {
-      return true;
-    }
+    /** 
+     * chek if is planned entry
+     * @param DateTime $dateTime
+     * 
+     * @return bool
+     */
+    protected function isPlanning(DateTime $dateTime): bool
+    {
+        $today = new \DateTime();
+        if ($dateTime->getTimestamp() > $today->getTimestamp()) {
+            return true;
+        }
 
     return false;
   }
@@ -177,7 +177,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
     return $this->data->get();
   }
 
-  /**
+   /**
    * save labels data
    * @param array $labels
    * 

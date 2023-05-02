@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\factories\PlannedEntriesFactory;
+use App\BudgetTracker\Factories\PlannedEntriesFactory;
 use App\BudgetTracker\Models\Entry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;

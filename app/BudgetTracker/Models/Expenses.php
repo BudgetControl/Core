@@ -4,7 +4,7 @@ namespace App\BudgetTracker\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\factories\ExpensesFactory;
+use App\BudgetTracker\Factories\ExpensesFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class Expenses extends Entry
