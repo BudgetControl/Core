@@ -46,6 +46,7 @@ class PlanningRecursivelyService implements EntryInterface
             }
 
             $entry->save();
+            
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
@@ -60,7 +61,7 @@ class PlanningRecursivelyService implements EntryInterface
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    static public function read(int $id = null): object
     {
         Log::debug("read planning recursively  -- $id");
         $result = new \stdClass();

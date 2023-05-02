@@ -4,7 +4,7 @@ namespace App\BudgetTracker\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\factories\DebitFactory;
+use App\BudgetTracker\Factories\DebitFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class Debit extends Entry

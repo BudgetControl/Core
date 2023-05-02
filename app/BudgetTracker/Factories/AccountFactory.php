@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\factories;
+namespace App\BudgetTracker\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\BudgetTracker\Models\Account;

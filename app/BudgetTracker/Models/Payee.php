@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\factories\PayeeFactory;
+use App\BudgetTracker\Factories\PayeeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
