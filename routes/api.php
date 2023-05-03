@@ -1,5 +1,6 @@
 <?php
 
+use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,6 @@ Route::apiResource('labels', \App\BudgetTracker\Http\Controllers\LabelController
 Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyController::class);
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
-
 
 Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesController@find');
 Route::get('entry/account/{id}', function (string $id) {
