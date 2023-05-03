@@ -60,7 +60,7 @@ class StatsController extends Controller
         $entry = new IncomingService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
         return response()->json(new ResponseService(
-            [$this->buildResponse($entry->get()),$entry->get()])
+            $this->buildResponse($entry->get()))
         );
         
     }

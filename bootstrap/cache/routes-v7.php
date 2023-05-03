@@ -570,7 +570,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::dUiMauQOdiVWcfd1',
+            '_route' => 'generated::XTKEgbNL0XR963uy',
           ),
           1 => NULL,
           2 => 
@@ -589,7 +589,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::nku3hfNNNJGCzAen',
+            '_route' => 'generated::qObU3iyB9E6Sdmf4',
           ),
           1 => NULL,
           2 => 
@@ -802,7 +802,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::phgS98MCxxr9ll1i',
+            '_route' => 'generated::Nmdkj4NM6yZ0tAib',
           ),
           1 => 
           array (
@@ -1445,7 +1445,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::n5oaGukF4r7PfkY9',
+            '_route' => 'generated::L1sGqbx5XE6U4Qpj',
             'year' => NULL,
             'month' => NULL,
             'day' => NULL,
@@ -4010,7 +4010,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::dUiMauQOdiVWcfd1' => 
+    'generated::XTKEgbNL0XR963uy' => 
     array (
       'methods' => 
       array (
@@ -4030,7 +4030,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::dUiMauQOdiVWcfd1',
+        'as' => 'generated::XTKEgbNL0XR963uy',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4046,7 +4046,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::phgS98MCxxr9ll1i' => 
+    'generated::Nmdkj4NM6yZ0tAib' => 
     array (
       'methods' => 
       array (
@@ -4062,13 +4062,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:123:"function (string $id) {
     return \\App\\BudgetTracker\\Http\\Controllers\\EntryController::getEntriesFromAccount((int) $id);
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000004f40000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000000000050d0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => 'api',
         'where' => 
         array (
         ),
-        'as' => 'generated::phgS98MCxxr9ll1i',
+        'as' => 'generated::Nmdkj4NM6yZ0tAib',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4084,7 +4084,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::n5oaGukF4r7PfkY9' => 
+    'generated::L1sGqbx5XE6U4Qpj' => 
     array (
       'methods' => 
       array (
@@ -4098,50 +4098,46 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'stats',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:1131:"function(string $type, string $year = \'\',string $month = \'\', int $day = 0, string $planned = \'\') {
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:1202:"function (string $type, string $year = \'\', string $month = \'\', int $day = 0, string $planned = \'\') {
 
 
-try {
+    try {
 
-    $year = $year === \'\' ? \\date(\'Y\',\\time()) : $year;
-    $startDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
-    $endDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
-    $planned = $planned === \'planned\' ? true: false;
+        $year = $year === \'\' ? \\date(\'Y\', \\time()) : $year;
+        $startDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
+        $endDate = $month === \'\' ? new \\DateTime() : new \\DateTime("$year $month");
+        $planned = $planned === \'planned\' ? true: false;
 
-    $start = $startDate->modify(\'first day of this month\')->getTimestamp();
-    $end = $endDate->modify(\'last day of this month\')->getTimestamp();
+        $start = $startDate->modify(\'first day of this month\')->getTimestamp();
+        $end = $endDate->modify(\'last day of this month\')->getTimestamp();
 
-    
-    if($day !== 0) {
-        $monthNumber = \\date_parse($month)[\'month\'];
-        $start = \\strtotime("$year/$monthNumber/$day");
-        $end = \\strtotime("$year/$monthNumber/$day");
+        if ($day !== 0) {
+            $monthNumber = \\date_parse($month)[\'month\'];
+            $start = \\strtotime("$year/$monthNumber/$day");
+            $end = \\strtotime("$year/$monthNumber/$day");
+        }
+
+        $stats = new \\App\\BudgetTracker\\Http\\Controllers\\StatsController();
+
+        $stats->setDateStart(
+            \\date(\'Y/m/d H:i:s\', $start)
+        )
+            ->setDateEnd(
+                \\date(\'Y/m/d H:i:s\', $end)
+            );
+
+        return $stats->$type($planned);
+    } catch (\\Exception $e) {
+        \\var_dump($e->getMessage());
+        return \\response("Ops an error occured... check url params", 500);
     }
-
-    $stats = new \\App\\BudgetTracker\\Http\\Controllers\\StatsController();
-
-    $stats->setDateStart(
-        \\date(\'Y/m/d H:i:s\',$start)
-    )
-    ->setDateEnd(
-        \\date(\'Y/m/d H:i:s\',$end)
-    );
-
-    return $stats->$type($planned);
-
-} catch(\\Exception $e) {
-    \\var_Dump($e->getMessage());
-    return \\response("Ops an error occured... check url params",500);
-
-}
-
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e30000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008fc0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => 'api/stats',
         'where' => 
         array (
         ),
-        'as' => 'generated::n5oaGukF4r7PfkY9',
+        'as' => 'generated::L1sGqbx5XE6U4Qpj',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4157,7 +4153,7 @@ try {
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::nku3hfNNNJGCzAen' => 
+    'generated::qObU3iyB9E6Sdmf4' => 
     array (
       'methods' => 
       array (
@@ -4173,13 +4169,13 @@ try {
         ),
         'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:44:"function () {
     return \\view(\'welcome\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008e60000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008ff0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::nku3hfNNNJGCzAen',
+        'as' => 'generated::qObU3iyB9E6Sdmf4',
       ),
       'fallback' => false,
       'defaults' => 
