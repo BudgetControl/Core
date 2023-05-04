@@ -144,7 +144,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
    * 
    * @return self
    */
-  public function addCOnditions(string $column, string|int $value): self
+  public function addConditions(string $column, string|int $value): self
   {
     $this->data->where($column, $value);
     return $this;

@@ -3,7 +3,9 @@
 namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Services\DebitService;
+use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\ExpensesService;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\IncomingService;
@@ -12,6 +14,7 @@ use App\BudgetTracker\Services\Math\EntriesMath;
 use Database\Seeders\TransferSeed;
 use DateTime;
 use \Illuminate\Http\JsonResponse;
+use League\CommonMark\Extension\CommonMark\Parser\Inline\EntityParser;
 
 class StatsController extends Controller
 {
@@ -111,6 +114,51 @@ class StatsController extends Controller
             $this->buildResponse($entry->get()))
         );
         
+    }
+
+    /**
+     * retrive total wallet sum
+     */
+    public function total(bool $planning): JsonResponse
+    {
+        $entry = new EntryService();
+        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        return response()->json(new ResponseService(
+            $this->buildResponse($entry->get()))
+        );
+
+    }
+
+    /** 
+     * retrive all accounts
+     */
+    public function wallets(bool $planning): JsonResponse
+    {
+        $accounts = Account::all();
+        $response = [];
+        foreach($accounts as $account) {
+            $entry = new EntryService();
+            $entry->addConditions('account_id', $account->id);
+            $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+            $mathTotal = new EntriesMath();
+            $mathTotal->setData($entry->get());
+
+            $response[] = [
+                'account_id' => $account->id,
+                'account_label' => $account->name,
+                'color' => $account->color,
+                'total_wallet' => $mathTotal->sum()
+            ];
+
+        }
+
+
+        return response()->json(new ResponseService(
+            $response
+        ));
+
     }
 
     /**
