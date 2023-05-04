@@ -52,16 +52,6 @@ class Entry extends Model
         );
     }
 
-    /**
-     * casting amount value
-     */
-    protected function dateTime(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => strtotime($value),
-        );
-    }
-
      /**
      * The users that belong to the role.
      */
