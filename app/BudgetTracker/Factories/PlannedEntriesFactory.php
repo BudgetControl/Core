@@ -33,7 +33,7 @@ class PlannedEntriesFactory extends Factory
         $month = fake()->numberBetween(1, date("m",time()));
         $year = date("Y",time());
 
-        $date = "$year/$month/$day 12:20:32";
+        $date = "$year-$month-$day 12:20:32";
 
         $planned = 0;
         if(strtotime($date) > time()) {
@@ -49,7 +49,7 @@ class PlannedEntriesFactory extends Factory
             'category_id' => fake()->numberBetween(1,75),
             'account_id' => 1,
             'currency_id' => 1,
-            'date_time' => strtotime($date),
+            'date_time' => $date,
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 1,

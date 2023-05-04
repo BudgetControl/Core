@@ -108,7 +108,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
   public function setDateStart(string $date): self
   {
     $date = new DateTime($date);
-    $this->data->where('date_time', '>=', $date->getTimestamp());
+    $this->data->where('created_at', '>=', $date->format('Y-m-d H:i:s'));
     return $this;
   }
 
@@ -121,7 +121,7 @@ class EntryService extends Math\EntriesMath implements EntryInterface
   public function setDateEnd(string $date): self
   {
     $date = new DateTime($date);
-    $this->data->where('date_time', '<=', $date->getTimestamp());
+    $this->data->where('created_at', '<=', $date->format('Y-m-d H:i:s'));
     return $this;
   }
 

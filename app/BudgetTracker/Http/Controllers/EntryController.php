@@ -24,7 +24,7 @@ class EntryController extends Controller implements ControllerResourcesInterface
 		$date->modify('last day of this month');
 		
 		$incoming = Entry::withRelations()
-		->where('date_Time', '<=', $date->getTimestamp())
+		->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
 		->limit(30)
 		->get();
 		return response()->json(new ResponseService(['elements' => $incoming]));

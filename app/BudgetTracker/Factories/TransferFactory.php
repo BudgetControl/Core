@@ -39,7 +39,7 @@ class TransferFactory extends Factory
             'account_id' => 1,
             'transfer_id' => 2,
             'currency_id' => 1,
-            'date_time' => time(),
+            'date_time' => date('Y-m-d H:i:s',time()),
             'payment_type' => 1,
             'confirmed' => 1,
             'payee_id' => 1

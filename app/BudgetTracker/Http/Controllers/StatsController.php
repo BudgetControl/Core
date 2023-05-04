@@ -123,7 +123,6 @@ class StatsController extends Controller
     {
         $entry = new EntryService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
-
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get()))
         );
