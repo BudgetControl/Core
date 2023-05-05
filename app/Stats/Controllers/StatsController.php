@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\Http\Controllers;
+namespace App\Stats\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Models\Account;
@@ -10,7 +10,8 @@ use App\BudgetTracker\Services\ExpensesService;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\TransferService;
-use App\BudgetTracker\Services\Math\EntriesMath;
+use App\Helpers\EntriesMath;
+use App\Helpers\MathHelper;
 use Database\Seeders\TransferSeed;
 use DateTime;
 use \Illuminate\Http\JsonResponse;
@@ -21,6 +22,8 @@ class StatsController extends Controller
 
     private string $startDate;
     private string $endDate;
+    private string $startDatePassed;
+    private string $endDatePassed;
 
     public function __construct() 
     {
@@ -37,6 +40,11 @@ class StatsController extends Controller
     public function setDateStart(string $date): self
     {
         $this->startDate = $date;
+
+        $passedDateTime = new DateTime($date);
+        $passedDateTime = $passedDateTime->modify('-1 month');
+        $this->startDatePassed = $passedDateTime->format('Y-m-d H:i:s');
+
         return $this;
     }
 
@@ -49,6 +57,11 @@ class StatsController extends Controller
     public function setDateEnd(string $date): self
     {
         $this->endDate = $date;
+        
+        $passedDateTime = new DateTime($date);
+        $passedDateTime = $passedDateTime->modify('-1 month');
+        $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
+
         return $this;
     }
 
@@ -62,8 +75,12 @@ class StatsController extends Controller
     {
         $entry = new IncomingService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        $entryOld = new IncomingService();
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get()))
+            $this->buildResponse($entry->get(),$entryOld->get()))
         );
         
     }
@@ -78,8 +95,12 @@ class StatsController extends Controller
     {
         $entry = new ExpensesService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        $entryOld = new ExpensesService();
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get()))
+            $this->buildResponse($entry->get(),$entryOld->get()))
         );
         
     }
@@ -94,8 +115,12 @@ class StatsController extends Controller
     {
         $entry = new TransferService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        $entryOld = new TransferService();
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get()))
+            $this->buildResponse($entry->get(),$entryOld->get()))
         );
         
     }
@@ -110,8 +135,12 @@ class StatsController extends Controller
     {
         $entry = new DebitService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        $entryOld = new DebitService();
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get()))
+            $this->buildResponse($entry->get(),$entryOld->get()))
         );
         
     }
@@ -123,8 +152,12 @@ class StatsController extends Controller
     {
         $entry = new EntryService();
         $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+
+        $entryOld = new EntryService();
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get()))
+            $this->buildResponse($entry->get(), $entryOld->get()))
         );
 
     }
@@ -163,16 +196,25 @@ class StatsController extends Controller
     /**
      * build stats standard response
      * @param \Illuminate\Database\Eloquent\Collection|\App\BudgetTracker\Models\Entry $data
+     * @param \Illuminate\Database\Eloquent\Collection|\App\BudgetTracker\Models\Entry $dataOld
      * 
      * @return array
      */
-    private function buildResponse(\Illuminate\Database\Eloquent\Collection|\App\BudgetTracker\Models\Entry $data)
+    private function buildResponse(\Illuminate\Database\Eloquent\Collection|\App\BudgetTracker\Models\Entry $data, \Illuminate\Database\Eloquent\Collection|\App\BudgetTracker\Models\Entry $dataOld)
     {
         $mathTotal = new EntriesMath();
         $mathTotal->setData($data);
 
+        $mathTotalPassed = new EntriesMath();
+        $mathTotalPassed->setData($dataOld);
+
+        $firstValue = $mathTotal->sum();
+        $secondValue = $mathTotalPassed->sum();
+
         return [
-            'total' => $mathTotal->sum()
+            'total' => $firstValue,
+            'total_passed' => $secondValue,
+            'percentage' => MathHelper::percentage($firstValue, $secondValue)
         ];
     }
 

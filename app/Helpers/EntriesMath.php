@@ -1,8 +1,8 @@
 <?php
-namespace App\BudgetTracker\Services\Math;
+namespace App\Helpers;
 
 use App\BudgetTracker\Exceptions\EntryException;
-use App\BudgetTracker\Helpers\MathHelper;
+use App\Helpers\MathHelper;
 
 class EntriesMath {
 

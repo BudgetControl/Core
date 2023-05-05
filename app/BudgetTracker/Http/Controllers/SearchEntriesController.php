@@ -9,6 +9,7 @@ use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\ResponseService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
+use App\Helpers\EntriesMath;
 use App\BudgetTracker\Enums\EntryType;
 
 class SearchEntriesController extends Controller
@@ -67,7 +68,7 @@ class SearchEntriesController extends Controller
 			$entriesData = EntryService::splitEntry_byType($data);
 
 			foreach($entriesData as $key => $entry) {
-				$entryService = new EntryService();
+				$entryService = new EntriesMath();
 				$entryService->setData($entriesData[$key]);
 				$total[strtolower($key)] = $entryService->sum();
 			}
