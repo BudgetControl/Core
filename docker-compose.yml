@@ -38,7 +38,7 @@ services:
     bemodule-staging:
       image: docker.io/bitnami/laravel:10
       ports:
-        - '127.0.0.1:3333:8000'
+        - 3030:8000
       volumes:
         - ./:/app
         - .env:/app/.env
