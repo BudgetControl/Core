@@ -1,8 +1,6 @@
 <?php
 
-use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +18,11 @@ Route::get('{type}/{year?}/{month?}/{day?}/{planned?}', function (string $type, 
 
     try {
 
+        if($year === 'planned') {
+            $year = '';
+            $planned = 'planned';
+        }
+
         $year = $year === '' ? date('Y', time()) : $year;
         $startDate = $month === '' ? new DateTime() : new DateTime("$year $month");
         $endDate = $month === '' ? new DateTime() : new DateTime("$year $month");
@@ -34,7 +37,7 @@ Route::get('{type}/{year?}/{month?}/{day?}/{planned?}', function (string $type, 
             $end = strtotime("$year/$monthNumber/$day");
         }
 
-        $stats = new \App\BudgetTracker\Http\Controllers\StatsController();
+        $stats = new \App\Stats\Controllers\StatsController();
 
         $stats->setDateStart(
             date('Y/m/d H:i:s', $start)

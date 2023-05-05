@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('models_id');
             $table->integer('labels_id');
             $table->timestamps();
-            $table->integer("date_time")->nullable();
+            $table->timestamp("date_time")->useCurrent();
         });
 
         // Schema::table('model_labels', function (Blueprint $table) {

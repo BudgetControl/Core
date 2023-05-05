@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text("location");
             $table->timestamps();
-            $table->integer("date_time")->nullable();
+            $table->timestamp("date_time")->useCurrent();
         });
     }
 

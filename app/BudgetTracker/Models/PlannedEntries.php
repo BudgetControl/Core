@@ -20,7 +20,7 @@ class PlannedEntries extends Entry
     {
         parent::__construct($attributes);
         
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
         $this->attributes['confirmed'] = 1;
         $this->attributes['planned'] = 1;

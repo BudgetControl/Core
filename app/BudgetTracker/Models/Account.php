@@ -41,7 +41,7 @@ class Account extends Model
     {   
         parent::__construct($attributes);
         
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
         
     }
