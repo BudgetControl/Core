@@ -13,14 +13,36 @@ services:
         MYSQL_DATABASE: ${DB_DATABASE}
     bemodule:
       image: docker.io/bitnami/laravel:10
-      env_file:
-        - .env
       ports:
-        - 3333:8000
+        - 3000:8000
       volumes:
         - ./:/app
         - .env:/app/.env
       depends_on:
         - database
+        - redis-master
       restart: unless-stopped
       command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+    redis-master:
+      env_file:
+        - .env
+      image: 'bitnami/redis:latest'
+      ports:
+        - '6379'
+      environment:
+        - REDIS_REPLICATION_MODE=master
+        - REDIS_PASSWORD=${REDIS_PASSWORD}
+      volumes:
+        - './storage/redis-persistence:/bitnami'
+    redis-replica:
+      image: 'bitnami/redis:latest'
+      ports:
+        - '6379'
+      depends_on:
+        - redis-master
+      environment:
+        - REDIS_REPLICATION_MODE=slave
+        - REDIS_MASTER_HOST=${REDIS_HOST}
+        - REDIS_MASTER_PORT_NUMBER=${REDIS_PORT}
+        - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
+        - REDIS_PASSWORD=${REDIS_PASSWORD_REPLICA}

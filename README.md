@@ -7,9 +7,14 @@ php version >= 8.2
 ###Installations
 * Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
 * Enter the repository directory with the command cd REPOSITORY-NAME.
-* Copy file .env.example on .env
+* Copy file .env.example on .env ( if you want you can change the user and password db )
 * Creation of the dockerfile container
    docker-compose up -d
+* generate laravel cache files
+   docker exec budgettrackerv2_bemodule_1 php artisan config:cache
+* migrate all db with exapmle data
+  docker exec budgettrackerv2_bemodule_1 php artisan migrate --seed
+* enjoy on port 3000 ( http://localhost:3000/api/incoming )
    
 ### Usage
 * Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
