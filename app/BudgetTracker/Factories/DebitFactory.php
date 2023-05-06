@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\factories;
+namespace App\BudgetTracker\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\BudgetTracker\Enums\EntryType;
@@ -39,7 +39,7 @@ class DebitFactory extends Factory
             'category_id' => fake()->numberBetween(1,75),
             'account_id' => 1,
             'currency_id' => 1,
-            'date_time' => time(),
+            'date_time' => date('Y-m-d H:i:s',time()),
             'payment_type' => 1,
             'confirmed' => 1,
             'payee_id' => 1

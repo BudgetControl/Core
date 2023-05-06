@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\factories\PayeeFactory;
+use App\BudgetTracker\Factories\PayeeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,7 +36,7 @@ class Payee extends Model
     {
         parent::__construct($attributes);
 
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
 
         foreach ($attributes as $k => $v) {

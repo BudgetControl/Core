@@ -3,7 +3,7 @@
 namespace App\BudgetTracker\Models;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\factories\IncomingFactory;
+use App\BudgetTracker\Factories\IncomingFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

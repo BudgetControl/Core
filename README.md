@@ -7,6 +7,7 @@ php version >= 8.2
 ###Installations
 * Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
 * Enter the repository directory with the command cd REPOSITORY-NAME.
+* Copy file .env.example on .env
 * Creation of the dockerfile container
    docker-compose up -d
    

@@ -1,13 +1,13 @@
 <?php
-namespace App\BudgetTracker\Services\Math;
+namespace App\Helpers;
 
 use App\BudgetTracker\Exceptions\EntryException;
-use App\BudgetTracker\Helpers\MathHelper;
+use App\Helpers\MathHelper;
 
 class EntriesMath {
 
-    /** @var \App\BudgetTracker\Models\Entry|array $data */
-    private \App\BudgetTracker\Models\Entry|array $data;
+    /** @var \App\BudgetTracker\Models\Entry|array|\Illuminate\Database\Eloquent\Collection $data */
+    private \App\BudgetTracker\Models\Entry|array|\Illuminate\Database\Eloquent\Collection $data;
 
     
     /**
@@ -20,10 +20,10 @@ class EntriesMath {
 
     /**
      * Set the value of data
-     *
+     * @param \App\BudgetTracker\Models\Entry|array|\Illuminate\Database\Eloquent\Collection $data
      * @return  self
      */ 
-    public function setData($data)
+    public function setData(\App\BudgetTracker\Models\Entry|array|\Illuminate\Database\Eloquent\Collection $data)
     {
         $this->data = $data;
 

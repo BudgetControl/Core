@@ -31,7 +31,7 @@ class Entry extends Model
     {
         parent::__construct($attributes);
         
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
@@ -49,16 +49,6 @@ class Entry extends Model
         return Attribute::make(
             get: fn (string $value) => $value,
             set: fn (string $value) => $this->cleanAmount($value),
-        );
-    }
-
-    /**
-     * casting amount value
-     */
-    protected function dateTime(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => strtotime($value),
         );
     }
 
