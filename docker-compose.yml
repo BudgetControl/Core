@@ -11,12 +11,10 @@ services:
         MYSQL_USER: ${DB_USERNAME}
         MYSQL_PASSWORD: ${DB_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
-      ports:
-        - '127.0.0.1:33306:3306'
     bemodule:
       image: docker.io/bitnami/laravel:10
       ports:
-        - '127.0.0.1:3333:8000'
+        - 3000:8000
       volumes:
         - ./:/app
         - .env:/app/.env
@@ -24,6 +22,7 @@ services:
         - database
         - redis-master
       restart: unless-stopped
+      command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
     redis-master:
       env_file:
         - .env

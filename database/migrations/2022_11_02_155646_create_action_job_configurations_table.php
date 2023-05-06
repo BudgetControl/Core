@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("action");
             $table->text("config");
             $table->timestamps();
-            $table->integer("date_time")->nullable();
+            $table->timestamp("date_time")->useCurrent();
         });
     }
 

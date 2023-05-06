@@ -15,6 +15,11 @@ use League\Config\Exception\ValidationException;
  */
 class IncomingService extends EntryService implements EntryInterface
 {
+    
+    function __construct()
+    {
+      $this->data = Incoming::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Incoming->value);
+    }
 
     /**
      * save a resource

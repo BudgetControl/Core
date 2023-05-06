@@ -43,6 +43,6 @@ class ActivatePlannedEntries implements ShouldQueue
      */
     private function findPlannedEntries() : \Illuminate\Database\Eloquent\Collection
     {   
-        return Entry::where('planned',1)->where('date_time', '<=', time())->get();
+        return Entry::where('planned',1)->where('date_time', '<=', date('Y-m-d H:i:s',time()))->get();
     }
 }

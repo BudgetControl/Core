@@ -16,7 +16,7 @@ return new class extends Migration
      Schema::create('entries', function (Blueprint $table) {
        $table->id();
        $table->timestamps();
-       $table->integer("date_time")->nullable();
+       $table->timestamp("date_time")->useCurrent();
        $table->string("uuid");
        $table->float("amount");
        $table->text("note")->nullable();

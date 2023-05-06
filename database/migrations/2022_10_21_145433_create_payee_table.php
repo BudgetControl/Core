@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("uuid");
             $table->string("name");
             $table->timestamps();
-            $table->integer("date_time")->nullable();
+            $table->timestamp("date_time")->useCurrent();
         });
 
         // Schema::table('payees', function (Blueprint $table) {
