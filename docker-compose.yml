@@ -11,44 +11,16 @@ services:
         MYSQL_USER: ${DB_USERNAME}
         MYSQL_PASSWORD: ${DB_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
-      ports:
-        - '127.0.0.1:33306:3306'
     bemodule:
       image: docker.io/bitnami/laravel:10
+      env_file:
+        - .env
       ports:
-        - '127.0.0.1:3333:8000'
+        - 3333:8000
       volumes:
         - ./:/app
         - .env:/app/.env
       depends_on:
         - database
       restart: unless-stopped
-    database-staging:
-      image: mysql:latest
-      restart: unless-stopped
-      env_file:
-        - .env
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-      ports:
-        - '127.0.0.1:33306:3306'
-    bemodule-staging:
-      image: docker.io/bitnami/laravel:10
-      ports:
-        - 3030:8000
-      volumes:
-        - ./:/app
-        - .env:/app/.env
-      depends_on:
-        - database-staging
-      restart: unless-stopped
-networks: 
-  production: 
-    external: 
-      name: budget-tracker-net
-  staging: 
-    external: 
-      name: budget-tracker-staging
+      command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
