@@ -4,7 +4,7 @@ namespace App\BudgetTracker\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\factories\TransferFactory;
+use App\BudgetTracker\Factories\TransferFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 

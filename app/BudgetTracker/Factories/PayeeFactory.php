@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\factories;
+namespace App\BudgetTracker\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\BudgetTracker\Enums\EntryType;
@@ -32,7 +32,7 @@ class PayeeFactory extends Factory
 
         return [
             'uuid' => uniqid(),
-            'date_time' => time(),
+            'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(5)
         ];
     }

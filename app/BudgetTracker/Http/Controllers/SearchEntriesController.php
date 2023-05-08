@@ -9,6 +9,7 @@ use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\ResponseService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
+use App\Helpers\EntriesMath;
 use App\BudgetTracker\Enums\EntryType;
 
 class SearchEntriesController extends Controller
@@ -67,7 +68,7 @@ class SearchEntriesController extends Controller
 			$entriesData = EntryService::splitEntry_byType($data);
 
 			foreach($entriesData as $key => $entry) {
-				$entryService = new EntryService();
+				$entryService = new EntriesMath();
 				$entryService->setData($entriesData[$key]);
 				$total[strtolower($key)] = $entryService->sum();
 			}
@@ -114,14 +115,14 @@ class SearchEntriesController extends Controller
 	 * @param int $year
 	 * @param int $month
 	 * 
-	 * @return int
+	 * @return string
 	 */
-	private function getStartDate(int $year, int $month): int
+	private function getStartDate(int $year, int $month): string
 	{
 		$dateTime = new \DateTime();
 		$dateTime->setDate((int)$year,(int)$month,1);
 		$dateTime->modify('first day of this month');
-		return $dateTime->getTimestamp();
+		return $dateTime->format('Y-m-d H:i:s');
 	}
 
 		/**
@@ -129,14 +130,14 @@ class SearchEntriesController extends Controller
 	 * @param int $year
 	 * @param int $month
 	 * 
-	 * @return \DateTime
+	 * @return string
 	 */
-	private function getEndDate(int $year, int $month): int
+	private function getEndDate(int $year, int $month): string
 	{
 		$dateTime = new \DateTime();
 		$dateTime->setDate((int)$year,(int)$month,1);
 		$dateTime->modify('last day of this month');
-		return $dateTime->getTimestamp();
+		return $dateTime->format('Y-m-d H:i:s');
 
 	}
 }

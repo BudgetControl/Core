@@ -12,8 +12,13 @@ use League\Config\Exception\ValidationException;
 /**
  * Summary of SaveEntryService
  */
-class TransferService implements EntryInterface
+class TransferService extends EntryService implements EntryInterface
 {
+
+    function __construct()
+    {
+      $this->data = Transfer::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Transfer->value);
+    }
 
     /**
      * save a resource

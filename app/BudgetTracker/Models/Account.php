@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\factories\AccountFactory;
+use App\BudgetTracker\Factories\AccountFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -41,7 +41,7 @@ class Account extends Model
     {   
         parent::__construct($attributes);
         
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
         
     }

@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\factories\PlannedEntriesFactory;
+use App\BudgetTracker\Factories\PlannedEntriesFactory;
 use App\BudgetTracker\Models\Entry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,7 +20,7 @@ class PlannedEntries extends Entry
     {
         parent::__construct($attributes);
         
-        $this->attributes['date_time'] = time();
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
         $this->attributes['confirmed'] = 1;
         $this->attributes['planned'] = 1;

@@ -16,7 +16,7 @@ return new class extends Migration
        Schema::create('payments_types', function (Blueprint $table) {
          $table->id();
          $table->timestamps();
-         $table->integer("date_time")->nullable();
+         $table->timestamp("date_time")->useCurrent();
          $table->string("uuid");
          $table->string("name");
          $table->softDeletes();

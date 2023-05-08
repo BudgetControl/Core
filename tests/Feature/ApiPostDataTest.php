@@ -110,7 +110,7 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -1024.90,
             'type' => EntryType::Transfer->value,
-            'category_id' => 12,
+            'category_id' => 75,
             'account_id' => 1,
             'transfer_id' => 2,
             'planned' => 0,
@@ -121,7 +121,7 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => 1024.90,
             'type' => EntryType::Transfer->value,
-            'category_id' => 12,
+            'category_id' => 75,
             'account_id' => 2,
             'transfer_id' => 1,
             'planned' => 0,
@@ -144,7 +144,7 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -200.90,
             'type' => EntryType::Debit->value,
-            'category_id' => 12,
+            'category_id' => 55,
             'account_id' => 1,
             'payee_id' => 1,
             'planned' => 0,
@@ -201,7 +201,8 @@ class ApiPostDataTest extends TestCase
             "account_id" : 1,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "'.$dateTime->format('Y-m-d h:i:s').'" 
+            "date_time": "'.$dateTime->format('Y-m-d h:i:s').'", 
+            "label": []
         }';
 
         return json_decode($request);
