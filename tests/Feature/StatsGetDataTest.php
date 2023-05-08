@@ -23,6 +23,15 @@ class StatsGetDataTest extends TestCase
             "version"
     ];
 
+    const WALLET = [
+        "data" => [
+                "total",
+        ],
+        "message",
+        "errorCode",
+        "version"
+];
+
     const WALLETS = [
         "data" => [
             [
@@ -175,7 +184,7 @@ class StatsGetDataTest extends TestCase
         $response = $this->get('/api/stats/total/');
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::RESPONSE);
+        $response->assertJsonStructure(self::WALLET);
 
         $test_amount = $response['data']['total'];
         $this->assertTrue($test_amount <= 0 || $test_amount >= 0 );
