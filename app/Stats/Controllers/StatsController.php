@@ -156,15 +156,13 @@ class StatsController extends Controller
         $lastRow = $this->getActionConfigurations(0);
 
         $entry = new EntryService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate)
-        ->addConditions('id', '>', $lastRow);
-
-        $entryOld = new EntryService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed)
-        ->addConditions('id', '>', $lastRow);
+        $entry->setPlanning($planning)->addConditions('id', '>', $lastRow);
 
         return response()->json(new ResponseService(
-            $this->buildResponse($entry->get(), $entryOld->get()))
+            [
+                'total' => MathHelper::sum($entry->get()),
+            ]
+        )
         );
 
     }
@@ -177,12 +175,11 @@ class StatsController extends Controller
         $accounts = Account::all();
         $response = [];
         foreach($accounts as $account) {
-            $lastRow = $this->getActionConfigurations(0);
+            $lastRow = $this->getActionConfigurations($account->id);
 
             $entry = new EntryService();
             $entry->addConditions('account_id', $account->id);
-            $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate)
-            ->addConditions('id', '>', $lastRow);
+            $entry->setPlanning($planning)->addConditions('id', '>', $lastRow);
 
             $mathTotal = new EntriesMath();
             $mathTotal->setData($entry->get());

@@ -148,7 +148,7 @@ class EntryService implements EntryInterface
   public function addConditions(string $column, string|int $valueOrSign, string|int $value = ''): self
   {
     if($value === '') {
-      $this->data->where($column, $value);
+      $this->data->where($column, $valueOrSign);
     } else {
       $this->data->where($column, $valueOrSign, $value);
     }
