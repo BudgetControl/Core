@@ -156,11 +156,11 @@ class StatsController extends Controller
         $lastRow = $this->getActionConfigurations(0);
 
         $entry = new EntryService();
-        $entry->setPlanning($planning)->addConditions('id', '>', $lastRow);
+        $entry->setPlanning($planning)->addConditions('id', '>', $lastRow->lastrow);
 
         return response()->json(new ResponseService(
             [
-                'total' => MathHelper::sum($entry->get()),
+                'total' => MathHelper::sum($entry->get()) + $lastRow->amount,
             ]
         )
         );
@@ -179,7 +179,7 @@ class StatsController extends Controller
 
             $entry = new EntryService();
             $entry->addConditions('account_id', $account->id);
-            $entry->setPlanning($planning)->addConditions('id', '>', $lastRow);
+            $entry->setPlanning($planning)->addConditions('id', '>', $lastRow->lastrow);
 
             $mathTotal = new EntriesMath();
             $mathTotal->setData($entry->get());
@@ -188,7 +188,7 @@ class StatsController extends Controller
                 'account_id' => $account->id,
                 'account_label' => $account->name,
                 'color' => $account->color,
-                'total_wallet' => $mathTotal->sum()
+                'total_wallet' => $mathTotal->sum() + $lastRow->amount
             ];
 
         }
@@ -228,9 +228,9 @@ class StatsController extends Controller
    /**
    * get wallet fix 78187.79;
    * @param int $account_id 
-   * @return int
+   * @return \stdClass
    */
-  private function getActionConfigurations(int $account_id):int
+  private function getActionConfigurations(int $account_id):\stdClass
   {
     $fix = ActionJobConfiguration::where("action", Action::Configurations->value)->orderBy("id", "desc")->get('config');
     $config = json_decode(
@@ -239,11 +239,11 @@ class StatsController extends Controller
     foreach ($fix as $f) {
       $config = json_decode($f->config);
       if ($config->account_id == $account_id) {
-        return $config->lastrow;
+        return $config;
       }
     }
 
-    return $config->lastrow;
+    return $config;
   }
 
 }
