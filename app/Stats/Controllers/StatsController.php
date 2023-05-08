@@ -177,7 +177,7 @@ class StatsController extends Controller
         $accounts = Account::all();
         $response = [];
         foreach($accounts as $account) {
-            $lastRow = $this->getActionConfigurations(0);
+            $lastRow = $this->getActionConfigurations($account->id);
 
             $entry = new EntryService();
             $entry->addConditions('account_id', $account->id);
