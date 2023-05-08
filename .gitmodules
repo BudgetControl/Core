@@ -1,0 +1,3 @@
+[submodule "budget-tracker_v2-FE"]
+	path = budget-tracker_v2-FE
+	url = git@github.com:marcodefelice/budget-tracker_v2-FE.git

@@ -10,6 +10,9 @@ use App\BudgetTracker\Services\ExpensesService;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\TransferService;
+use App\BudgetTracker\Enums\Action;
+use App\BudgetTracker\Models\ActionJobConfiguration;
+use Illuminate\Support\Facades\Log;
 use App\Helpers\EntriesMath;
 use App\Helpers\MathHelper;
 use Database\Seeders\TransferSeed;
@@ -150,11 +153,15 @@ class StatsController extends Controller
      */
     public function total(bool $planning): JsonResponse
     {
+        $lastRow = $this->getActionConfigurations(0);
+
         $entry = new EntryService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate)
+        ->addConditions('id', '>', $lastRow);
 
         $entryOld = new EntryService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed)
+        ->addConditions('id', '>', $lastRow);
 
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get(), $entryOld->get()))
@@ -170,9 +177,12 @@ class StatsController extends Controller
         $accounts = Account::all();
         $response = [];
         foreach($accounts as $account) {
+            $lastRow = $this->getActionConfigurations(0);
+
             $entry = new EntryService();
             $entry->addConditions('account_id', $account->id);
-            $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+            $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate)
+            ->addConditions('id', '>', $lastRow);
 
             $mathTotal = new EntriesMath();
             $mathTotal->setData($entry->get());
@@ -217,5 +227,26 @@ class StatsController extends Controller
             'percentage' => MathHelper::percentage($firstValue, $secondValue)
         ];
     }
+
+   /**
+   * get wallet fix 78187.79;
+   * @param int $account_id 
+   * @return int
+   */
+  private function getActionConfigurations(int $account_id):int
+  {
+    $fix = ActionJobConfiguration::where("action", Action::Configurations->value)->orderBy("id", "desc")->get('config');
+    $config = json_decode(
+      '{"account_id":' . $account_id . ',"amount":"0","lastrow":1}'
+    );
+    foreach ($fix as $f) {
+      $config = json_decode($f->config);
+      if ($config->account_id == $account_id) {
+        return $config->lastrow;
+      }
+    }
+
+    return $config->lastrow;
+  }
 
 }

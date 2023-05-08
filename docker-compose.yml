@@ -13,14 +13,13 @@ services:
         MYSQL_DATABASE: ${DB_DATABASE}
     bemodule:
       image: docker.io/bitnami/laravel:10
-      env_file:
-        - .env
       ports:
-        - 3333:8000
+        - 3000:8000
       volumes:
         - ./:/app
         - .env:/app/.env
       depends_on:
         - database
+        - redis-master
       restart: unless-stopped
       command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"

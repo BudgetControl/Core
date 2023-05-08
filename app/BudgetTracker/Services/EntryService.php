@@ -140,13 +140,19 @@ class EntryService implements EntryInterface
   /**
    * set data to start stats
    * @param string $column
+   * @param string|int $valueOrSign
    * @param string|int $value
    * 
    * @return self
    */
-  public function addConditions(string $column, string|int $value): self
+  public function addConditions(string $column, string|int $valueOrSign, string|int $value = ''): self
   {
-    $this->data->where($column, $value);
+    if($value === '') {
+      $this->data->where($column, $value);
+    } else {
+      $this->data->where($column, $valueOrSign, $value);
+    }
+
     return $this;
   }
 
