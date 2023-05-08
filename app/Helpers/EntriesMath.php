@@ -32,11 +32,11 @@ class EntriesMath {
 
     /**
      * calculate the total type
-     * @return int
+     * @return float
      * 
      * @throws EntryException
      */
-    public function sum(): int
+    public function sum(): float
     {
         if(empty($this->getData())) {
             throw new EntryException("No data foud to math in getTotal function");

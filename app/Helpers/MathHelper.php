@@ -43,6 +43,6 @@ class MathHelper
       foreach ($data as $value) {
         $cost += (float) $value->amount;
       }
-      return round($cost,2);
+      return $cost;
     }
 }
