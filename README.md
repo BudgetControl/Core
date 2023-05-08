@@ -7,14 +7,15 @@ php version >= 8.2
 ###Installations
 * Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
 * Enter the repository directory with the command cd REPOSITORY-NAME.
-* Copy file .env.example on .env ( if you want you can change the user and password db )
+* Copy file .env.example on .env 
 * Creation of the dockerfile container
    docker-compose up -d
-* generate laravel cache files
-   docker exec budgettrackerv2_bemodule_1 php artisan config:cache
-* migrate all db with exapmle data
-  docker exec budgettrackerv2_bemodule_1 php artisan migrate --seed
-* enjoy on port 3000 ( http://localhost:3000/api/incoming )
+* Generate cache file
+   docker exec budgettrackerv2_bemodule_1 php artisan confic:cache
+* Make migrations
+   docker exec budgettrackerv2_bemodule_1 php artisan migrate --seed
+* Enjoy
+   insert utl http://localhost:3333/ ( api/incoming )
    
 ### Usage
 * Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
@@ -80,7 +81,21 @@ Front-end is developed with Vue Notus template Back-end is developed with larave
 * DELETE /api/entry 
 * DELETE /api/planning-recursively
 * DELETE /api/payee 
-    
+
+### Struttura delle directory
+_ node_modules: contiene tutte le dipendenze del progetto installate tramite npm.
+_ public: contiene file statici accessibili direttamente dal client (es. immagini, file CSS, JavaScript).
+_ data: contiene i dati salvati dall'applicazione in formato JSON
+_ components: contiene i componenti dell'applicazione.
+__ buttons: contiene i pulsanti e le action dell'applicazione.
+__ cards: contiene le card specifiche e stilizzate
+__ table: contiene tabelle ed elementi tabellari per le pagine
+_ pages: contiene le views dell'applicazione
+_ services: qui vengono implementati tutti i vari servizi
+
+## Tecnologie utilizzate
+php - laravel 10
+
 ## Autori
 * Marco De Felice
 
