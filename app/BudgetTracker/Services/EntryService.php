@@ -50,9 +50,9 @@ class EntryService implements EntryInterface
       Log::debug("save entry -- " . json_encode($data));
 
       self::validate($data);
-      $entry = new Incoming();
+      $entry = new Entry();
       if (!empty($data['uuid'])) {
-        $entry = Incoming::findFromUuid($data['uuid']);
+        $entry = Entry::findFromUuid($data['uuid']);
       }
 
       foreach ($data as $k => $v) {
@@ -236,7 +236,7 @@ class EntryService implements EntryInterface
     $rules = [
       'id' => ['integer'],
       'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
-      'amount' => ['required', 'numeric', 'gte:0'],
+      'amount' => ['required', 'numeric'],
       'note' => 'nullable',
       'waranty' => 'boolean',
       'transfer' => 'boolean',
