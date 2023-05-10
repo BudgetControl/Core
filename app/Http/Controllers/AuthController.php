@@ -8,9 +8,11 @@ use App\Models\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Log;
+use App\Traits\Encryptable;
 
 class AuthController extends Controller
 {
+    use Encryptable;
 
     /**
      * make authentication for API user
@@ -33,7 +35,10 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            if (!Auth::attempt($credentials)) {
+            if (!Auth::attempt([
+                'email' => self::encrypt(['email' => $request->email]),
+                'password' => $request->password
+            ])) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
             
@@ -41,7 +46,7 @@ class AuthController extends Controller
             $token = $user->retriveNotExpiredToken();
             
             if(empty($token)) {
-                $jwt = JWT::encode($JWT_PAYLOAD, env('JWT_SECRET','no_secret'), 'HS256');
+                $jwt = self::encrypt($JWT_PAYLOAD);
                 $token = $user->createToken('access_token',$jwt, ['*'],\DateTime::createFromFormat('Y-m-d H:i:s',$expiredToken->format('Y-m-d H:i:s')));
             }
 
@@ -72,7 +77,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|min:8',
         ]);
 
         $user = new User();

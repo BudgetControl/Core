@@ -5,13 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\NewAccessToken;
-use Laravel\Sanctum\PersonalAccessToken;
+use App\Models\PersonalAccessToken;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Crypt;
+use App\Traits\Encryptable;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Encryptable;
+
+    /**
+     *  encryptable data
+     */
+
+     protected $encryptable = [
+        'email'
+    ];
 
     /**
      * Create a new personal access token for the user.
