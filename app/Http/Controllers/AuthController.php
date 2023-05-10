@@ -24,15 +24,13 @@ class AuthController extends Controller
     {
         $expiredToken = new \DateTime();
         $expiredToken->modify('+ 7 days');
-        
+
         $JWT_PAYLOAD = [
             'user' => $request->user,
             'email' => $request->email,
             'password' => $request->password,
             'domain' => env('APP_URL')
         ];
-
-        $credentials = $request->only('email', 'password');
 
         try {
             if (!Auth::attempt([
@@ -41,17 +39,16 @@ class AuthController extends Controller
             ])) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
-            
+
             $user = Auth::user();
             $token = $user->retriveNotExpiredToken();
-            
-            if(empty($token)) {
-                $jwt = self::encrypt($JWT_PAYLOAD);
-                $token = $user->createToken('access_token',$jwt, ['*'],\DateTime::createFromFormat('Y-m-d H:i:s',$expiredToken->format('Y-m-d H:i:s')));
-            }
 
+            if (empty($token)) {
+                $jwt = self::encrypt($JWT_PAYLOAD);
+                $token = $user->createToken('access_token', $jwt, ['*'], \DateTime::createFromFormat('Y-m-d H:i:s', $expiredToken->format('Y-m-d H:i:s')));
+            }
         } catch (\Exception $e) {
-            Log::critical("could_not_create_token ".$e->getMessage());
+            Log::critical("could_not_create_token " . $e->getMessage());
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
@@ -62,10 +59,11 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        if (Auth::attempt([
+            'email' => self::encrypt(['email' => $request->email]),
+            'password' => $request->password
+        ])) {
             return $this->authenticate($request);
-
         } else {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
@@ -87,7 +85,6 @@ class AuthController extends Controller
         $user->save();
 
         return $this->authenticate($request);
-
     }
 
     public function logout()
