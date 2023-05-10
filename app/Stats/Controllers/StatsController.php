@@ -155,8 +155,16 @@ class StatsController extends Controller
     {
         $lastRow = $this->getActionConfigurations(0);
 
+        $dateTime = new DateTime('now');
+        $dateTime = $dateTime->modify('Last day of this month');
+        $dateTime = $dateTime->format('Y-m-d H:i:s');
+
         $entry = new EntryService();
         $entry->setPlanning($planning)->addConditions('id', '>', $lastRow->lastrow);
+
+        if($planning === true) {
+            $entry->setDateEnd($dateTime);
+        }
 
         return response()->json(new ResponseService(
             [
