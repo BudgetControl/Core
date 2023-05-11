@@ -20,6 +20,11 @@ Route::post('/authenticate',function(Request $request) {
     return $auth->authenticate($request);
 });
 
+Route::get('/check',function() {
+    $auth = new AuthController();
+    return $auth->check();
+})->middleware('auth.jwt');
+
 Route::post('/login',function(Request $request) {
     $auth = new AuthController();
     return $auth->login($request);

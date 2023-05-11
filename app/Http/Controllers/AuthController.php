@@ -59,6 +59,23 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
 
+    /**
+     * check if user is logged
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function check()
+    {
+        //middelware will be check if token exist
+        return response()->json(['success' => 'user authenticated']);
+    }
+
+    /**
+     * login user
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
 
@@ -72,6 +89,12 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * register user
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         try {
@@ -97,7 +120,11 @@ class AuthController extends Controller
 
         
     }
-
+    /**
+     * logout user
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
         Auth::logout();
