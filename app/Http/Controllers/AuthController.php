@@ -9,6 +9,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Encryptable;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -47,6 +48,9 @@ class AuthController extends Controller
                 $jwt = self::encrypt($JWT_PAYLOAD);
                 $token = $user->createToken('access_token', $jwt, ['*'], \DateTime::createFromFormat('Y-m-d H:i:s', $expiredToken->format('Y-m-d H:i:s')));
             }
+
+            $user->useToken();
+
         } catch (\Exception $e) {
             Log::critical("could_not_create_token " . $e->getMessage());
             return response()->json(['error' => 'could_not_create_token'], 500);
@@ -57,7 +61,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt([
             'email' => self::encrypt(['email' => $request->email]),
@@ -71,20 +74,28 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        try {
+            $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:8',
+            ]);
+    
+            $user = new User();
+            $user->name = $request['name'];
+            $user->email = $request['email'];
+            $user->password = bcrypt($request['password']);
+            $user->save();
+    
+            return $this->authenticate($request);
 
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-        ]);
+        } catch(ValidationException $e) {
 
-        $user = new User();
-        $user->name = $request['name'];
-        $user->email = $request['email'];
-        $user->password = bcrypt($request['password']);
-        $user->save();
+            return response()->json(['error' => $e->getMessage()], 500);
 
-        return $this->authenticate($request);
+        }
+
+        
     }
 
     public function logout()

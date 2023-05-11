@@ -53,14 +53,22 @@ class User extends Authenticatable
     {
         $token = PersonalAccessToken::where('tokenable_id',$this->id)
         ->where('name','access_token')->where('expires_at','>',date('Y-m-d H:i:s',time()))->get();
-
-        // $token = DB::table('personal_access_tokens')->where('tokenable_id',$this->id)
-        // ->where('name','access_token')->where('expires_at','>',date('Y-m-d H:i:s',time()))->get();
         
         if(empty($token[0])) {
             return false;
         }
 
         return new NewAccessToken($token[0], $token[0]->token);
+    }
+
+    /**
+     * set up last usage token
+     */
+    public function useToken(): void
+    {
+        PersonalAccessToken::where('tokenable_id',$this->id)
+        ->where('name','access_token')->where('expires_at','>',date('Y-m-d H:i:s',time()))->update(
+            [ 'last_used_at' => date('Y-m-d H:i:s',time())]
+        );
     }
 }
