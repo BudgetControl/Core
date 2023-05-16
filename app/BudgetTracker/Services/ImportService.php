@@ -172,7 +172,7 @@ class ImportService implements ImportServiceInterface
           }
 
           $date = $date->format("Y-m-d H:i:s");
-          $entry->created_at = $date;
+          $entry->date_time = $date;
 
           $CategoryService = new CategoryService();
           $category = $CategoryService->getCategoryIdFromAction($value[2]);
