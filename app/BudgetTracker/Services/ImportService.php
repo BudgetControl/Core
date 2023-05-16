@@ -161,8 +161,8 @@ class ImportService implements ImportServiceInterface
           $entry->planned = 0;
           $entry->payment_type = 1;
 
-          $entry->account = $account->id;
-          $entry->currency = $currency->id;
+          $entry->account_id= $account->id;
+          $entry->currency_id = $currency->id;
 
           $date = $this->checkDateFormat($value[3]);
 
@@ -180,7 +180,7 @@ class ImportService implements ImportServiceInterface
 
           if ($toupdate === false) {
             $category = SubCategory::where("name", $category)->first();
-            $entry->category = $category->id;
+            $entry->category_id = $category->id;
           }
 
           // if (empty($this->labels)) {
