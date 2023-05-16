@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\BudgetTracker\Services;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
