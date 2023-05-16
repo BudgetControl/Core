@@ -35,3 +35,5 @@ Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesControll
 Route::get('entry/account/{id}', function (string $id) {
     return \App\BudgetTracker\Http\Controllers\EntryController::getEntriesFromAccount((int) $id);
 });
+
+Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import');
