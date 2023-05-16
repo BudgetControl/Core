@@ -102,7 +102,7 @@ class ImportService implements ImportServiceInterface
 
         if ($key != 0 && !empty($value)) {
 
-          $amount = Entry::cleanAmount($value[1]);
+          $amount = $value[1];
 
           $dataToCheck = new \DateTime($value[3]);
           $dataToCheck->modify("first day of this month");
@@ -155,7 +155,7 @@ class ImportService implements ImportServiceInterface
             $toupdate = $this->checkUpdateData($entryExist, $value);
           }
 
-          $entry->amount = $amount;
+          $entry->amount = $entry->cleanAmount($amount);
           $entry->type = $amount <= 0 ? "expenses" : "incoming";
           $entry->confirmed = 1;
           $entry->note = $value[2];
