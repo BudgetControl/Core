@@ -9,7 +9,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Labels;
 
 
-class CategoryService extends Controller
+class CategoryService 
 {   
     private $categories;
     private $labels;

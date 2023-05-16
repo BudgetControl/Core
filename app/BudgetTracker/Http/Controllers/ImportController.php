@@ -5,6 +5,7 @@ namespace App\BudgetTracker\Http\Controllers;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Account;
+use Illuminate\Support\Facades\Log;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\ImportService;
