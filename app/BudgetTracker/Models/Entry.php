@@ -160,7 +160,7 @@ class Entry extends Model
      * 
      * @return float
      */
-    private function cleanAmount(string $amount): float
+    public function cleanAmount(string $amount): float
     {
         $amount = number_format((float) $amount,2,'.',"");
 
