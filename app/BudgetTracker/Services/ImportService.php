@@ -183,15 +183,15 @@ class ImportService implements ImportServiceInterface
             $entry->category = $category->id;
           }
 
-          if (empty($this->labels)) {
-            $tags = $CategoryService->getLabelIdFromAction($value[2]);
-            Log::debug("Found these labels " . json_encode($tags));
-          } else {
-            $tags = $this->labels;
-          }
+          // if (empty($this->labels)) {
+          //   $tags = $CategoryService->getLabelIdFromAction($value[2]);
+          //   Log::debug("Found these labels " . json_encode($tags));
+          // } else {
+          //   $tags = $this->labels;
+          // }
 
-          $tags = explode("|", $tags);
-          $entry->label = $tags;
+          // $tags = explode("|", $tags);
+          // $entry->label = $tags;
 
           Log::debug("Store datata ::" . json_encode($entry->toArray()));
 
