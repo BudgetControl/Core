@@ -41,7 +41,7 @@ class ImportController extends Controller
             $import->handle();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->error("Something was wrong during import");
+            return response("Something was wrong during import",500);
         }
     }
 
