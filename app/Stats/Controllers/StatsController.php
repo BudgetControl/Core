@@ -77,10 +77,15 @@ class StatsController extends Controller
     public function incoming(bool $planning): JsonResponse
     {
         $entry = new IncomingService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
 
         $entryOld = new IncomingService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
+        if($planning === true) {
+            $entry->setPlanning($planning);
+            $entryOld->setPlanning($planning);
+        }
 
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get(),$entryOld->get()))
@@ -97,10 +102,15 @@ class StatsController extends Controller
     public function expenses(bool $planning): JsonResponse
     {
         $entry = new ExpensesService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
 
         $entryOld = new ExpensesService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
+        if($planning === true) {
+            $entry->setPlanning($planning);
+            $entryOld->setPlanning($planning);
+        }
 
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get(),$entryOld->get()))
@@ -117,10 +127,15 @@ class StatsController extends Controller
     public function transfer(bool $planning): JsonResponse
     {
         $entry = new TransferService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
 
         $entryOld = new TransferService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
+        if($planning === true) {
+            $entry->setPlanning($planning);
+            $entryOld->setPlanning($planning);
+        }
 
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get(),$entryOld->get()))
@@ -137,10 +152,15 @@ class StatsController extends Controller
     public function debit(bool $planning): JsonResponse
     {
         $entry = new DebitService();
-        $entry->setPlanning($planning)->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
 
         $entryOld = new DebitService();
-        $entryOld->setPlanning($planning)->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+
+        if($planning === true) {
+            $entry->setPlanning($planning);
+            $entryOld->setPlanning($planning);
+        }
 
         return response()->json(new ResponseService(
             $this->buildResponse($entry->get(),$entryOld->get()))
@@ -160,9 +180,10 @@ class StatsController extends Controller
         $dateTime = $dateTime->format('Y-m-d H:i:s');
 
         $entry = new EntryService();
-        $entry->setPlanning($planning)->addConditions('id', '>', $lastRow->lastrow);
+        $entry->addConditions('id', '>', $lastRow->lastrow);
 
         if($planning === true) {
+            $entry->setPlanning($planning);
             $entry->setDateEnd($dateTime);
         }
 
@@ -187,7 +208,11 @@ class StatsController extends Controller
 
             $entry = new EntryService();
             $entry->addConditions('account_id', $account->id);
-            $entry->setPlanning($planning)->addConditions('id', '>', $lastRow->lastrow);
+            $entry->addConditions('id', '>', $lastRow->lastrow);
+
+            if($planning === true) {
+                $entry->setPlanning($planning);
+            }
 
             $mathTotal = new EntriesMath();
             $mathTotal->setData($entry->get());
