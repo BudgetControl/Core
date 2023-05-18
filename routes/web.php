@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/import/download-csv-template',[ \App\BudgetTracker\Http\Controllers\ImportController::class, 'viewCSV']);
+Route::get('/entries/export', '\App\BudgetTracker\Http\Controllers\ImportController@export');

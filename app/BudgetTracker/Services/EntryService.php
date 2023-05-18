@@ -55,15 +55,21 @@ class EntryService implements EntryInterface
         $entry = Entry::findFromUuid($data['uuid']);
       }
 
-      foreach ($data as $k => $v) {
-        if ($k !== 'label') {
-          $entry->$k = $v;
-        }
-      }
+      $entry->type = (float) $data['amount'] <= 0 ? EntryType::Expenses->value : EntryType::Incoming->value;
+      $entry->account_id = $data['account_id'];
+      $entry->amount = $data['amount'];
+      $entry->category_id = $data['category_id'];
+      $entry->currency_id = $data['currency_id'];
+      $entry->date_time = $data['date_time'];
+      $entry->note = $data['note'];
+      $entry->payment_type = $data['payment_type'];
 
       $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
 
       $entry->save();
+
+      $this->attachLabels($data['label'], $entry);
+
     } catch (\Exception $e) {
       $errorCode = uniqid();
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
