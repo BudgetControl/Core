@@ -85,6 +85,8 @@ class StatsController extends Controller
         if($planning === true) {
             $entry->setPlanning($planning);
             $entryOld->setPlanning($planning);
+        } else {
+            $entry->setPlanning(false);
         }
 
         return response()->json(new ResponseService(
@@ -110,6 +112,8 @@ class StatsController extends Controller
         if($planning === true) {
             $entry->setPlanning($planning);
             $entryOld->setPlanning($planning);
+        } else {
+            $entry->setPlanning(false);
         }
 
         return response()->json(new ResponseService(
@@ -135,6 +139,8 @@ class StatsController extends Controller
         if($planning === true) {
             $entry->setPlanning($planning);
             $entryOld->setPlanning($planning);
+        } else {
+            $entry->setPlanning(false);
         }
 
         return response()->json(new ResponseService(
@@ -160,6 +166,8 @@ class StatsController extends Controller
         if($planning === true) {
             $entry->setPlanning($planning);
             $entryOld->setPlanning($planning);
+        } else {
+            $entry->setPlanning(false);
         }
 
         return response()->json(new ResponseService(
@@ -214,6 +222,8 @@ class StatsController extends Controller
 
             if($planning === true) {
                 $entry->setPlanning($planning);
+            } else {
+                $entry->setPlanning(false);
             }
 
             $mathTotal = new EntriesMath();
