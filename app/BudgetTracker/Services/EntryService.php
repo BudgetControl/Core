@@ -139,7 +139,9 @@ class EntryService implements EntryInterface
    */
   public function setPlanning(bool $planning): self
   {
-    $this->data->where('planned', $planning);
+    if($planning === true) {
+      $this->data->whereIn('planned', [0,1]);
+    }
     return $this;
   }
 
