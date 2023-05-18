@@ -141,6 +141,8 @@ class EntryService implements EntryInterface
   {
     if($planning === true) {
       $this->data->whereIn('planned', [0,1]);
+    } else {
+      $this->data->whereIn('planned', [0]);
     }
     return $this;
   }

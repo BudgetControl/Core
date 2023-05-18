@@ -185,6 +185,8 @@ class StatsController extends Controller
         if($planning === true) {
             $entry->setPlanning($planning);
             $entry->setDateEnd($dateTime);
+        } else {
+            $entry->setPlanning(false);
         }
 
         return response()->json(new ResponseService(
