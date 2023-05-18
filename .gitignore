@@ -45,3 +45,4 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 bootstrap/cache/*
+config/cors.php
