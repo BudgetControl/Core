@@ -4,13 +4,15 @@ namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Services\CategoryService;
 use Illuminate\Support\Facades\Log;
+use App\BudgetTracker\Exceptions\ImportException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
+Use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Interfaces\ImportServiceInterface;
 use Exception;
 use stdClass;
@@ -27,6 +29,7 @@ class ImportService implements ImportServiceInterface
     "note",
     "date",
     "labels",
+    "account"
   ];
 
   public $filePath = null;
@@ -89,7 +92,7 @@ class ImportService implements ImportServiceInterface
    * @param array $data
    * 
    * @return void
-   * @throws Exception
+   * @throws ImportException
    */
   public function import(array $data)
   {
@@ -109,23 +112,14 @@ class ImportService implements ImportServiceInterface
           $dataToCheck->modify("last day of this month");
           $endTime = $dataToCheck->format('Y-m-d');
 
-          $account = Account::find($this->account);
-          $currency = Currency::where("name", strtolower($value[0]))->first();
-
-          if (empty($account)) {
-            $account = new Account();
-            $account->uuid = uniqid();
-            $account->name = "new-" . uniqid();
-            $account->save();
-            Log::debug("created new account " . $account->uuid);
+          $account = Account::where('name',trim($value[5]))->first();
+          if(empty($account)) {
+            throw new ImportException("No acoount found with name ".$value[5],500);
           }
 
-          if (empty($currency)) {
-            $currency = new Currency();
-            $currency->uuid = uniqid();
-            $currency->name = strtolower($value[0]);
-            $currency->save();
-            Log::debug("created new currency " . $currency->uuid);
+          $currency = Currency::where("name", strtolower(trim($value[0])))->first();
+          if(empty($currency)) {
+            throw new ImportException("No currency found with name ".$value[0],500);
           }
 
           Log::debug("Check if these entry exist");
@@ -140,7 +134,8 @@ class ImportService implements ImportServiceInterface
           $not_exist = empty($entryExist);
           $toupdate = false;
 
-          $entry = new Entry();
+          $entryService = new EntryService();
+          $entry = new stdClass();
 
           if ($not_exist === true) {
             Log::debug("Entry not exist");
@@ -153,27 +148,14 @@ class ImportService implements ImportServiceInterface
             $toupdate = $this->checkUpdateData($entryExist, $value);
           }
 
-          $entry->amount = $entry->cleanAmount($amount);
-          $entry->type = $amount <= 0 ? "expenses" : "incoming";
-          $entry->confirmed = 1;
+          $entry->amount = (float) $amount;
           $entry->note = $value[2];
-          $entry->transfer = 0;
-          $entry->planned = 0;
-          $entry->payment_type = 1;
 
           $entry->account_id= $account->id;
           $entry->currency_id = $currency->id;
-
-          $date = $this->checkDateFormat($value[3]);
-
-          if ($date === '') {
-            Log::warning("Ivalid date format " . $value[3]);
-            $date = new \DateTime();
-          }
-
-          $date = $date->format("Y-m-d H:i:s");
-          $entry->date_time = $date;
-
+          $entry->date_time = $value[3] . " 00:00:00";
+          $entry->payment_type = 2;
+          
           $CategoryService = new CategoryService();
           $category = $CategoryService->getCategoryIdFromAction($value[2]);
           Log::debug("Found these category " . $category);
@@ -183,19 +165,23 @@ class ImportService implements ImportServiceInterface
             $entry->category_id = $category->id;
           }
 
-          // if (empty($this->labels)) {
-          //   $tags = $CategoryService->getLabelIdFromAction($value[2]);
-          //   Log::debug("Found these labels " . json_encode($tags));
-          // } else {
-          //   $tags = $this->labels;
-          // }
+          $tags = [];
+          if (empty($this->labels)) {
+            $tags = [$CategoryService->getLabelIdFromAction($value[2])];
+            Log::debug("Found these labels " . json_encode($tags));
+          } else {
+            $labels = Labels::whereIn('id',$this->labels)->get();
+            foreach($labels as $label) {
+              $tags[] = $label->name;
+            }
+            
+          }
 
-          // $tags = explode("|", $tags);
-          // $entry->label = $tags;
+          $entry->label = $tags;
 
-          Log::debug("Store datata ::" . json_encode($entry->toArray()));
+          Log::debug("Store datata ::" . json_encode($entry));
 
-          $entry->save();
+          $entryService->save((array) $entry);
           Log::info("Insert data");
         }
       }
@@ -208,7 +194,7 @@ class ImportService implements ImportServiceInterface
   /**
    * get last item
    *
-   * @return \App\Models\Entry
+   * @return \App\BudgetTracker\Models\Entry
    */
   private function getLastItem()
   {
@@ -248,7 +234,7 @@ class ImportService implements ImportServiceInterface
 
   /**
    * check if need an update
-   *  @param \App\Models\Entry $data
+   *  @param \App\BudgetTracker\Models\Entry $data
    * 
    *  @return bool
    */
@@ -313,29 +299,4 @@ class ImportService implements ImportServiceInterface
     Log::info("Close import ##");
   }
 
-  /**
-   * check the right date format
-   * @param string $dateTime
-   * 
-   * @return string with date
-   */
-  private function checkDateFormat(string $dateTime)
-  {
-    $result = '';
-    $formats = [
-      'd-m-Y',
-      'm/d/Y'
-    ];
-
-    foreach ($formats as $format) {
-      $entryDate = new \DateTime();
-      $date = $entryDate->createFromFormat($format, $dateTime);
-
-      if ($date !== false) {
-        $result = $date;
-      }
-    }
-
-    return $result;
-  }
 }

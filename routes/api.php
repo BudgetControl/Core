@@ -23,7 +23,6 @@ Route::apiResource('planning-recursively', \App\BudgetTracker\Http\Controllers\P
 Route::apiResource('payee', \App\BudgetTracker\Http\Controllers\PayeeController::class);
 Route::apiResource('entry', \App\BudgetTracker\Http\Controllers\EntryController::class);
 
-
 Route::apiResource('categories', \App\BudgetTracker\Http\Controllers\CategoryController::class);
 Route::apiResource('accounts', \App\BudgetTracker\Http\Controllers\AccountController::class);
 Route::apiResource('labels', \App\BudgetTracker\Http\Controllers\LabelController::class);
