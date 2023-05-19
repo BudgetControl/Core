@@ -51,4 +51,4 @@ Route::get('{type}/{year?}/{month?}/{day?}/{planned?}', function (string $type, 
         var_dump($e->getMessage());
         return response("Ops an error occured... check url params", 500);
     }
-});
+})->middleware('auth.jwt');

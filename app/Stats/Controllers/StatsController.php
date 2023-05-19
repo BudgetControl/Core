@@ -233,7 +233,7 @@ class StatsController extends Controller
                 'account_id' => $account->id,
                 'account_label' => $account->name,
                 'color' => $account->color,
-                'total_wallet' => $mathTotal->sum() + $lastRow->amount
+                'total_wallet' => round($mathTotal->sum() + $lastRow->amount,2)
             ];
 
         }
@@ -264,7 +264,7 @@ class StatsController extends Controller
         $secondValue = $mathTotalPassed->sum();
 
         return [
-            'total' => $firstValue,
+            'total' => round($firstValue,2),
             'total_passed' => $secondValue,
             'percentage' => MathHelper::percentage($firstValue, $secondValue)
         ];
