@@ -254,7 +254,7 @@ class EntryService implements EntryInterface
       'planned' => 'boolean',
       'category_id' => ['required', 'integer'],
       'account_id' => ['required', 'integer'],
-      'currency_id' => 'required|boolean',
+      'currency_id' => ['required', 'integer'],
       'payment_type' => ['required', 'integer'],
       'geolocation_id' => 'integer'
     ];
