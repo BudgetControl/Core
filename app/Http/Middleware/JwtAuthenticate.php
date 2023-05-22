@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 use App\Models\PersonalAccessToken;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Services\UserService;
 
 class JwtAuthenticate
 {
@@ -30,6 +32,8 @@ class JwtAuthenticate
         if(empty($token)) {
             abort(response()->json(['error' => 'not authorized'], 401));
         }
+
+		UserService::userIDfromToken($headers->get('access_token'));
 
         return $next($request);
 

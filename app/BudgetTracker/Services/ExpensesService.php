@@ -70,7 +70,7 @@ class ExpensesService extends EntryService implements EntryInterface
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
 
-        $entry = Expenses::withRelations()->where('type', EntryType::Expenses->value);
+        $entry = Expenses::withRelations()->user()->where('type', EntryType::Expenses->value);
 
         if ($id === null) {
             $entry = $entry->get();

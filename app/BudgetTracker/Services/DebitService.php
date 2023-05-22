@@ -75,7 +75,7 @@ class DebitService extends EntryService implements EntryInterface
         Log::debug("read debit -- $id");
         $result = new \stdClass();
 
-        $entry = Debit::withRelations()->where('type', EntryType::Debit->value);
+        $entry = Debit::withRelations()->user()->where('type', EntryType::Debit->value);
 
         if ($id === null) {
             $entry = $entry->get();

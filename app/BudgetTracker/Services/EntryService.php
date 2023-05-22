@@ -11,6 +11,7 @@ use DateTime;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
+use App\Http\Services\UserService;
 
 /**
  * Summary of SaveEntryService
@@ -89,7 +90,7 @@ class EntryService implements EntryInterface
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = Entry::withRelations()->orderBy('date_time', 'desc');
+    $entry = Entry::withRelations()->user()->orderBy('date_time', 'desc')->where('user_di',UserService::getCacheUserID());
 
     if ($id === null) {
       $entry = $entry->get();

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Http\Services\UserService;
 
 class Entry extends Model
 {
@@ -35,6 +36,7 @@ class Entry extends Model
         $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
+        $this->attributes['user_id'] = UserService::getCacheUserID();
 
         foreach($attributes as $k => $v) {
             $this->$k = $v;
@@ -140,7 +142,8 @@ class Entry extends Model
      */
     public function scopeWithRelations($query): void
     {
-        $query->with('label')->with('subCategory.category')->with('account')->with('geolocation')->orderBy('date_time','desc');
+        $query->with('label')->with('subCategory.category')->with('account')->with('geolocation')->orderBy('date_time','desc')
+        ->where('user_id',UserService::getCacheUserID());
     }
 
     /**
@@ -151,7 +154,15 @@ class Entry extends Model
      * */
     public static function findFromUuid(string $uuid): Entry
     {
-        return Entry::where('uuid',$uuid)->firstOrFail();
+        return Entry::where('uuid',$uuid)->where('user_di',UserService::getCacheUserID())->firstOrFail();
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeUser($query): void
+    {
+        $query->where('user_id',UserService::getCacheUserID());
     }
 
     /**
@@ -165,6 +176,24 @@ class Entry extends Model
         $amount = number_format((float) $amount,2,'.',"");
 
         return (float) $amount;
+    }
+
+        /**
+     * Find a model by its primary key.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|null
+     */
+    public function find($id, $columns = ['*'])
+    {
+        if (is_array($id)) {
+            return $this->findMany($id, $columns);
+        }
+
+        $this->query->where($this->model->getQualifiedKeyName(), '=', $id);
+
+        return $this->first($columns);
     }
 
 }

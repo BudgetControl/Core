@@ -71,7 +71,7 @@ class IncomingService extends EntryService implements EntryInterface
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
 
-        $entry = Incoming::withRelations()->where('type', EntryType::Incoming->value);
+        $entry = Incoming::withRelations()->user()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
             $entry = $entry->get();
