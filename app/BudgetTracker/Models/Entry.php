@@ -156,7 +156,7 @@ class Entry extends Model
      * */
     public static function findFromUuid(string $uuid): Entry
     {
-        return Entry::where('uuid',$uuid)->where('user_di',UserService::getCacheUserID())->firstOrFail();
+        return Entry::where('uuid',$uuid)->where('user_id',UserService::getCacheUserID())->firstOrFail();
     }
 
     /**
