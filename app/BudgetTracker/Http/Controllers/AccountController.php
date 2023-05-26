@@ -8,6 +8,7 @@ use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Account;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
+use App\BudgetTracker\Services\AccountsService;
 
 class AccountController extends Controller implements ControllerResourcesInterface
 {
@@ -19,7 +20,7 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Account::all();
+		$incoming = AccountsService::read();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -31,7 +32,10 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
 	{
-		return response('nothing');
+		$account = new AccountsService();
+		$account->save($request->toArray());
+
+		return response('all data stored'); 	
 	}
 
 	/**
@@ -42,7 +46,23 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		return response()->json([],'nothing');
+		$account = AccountsService::read($id);
+
+		return response()->json($account);
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request): \Illuminate\Http\Response
+	{
+		$account = new AccountsService();
+		$account->save($request->toArray());
+
+		return response('all data stored'); 	
 	}
 
 	/**
