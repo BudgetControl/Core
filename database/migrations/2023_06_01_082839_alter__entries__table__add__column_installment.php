@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('emtries', function (Blueprint $table) {
+        Schema::table('entries', function (Blueprint $table) {
             $table->boolean('installment')->default(0);
         });
     }
