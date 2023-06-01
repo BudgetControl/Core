@@ -12,6 +12,7 @@ use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\TransferService;
 use App\BudgetTracker\Enums\Action;
 use App\BudgetTracker\Models\ActionJobConfiguration;
+use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\EntriesMath;
 use App\Helpers\MathHelper;
@@ -190,20 +191,43 @@ class StatsController extends Controller
         $entry = new EntryService();
         $entry->addConditions('id', '>', $lastRow->lastrow);
 
+        $entry->setPlanning(false);
+
+        $total = MathHelper::sum($entry->get()) + $lastRow->amount;
+
         if($planning === true) {
-            $entry->setPlanning($planning);
-            $entry->setDateEnd($dateTime);
-        } else {
-            $entry->setPlanning(false);
-        }
+            $plannedEntry = MathHelper::sum($this->getPlannedEntry());
+            $total += $plannedEntry;
+        } 
 
         return response()->json(new ResponseService(
             [
-                'total' => MathHelper::sum($entry->get()) + $lastRow->amount,
+                'total' => $total,
             ]
         )
         );
 
+    }
+
+    /**
+     * get only planned entry
+     * 
+     * @return Entry
+     */
+    private function getPlannedEntry(): Entry {
+        $dateTime = new DateTime('now');
+        $dateTime = $dateTime->modify('Last day of this month');
+        $dateTime = $dateTime->format('Y-m-d H:i:s');
+
+        $dateTimeFirst = new DateTime('now');
+        $dateTimeFirst = $dateTimeFirst->modify('First day of this month');
+        $dateTimeFirst = $dateTimeFirst->format('Y-m-d H:i:s');
+        
+        //TODO: use a service
+        $entry = Entry::where('planned', 1)->where('date_time', '<=', $dateTime)
+        ->where('date_time', '>=', $dateTimeFirst)->get();
+
+        return $entry;
     }
 
     /** 
