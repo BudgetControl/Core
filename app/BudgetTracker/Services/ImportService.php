@@ -29,7 +29,8 @@ class ImportService implements ImportServiceInterface
     "note",
     "date",
     "labels",
-    "account"
+    "account",
+    "installment"
   ];
 
   public $filePath = null;
@@ -155,6 +156,7 @@ class ImportService implements ImportServiceInterface
           $entry->currency_id = $currency->id;
           $entry->date_time = $value[3] . " 00:00:00";
           $entry->payment_type = 2;
+          $entry->installment = $value[6];
           
           $CategoryService = new CategoryService();
           $category = $CategoryService->getCategoryIdFromAction($value[2]);
