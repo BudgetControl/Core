@@ -325,7 +325,7 @@ class StatsController extends Controller
      */
     public function health(bool $planned): JsonResponse
     {
-        $lastRow = $this->getActionConfigurations(0);
+        $lastRow = $this->getActionConfigurations(-1);
 
         $dateTime = new DateTime('now');
         $dateTime = $dateTime->modify('Last day of this month');
