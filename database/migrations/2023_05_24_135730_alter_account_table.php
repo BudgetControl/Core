@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::table('accounts', function (Blueprint $table) {
             $table->integer('date_end')->nullable();
             $table->string('type')->default('bank');
+            $table->boolean('installment')->default(0);
+            $table->float('bank_credit')->default(0);
         });
     }
 };
