@@ -207,7 +207,8 @@ class ApiPostDataTest extends TestCase
             "currency_id": 1,
             "payment_type" : 1,
             "date_time": "'.$dateTime->format('Y-m-d h:i:s').'", 
-            "label": []
+            "label": [],
+            "installment": 0
         }';
 
         return json_decode($request);
