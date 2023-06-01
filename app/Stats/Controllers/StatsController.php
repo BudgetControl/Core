@@ -212,9 +212,9 @@ class StatsController extends Controller
     /**
      * get only planned entry
      * 
-     * @return Entry
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function getPlannedEntry(): Entry {
+    private function getPlannedEntry(): \Illuminate\Database\Eloquent\Collection {
         $dateTime = new DateTime('now');
         $dateTime = $dateTime->modify('Last day of this month');
         $dateTime = $dateTime->format('Y-m-d H:i:s');
