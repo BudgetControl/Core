@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->integer('date_end')->nullable();
+            $table->timestamp('date_end')->nullable();
             $table->string('type')->default('bank');
             $table->boolean('installment')->default(0);
             $table->float('bank_credit')->default(0);
