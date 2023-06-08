@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\Account;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\BudgetTracker\Constants\Currency;
 use App\BudgetTracker\Enums\AccountType as AccountEnums;
 
-class AccountType implements ValidationRule
+class AccountCurrencyValidation implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -16,10 +17,9 @@ class AccountType implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = false;
-        foreach(AccountEnums::cases() as $case) {
-            if ($value == $case->value) {
-                $result = true;
-            }
+        
+        if(array_key_exists($value,Currency::data)) {
+            $result = true;
         }
 
         if($result === false) {

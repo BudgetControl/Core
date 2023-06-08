@@ -20,8 +20,9 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = AccountsService::read();
-		return response()->json(new ResponseService($incoming));
+		$account = new AccountsService();
+		$account = $account->read();
+		return response()->json(new ResponseService($account->toArray()));
 	}
 
 	/**
@@ -46,9 +47,10 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$account = AccountsService::read($id);
+		$account = new AccountsService();
+		$account = $account->read($id);
 
-		return response()->json($account);
+		return response()->json($account->toArray());
 	}
 
 	/**

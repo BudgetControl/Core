@@ -2,26 +2,28 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Account;
-use DateTime;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
-use App\Rules\AccountType;
+use App\BudgetTracker\ValueObject\Accounts\BankAccount;
+use App\BudgetTracker\ValueObject\Accounts\CreditCardAccount;
+use App\BudgetTracker\ValueObject\Accounts\SavingAccount;
+use App\BudgetTracker\Interfaces\AccountInterface;
+use DateTime;
 
 /**
  * Summary of SaveEntryService
  */
 class AccountsService
 {
+    /** @var AccountInterface */
+    private $account;
 
     /**
      * save a resource
      * @param array $data
      * 
      * @return void
+     * @throws \Exception
      */
     public function save(array $data): void
     {
@@ -29,22 +31,31 @@ class AccountsService
 
             Log::debug("save Account -- " . json_encode($data));
 
-            self::validate($data);
+            $this->makeObject($data);
+
+            $account = $this->account->toArray();
+
             $entry = new Account();
             if (!empty($data['uuid'])) {
                 $entry = Account::findFromUuid($data['uuid']);
             }
 
-            $entry->name = $data['name'];
-            $entry->type = $data['type'];
-            $entry->date_end = $data['date_end'];
+            $entry->name = $account['name'];
+            $entry->type = $account['type'];
+            $entry->date = $account['date'];
+            $entry->color = $account['color'];
+            $entry->value = $account['value'];
+            $entry->installement = $account['installement'];
+            $entry->installementValue = $account['installementValue'];
+            $entry->currency = $account['currency'];
+            $entry->amount = $account['amount'];
 
             $entry->save();
-
+            
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -52,13 +63,12 @@ class AccountsService
      * read a resource
      * @param int $id of resource
      * 
-     * @return object with a resource
+     * @return AccountInterface with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(int $id = null): AccountInterface|null
     {
         Log::debug("read accounts -- $id");
-        $result = new \stdClass();
 
         $entry = Account::user();
 
@@ -68,30 +78,48 @@ class AccountsService
             $entry = $entry->find($id);
         }
 
-        if (!empty($entry)) {
+        if (empty($entry)) {
             Log::debug("found accounts -- " . $entry->toJson());
-            $result = $entry;
+            return null;
         }
 
-        return $result;
+        $this->makeObject($entry->toArray());
+
+        return $this->account;
     }
 
     /**
-     * read a resource
-     *
+     * make object to save
      * @param array $data
+     * 
      * @return void
-     * @throws ValidationException
+     * @throws \Exception
      */
-    public static function validate(array $data): void
+    private function makeObject(array $data): void
     {
-        $rules = [
-            'name' => ['required', 'string'],
-            'date_end' => ['numeric', 'between:1,31'],
-            'type' => ['required', new AccountType()],
-            'color' => ['string','required']
-        ];
+        switch ($data['type']) {
+            case 'CreditCard':
+                $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['value'], $this->makeTime($data['date']), $data['installement'], $data['installementValue']);
+                break;
+            case 'Bank':
+                $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['value']);
+                break;
+            case 'Saving':
+                $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['value'], $this->makeTime($data['date']));
+                break;
+            default:
+                throw new \Exception("Account type is ivalid");
+        }
+    }
 
-        Validator::validate($data, $rules);
+    /**
+     * make time
+     * @param string $dateTime
+     * 
+     * @return DateTime
+     */
+    private function makeTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

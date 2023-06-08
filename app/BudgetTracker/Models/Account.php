@@ -52,7 +52,7 @@ class Account extends Model
      *  
      *  @return Entry
      * */
-    public static function findFromUuid(string $uuid): Entry
+    public static function findFromUuid(string $uuid): Account
     {
         return Account::where('uuid',$uuid)->where('user_id',UserService::getCacheUserID())->firstOrFail();
     }
