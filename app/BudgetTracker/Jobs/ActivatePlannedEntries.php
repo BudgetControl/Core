@@ -29,7 +29,7 @@ class ActivatePlannedEntries implements ShouldQueue
      */
     public function handle(): void
     {
-        $id = Entry::firtst('id');
+        $id = Entry::orderBy('id','desc')->firtst('id');
 
         foreach($this->findPlannedEntries() as $entry) {
             $id++;
