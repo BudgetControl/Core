@@ -161,9 +161,9 @@ class StatsService
      * retrive total wallet sum
      * @param bool $planning
      * 
-     * @return array
+     * @return float
      */
-    public function total(bool $planning): array
+    public function total(bool $planning): float
     {
         $wallet = new Wallet(0);
 
@@ -177,7 +177,7 @@ class StatsService
             $wallet->sum($plannedEntries->toArray());
         }
 
-        return ['total' => $wallet->getBalance()];
+        return $wallet->getBalance();
     }
 
     /**

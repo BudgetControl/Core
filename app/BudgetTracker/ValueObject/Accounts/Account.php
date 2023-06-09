@@ -80,7 +80,7 @@ abstract class Account implements AccountInterface
      */ 
     public function getBalance()
     {
-        return $this->balance;
+        return round($this->balance,2);
     }
 
     /**
