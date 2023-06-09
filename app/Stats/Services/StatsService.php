@@ -233,7 +233,7 @@ class StatsService
     /**
      * get the healt of wallet
      */
-    public function health(bool $planned): Array
+    public function health(bool $planned): float
     {
         $wallet = new Wallet(0);
 
@@ -242,7 +242,7 @@ class StatsService
             $wallet->deposit($account->balance);
         }
 
-        return ['total' => $wallet->getBalance()];
+        return $wallet->getBalance();
     }
 
 }
