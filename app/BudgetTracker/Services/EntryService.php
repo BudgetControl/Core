@@ -64,7 +64,6 @@ class EntryService implements EntryInterface
       $entry->date_time = $data['date_time'];
       $entry->note = $data['note'];
       $entry->payment_type = $data['payment_type'];
-      $entry->installment = $data['installment'];
 
       $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
 
@@ -259,7 +258,6 @@ class EntryService implements EntryInterface
       'currency_id' => ['required', 'integer'],
       'payment_type' => ['required', 'integer'],
       'geolocation_id' => 'integer',
-      'installment' => 'boolean'
     ];
 
     Validator::validate($data, $rules);

@@ -45,8 +45,6 @@ class ExpensesService extends EntryService implements EntryInterface
             $entry->date_time = $data['date_time'];
             $entry->note = $data['note'];
             $entry->payment_type = $data['payment_type'];
-            $entry->installment = $data['installment'];
-
             $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
 
             $entry->save();

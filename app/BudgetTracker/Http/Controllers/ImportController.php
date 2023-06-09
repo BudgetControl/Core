@@ -20,8 +20,7 @@ class ImportController extends Controller
 		'amount',
 		'note',
 		'category',
-		'account',
-		'installment'
+		'account'
 	];
 
 	public function __construct()
