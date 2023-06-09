@@ -34,14 +34,14 @@ class MathHelper
 
     /**
     * sum of costo
-    * @param \Illuminate\Database\Eloquent\Collection|array|\App\BudgetTracker\Models\Entry $data
+    * @param array $data
     * @return float
     */
-    static public function sum( \Illuminate\Database\Eloquent\Collection|array|\App\BudgetTracker\Models\Entry $data): float
+    static public function sum(array $data): float
     {
       $cost = (float) 0.00;
       foreach ($data as $value) {
-        $cost += (float) $value->amount;
+        $cost += (float) $value['amount'];
       }
       return $cost;
     }

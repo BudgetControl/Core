@@ -13,37 +13,14 @@ use DateTime;
 
 final class CreditCardAccount extends Account {
 
-    /** @var AccountType */
-    private $type;
 
-    /** @var string */
-    private $currency;
-
-    /** @var string */
-    private $color;
-
-    /** @var string */
-    private $name;
-
-    /** @var bool */
-    private $installement;
-
-    /** @var float */
-    private $installementValue;
-
-    /** @var float */
-    private $value;
-
-    /** @var DateTime */
-    private $date;
-
-    public function __construct(string $name, string $currency, string $color, float $value, DateTime $date, bool $installement, float $installementValue = 0)
+    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $installement, float $installementValue = 0)
     {
 
         $this->name = $name;
         $this->type = AccountType::CreditCard;
         $this->currency = $currency;
-        $this->value = $value;
+        $this->balance = $balance;
         $this->color = $color;
         $this->installement = $installement;
         $this->installementValue = $installementValue;
@@ -56,58 +33,18 @@ final class CreditCardAccount extends Account {
         $this->validate();
 
     }
-
-    /**
-     * Get the value of date
-     */ 
-    public function getdate(): DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * Get the value of installementValue
-     */ 
-    public function getInstallementValue(): float
-    {
-        return $this->installementValue;
-    }
-
-    /**
-     * Get the value of installement
-     */ 
-    public function getInstallement(): bool
-    {
-        return $this->installement;
-    }
-
-
-    /**
-     * Get the value of color
-     */ 
-    public function getColor(): string
-    {
-        return $this->color;
-    }
-
-    /**
-     * Get the value of name
-     */ 
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    
     private function hash(): string
     {
-        return md5("{$this->name}{$this->currency}{$this->color}{$this->value}{$this->type->value}{$this->installement}{$this->installementValue}{$this->date}");
+        return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->installement}{$this->installementValue}{$this->date}");
     }
 
     /**
      * Get the value of value
      */ 
-    public function getValue()
+    public function getBalance()
     {
-        return $this->value;
+        return $this->balance;
     }
 
     public function isEqualsTo(CreditCardAccount $account): bool
@@ -147,7 +84,7 @@ final class CreditCardAccount extends Account {
             'color' => ['required',new AccountColorValidation()],
             'currency' => ['required', new AccountCurrencyValidation()],
             'date' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
-            'value' =>  ['required','numeric'],
+            'balance' =>  ['required','numeric'],
         ];
 
         Validator::validate($this->toArray(), $rules);

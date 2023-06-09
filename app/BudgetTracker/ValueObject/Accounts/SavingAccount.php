@@ -29,12 +29,12 @@ final class SavingAccount extends Account {
     private $amount;
 
     /** @var float */
-    private $value;
+    private $balance;
 
     /** @var string */
     private $date;
 
-    public function __construct(string $name, string $currency, string $color, float $amout, float $value, DateTime $date)
+    public function __construct(string $name, string $currency, string $color, float $amout, float $balance, DateTime $date)
     {
         $this->name = $name;
         $this->type = AccountType::Saving;
@@ -42,7 +42,7 @@ final class SavingAccount extends Account {
         $this->color = $color;
         $this->amount = $amout;
         $this->date = $date->format('Y-m-d h:i:s');
-        $this->value = $value;
+        $this->balance = $balance;
 
         $this->validate();
 
@@ -50,7 +50,7 @@ final class SavingAccount extends Account {
 
     private function hash(): string
     {
-        return md5("{$this->name}{$this->currency}{$this->color}{$this->value}{$this->type->value}{$this->date}");
+        return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->date}");
     }
 
     public function isEqualsTo(SavingAccount $account): bool
@@ -74,7 +74,7 @@ final class SavingAccount extends Account {
             'currency' => ['required', new AccountCurrencyValidation()],
             'installementValue' => ['required','numeric'],
             'date' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
-            'value' =>  ['required','numeric'],
+            'balance' =>  ['required','numeric'],
         ];
 
         Validator::validate($this->toArray(), $rules);

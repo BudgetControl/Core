@@ -13,13 +13,13 @@ use DateTime;
 
 final class BankAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $value)
+    public function __construct(string $name, string $currency, string $color, float $balance)
     {
         $this->name = $name;
         $this->type = AccountType::Bank;
         $this->currency = $currency;
         $this->color = $color;
-        $this->value = $value;
+        $this->balance = $balance;
 
         $this->validate();
 
@@ -27,7 +27,7 @@ final class BankAccount extends Account {
 
     private function hash(): string
     {
-        return md5("{$this->name}{$this->currency}{$this->color}{$this->value}{$this->type->value}");
+        return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}");
     }
 
     public function isEqualsTo(BankAccount $account): bool
@@ -49,7 +49,7 @@ final class BankAccount extends Account {
             'type' => ['required', new AccountTypeValidation()],
             'color' => ['required',new AccountColorValidation()],
             'currency' => ['required', new AccountCurrencyValidation()],
-            'value' =>  ['required','numeric'],
+            'balance' =>  ['required','numeric'],
         ];
 
         Validator::validate($this->toArray(), $rules);
@@ -60,6 +60,6 @@ final class BankAccount extends Account {
      */ 
     public function getValue()
     {
-        return $this->value;
+        return $this->balance;
     }
 }

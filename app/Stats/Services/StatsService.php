@@ -2,46 +2,36 @@
 
 namespace App\Stats\Services;
 
-use App\BudgetTracker\Http\Controllers\Controller;
-use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Services\DebitService;
-use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\ExpensesService;
-use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\TransferService;
-use App\BudgetTracker\Enums\Action;
-use App\BudgetTracker\Models\ActionJobConfiguration;
 use App\BudgetTracker\Models\Entry;
-use Illuminate\Support\Facades\Log;
-use App\Helpers\EntriesMath;
-use App\Helpers\MathHelper;
-use Database\Seeders\TransferSeed;
+use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Models\Account;
 use DateTime;
-use \Illuminate\Http\JsonResponse;
-use League\CommonMark\Extension\CommonMark\Parser\Inline\EntityParser;
 
 class StatsService
 {
 
-    private string $startDate;
-    private string $endDate;
-    private string $startDatePassed;
-    private string $endDatePassed;
+    private readonly string $startDate;
+    private readonly string $endDate;
+    private readonly string $startDatePassed;
+    private readonly string $endDatePassed;
 
-    public function __construct()
+    public function __construct(string $startDate, string $endDate)
     {
-        $this->startDate = date('Y/m/d H:i:s', time());
-        $this->endDate = date('Y/m/d H:i:s', time());
+        $this->setDateEnd($endDate);
+        $this->setDateStart($startDate);
     }
 
     /**
      * set data to start stats
      * @param string $date
      * 
-     * @return self
+     * @return void
      */
-    public function setDateStart(string $date): self
+    private function setDateStart(string $date): void
     {
         $this->startDate = $date;
 
@@ -49,7 +39,6 @@ class StatsService
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->startDatePassed = $passedDateTime->format('Y-m-d H:i:s');
 
-        return $this;
     }
 
     /**
@@ -58,7 +47,7 @@ class StatsService
      * 
      * @return self
      */
-    public function setDateEnd(string $date): self
+    private function setDateEnd(string $date): void
     {
         $this->endDate = $date;
 
@@ -66,17 +55,17 @@ class StatsService
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
 
-        return $this;
     }
 
     /**
      * retrive data
      * @param bool $planning
      * 
-     * @return Array
+     * @return array
      */
     public function incoming(bool $planning): Array
     {
+
         $entry = new IncomingService();
         $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
 
@@ -123,9 +112,9 @@ class StatsService
      * retrive data
      * @param bool $planning
      * 
-     * @return Array
+     * @return array
      */
-    public function transfer(bool $planning): Array
+    public function transfer(bool $planning): array
     {
         $entry = new TransferService();
         $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
@@ -176,26 +165,19 @@ class StatsService
      */
     public function total(bool $planning): array
     {
-        $lastRow = $this->getActionConfigurations(0);
+        $wallet = new Wallet(0);
 
-        $dateTime = new DateTime('now');
-        $dateTime = $dateTime->modify('Last day of this month');
-        $dateTime = $dateTime->format('Y-m-d H:i:s');
-
-        $entry = new EntryService();
-        $entry->addConditions('id', '>', $lastRow->lastrow);
-        $entry->addConditions('installment', 0);
-
-        $entry->setPlanning(false);
-
-        $total = MathHelper::sum($entry->get()) + $lastRow->amount;
-
-        if ($planning === true) {
-            $plannedEntry = MathHelper::sum($this->getPlannedEntry());
-            $total += $plannedEntry;
+        $accounts = Account::user()->where('installement',0)->get();
+        foreach($accounts as $account) {
+            $wallet->deposit($account->balance);
         }
 
-        return ['total' => $total];
+        if ($planning === true) {
+            $plannedEntries = $this->getPlannedEntry();
+            $wallet->sum($plannedEntries->toArray());
+        }
+
+        return ['total' => $wallet->getBalance()];
     }
 
     /**
@@ -213,10 +195,12 @@ class StatsService
         $dateTimeFirst = $dateTimeFirst->modify('First day of this month');
         $dateTimeFirst = $dateTimeFirst->format('Y-m-d H:i:s');
 
-        //TODO: use a service
-        $entry = Entry::where('planned', 1)->where('date_time', '<=', $dateTime)
+        $entry = Entry::where('planned', 1)
+            ->with('account')
+            ->where('date_time', '<=', $dateTime)
             ->where('date_time', '>=', $dateTimeFirst)
-            ->where('installment', 0)->get();
+            ->where('installment', 0)
+            ->get('amount');
 
         return $entry;
     }
@@ -228,30 +212,18 @@ class StatsService
      * 
      * @return array
      */
-    public function wallets(bool $planning, \Illuminate\Database\Eloquent\Collection $accounts): array
+    public function wallets(\Illuminate\Database\Eloquent\Collection $accounts): array
     {
         $response = [];
         foreach ($accounts as $account) {
-            $lastRow = $this->getActionConfigurations($account->id);
 
-            $entry = new EntryService();
-            $entry->addConditions('account_id', $account->id);
-            $entry->addConditions('id', '>', $lastRow->lastrow);
-
-            if ($planning === true) {
-                $entry->setPlanning($planning);
-            } else {
-                $entry->setPlanning(false);
-            }
-
-            $mathTotal = new EntriesMath();
-            $mathTotal->setData($entry->get());
+            $wallet = new Wallet($account->balance);
 
             $response[] = [
                 'account_id' => $account->id,
                 'account_label' => $account->name,
                 'color' => $account->color,
-                'total_wallet' => round($mathTotal->sum() + $lastRow->amount, 2)
+                'total_wallet' => $wallet->getBalance()
             ];
         }
 
@@ -259,46 +231,18 @@ class StatsService
     }
 
     /**
-     * get wallet fix 78187.79;
-     * @param int $account_id 
-     * @return \stdClass
-     */
-    private function getActionConfigurations(int $account_id): \stdClass
-    {
-        $fix = ActionJobConfiguration::where("action", Action::Configurations->value)->orderBy("id", "desc")->get('config');
-        $config = json_decode(
-            '{"account_id":' . $account_id . ',"amount":"0","lastrow":1}'
-        );
-        foreach ($fix as $f) {
-            $config = json_decode($f->config);
-            if ($config->account_id == $account_id) {
-                return $config;
-            }
-        }
-
-        return $config;
-    }
-
-    /**
      * get the healt of wallet
      */
     public function health(bool $planned): Array
     {
-        $lastRow = $this->getActionConfigurations(-1);
+        $wallet = new Wallet(0);
 
-        $dateTime = new DateTime('now');
-        $dateTime = $dateTime->modify('Last day of this month');
-        $dateTime = $dateTime->format('Y-m-d H:i:s');
+        $accounts = Account::user()->get();
+        foreach($accounts as $account) {
+            $wallet->deposit($account->balance);
+        }
 
-        $entry = new EntryService();
-        $entry->addConditions('id', '>', $lastRow->lastrow);
-        $entry->setPlanning(false);
-
-        $total = MathHelper::sum($entry->get()) + $lastRow->amount;
-
-        $plannedEntry = MathHelper::sum($this->getPlannedEntry());
-        $total += $plannedEntry;
-
-        return ['total' => $total];
+        return ['total' => $wallet->getBalance()];
     }
+
 }

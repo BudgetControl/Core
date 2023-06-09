@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('installementValue')->default(0);
             $table->string('currency')->default('EUR');
             $table->float('amount')->default(0);
-            $table->float('value')->default(0);
+            $table->float('balance')->default(0);
         });
     }
 };

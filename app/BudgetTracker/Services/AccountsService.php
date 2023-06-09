@@ -66,7 +66,7 @@ class AccountsService
      * @return AccountInterface with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): AccountInterface|null
+    public function read(int $id = null): AccountInterface
     {
         Log::debug("read accounts -- $id");
 
@@ -75,12 +75,7 @@ class AccountsService
         if ($id === null) {
             $entry = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (empty($entry)) {
-            Log::debug("found accounts -- " . $entry->toJson());
-            return null;
+            $entry = $entry->firstOrFail($id);
         }
 
         $this->makeObject($entry->toArray());
