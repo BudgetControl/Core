@@ -13,27 +13,6 @@ use DateTime;
 
 final class SavingAccount extends Account {
 
-    /** @var AccountType */
-    private $type;
-
-    /** @var string */
-    private $currency;
-
-    /** @var string */
-    private $color;
-
-    /** @var string */
-    private $name;
-
-    /** @var float */
-    private $amount;
-
-    /** @var float */
-    private $balance;
-
-    /** @var string */
-    private $date;
-
     public function __construct(string $name, string $currency, string $color, float $amout, float $balance, DateTime $date)
     {
         $this->name = $name;

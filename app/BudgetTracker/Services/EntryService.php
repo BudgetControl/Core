@@ -90,7 +90,7 @@ class EntryService implements EntryInterface
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = Entry::withRelations()->user()->orderBy('date_time', 'desc')->where('user_di',UserService::getCacheUserID());
+    $entry = Entry::withRelations()->user()->orderBy('date_time', 'desc')->where('user_id',UserService::getCacheUserID());
 
     if ($id === null) {
       $entry = $entry->get();

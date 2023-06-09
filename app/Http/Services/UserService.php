@@ -38,6 +38,7 @@ class UserService
         $session = request()->ip();
         if(env('APP_ENV') == 'testing') {
             return 1;
+            die;
         }
 
         if(!Cache::has($session)) {

@@ -9,6 +9,7 @@ use App\BudgetTracker\ValueObject\Accounts\CreditCardAccount;
 use App\BudgetTracker\ValueObject\Accounts\SavingAccount;
 use App\BudgetTracker\Interfaces\AccountInterface;
 use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Summary of SaveEntryService
@@ -44,7 +45,7 @@ class AccountsService
             $entry->type = $account['type'];
             $entry->date = $account['date'];
             $entry->color = $account['color'];
-            $entry->value = $account['value'];
+            $entry->balance = $account['balance'];
             $entry->installement = $account['installement'];
             $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
@@ -66,7 +67,7 @@ class AccountsService
      * @return AccountInterface with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): AccountInterface
+    public function read(int $id = null): Collection
     {
         Log::debug("read accounts -- $id");
 
@@ -78,9 +79,7 @@ class AccountsService
             $entry = $entry->firstOrFail($id);
         }
 
-        $this->makeObject($entry->toArray());
-
-        return $this->account;
+        return $entry;
     }
 
     /**
@@ -94,13 +93,13 @@ class AccountsService
     {
         switch ($data['type']) {
             case 'CreditCard':
-                $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['value'], $this->makeTime($data['date']), $data['installement'], $data['installementValue']);
+                $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installement'], $data['installementValue']);
                 break;
             case 'Bank':
-                $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['value']);
+                $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['balance']);
                 break;
             case 'Saving':
-                $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['value'], $this->makeTime($data['date']));
+                $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['balance'], $this->makeTime($data['date']));
                 break;
             default:
                 throw new \Exception("Account type is ivalid");

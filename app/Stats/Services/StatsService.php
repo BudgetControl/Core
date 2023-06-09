@@ -79,7 +79,7 @@ class StatsService
             $entry->setPlanning(false);
         }
 
-        return ['total' => $entry->get(),'total_passed' => $entryOld->get()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -104,7 +104,7 @@ class StatsService
             $entry->setPlanning(false);
         }
 
-        return ['total' => $entry->get(),'total_passed' => $entryOld->get()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -129,7 +129,7 @@ class StatsService
             $entry->setPlanning(false);
         }
 
-        return ['total' => $entry->get(),'total_passed' => $entryOld->get()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -154,7 +154,7 @@ class StatsService
             $entry->setPlanning(false);
         }
 
-        return ['total' => $entry->get(),'total_passed' => $entryOld->get()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
     }
 
     /**
@@ -195,12 +195,12 @@ class StatsService
         $dateTimeFirst = $dateTimeFirst->modify('First day of this month');
         $dateTimeFirst = $dateTimeFirst->format('Y-m-d H:i:s');
 
-        $entry = Entry::where('planned', 1)
-            ->with('account')
-            ->where('date_time', '<=', $dateTime)
-            ->where('date_time', '>=', $dateTimeFirst)
-            ->where('installment', 0)
-            ->get('amount');
+        $entry = Entry::leftJoin('accounts', 'accounts.id', '=', 'entries.account_id')
+            ->where('entries.planned', 1)
+            ->where('entries.date_time', '<=', $dateTime)
+            ->where('entries.date_time', '>=', $dateTimeFirst)
+            ->where('accounts.installement', 0)
+            ->get('entries.amount');
 
         return $entry;
     }

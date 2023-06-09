@@ -23,6 +23,7 @@ class PaymentTypeSeeders extends Seeder
         $db = new PaymentsTypes();
         $db->uuid = uniqid();
         $db->name = strtolower($value);
+        $db->user_id = 1;
         $db->save();
       }
     }

@@ -33,11 +33,11 @@ class StatsController extends Controller
     public function incoming(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        list($total, $totalPassed) = $service->incoming($planning);
+        $result = $service->incoming($planning);
 
         return response()->json(
             new ResponseService(
-                $this->buildResponse($total, $totalPassed)
+                $this->buildResponse($result['total'], $result['total_passed'])
             )
         );
     }
@@ -51,11 +51,11 @@ class StatsController extends Controller
     public function expenses(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        list($total, $totalPassed) = $service->expenses($planning);
+        $result = $service->expenses($planning);
 
         return response()->json(
             new ResponseService(
-                $this->buildResponse($total, $totalPassed)
+               $this->buildResponse($result['total'], $result['total_passed'])
             )
         );
     }
@@ -69,11 +69,11 @@ class StatsController extends Controller
     public function transfer(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        list($total, $totalPassed) = $service->transfer($planning);
+        $result =$service->transfer($planning);
 
         return response()->json(
             new ResponseService(
-                $this->buildResponse($total, $totalPassed)
+               $this->buildResponse($result['total'], $result['total_passed'])
             )
         );
     }
@@ -87,11 +87,11 @@ class StatsController extends Controller
     public function debit(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        list($total, $totalPassed) = $service->debit($planning);
+        $result =$service->debit($planning);
 
         return response()->json(
             new ResponseService(
-                $this->buildResponse($total, $totalPassed)
+               $this->buildResponse($result['total'], $result['total_passed'])
             )
         );
     }

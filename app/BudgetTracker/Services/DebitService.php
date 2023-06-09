@@ -39,7 +39,7 @@ class DebitService extends EntryService implements EntryInterface
                 'name' => $data['payee_id']
             ]);
 
-            $data['payee_id'] = Payee::where('name', $data['payee_id'])->firstOrFail('id')['id'];
+            $data['payee_id'] = Payee::user()->where('name', $data['payee_id'])->firstOrFail('id')['id'];
 
             $entry = new Debit();
             if (!empty($data['uuid'])) {

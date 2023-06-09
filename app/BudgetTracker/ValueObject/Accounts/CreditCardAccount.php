@@ -62,7 +62,7 @@ final class CreditCardAccount extends Account {
     private function installementValidate(): void
     {
         $rules = [
-            'installement' => ['required','true'],
+            'installement' => ['required','boolean'],
             'installementValue' => ['required','numeric'],
         ];
 

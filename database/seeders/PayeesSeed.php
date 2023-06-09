@@ -13,7 +13,9 @@ class PayeesSeed extends Seeder
      */
     public function run(): void
     {
-        Payee::factory(1)->create(['name' => 'Gino']);
-        Payee::factory(9)->create();
+        Payee::factory(1)->create(['name' => 'Gino','user_id' => 1]);
+        Payee::factory(9)->create([
+            'user_id' => 1
+        ]);
     }
 }
