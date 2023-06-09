@@ -39,7 +39,7 @@ class DebitService extends EntryService implements EntryInterface
                 'name' => $data['payee_id']
             ]);
 
-            $data['payee_id'] = Payee::where('name', $data['payee_id'])->firstOrFail('id')['id'];
+            $data['payee_id'] = Payee::user()->where('name', $data['payee_id'])->firstOrFail('id')['id'];
 
             $entry = new Debit();
             if (!empty($data['uuid'])) {
@@ -75,7 +75,7 @@ class DebitService extends EntryService implements EntryInterface
         Log::debug("read debit -- $id");
         $result = new \stdClass();
 
-        $entry = Debit::withRelations()->where('type', EntryType::Debit->value);
+        $entry = Debit::withRelations()->user()->where('type', EntryType::Debit->value);
 
         if ($id === null) {
             $entry = $entry->get();

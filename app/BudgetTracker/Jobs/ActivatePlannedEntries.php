@@ -29,11 +29,18 @@ class ActivatePlannedEntries implements ShouldQueue
      */
     public function handle(): void
     {
+        $id = Entry::orderBy('id','desc')->first('id');
+        $id = $id->id;
+
         foreach($this->findPlannedEntries() as $entry) {
+            $id++;
             Log::info($entry->uuid." updated planned = 0");
+            $entry->id = $id;
             $entry->planned = 0;
             $entry->updated_at = date('Y-m-d H:i:s', time());
             $entry->save();
+            
+            Log::info("Activated entry: ".json_encode($entry->toArray()));
         }
     }
 

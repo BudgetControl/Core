@@ -13,6 +13,8 @@ class PlannedEntriesSeed extends Seeder
      */
     public function run(): void
     {
-        PlannedEntries::factory(10)->create();
+        PlannedEntries::factory(10)->create([
+            'user_id' => 1
+        ]);
     }
 }

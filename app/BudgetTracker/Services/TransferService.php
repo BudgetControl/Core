@@ -67,7 +67,7 @@ class TransferService extends EntryService implements EntryInterface
         Log::debug("read entry -- $id");
         $result = new \stdClass();
 
-        $entry = Transfer::withRelations()->where('type', EntryType::Transfer->value);
+        $entry = Transfer::withRelations()->user()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
             $entry = $entry->get();

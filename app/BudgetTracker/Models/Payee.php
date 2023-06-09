@@ -6,6 +6,7 @@ use App\BudgetTracker\Factories\PayeeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Http\Services\UserService;
 
 class Payee extends Model
 {
@@ -38,6 +39,9 @@ class Payee extends Model
 
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
+        if(empty($this->attributes['user_id'])) {
+            $this->attributes['user_id'] = UserService::getCacheUserID();
+        }
 
         foreach ($attributes as $k => $v) {
             $this->$k = $v;
@@ -59,5 +63,13 @@ class Payee extends Model
     public function entry()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeUser($query): void
+    {
+        $query->where('user_id',UserService::getCacheUserID());
     }
 }

@@ -13,6 +13,8 @@ class ExpensesSeed extends Seeder
      */
     public function run(): void
     {
-        Expenses::factory(10)->create();
+        Expenses::factory(10)->create([
+            'user_id' => 1
+        ]);
     }
 }
