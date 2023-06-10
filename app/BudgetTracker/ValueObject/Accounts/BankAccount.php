@@ -9,8 +9,6 @@ use App\Rules\Account\AccountTypeValidation;
 use App\Rules\Account\AccountColorValidation;
 use App\Rules\Account\AccountCurrencyValidation;
 
-use DateTime;
-
 final class BankAccount extends Account {
 
     public function __construct(string $name, string $currency, string $color, float $balance)
@@ -53,13 +51,5 @@ final class BankAccount extends Account {
         ];
 
         Validator::validate($this->toArray(), $rules);
-    }
-
-    /**
-     * Get the value of value
-     */ 
-    public function getValue()
-    {
-        return $this->balance;
     }
 }

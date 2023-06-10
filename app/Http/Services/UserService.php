@@ -17,8 +17,7 @@ class UserService
      */
     static public function userIDfromToken(string $token)
     {
-        $session = request();
-        $session = $session->server()['REMOTE_ADDR'];
+        $session = session()->getId();
 
         if(Cache::has($session)) {
             return Cache::get($session);
@@ -36,13 +35,7 @@ class UserService
      */
     static public function getCacheUserID(): int
     {
-        $session = request();
-        $session = $session->server()['REMOTE_ADDR'];
-
-        if(env('APP_ENV') == 'testing') {
-            return 1;
-            die;
-        }
+        $session = session()->getId();
 
         if(!Cache::has($session)) {
             throw new \Exception("Unable find a user ID from cache with IP $session");

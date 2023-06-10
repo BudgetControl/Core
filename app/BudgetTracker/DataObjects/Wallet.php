@@ -19,7 +19,7 @@ final class Wallet {
      */ 
     public function getBalance(): float
     {
-        return $this->balance;
+        return round($this->balance,2);
     }
 
     /**

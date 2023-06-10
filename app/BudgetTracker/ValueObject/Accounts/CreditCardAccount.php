@@ -13,7 +13,6 @@ use DateTime;
 
 final class CreditCardAccount extends Account {
 
-
     public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $installement, float $installementValue = 0)
     {
 
@@ -37,14 +36,6 @@ final class CreditCardAccount extends Account {
     private function hash(): string
     {
         return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->installement}{$this->installementValue}{$this->date}");
-    }
-
-    /**
-     * Get the value of value
-     */ 
-    public function getBalance()
-    {
-        return $this->balance;
     }
 
     public function isEqualsTo(CreditCardAccount $account): bool
