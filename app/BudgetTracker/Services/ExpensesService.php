@@ -17,7 +17,7 @@ class ExpensesService extends EntryService implements EntryInterface
 {
     function __construct()
     {
-      $this->data = Expenses::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Expenses->value);
+        $this->data = Expenses::withRelations()->orderBy('date_time', 'desc')->where('type', EntryType::Expenses->value);
     }
 
     /**
@@ -50,10 +50,11 @@ class ExpensesService extends EntryService implements EntryInterface
             $entry->save();
 
             $this->attachLabels($data['label'], $entry);
+            AccountsService::updateBalance($entry->amount, $entry->account_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -96,7 +97,7 @@ class ExpensesService extends EntryService implements EntryInterface
     {
         $rules = [
             'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
+            'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
             'amount' => ['required', 'numeric', new AmountMinor()],
             'note' => 'nullable',
             'waranty' => 'boolean',
@@ -106,7 +107,7 @@ class ExpensesService extends EntryService implements EntryInterface
             'category_id' => ['required', 'integer'],
             'account_id' => ['required', 'integer'],
             'currency_id' => ['required', 'integer'],
-            'payment_type' => ['required','integer'],
+            'payment_type' => ['required', 'integer'],
             'geolocation_id' => 'integer'
         ];
 

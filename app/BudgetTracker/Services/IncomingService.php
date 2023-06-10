@@ -15,10 +15,10 @@ use League\Config\Exception\ValidationException;
  */
 class IncomingService extends EntryService implements EntryInterface
 {
-    
+
     function __construct()
     {
-      $this->data = Incoming::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Incoming->value);
+        $this->data = Incoming::withRelations()->orderBy('date_time', 'desc')->where('type', EntryType::Incoming->value);
     }
 
     /**
@@ -51,11 +51,11 @@ class IncomingService extends EntryService implements EntryInterface
 
             $entry->save();
             $this->attachLabels($data['label'], $entry);
-
+            AccountsService::updateBalance($entry->amount, $entry->account_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -98,7 +98,7 @@ class IncomingService extends EntryService implements EntryInterface
     {
         $rules = [
             'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
+            'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
             'amount' => ['required', 'numeric', 'gte:0'],
             'note' => 'nullable',
             'waranty' => 'boolean',
@@ -108,7 +108,7 @@ class IncomingService extends EntryService implements EntryInterface
             'category_id' => ['required', 'integer'],
             'account_id' => ['required', 'integer'],
             'currency_id' => ['required', 'integer'],
-            'payment_type' => ['required','integer'],
+            'payment_type' => ['required', 'integer'],
             'geolocation_id' => 'integer'
         ];
 

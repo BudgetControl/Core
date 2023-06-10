@@ -70,6 +70,7 @@ class EntryService implements EntryInterface
       $entry->save();
 
       $this->attachLabels($data['label'], $entry);
+      AccountsService::updateBalance($entry->amount,$entry->account_id);
 
     } catch (\Exception $e) {
       $errorCode = uniqid();
@@ -284,4 +285,5 @@ class EntryService implements EntryInterface
 
     return $returnEntry;
   }
+  
 }

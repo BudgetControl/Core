@@ -18,7 +18,7 @@ class DebitService extends EntryService implements EntryInterface
 {
     function __construct()
     {
-      $this->data = Debit::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Debit->value);
+        $this->data = Debit::withRelations()->orderBy('date_time', 'desc')->where('type', EntryType::Debit->value);
     }
 
     /**
@@ -55,11 +55,12 @@ class DebitService extends EntryService implements EntryInterface
             $entry->payee_id = $data['payee_id'];
 
             $entry->save();
-            
+
+            AccountsService::updateBalance($entry->amount, $entry->account_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -102,7 +103,7 @@ class DebitService extends EntryService implements EntryInterface
     {
         $rules = [
             'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
+            'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
             'amount' => ['required', 'numeric'],
             'note' => 'nullable',
             'waranty' => 'boolean',
@@ -110,7 +111,7 @@ class DebitService extends EntryService implements EntryInterface
             'confirmed' => 'boolean',
             'account_id' => ['required', 'integer'],
             'currency_id' => 'required|boolean',
-            'payment_type' => ['required','integer'],
+            'payment_type' => ['required', 'integer'],
             'geolocation_id' => 'integer',
             'payee_id' => 'string'
         ];

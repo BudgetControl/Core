@@ -10,6 +10,7 @@ use App\BudgetTracker\ValueObject\Accounts\SavingAccount;
 use App\BudgetTracker\Interfaces\AccountInterface;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
+use App\BudgetTracker\DataObjects\Wallet;
 
 /**
  * Summary of SaveEntryService
@@ -115,5 +116,22 @@ class AccountsService
     private function makeTime(string $dateTime): DateTime
     {
         return new DateTime($dateTime);
+    }
+
+    /**
+     * update balance
+     * @param float $amount
+     * @param int $account_id
+     * 
+     * @return void
+     */
+    public static function updateBalance(float $amount, int $account_id):void
+    {
+        $account = Account::findOrFail($account_id);
+        $wallet = new Wallet($account->balance);
+        $wallet->deposit($amount);
+
+        $account->balance = $wallet->getBalance();
+        $account->save();
     }
 }
