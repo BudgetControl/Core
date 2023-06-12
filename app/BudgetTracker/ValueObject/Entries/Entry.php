@@ -30,7 +30,7 @@ class Entry implements EntryInterface
     protected PaymentsTypes $paymentType;
     protected object $geolocation;
     protected array $labels;
-    protected Payee $payee;
+    protected Payee|null $payee = null;
 
     public function __construct(
         float $amount,
@@ -45,7 +45,7 @@ class Entry implements EntryInterface
         bool $waranty = false,
         object $geolocation = new stdClass(),
         bool $transfer = false,
-        Payee $payee = null,
+        Payee|null $payee = null,
         EntryType $type = EntryType::Incoming,
     ) {
         $this->amount = $amount;

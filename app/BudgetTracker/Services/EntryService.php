@@ -66,7 +66,16 @@ class EntryService
         $entryModel = EntryModel::findFromUuid($data['uuid']);
       }
 
-      $entryModel->save($entry->toArray());
+      $entryModel->account_id = $entry->getAccount()->id;
+      $entryModel->amount = $entry->getAmount();
+      $entryModel->category_id = $entry->getCategory()->id;
+      $entryModel->currency_id = $entry->getCurrency()->id;
+      $entryModel->date_time = $entry->getDateFormat();
+      $entryModel->note = $entry->getNote();
+      $entryModel->payment_type = $entry->getPaymentType()->id;
+      $entryModel->planned = $entry->getPlanned();
+      $entryModel->waranty = $entry->getWaranty();
+      $entryModel->confirmed = $entry->getConfirmed();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
       if ($data['confirmed'] == 1) {

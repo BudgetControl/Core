@@ -8,6 +8,7 @@ use App\BudgetTracker\ValueObject\Entries\Entry;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PaymentsTypes;
 use DateTime; use stdClass;
 
@@ -26,6 +27,7 @@ final class Transfer extends Entry {
         bool $waranty = false,
         object $geolocation = new stdClass(),
         bool $transfer = false,
+        Payee|null $payee = null,
         EntryType $type = EntryType::Debit,
     ) {
 
@@ -33,6 +35,7 @@ final class Transfer extends Entry {
 
         $this->type = EntryType::Transfer;
         $this->transfer = true;
+        $this->category = SubCategory::findOrFail(75);
 
     }
     

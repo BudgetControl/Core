@@ -6,7 +6,7 @@ use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Debit as DebitModel;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Models\Payee;
-use App\BudgetTracker\ValueObject\Debit;
+use App\BudgetTracker\ValueObject\Entries\Debit;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
@@ -35,7 +35,7 @@ class DebitService extends EntryService
                 'name' => $data['payee_id']
             ]);
 
-            $data['payee_id'] = Payee::user()->where('name', $data['payee_id'])->firstOrFail('id')['id'];
+            $payee = Payee::user()->where('name', $data['payee_id'])->firstOrFail();
 
             $entry = new Debit(
                 $data['amount'],
@@ -48,6 +48,9 @@ class DebitService extends EntryService
                 $data['label'],
                 $data['confirmed'],
                 $data['waranty'],
+                new \stdClass(),
+                false,
+                $payee,
             );
 
             $entryModel = new DebitModel();
@@ -65,7 +68,7 @@ class DebitService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
-            $entryModel->payee = $entry->getPayee()->id;
+            $entryModel->payee_id = $entry->getPayee()->id;
 
             $entryModel->save();
 

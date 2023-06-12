@@ -1,16 +1,18 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject;
+namespace App\BudgetTracker\ValueObject\Entries;
 
 use App\BudgetTracker\Enums\EntryType;
-use League\Config\Exception\ValidationException;
 use App\BudgetTracker\ValueObject\Entries\Entry;
-use Illuminate\Support\Facades\Validator;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
-use DateTime; use stdClass;
+use League\Config\Exception\ValidationException;
+use Nette\Schema\ValidationException as NetteException;
+use App\BudgetTracker\Models\Payee;
+use DateTime; 
+use stdClass;
 final class Debit extends Entry {
 
     public function __construct(
@@ -26,6 +28,7 @@ final class Debit extends Entry {
         bool $waranty = false,
         object $geolocation = new stdClass(),
         bool $transfer = false,
+        Payee|null $payee = null,
         EntryType $type = EntryType::Debit,
     ) {
 
@@ -33,6 +36,8 @@ final class Debit extends Entry {
 
         $this->type = EntryType::Debit;
         $this->transfer = false;
+        $this->payee = $payee;
+        $this->category = SubCategory::findOrFail(55);
 
         $this->validate();
 
@@ -45,11 +50,11 @@ final class Debit extends Entry {
      */
     private function validate(): void
     {
-        $rules = [
-            'payee_id' => 'string'
-        ];
-
-        Validator::validate($this->toArray(), $rules);
+        if(empty($this->payee)) {
+            throw new ValidationException(
+                new NetteException('Payee ID must be valid')
+            );
+        }
     }
     
 }

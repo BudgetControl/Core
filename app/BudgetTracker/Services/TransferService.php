@@ -10,8 +10,6 @@ use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\ValueObject\Entries\Transfer;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
 use DateTime;
 
 /**
@@ -59,6 +57,7 @@ class TransferService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->transfer_id = $data['transfer_id'];
 
             $entryModel->save();
 

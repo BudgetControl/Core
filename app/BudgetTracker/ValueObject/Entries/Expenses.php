@@ -10,6 +10,7 @@ use App\BudgetTracker\Models\PaymentsTypes;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\ValueObject\Entries\Entry;
 use Nette\Schema\ValidationException as NetteException;
+use App\BudgetTracker\Models\Payee;
 use stdClass;
 use DateTime;
 
@@ -28,6 +29,7 @@ final class Expenses extends Entry {
         bool $waranty = false,
         object $geolocation = new stdClass(),
         bool $transfer = false,
+        Payee|null $payee = null,
         EntryType $type = EntryType::Expenses,
     ) {
 

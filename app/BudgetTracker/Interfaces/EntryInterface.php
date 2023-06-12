@@ -6,9 +6,10 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Payee;
 use DateTime;
-use League\Config\Exception\ValidationException;
 use stdClass;
+
 interface EntryInterface {
 
     public function __construct(
@@ -24,6 +25,7 @@ interface EntryInterface {
         bool $waranty = false,
         object $geolocation = new stdClass(),
         bool $transfer = false,
+        Payee $payee = null,
         EntryType $type = EntryType::Incoming,
     );
 
@@ -35,20 +37,20 @@ interface EntryInterface {
 
     /**
      * Return value of amount
-     * @return float
+     * @return EntryType
      */
     public function getType(): EntryType;
 
     /**
      * Return value of currency
-     * @return float
+     * @return Currency
      */
     public function getCurrency(): Currency;
 
     
     /**
      * Return value of dateTime
-     * @return float
+     * @return DateTime
      */
     public function getDateTime(): DateTime;
 
@@ -94,7 +96,7 @@ interface EntryInterface {
     /**
      * Get the value of geolocation
      */ 
-    public function getGeolocation(): \stdClass;
+    public function getGeolocation(): stdClass;
 
     /**
      * 

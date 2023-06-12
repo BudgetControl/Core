@@ -35,6 +35,12 @@ class UserService
      */
     static public function getCacheUserID(): int
     {
+
+        if(env('APP_ENV') == 'testing') {
+            return 1;
+            die;
+        }
+        
         $session = session()->getId();
 
         if(!Cache::has($session)) {
