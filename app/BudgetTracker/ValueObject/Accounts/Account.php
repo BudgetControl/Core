@@ -5,7 +5,7 @@ namespace App\BudgetTracker\ValueObject\Accounts;
 use App\BudgetTracker\Enums\AccountType;
 use App\BudgetTracker\Interfaces\AccountInterface;
 
-abstract class Account implements AccountInterface
+class Account implements AccountInterface
 {
 
     /** @var AccountType */
@@ -98,7 +98,6 @@ abstract class Account implements AccountInterface
     {
         return $this->color;
     }
-
 
     /**
      * Get the value of currency

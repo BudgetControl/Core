@@ -104,14 +104,6 @@ class Entry extends Model
     }
 
     /**
-     * Get the payments_type
-     */
-    public function geolocation()
-    {
-        return $this->belongsTo(Geolocation::class);
-    }
-
-    /**
      * Get the payee
      */
     public function payee()
@@ -143,7 +135,7 @@ class Entry extends Model
      */
     public function scopeWithRelations($query): void
     {
-        $query->with('label')->with('subCategory.category')->with('account')->with('geolocation')->orderBy('date_time','desc')
+        $query->with('label')->with('subCategory.category')->with('account')->orderBy('date_time','desc')
         ->where('user_id',UserService::getCacheUserID());
     }
 

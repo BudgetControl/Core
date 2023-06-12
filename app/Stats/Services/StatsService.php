@@ -2,22 +2,22 @@
 
 namespace App\Stats\Services;
 
-use App\BudgetTracker\Services\DebitService;
-use App\BudgetTracker\Services\ExpensesService;
-use App\BudgetTracker\Services\IncomingService;
-use App\BudgetTracker\Services\TransferService;
+use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\DataObjects\Wallet;
 use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Debit;
+use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Transfer;
 use DateTime;
 
 class StatsService
 {
 
-    private readonly string $startDate;
-    private readonly string $endDate;
-    private readonly string $startDatePassed;
-    private readonly string $endDatePassed;
+    private string $startDate;
+    private string $endDate;
+    private string $startDatePassed;
+    private string $endDatePassed;
 
     public function __construct(string $startDate, string $endDate)
     {
@@ -66,20 +66,23 @@ class StatsService
     public function incoming(bool $planning): Array
     {
 
-        $entry = new IncomingService();
-        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry = New Incoming();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate);
 
-        $entryOld = new IncomingService();
-        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld = new Incoming();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed);
 
         if ($planning === true) {
-            $entry->setPlanning($planning);
-            $entryOld->setPlanning($planning);
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
         } else {
-            $entry->setPlanning(false);
+            $entry->where('planned',0);
+            $entryOld->where('planned',1);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
 
     }
 
@@ -87,24 +90,27 @@ class StatsService
      * retrive data
      * @param bool $planning
      * 
-     * @return Array
+     * @return array
      */
-    public function expenses(bool $planning): Array
+    public function expenses(bool $planning): array
     {
-        $entry = new ExpensesService();
-        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry = New Expenses();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate);
 
-        $entryOld = new ExpensesService();
-        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld = new Expenses();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed);
 
         if ($planning === true) {
-            $entry->setPlanning($planning);
-            $entryOld->setPlanning($planning);
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
         } else {
-            $entry->setPlanning(false);
+            $entry->where('planned',0);
+            $entryOld->where('planned',1);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
 
     }
 
@@ -116,20 +122,15 @@ class StatsService
      */
     public function transfer(bool $planning): array
     {
-        $entry = new TransferService();
-        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry = New Transfer();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate);
 
-        $entryOld = new TransferService();
-        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld = new Transfer();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed);
 
-        if ($planning === true) {
-            $entry->setPlanning($planning);
-            $entryOld->setPlanning($planning);
-        } else {
-            $entry->setPlanning(false);
-        }
-
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
 
     }
 
@@ -137,24 +138,19 @@ class StatsService
      * retrive data
      * @param bool $planning
      * 
-     * @return Array
+     * @return array
      */
     public function debit(bool $planning): array
     {
-        $entry = new DebitService();
-        $entry->setDateStart($this->startDate)->setDateEnd($this->endDate);
+        $entry = New Debit();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate);
 
-        $entryOld = new DebitService();
-        $entryOld->setDateStart($this->startDatePassed)->setDateEnd($this->endDatePassed);
+        $entryOld = new Debit();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed);
 
-        if ($planning === true) {
-            $entry->setPlanning($planning);
-            $entryOld->setPlanning($planning);
-        } else {
-            $entry->setPlanning(false);
-        }
-
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
     }
 
     /**
