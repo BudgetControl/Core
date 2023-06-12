@@ -1,33 +1,110 @@
 <?php
 namespace App\BudgetTracker\Interfaces;
 
+use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Models\SubCategory;
+use DateTime;
 use League\Config\Exception\ValidationException;
+use stdClass;
 interface EntryInterface {
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data) : void;
+    public function __construct(
+        float $amount,
+        Currency $currency,
+        string $note,
+        SubCategory $category,
+        Account $account,
+        PaymentsTypes $paymentType,
+        DateTime $date_time,
+        array $labels = [],
+        bool $confirmed = true,
+        bool $waranty = false,
+        object $geolocation = new stdClass(),
+        bool $transfer = false,
+        EntryType $type = EntryType::Incoming,
+    );
 
-     /**
-     * read a resource
-     * @param int $id of resource
-     * 
-     * @return object with a resource
-     * @throws \Exception
+    /**
+     * Return value of amount
+     * @return float
      */
-    public static function read(int $id) : object;
+    public function getAmount(): float;
 
     /**
-     * read a resource
-     * @param array $data
-     * 
-     * @return void
-     * @throws ValidationException
+     * Return value of amount
+     * @return float
      */
-    public static function validate(array $data) : void;
+    public function getType(): EntryType;
+
+    /**
+     * Return value of currency
+     * @return float
+     */
+    public function getCurrency(): Currency;
+
     
+    /**
+     * Return value of dateTime
+     * @return float
+     */
+    public function getDateTime(): DateTime;
+
+    /**
+     * Get the value of planned
+     */
+    public function getPlanned(): bool;
+
+    /**
+     * Get the value of note
+     */ 
+    public function getNote(): string;
+
+    /**
+     * Get the value of waranty
+     */ 
+    public function getWaranty(): bool;
+    /**
+     * Get the value of transfer
+     */ 
+    public function getTransfer(): bool;
+
+    /**
+     * Get the value of confirmed
+     */ 
+    public function getConfirmed(): bool;
+
+    /**
+     * Get the value of category
+     */ 
+    public function getCategory(): SubCategory;
+
+    /**
+     * Get the value of account
+     */ 
+    public function getAccount(): Account;
+
+    /**
+     * Get the value of paymentType
+     */ 
+    public function getPaymentType(): PaymentsTypes;
+
+    /**
+     * Get the value of geolocation
+     */ 
+    public function getGeolocation(): \stdClass;
+
+    /**
+     * 
+     */
+    public function toArray(): array;
+
+    /**
+     * unique hash
+     */
+    public function getHash(): string;
+
+
 }

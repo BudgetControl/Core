@@ -3,20 +3,22 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Models\Entry;
-use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Models\Entry as EntryModel;
+use App\BudgetTracker\ValueObject\Entries\Entry;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
 use App\Http\Services\UserService;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
+
 
 /**
  * Summary of SaveEntryService
  */
-class EntryService implements EntryInterface
+class EntryService
 {
   const COLORS = [
     "bg-blueGray-200 text-blueGray-600",
@@ -33,10 +35,6 @@ class EntryService implements EntryInterface
 
   protected $data;
 
-  function __construct()
-  {
-    $this->data = Entry::withRelations()->orderBy('date_time', 'desc');
-  }
 
   /**
    * save a resource
@@ -50,28 +48,30 @@ class EntryService implements EntryInterface
 
       Log::debug("save entry -- " . json_encode($data));
 
-      self::validate($data);
-      $entry = new Entry();
+      $entry = new Entry(
+        $data['amount'],
+        Currency::findOrFail($data['currency_id']),
+        $data['note'],
+        SubCategory::findOrFail($data['category_id']),
+        Account::findOrFail($data['account_id']),
+        PaymentsTypes::findOrFail($data['payment_type']),
+        new DateTime($data['date_time']),
+        $data['label'],
+        $data['confirmed'],
+        $data['waranty']
+      );
+
+      $entryModel = new EntryModel();
       if (!empty($data['uuid'])) {
-        $entry = Entry::findFromUuid($data['uuid']);
+        $entryModel = EntryModel::findFromUuid($data['uuid']);
       }
 
-      $entry->type = (float) $data['amount'] <= 0 ? EntryType::Expenses->value : EntryType::Incoming->value;
-      $entry->account_id = $data['account_id'];
-      $entry->amount = $data['amount'];
-      $entry->category_id = $data['category_id'];
-      $entry->currency_id = $data['currency_id'];
-      $entry->date_time = $data['date_time'];
-      $entry->note = $data['note'];
-      $entry->payment_type = $data['payment_type'];
+      $entryModel->save($entry->toArray());
 
-      $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
-
-      $entry->save();
-
-      $this->attachLabels($data['label'], $entry);
-      AccountsService::updateBalance($entry->amount,$entry->account_id);
-
+      $this->attachLabels($entry->getLabels(), $entryModel);
+      if ($data['confirmed'] == 1) {
+        AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
+      }
     } catch (\Exception $e) {
       $errorCode = uniqid();
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
@@ -91,7 +91,7 @@ class EntryService implements EntryInterface
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = Entry::withRelations()->user()->orderBy('date_time', 'desc')->where('user_id',UserService::getCacheUserID());
+    $entry = EntryModel::withRelations()->user()->orderBy('date_time', 'desc')->where('user_id', UserService::getCacheUserID());
 
     if ($id === null) {
       $entry = $entry->get();
@@ -108,94 +108,6 @@ class EntryService implements EntryInterface
   }
 
   /**
-   * set data to start stats
-   * @param string $date
-   * 
-   * @return self
-   */
-  public function setDateStart(string $date): self
-  {
-    $date = new DateTime($date);
-    $this->data->where('date_time', '>=', $date->format('Y-m-d H:i:s'));
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param string $date
-   * 
-   * @return self
-   */
-  public function setDateEnd(string $date): self
-  {
-    $date = new DateTime($date);
-    $this->data->where('date_time', '<=', $date->format('Y-m-d H:i:s'));
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param bool $date
-   * 
-   * @return self
-   */
-  public function setPlanning(bool $planning): self
-  {
-    if($planning === true) {
-      $this->data->whereIn('planned', [0,1]);
-    } else {
-      $this->data->whereIn('planned', [0]);
-    }
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param string $column
-   * @param string|int $valueOrSign
-   * @param string|int $value
-   * 
-   * @return self
-   */
-  public function addConditions(string $column, string|int $valueOrSign, string|int $value = ''): self
-  {
-    if($value === '') {
-      $this->data->where($column, $valueOrSign);
-    } else {
-      $this->data->where($column, $valueOrSign, $value);
-    }
-
-    return $this;
-  }
-
-
-    /** 
-     * chek if is planned entry
-     * @param DateTime $dateTime
-     * 
-     * @return bool
-     */
-    protected function isPlanning(DateTime $dateTime): bool
-    {
-        $today = new \DateTime();
-        if ($dateTime->getTimestamp() > $today->getTimestamp()) {
-            return true;
-        }
-
-    return false;
-  }
-
-  /**
-   * retrive data
-   * 
-   * @return Entry
-   */
-  public function get()
-  { 
-    return $this->data->get();
-  }
-
-   /**
    * save labels data
    * @param array $labels
    * 
@@ -237,31 +149,17 @@ class EntryService implements EntryInterface
   }
 
   /**
-   * read a resource
-   *
-   * @param array $data
-   * @return void
-   * @throws ValidationException
+   * generate geolocation object
+   * @param string $geoloc
+   * 
+   * @return string
    */
-  public static function validate(array $data): void
+  protected function geolocation(string $geoloc): string
   {
-    $rules = [
-      'id' => ['integer'],
-      'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
-      'amount' => ['required', 'numeric'],
-      'note' => 'nullable',
-      'waranty' => 'boolean',
-      'transfer' => 'boolean',
-      'confirmed' => 'boolean',
-      'planned' => 'boolean',
-      'category_id' => ['required', 'integer'],
-      'account_id' => ['required', 'integer'],
-      'currency_id' => ['required', 'integer'],
-      'payment_type' => ['required', 'integer'],
-      'geolocation_id' => 'integer',
-    ];
+    $obj = new \stdClass();
+    $obj->geoloc = $geoloc;
 
-    Validator::validate($data, $rules);
+    return json_encode($obj);
   }
 
   /**
@@ -285,5 +183,4 @@ class EntryService implements EntryInterface
 
     return $returnEntry;
   }
-  
 }
