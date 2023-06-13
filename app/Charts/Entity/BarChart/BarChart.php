@@ -17,5 +17,19 @@ final class BarChart
         return $this->bar;
     }
 
+    private function hash(): string
+    {       
+        $hash = '';
+        foreach($this->bar as $bar) {
+            $hash .= "{".$bar->getLabel().$bar->getColor().$bar->getValue()."}";
+        }
+        return md5("BarChart:$hash");
+    }
+
+    public function isEqualsTo(BarChart $chart): bool
+    {
+        return $this->hash() === $chart->hash();
+    }
+
    
 }

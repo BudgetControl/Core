@@ -17,5 +17,20 @@ final class LineChart
         return $this->series;
     }
 
+    private function hash(): string
+    {       
+        $hash = '';
+        foreach($this->series as $serie) {
+            $points = $serie->getDataPoints();
+            $hash .= "{".$serie->getLabel().$serie->getColor().$points->getXValue().$points->getYValue()."}";
+        }
+        return md5("LineChart:$hash");
+    }
+
+    public function isEqualsTo(LineChart $chart): bool
+    {
+        return $this->hash() === $chart->hash();
+    }
+
    
 }
