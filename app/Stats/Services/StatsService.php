@@ -5,6 +5,7 @@ namespace App\Stats\Services;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
@@ -65,24 +66,23 @@ class StatsService
      */
     public function incoming(bool $planning): Array
     {
-
-        $entry = New Incoming();
+        $entry = Incoming::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate);
+        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Incoming->value);
 
-        $entryOld = new Incoming();
+        $entryOld = Incoming::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed);
+        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Incoming->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
             $entryOld->whereIn('planned',[0,1]);
         } else {
             $entry->where('planned',0);
-            $entryOld->where('planned',1);
+            $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -94,20 +94,20 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        $entry = New Expenses();
+        $entry = Expenses::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate);
+        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Expenses->value);
 
-        $entryOld = new Expenses();
+        $entryOld = Expenses::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed);
+        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Expenses->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
             $entryOld->whereIn('planned',[0,1]);
         } else {
             $entry->where('planned',0);
-            $entryOld->where('planned',1);
+            $entryOld->where('planned',0);
         }
 
         return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
@@ -122,13 +122,13 @@ class StatsService
      */
     public function transfer(bool $planning): array
     {
-        $entry = New Transfer();
+        $entry = Transfer::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate);
+        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Transfer->value);
 
-        $entryOld = new Transfer();
+        $entryOld = Transfer::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed);
+        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
 
         return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
 
@@ -142,13 +142,13 @@ class StatsService
      */
     public function debit(bool $planning): array
     {
-        $entry = New Debit();
+        $entry = Debit::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate);
+        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Debit->value);
 
-        $entryOld = new Debit();
+        $entryOld = Debit::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed);
+        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
 
         return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
     }
