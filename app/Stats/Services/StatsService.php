@@ -4,7 +4,7 @@ namespace App\Stats\Services;
 
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Entry;
-use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Debit;

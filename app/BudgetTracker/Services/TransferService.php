@@ -8,7 +8,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
-use App\BudgetTracker\ValueObject\Entries\Transfer;
+use App\BudgetTracker\Entity\Entries\Transfer;
 use Illuminate\Support\Facades\Log;
 use DateTime;
 

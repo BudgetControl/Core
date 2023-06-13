@@ -9,7 +9,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
-use App\BudgetTracker\ValueObject\Entries\Expenses;
+use App\BudgetTracker\Entity\Entries\Expenses;
 use DateTime;
 
 /**

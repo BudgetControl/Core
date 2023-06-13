@@ -3,9 +3,9 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\BudgetTracker\ValueObject\Accounts\BankAccount;
-use App\BudgetTracker\ValueObject\Accounts\SavingAccount;
-use App\BudgetTracker\ValueObject\Accounts\CreditCardAccount;
+use App\BudgetTracker\Entity\Accounts\BankAccount;
+use App\BudgetTracker\Entity\Accounts\SavingAccount;
+use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
 
 
 class AccountDataTest extends TestCase

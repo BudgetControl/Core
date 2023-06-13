@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\DataObjects;
+namespace App\BudgetTracker\Entity;
 
 use App\Helpers\MathHelper;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject\Entries;
+namespace App\BudgetTracker\Entity\Entries;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
-use App\BudgetTracker\ValueObject\Entries\Entry;
+use App\BudgetTracker\Entity\Entries\Entry;
 use League\Config\Exception\ValidationException;
 use Nette\Schema\ValidationException as NetteException;
 use App\BudgetTracker\Models\Payee;

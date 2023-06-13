@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject\Entries;
+namespace App\BudgetTracker\Entity\Entries;
 
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\ValueObject\Entries\Entry;
+use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;

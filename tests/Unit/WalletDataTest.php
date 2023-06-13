@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Entity\Wallet;
 
 
 class WalletDataTest extends TestCase
