@@ -26,7 +26,7 @@ class ApiGetDataTest extends TestCase
             "currency_id",
             "payment_type",
             "payee_id",
-            "geolocation_id",
+            "geolocation",
             "label",
             "sub_category" => [
                 "id",

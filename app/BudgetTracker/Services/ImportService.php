@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Services;
 
+use App\BudgetTracker\Enums\AccountType;
 use App\BudgetTracker\Services\CategoryService;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Exceptions\ImportException;
@@ -30,7 +31,6 @@ class ImportService implements ImportServiceInterface
     "date",
     "labels",
     "account",
-    "installment"
   ];
 
   public $filePath = null;
@@ -150,13 +150,16 @@ class ImportService implements ImportServiceInterface
           }
 
           $entry->amount = (float) $amount;
+          if($account->type == AccountType::CreditCard->value) {
+            $entry->amount = (float) $amount * -1;
+          }
+
           $entry->note = $value[2];
 
           $entry->account_id= $account->id;
           $entry->currency_id = $currency->id;
           $entry->date_time = $value[3] . " 00:00:00";
           $entry->payment_type = 2;
-          $entry->installment = $value[6];
           
           $CategoryService = new CategoryService();
           $category = $CategoryService->getCategoryIdFromAction($value[2]);

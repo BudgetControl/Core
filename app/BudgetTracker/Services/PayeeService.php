@@ -2,8 +2,6 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Payee;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +11,7 @@ use App\Rules\AmountMinor;
 /**
  * Summary of SaveEntryService
  */
-class PayeeService implements EntryInterface
+class PayeeService
 {
 
     /**

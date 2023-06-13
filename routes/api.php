@@ -36,3 +36,6 @@ Route::get('entry/account/{id}', function (string $id) {
 })->middleware('auth.jwt');
 
 Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import')->middleware('auth.jwt');
+
+/** make accounts api */
+Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');

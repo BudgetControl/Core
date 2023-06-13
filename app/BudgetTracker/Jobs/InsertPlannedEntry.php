@@ -76,8 +76,7 @@ class InsertPlannedEntry implements ShouldQueue
                 $entry->account_id = $account;
                 $entry->currency_id = $currency;
                 $entry->planned = 1;
-                //FIXME:: forgot in table planned
-                $entry->installment = 0;
+                $entry->user_id = $request->user_id;
                 $entry->date_time = $request->date_time->format('Y-m-d H:i:s');
                 $entry->label = []; //FIXME:: $request->label;
 

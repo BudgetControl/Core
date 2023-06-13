@@ -13,6 +13,15 @@ class AccountSeed extends Seeder
      */
     public function run(): void
     {
-        Account::factory(10)->create();
+        Account::factory(8)->create([
+            'user_id' => 1
+        ]);
+        Account::factory(1)->create([
+            'user_id' => 1,
+            'installement' => 1,
+            'installementValue' => 200,
+            'type' => 'Credit Card',
+            'date' => '2023-06-12'
+        ]);
     }
 }

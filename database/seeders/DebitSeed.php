@@ -13,6 +13,8 @@ class DebitSeed extends Seeder
      */
     public function run(): void
     {
-        Debit::factory(1)->create();
+        Debit::factory(1)->create([
+            'user_id' => 1
+        ]);
     }
 }

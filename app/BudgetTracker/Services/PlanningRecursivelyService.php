@@ -9,11 +9,16 @@ use App\BudgetTracker\Models\PlannedEntries;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
+use App\BudgetTracker\ValueObject\Debit;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
 
 /**
  * Summary of SaveEntryService
  */
-class PlanningRecursivelyService extends EntryService implements EntryInterface
+class PlanningRecursivelyService extends EntryService
 {
 
     /**

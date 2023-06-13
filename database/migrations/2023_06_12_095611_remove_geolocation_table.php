@@ -6,10 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
+        Schema::dropIfExists('geolocation');
         Schema::table('entries', function (Blueprint $table) {
-            $table->boolean('installment')->default(0);
+            $table->dropColumn('geolocation_id');
+            $table->json('geolocation')->nullable()->change();
         });
     }
+
 };

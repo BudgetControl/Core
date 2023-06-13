@@ -13,6 +13,8 @@ class IncomingSeed extends Seeder
      */
     public function run(): void
     {
-        Incoming::factory(10)->create();
+        Incoming::factory(10)->create([
+            'user_id' => 1
+        ]);
     }
 }

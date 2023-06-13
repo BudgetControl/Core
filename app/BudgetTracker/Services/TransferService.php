@@ -3,22 +3,20 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Models\Transfer;
+use App\BudgetTracker\Models\Transfer as TransferModel;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Entity\Entries\Transfer;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
+use DateTime;
 
 /**
  * Summary of SaveEntryService
  */
-class TransferService extends EntryService implements EntryInterface
+class TransferService extends EntryService
 {
-
-    function __construct()
-    {
-      $this->data = Transfer::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Transfer->value);
-    }
 
     /**
      * save a resource
@@ -32,22 +30,37 @@ class TransferService extends EntryService implements EntryInterface
 
             Log::debug("save transfer -- " . json_encode($data));
 
-            self::validate($data);
+            $entry = new Transfer(
+                $data['amount'],
+                Currency::findOrFail($data['currency_id']),
+                $data['note'],
+                SubCategory::findOrFail($data['category_id']),
+                Account::findOrFail($data['account_id']),
+                PaymentsTypes::findOrFail($data['payment_type']),
+                new DateTime($data['date_time']),
+                $data['label'],
+                $data['confirmed'],
+                $data['waranty'],
+            );
 
-            $entry = new Transfer();
+            $entryModel = new TransferModel();
             if (!empty($data['uuid'])) {
-                $entry = Transfer::findFromUuid($data['uuid']);
+                $entryModel = TransferModel::findFromUuid($data['uuid']);
             }
+            $entryModel->account_id = $entry->getAccount()->id;
+            $entryModel->amount = $entry->getAmount();
+            $entryModel->category_id = $entry->getCategory()->id;
+            $entryModel->currency_id = $entry->getCurrency()->id;
+            $entryModel->date_time = $entry->getDateFormat();
+            $entryModel->note = $entry->getNote();
+            $entryModel->payment_type = $entry->getPaymentType()->id;
+            $entryModel->planned = $entry->getPlanned();
+            $entryModel->waranty = $entry->getWaranty();
+            $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->transfer_id = $data['transfer_id'];
 
-            $entry->account_id = $data['account_id'];
-            $entry->amount = $data['amount'];
-            $entry->currency_id = $data['currency_id'];
-            $entry->date_time = $data['date_time'];
-            $entry->note = $data['note'];
-            $entry->payment_type = $data['payment_type'];
-            $entry->transfer_id = $data['transfer_id'];
+            $entryModel->save();
 
-            $entry->save();
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
@@ -67,7 +80,7 @@ class TransferService extends EntryService implements EntryInterface
         Log::debug("read entry -- $id");
         $result = new \stdClass();
 
-        $entry = Transfer::withRelations()->where('type', EntryType::Transfer->value);
+        $entry = TransferModel::withRelations()->user()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
             $entry = $entry->get();
@@ -81,33 +94,5 @@ class TransferService extends EntryService implements EntryInterface
         }
 
         return $result;
-    }
-
-    /**
-     * read a resource
-     *
-     * @param array $data
-     * @return void
-     * @throws ValidationException
-     */
-    public static function validate(array $data): void
-    {
-        $rules = [
-            'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
-            'amount' => ['required', 'numeric'],
-            'note' => 'nullable',
-            'waranty' => 'boolean',
-            'transfer' => 'boolean',
-            'confirmed' => 'boolean',
-            'transfer_id' => ['required', 'integer'],
-            'planned' => 'boolean',
-            'account_id' => ['required', 'integer'],
-            'currency_id' => 'required|boolean',
-            'payment_type' => ['required','integer'],
-            'geolocation_id' => 'integer'
-        ];
-
-        Validator::validate($data, $rules);
     }
 }

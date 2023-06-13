@@ -3,23 +3,22 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Models\Incoming as IncomingModel;
+use App\BudgetTracker\Entity\Entries\Incoming;
+use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
+use App\Http\Services\UserService;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
 
 /**
  * Summary of SaveEntryService
  */
-class IncomingService extends EntryService implements EntryInterface
+class IncomingService extends EntryService
 {
-    
-    function __construct()
-    {
-      $this->data = Incoming::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Incoming->value);
-    }
 
     /**
      * save a resource
@@ -33,30 +32,46 @@ class IncomingService extends EntryService implements EntryInterface
 
             Log::debug("save incoming -- " . json_encode($data));
 
-            self::validate($data);
-            $entry = new Incoming();
+            $entry = new Incoming(
+                $data['amount'],
+                Currency::findOrFail($data['currency_id']),
+                $data['note'],
+                SubCategory::findOrFail($data['category_id']),
+                Account::findOrFail($data['account_id']),
+                PaymentsTypes::findOrFail($data['payment_type']),
+                new DateTime($data['date_time']),
+                $data['label'],
+                $data['confirmed'],
+                $data['waranty'],
+            );
+
+            $entryModel = new IncomingModel();
             if (!empty($data['uuid'])) {
-                $entry = Incoming::findFromUuid($data['uuid']);
+                $entryModel = IncomingModel::findFromUuid($data['uuid']);
             }
 
-            $entry->account_id = $data['account_id'];
-            $entry->amount = $data['amount'];
-            $entry->category_id = $data['category_id'];
-            $entry->currency_id = $data['currency_id'];
-            $entry->date_time = $data['date_time'];
-            $entry->note = $data['note'];
-            $entry->payment_type = $data['payment_type'];
-            $entry->installment = $data['installment'];
+            $entryModel->account_id = $entry->getAccount()->id;
+            $entryModel->amount = $entry->getAmount();
+            $entryModel->category_id = $entry->getCategory()->id;
+            $entryModel->currency_id = $entry->getCurrency()->id;
+            $entryModel->date_time = $entry->getDateFormat();
+            $entryModel->note = $entry->getNote();
+            $entryModel->payment_type = $entry->getPaymentType()->id;
+            $entryModel->planned = $entry->getPlanned();
+            $entryModel->waranty = $entry->getWaranty();
+            $entryModel->confirmed = $entry->getConfirmed();
 
-            $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
+            $entryModel->save();
 
-            $entry->save();
-            $this->attachLabels($data['label'], $entry);
+            $this->attachLabels($entry->getLabels(), $entryModel);
+            if ($data['confirmed'] == 1) {
+                AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
+            }
 
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -72,7 +87,7 @@ class IncomingService extends EntryService implements EntryInterface
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
 
-        $entry = Incoming::withRelations()->where('type', EntryType::Incoming->value);
+        $entry = IncomingModel::withRelations()->user()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
             $entry = $entry->get();
@@ -88,31 +103,4 @@ class IncomingService extends EntryService implements EntryInterface
         return $result;
     }
 
-    /**
-     * read a resource
-     *
-     * @param array $data
-     * @return void
-     * @throws ValidationException
-     */
-    public static function validate(array $data): void
-    {
-        $rules = [
-            'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
-            'amount' => ['required', 'numeric', 'gte:0'],
-            'note' => 'nullable',
-            'waranty' => 'boolean',
-            'transfer' => 'boolean',
-            'confirmed' => 'boolean',
-            'planned' => 'boolean',
-            'category_id' => ['required', 'integer'],
-            'account_id' => ['required', 'integer'],
-            'currency_id' => ['required', 'integer'],
-            'payment_type' => ['required','integer'],
-            'geolocation_id' => 'integer'
-        ];
-
-        Validator::validate($data, $rules);
-    }
-}
+ }
