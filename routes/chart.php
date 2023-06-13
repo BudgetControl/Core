@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route->middleware('auth.jwt');
-use App\Http\Controllers\AuthController->middleware('auth.jwt');
-use Illuminate\Http\Request->middleware('auth.jwt');
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
