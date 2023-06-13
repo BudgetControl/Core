@@ -6,7 +6,7 @@ use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Debit as DebitModel;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Models\Payee;
-use App\BudgetTracker\ValueObject\Entries\Debit;
+use App\BudgetTracker\Entity\Entries\Debit;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;

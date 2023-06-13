@@ -2,15 +2,11 @@
 
 namespace App\Charts\Services;
 
-use App\BudgetTracker\DataObjects\Wallet;
-use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Models\SubCategory;
 use App\Charts\Entity\BarChart\BarChart;
 use App\Charts\Entity\BarChart\BarChartBar;
-use App\Charts\Entity\LineChart\LineChart;
-use App\Charts\Entity\LineChart\LineChartPoint;
-use App\Charts\Entity\LineChart\LineChartSeries;
 use DateTime;
 
 class BarChartService extends ChartDataService

@@ -2,7 +2,7 @@
 
 namespace App\Stats\Controllers;
 
-use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Services\ResponseService;

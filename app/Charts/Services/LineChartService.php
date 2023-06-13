@@ -2,8 +2,7 @@
 
 namespace App\Charts\Services;
 
-use App\BudgetTracker\DataObjects\Wallet;
-use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Models\SubCategory;
 use App\Charts\Entity\LineChart\LineChart;
