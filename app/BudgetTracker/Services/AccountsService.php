@@ -4,13 +4,13 @@ namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Models\Account;
 use Illuminate\Support\Facades\Log;
-use App\BudgetTracker\ValueObject\Accounts\BankAccount;
-use App\BudgetTracker\ValueObject\Accounts\CreditCardAccount;
-use App\BudgetTracker\ValueObject\Accounts\SavingAccount;
+use App\BudgetTracker\Entity\Accounts\BankAccount;
+use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
+use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Interfaces\AccountInterface;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
-use App\BudgetTracker\DataObjects\Wallet;
+use App\BudgetTracker\Entity\Wallet;
 
 /**
  * Summary of SaveEntryService

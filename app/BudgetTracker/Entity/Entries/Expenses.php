@@ -1,20 +1,21 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject\Entries;
+namespace App\BudgetTracker\Entity\Entries;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\ValueObject\Entries\Entry;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Entity\Entries\Entry;
 use Nette\Schema\ValidationException as NetteException;
 use App\BudgetTracker\Models\Payee;
-use DateTime; 
 use stdClass;
-final class Debit extends Entry {
+use DateTime;
 
+final class Expenses extends Entry {
+    
     public function __construct(
         float $amount,
         Currency $currency,
@@ -29,30 +30,29 @@ final class Debit extends Entry {
         object $geolocation = new stdClass(),
         bool $transfer = false,
         Payee|null $payee = null,
-        EntryType $type = EntryType::Debit,
+        EntryType $type = EntryType::Expenses,
     ) {
 
         parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$geolocation);
 
-        $this->type = EntryType::Debit;
+        $this->type = EntryType::Expenses;
         $this->transfer = false;
-        $this->payee = $payee;
-        $this->category = SubCategory::findOrFail(55);
 
         $this->validate();
 
     }
+
     /**
-     * read a resource
-     *
+     * validate informations
+     * 
      * @return void
      * @throws ValidationException
      */
-    private function validate(): void
+    public function validate(): void
     {
-        if(empty($this->payee)) {
+        if($this->amount > 0) {
             throw new ValidationException(
-                new NetteException('Payee ID must be valid')
+                new NetteException('Amount must be minor than 0')
             );
         }
     }

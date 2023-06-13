@@ -4,7 +4,7 @@ namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Entry as EntryModel;
-use App\BudgetTracker\ValueObject\Entries\Entry;
+use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;

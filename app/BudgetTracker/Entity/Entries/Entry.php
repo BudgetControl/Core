@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject\Entries;
+namespace App\BudgetTracker\Entity\Entries;
 
 use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Enums\EntryType;

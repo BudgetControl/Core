@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetTracker\ValueObject\Accounts;
+namespace App\BudgetTracker\Entity\Accounts;
 
 use App\BudgetTracker\Enums\AccountType;
 use Illuminate\Support\Facades\Validator;
