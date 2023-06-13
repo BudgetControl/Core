@@ -7,7 +7,7 @@ final class LineChartSeries
 {
     private string $label;
     private string $color;
-    private LineChartPoint $dataPoints;
+    private array $dataPoints;
 
     public function __construct($label)
     {
@@ -17,10 +17,10 @@ final class LineChartSeries
 
     public function addDataPoint(LineChartPoint $dataPoint)
     {
-        $this->dataPoints = $dataPoint;
+        $this->dataPoints[] = $dataPoint;
     }
 
-    public function getDataPoints(): LineChartPoint
+    public function getDataPoints(): array
     {
         return $this->dataPoints;
     }

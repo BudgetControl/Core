@@ -2,6 +2,7 @@
 
 namespace App\Charts\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Http\JsonResponse;
 use App\Charts\Services\LineChartService;
 use League\Config\Exception\ValidationException;
@@ -32,6 +33,7 @@ class LineChartController
             $points = $serie->getDataPoints();
             $results->series[] = [
                 'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
                 'points' => [
                     'x' => $points->getXValue(),
                     'y' => $points->getYValue()
@@ -63,6 +65,7 @@ class LineChartController
             $points = $serie->getDataPoints();
             $results->series[] = [
                 'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
                 'points' => [
                     'x' => $points->getXValue(),
                     'y' => $points->getYValue()
@@ -94,6 +97,7 @@ class LineChartController
             $points = $serie->getDataPoints();
             $results->series[] = [
                 'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
                 'points' => [
                     'x' => $points->getXValue(),
                     'y' => $points->getYValue()
@@ -143,31 +147,32 @@ class LineChartController
      * @return JsonResponse
      */
 
-     public function expensesByLabel(Request $data): JsonResponse
-     {
-         $results = new \stdClass();
-         $dateTime = $data->date_time;
-         $this->validate($dateTime);
- 
-         $service = new LineChartService($dateTime);
-         $chart = $service->expensesByLabel();
-         $series = $chart->getSeries();
- 
-         foreach ($series as $serie) {
-             $points = $serie->getDataPoints();
-             $results->series[] = [
-                 'label' => $serie->getLabel(),
-                 'points' => [
-                     'x' => $points->getXValue(),
-                     'y' => $points->getYValue()
-                 ]
-             ];
-         }
- 
-         return response()->json($results);
-     }
+    public function expensesByLabel(Request $data): JsonResponse
+    {
+        $results = new \stdClass();
+        $dateTime = $data->date_time;
+        $this->validate($dateTime);
 
-     /**
+        $service = new LineChartService($dateTime);
+        $chart = $service->expensesByLabel();
+        $series = $chart->getSeries();
+
+        foreach ($series as $serie) {
+            $points = $serie->getDataPoints();
+            $results->series[] = [
+                'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
+                'points' => [
+                    'x' => $points->getXValue(),
+                    'y' => $points->getYValue()
+                ]
+            ];
+        }
+
+        return response()->json($results);
+    }
+
+    /**
      * get line chart data
      * @param Request $data
      * 
@@ -188,11 +193,47 @@ class LineChartController
             $points = $serie->getDataPoints();
             $results->series[] = [
                 'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
                 'points' => [
                     'x' => $points->getXValue(),
                     'y' => $points->getYValue()
                 ]
             ];
+        }
+
+        return response()->json($results);
+    }
+
+    public function incomingExpenses(Request $data): JsonResponse
+    {
+        $results = new \stdClass();
+        $dateTime = $data->date_time;
+        $this->validate($dateTime);
+
+        $service = new LineChartService($dateTime);
+        $chart = $service->dataByTypes([
+            EntryType::Incoming->value,
+            EntryType::Expenses->value,
+        ]);
+        $series = $chart->getSeries();
+
+        foreach ($series as $serie) {
+            $points = $serie->getDataPoints();
+            $datapoints = [];
+            foreach($points as $point) {
+                $datapoints[] = [
+                        'label' => $point->getLabel(),
+                        'x' => $point->getXValue(),
+                        'y' => $point->getYValue()
+                ];
+            }
+
+            $results->series[] = [
+                'label' => $serie->getLabel(),
+                'color' => $serie->getColor(),
+                'points' => $datapoints
+            ];
+            
         }
 
         return response()->json($results);

@@ -5,11 +5,13 @@ class LineChartPoint
 {
     private int $xValue;
     private int $yValue;
+    private string $label;
 
-    public function __construct(int $xValue, int $yValue)
+    public function __construct(int $xValue, int $yValue, string $label = '')
     {
         $this->xValue = $xValue;
         $this->yValue = $yValue;
+        $this->label = $label;
     }
 
     public function getXValue()
@@ -25,5 +27,10 @@ class LineChartPoint
     public function getXYValue()
     {
         return [$this->xValue,$this->yValue];
+    }
+    
+    public function getLabel()
+    {
+        return $this->label;
     }
 }

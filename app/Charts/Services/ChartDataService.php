@@ -24,6 +24,7 @@ class ChartDataService
     public function incoming(DateTime $start, DateTime $end): array
     {
         return Incoming::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('planned', 0)->where('confirmed', 1)
             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)->get()
             ->toArray();
     }
@@ -37,14 +38,15 @@ class ChartDataService
      * @return array
      */
 
-     public function incomingCategory(DateTime $start, DateTime $end, int $categoryId): array
-     {
-         return Incoming::user()->where('date_time', '>=', $this->startDate($start))
-             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)
-             ->where('category_id',$categoryId)
-             ->get()
-             ->toArray();
-     }
+    public function incomingCategory(DateTime $start, DateTime $end, int $categoryId): array
+    {
+        return Incoming::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)
+            ->where('planned', 0)->where('confirmed', 1)
+            ->where('category_id', $categoryId)
+            ->get()
+            ->toArray();
+    }
 
     /**
      * get line chart data
@@ -55,16 +57,17 @@ class ChartDataService
      * @return array
      */
 
-     public function incomingLabel(DateTime $start, DateTime $end, int $labelId): array
-     {
-         return Incoming::user()->where('date_time', '>=', $this->startDate($start))
-             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)
-             ->whereAs('labels',function($query) use($labelId) {
+    public function incomingLabel(DateTime $start, DateTime $end, int $labelId): array
+    {
+        return Incoming::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)
+            ->where('planned', 0)->where('confirmed', 1)
+            ->whereAs('labels', function ($query) use ($labelId) {
                 $query->where('label', $labelId);
-             })
-             ->get()
-             ->toArray();
-     }
+            })
+            ->get()
+            ->toArray();
+    }
 
     /**
      * get line chart data
@@ -77,6 +80,7 @@ class ChartDataService
     public function expenses(DateTime $start, DateTime $end): array
     {
         return Expenses::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('planned', 0)->where('confirmed', 1)
             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)->get()
             ->toArray();
     }
@@ -90,16 +94,17 @@ class ChartDataService
      * @return array
      */
 
-     public function expensesCategory(DateTime $start, DateTime $end, int $categoryId): array
-     {
-         return Expenses::user()->where('date_time', '>=', $this->startDate($start))
-             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)
-             ->where('category_id',$categoryId)
-             ->get()
-             ->toArray();
-     }
+    public function expensesCategory(DateTime $start, DateTime $end, int $categoryId): array
+    {
+        return Expenses::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)
+            ->where('planned', 0)->where('confirmed', 1)
+            ->where('category_id', $categoryId)
+            ->get()
+            ->toArray();
+    }
 
-     /**
+    /**
      * get line chart data
      * @param DateTime $start
      * @param DateTime $end
@@ -108,16 +113,35 @@ class ChartDataService
      * @return array
      */
 
-     public function expensesLabel(DateTime $start, DateTime $end, int $labelId): array
-     {
-         return Expenses::user()->where('date_time', '>=', $this->startDate($start))
-             ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)
-             ->whereHas('label',function($query) use($labelId) {
+    public function expensesLabel(DateTime $start, DateTime $end, int $labelId): array
+    {
+        return Expenses::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)
+            ->where('planned', 0)->where('confirmed', 1)
+            ->whereHas('label', function ($query) use ($labelId) {
                 $query->where('labels_id', $labelId);
-             })
-             ->get()
-             ->toArray();
-     }
+            })
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * get line chart data
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param array $types type of data entry
+     * 
+     * @return array
+     */
+
+    public function types(DateTime $start, DateTime $end, array $types): array
+    {
+        return Incoming::user()->where('date_time', '>=', $this->startDate($start))
+            ->where('date_time', '<=', $this->endDate($end))->whereIn('type', $types)
+            ->where('planned', 0)->where('confirmed', 1)
+            ->get()
+            ->toArray();
+    }
 
     /**
      * set up date time to search

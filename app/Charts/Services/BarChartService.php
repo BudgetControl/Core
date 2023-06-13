@@ -3,10 +3,12 @@
 namespace App\Charts\Services;
 
 use App\BudgetTracker\Entity\Wallet;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Models\SubCategory;
 use App\Charts\Entity\BarChart\BarChart;
 use App\Charts\Entity\BarChart\BarChartBar;
+use App\Charts\Services\ChartDataService;
 use DateTime;
 
 class BarChartService extends ChartDataService
@@ -73,6 +75,43 @@ class BarChartService extends ChartDataService
                     $wallet = new Wallet();
                     $wallet->sum($data);
                     $bar = new BarChartBar($wallet->getBalance(), $category->name);
+                    $chart->addBar($bar);
+                }
+            }
+        }
+
+        return $chart;
+    }
+
+    /**
+     * get line chart data
+     * @param array $types
+     * 
+     * @return BarChart
+     */
+
+    public function dataByTypes(array $types): BarChart
+    {
+        $chart = new BarChart();
+
+        foreach ($this->dateTime as $date) {
+            foreach ($types as $type) {
+
+                switch ($type) {
+                    case EntryType::Incoming->value:
+                        $data = $this->incoming($date['start'], $date['end']);
+                        break;
+                    case EntryType::Expenses->value:
+                        $data = $this->expenses($date['start'], $date['end']);
+                        break;
+                    default:
+                        throw new \Exception("Type of entry is not specified");
+                }
+
+                if (!empty($data)) {
+                    $wallet = new Wallet();
+                    $wallet->sum($data);
+                    $bar = new BarChartBar($wallet->getBalance(), $type);
                     $chart->addBar($bar);
                 }
             }

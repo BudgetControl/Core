@@ -2,6 +2,7 @@
 
 namespace App\Charts\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use App\Charts\Services\BarChartService;
 use Illuminate\Http\JsonResponse;
 use App\Charts\Services\LineChartService;
@@ -32,7 +33,7 @@ class BarChartController
         foreach ($bars as $bar) {
             $results->series[] = [
                 'label' => $bar->getLabel(),
-                'bar' => $bar->getValue(),
+                'value' => $bar->getValue(),
                 'color' => $bar->getColor()
             ];
         }
@@ -60,7 +61,7 @@ class BarChartController
         foreach ($bars as $bar) {
             $results->series[] = [
                 'label' => $bar->getLabel(),
-                'bar' => $bar->getValue(),
+                'value' => $bar->getValue(),
                 'color' => $bar->getColor()
             ];
         }
@@ -88,7 +89,7 @@ class BarChartController
         foreach ($bars as $bar) {
             $results->series[] = [
                 'label' => $bar->getLabel(),
-                'bar' => $bar->getValue(),
+                'value' => $bar->getValue(),
                 'color' => $bar->getColor()
             ];
         }
@@ -117,7 +118,7 @@ class BarChartController
         foreach ($bars as $bar) {
             $results->series[] = [
                 'label' => $bar->getLabel(),
-                'bar' => $bar->getValue(),
+                'value' => $bar->getValue(),
                 'color' => $bar->getColor()
             ];
         }
@@ -145,7 +146,31 @@ class BarChartController
         foreach ($bars as $bar) {
             $results->series[] = [
                 'label' => $bar->getLabel(),
-                'bar' => $bar->getValue(),
+                'value' => $bar->getValue(),
+                'color' => $bar->getColor()
+            ];
+        }
+
+        return response()->json($results);
+    }
+
+    public function incomingExpenses(Request $data): JsonResponse
+    {
+        $results = new \stdClass();
+        $dateTime = $data->date_time;
+        $this->validate($dateTime);
+
+        $service = new BarChartService($dateTime);
+        $chart = $service->dataByTypes([
+            EntryType::Incoming->value,
+            EntryType::Expenses->value
+        ]);
+        $bars = $chart->getBars();
+
+        foreach ($bars as $bar) {
+            $results->series[] = [
+                'label' => $bar->getLabel(),
+                'value' => $bar->getValue(),
                 'color' => $bar->getColor()
             ];
         }
