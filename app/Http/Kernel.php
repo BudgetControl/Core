@@ -50,6 +50,12 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\JwtAuthenticate::class,
         ],
+
+        'chart' => [
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':chart',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\JwtAuthenticate::class,
+        ],
         
         'auth' => [
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
