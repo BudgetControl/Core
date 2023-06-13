@@ -40,7 +40,9 @@ return new class extends Migration
 
        $table->integer('payee_id')->nullable();
 
+       $table->integer('geolocation_id')->nullable();
        $table->integer('geolocation')->nullable();
+
 
        $table->softDeletes();
      });
