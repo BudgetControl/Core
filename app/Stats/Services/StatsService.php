@@ -110,7 +110,7 @@ class StatsService
             $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -130,7 +130,7 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
 
-        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
 
     }
 
@@ -150,7 +150,7 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
 
-        return ['total' => $entry->all()->toArray(),'total_passed' => $entryOld->all()->toArray()];
+        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
     }
 
     /**
