@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::dropIfExists('geolocation');
         Schema::table('entries', function (Blueprint $table) {
             $table->dropColumn('geolocation_id');
-            $table->text('geolocation')->nullable();
+            $table->json('geolocation')->nullable();
         });
     }
 
