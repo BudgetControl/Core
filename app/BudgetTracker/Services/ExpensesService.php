@@ -10,6 +10,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Expenses;
+use App\Http\Services\UserService;
 use DateTime;
 
 /**
@@ -59,7 +60,7 @@ class ExpensesService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
-
+            $entryModel->user_id = UserService::getCacheUserID();
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);

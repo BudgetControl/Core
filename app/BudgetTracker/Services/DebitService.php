@@ -11,6 +11,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\Http\Services\UserService;
 use Exception;
 use DateTime;
 
@@ -71,7 +72,7 @@ class DebitService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->payee_id = $entry->getPayee()->id;
-
+            $entryModel->user_id = UserService::getCacheUserID();
             $entryModel->save();
 
         } catch (\Exception $e) {

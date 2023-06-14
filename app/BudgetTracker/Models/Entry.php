@@ -35,9 +35,6 @@ class Entry extends Model
         $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
-        if(empty($this->attributes['user_id'])) {
-            $this->attributes['user_id'] = UserService::getCacheUserID();
-        }
 
         foreach($attributes as $k => $v) {
             $this->$k = $v;

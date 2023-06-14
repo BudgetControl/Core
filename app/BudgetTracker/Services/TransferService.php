@@ -9,6 +9,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Transfer;
+use App\Http\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use DateTime;
 
@@ -61,7 +62,7 @@ class TransferService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->transfer_id = $data['transfer_id'];
-
+            $entryModel->user_id = UserService::getCacheUserID();
             $entryModel->save();
 
         } catch (\Exception $e) {

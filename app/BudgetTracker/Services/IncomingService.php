@@ -62,6 +62,7 @@ class IncomingService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->user_id = UserService::getCacheUserID();
 
             $entryModel->save();
 
