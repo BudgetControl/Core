@@ -49,6 +49,8 @@ class IncomingService extends EntryService
                 $entryModel = IncomingModel::findFromUuid($data['uuid']);
             }
 
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -59,13 +61,11 @@ class IncomingService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->user_id = UserService::getCacheUserID();
 
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
-            if ($data['confirmed'] == 1) {
-                AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
-            }
 
         } catch (\Exception $e) {
             $error = uniqid();

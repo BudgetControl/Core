@@ -53,7 +53,8 @@ class PlannedEntriesFactory extends Factory
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 1,
-            'planning' => 'daily'
+            'planning' => 'daily',
+            'user_id' => 1
         ];
     }
 }

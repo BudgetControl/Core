@@ -11,6 +11,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\Http\Services\UserService;
 use Exception;
 use DateTime;
 
@@ -58,6 +59,8 @@ class DebitService extends EntryService
                 $entryModel = DebitModel::findFromUuid($data['uuid']);
             }
 
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -69,10 +72,9 @@ class DebitService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->payee_id = $entry->getPayee()->id;
-
+            $entryModel->user_id = UserService::getCacheUserID();
             $entryModel->save();
 
-            AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());

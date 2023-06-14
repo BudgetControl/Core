@@ -4,16 +4,11 @@ namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\PlannedEntries;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
-use App\BudgetTracker\ValueObject\Debit;
-use App\BudgetTracker\Models\Account;
-use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\PaymentsTypes;
+use App\Http\Services\UserService;
 
 /**
  * Summary of SaveEntryService
@@ -53,6 +48,7 @@ class PlanningRecursivelyService extends EntryService
             $entry->date_time = $data['date_time'];
             $entry->note = $data['note'];
             $entry->payment_type = $data['payment_type'];
+            $entry->user_id = UserService::getCacheUserID();
 
             $entry->save();
 

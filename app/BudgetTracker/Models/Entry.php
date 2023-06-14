@@ -35,24 +35,10 @@ class Entry extends Model
         $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
-        if(empty($this->attributes['user_id'])) {
-            $this->attributes['user_id'] = UserService::getCacheUserID();
-        }
 
         foreach($attributes as $k => $v) {
             $this->$k = $v;
         }
-    }
-
-    /**
-     * casting amount value
-     */
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => $value,
-            set: fn (string $value) => $this->cleanAmount($value),
-        );
     }
 
      /**
@@ -156,19 +142,6 @@ class Entry extends Model
     public function scopeUser($query): void
     {
         $query->where('user_id',UserService::getCacheUserID());
-    }
-
-    /**
-     * clean amount value
-     * @param string $amount
-     * 
-     * @return float
-     */
-    private function cleanAmount(string $amount): float
-    {
-        $amount = number_format((float) $amount,2,'.',"");
-
-        return (float) $amount;
     }
 
 }

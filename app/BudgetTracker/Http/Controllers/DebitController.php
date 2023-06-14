@@ -6,7 +6,9 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Debit;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\DebitService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
@@ -62,9 +64,11 @@ class DebitController extends Controller implements ControllerResourcesInterface
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
-	{
+	{	
+		$entry = Entry::findOrFail($id);
 		try {
 			Debit::destroy($id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

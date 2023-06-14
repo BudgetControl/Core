@@ -21,7 +21,6 @@ class ActivatePlannedEntries implements ShouldQueue
     public function __construct()
     {
         $this->handle();
-        return true;
     }
 
     /**

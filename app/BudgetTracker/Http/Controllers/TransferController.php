@@ -6,8 +6,10 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Services\TransferService;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Transfer;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
@@ -75,8 +77,10 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
+		$entry = Entry::findOrFail($id);
 		try {
 			Transfer::destroy($id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
