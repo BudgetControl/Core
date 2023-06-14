@@ -47,6 +47,9 @@ class TransferService extends EntryService
             if (!empty($data['uuid'])) {
                 $entryModel = TransferModel::findFromUuid($data['uuid']);
             }
+
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;

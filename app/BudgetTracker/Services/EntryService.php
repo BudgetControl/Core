@@ -192,4 +192,44 @@ class EntryService
 
     return $returnEntry;
   }
+
+  /**
+   * update balance
+   * @param Entry $amount
+   * @param int $accountId
+   * @param EntryModel $entry
+   * 
+   * @return void
+   */
+  protected function updateBalance(Entry $newEntry, int $accountId, EntryModel $entry): void
+  {
+    $amount = $newEntry->getAmount();
+    $planned = $newEntry->getPlanned();
+    $confirmed = $newEntry->getConfirmed();
+    
+    //only new entry
+    if(!empty($entry) && $confirmed == 1 && $planned == 0) {
+      AccountsService::updateBalance($amount,$accountId);
+    }
+
+    //conditions
+    switch(true) {
+      case ($amount != $entry->amount && $confirmed == 1 && $planned = 0):
+        AccountsService::updateBalance($entry->amount * -1,$accountId);
+        AccountsService::updateBalance($amount,$accountId);
+        break;
+      case ($planned == 1 && $entry->planned == 0):
+        AccountsService::updateBalance($entry->amount * -1,$accountId);
+        break;
+      case ($planned = 0 && $entry->planned == 1 && $confirmed == 1):
+        AccountsService::updateBalance($entry->amount,$accountId);
+        break;
+      case ($entry->planned = 0 && $entry->confirmed == 0 && $confirmed == 1):
+        AccountsService::updateBalance($entry->amount,$accountId);
+        break;
+      case ($entry->planned = 0 && $entry->confirmed == 1 && $confirmed == 0):
+        AccountsService::updateBalance($entry->amount * -1,$accountId);
+        break;
+    }
+  }
 }
