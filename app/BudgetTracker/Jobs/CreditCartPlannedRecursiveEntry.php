@@ -55,9 +55,9 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
 
     /**
      * find planned entries
-     * @return Account
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function findCreditCards() : Account
+    private function findCreditCards() : \Illuminate\Database\Eloquent\Collection
     {   
         return Account::where('installement',1)->get();
     }
