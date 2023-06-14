@@ -76,7 +76,7 @@ class EntryService
       $entryModel->planned = $entry->getPlanned();
       $entryModel->waranty = $entry->getWaranty();
       $entryModel->confirmed = $entry->getConfirmed();
-
+      $entryModel->user_id = UserService::getCacheUserID();
       $this->attachLabels($entry->getLabels(), $entryModel);
       if ($data['confirmed'] == 1) {
         AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
