@@ -52,7 +52,7 @@ class AccountsService
             $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
             $entry->amount = $account['amount'];
-            $entry->user_id = UserService::getCacheUserID();
+            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];;
 
             $entry->save();
             

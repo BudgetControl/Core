@@ -65,7 +65,7 @@ class TransferService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->transfer_id = $data['transfer_id'];
-            $entryModel->user_id = UserService::getCacheUserID();
+            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
 
         } catch (\Exception $e) {

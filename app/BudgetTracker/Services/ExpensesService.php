@@ -64,7 +64,7 @@ class ExpensesService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
-            $entryModel->user_id = UserService::getCacheUserID();
+            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
