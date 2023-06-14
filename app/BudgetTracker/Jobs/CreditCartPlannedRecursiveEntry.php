@@ -85,8 +85,10 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
     {
         $entry = Entry::where('note', $note)->get();
         if(empty($entry)) {
+            Log::debug("No entry found with ".$note);
             return false;
         }
+        Log::debug("Founded entry ".$note);
         return true;
     }
 }
