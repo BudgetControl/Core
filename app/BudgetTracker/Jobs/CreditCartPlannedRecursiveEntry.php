@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
@@ -15,6 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Services\EntryService;
 use Illuminate\Support\Facades\Log;
 
 class CreditCartPlannedRecursiveEntry implements ShouldQueue
@@ -43,10 +45,16 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
                 $entry = $this->entry($account->installementValue,$account);
 
                 if($this->exist($entry->getNote()) === false) {
-                    $service = new ExpensesService();
+                    $service = new EntryService();
                     $entryArray = $entry->toArray();
                     $entryArray['user_id'] = $account->user_id;
-                    $service->save($entryArray);
+
+                    $type = EntryType::Incoming;
+                    if($entry->getAmount() < 0) {
+                        $type = EntryType::Expenses;
+                    }
+
+                    $service->save($entryArray,$type);
                 }
             }
 

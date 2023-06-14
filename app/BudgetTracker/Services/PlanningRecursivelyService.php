@@ -8,6 +8,7 @@ use App\BudgetTracker\Models\PlannedEntries;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Models\Payee;
 use App\Http\Services\UserService;
 
 /**
@@ -16,13 +17,15 @@ use App\Http\Services\UserService;
 class PlanningRecursivelyService extends EntryService
 {
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 

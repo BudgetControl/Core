@@ -13,6 +13,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Models\Payee;
 
 /**
  * Summary of SaveEntryService
@@ -20,13 +21,15 @@ use App\BudgetTracker\Models\PaymentsTypes;
 class IncomingService extends EntryService
 {
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 

@@ -20,13 +20,16 @@ use DateTime;
  */
 class DebitService extends EntryService
 {
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+    
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
             Log::debug("save debit -- " . json_encode($data));
