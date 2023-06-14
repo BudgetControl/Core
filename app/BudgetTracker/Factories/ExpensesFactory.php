@@ -52,7 +52,8 @@ class ExpensesFactory extends Factory
             'date_time' => $date,
             'payment_type' => 1,
             'confirmed' => 1,
-            'planned' => $planned
+            'planned' => $planned,
+            'user_id' => 1
 
         ];
     }
