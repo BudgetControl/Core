@@ -44,17 +44,6 @@ class Entry extends Model
         }
     }
 
-    /**
-     * casting amount value
-     */
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => $value,
-            set: fn (string $value) => $this->cleanAmount($value),
-        );
-    }
-
      /**
      * The users that belong to the role.
      */
@@ -156,19 +145,6 @@ class Entry extends Model
     public function scopeUser($query): void
     {
         $query->where('user_id',UserService::getCacheUserID());
-    }
-
-    /**
-     * clean amount value
-     * @param string $amount
-     * 
-     * @return float
-     */
-    private function cleanAmount(string $amount): float
-    {
-        $amount = number_format((float) $amount,2,'.',"");
-
-        return (float) $amount;
     }
 
 }
