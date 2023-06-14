@@ -42,7 +42,9 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
 
                 if($this->exist($entry->getNote()) === false) {
                     $service = new ExpensesService();
-                    $service->save($entry->toArray());
+                    $entryArray = $entry->toArray();
+                    $entryArray['user_id'] = $account->user_id;
+                    $service->save($entryArray);
                 }
             }
 
