@@ -58,6 +58,8 @@ class DebitService extends EntryService
                 $entryModel = DebitModel::findFromUuid($data['uuid']);
             }
 
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -72,7 +74,6 @@ class DebitService extends EntryService
 
             $entryModel->save();
 
-            AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());

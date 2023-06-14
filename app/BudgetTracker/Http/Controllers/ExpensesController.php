@@ -6,6 +6,7 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\ExpensesService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
@@ -61,8 +62,10 @@ class ExpensesController extends Controller implements ControllerResourcesInterf
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
+		$entry = Expenses::findOrFail($id);
 		try {
 			Expenses::destroy($id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
