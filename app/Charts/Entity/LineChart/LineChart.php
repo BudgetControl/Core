@@ -22,7 +22,11 @@ final class LineChart
         $hash = '';
         foreach($this->series as $serie) {
             $points = $serie->getDataPoints();
-            $hash .= "{".$serie->getLabel().$serie->getColor().$points->getXValue().$points->getYValue()."}";
+            $hash .= "{".$serie->getLabel().$serie->getColor();
+            foreach($points as $point) {
+                $hash .= $point->getXValue().$point->getYValue()."-";
+            }
+            $hash .= "}";
         }
         return md5("LineChart:$hash");
     }
