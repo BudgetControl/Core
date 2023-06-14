@@ -11,6 +11,7 @@ use App\BudgetTracker\Interfaces\AccountInterface;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use App\BudgetTracker\Entity\Wallet;
+use App\Http\Services\UserService;
 
 /**
  * Summary of SaveEntryService
@@ -51,6 +52,7 @@ class AccountsService
             $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
             $entry->amount = $account['amount'];
+            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];;
 
             $entry->save();
             

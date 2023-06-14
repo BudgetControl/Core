@@ -10,6 +10,7 @@ use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Transfer;
 use App\Http\Services\UserService;
+use App\BudgetTracker\Models\Payee;
 use Illuminate\Support\Facades\Log;
 use DateTime;
 
@@ -19,13 +20,15 @@ use DateTime;
 class TransferService extends EntryService
 {
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 
@@ -62,7 +65,7 @@ class TransferService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->transfer_id = $data['transfer_id'];
-            $entryModel->user_id = UserService::getCacheUserID();
+            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
 
         } catch (\Exception $e) {

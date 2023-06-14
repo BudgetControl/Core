@@ -111,7 +111,8 @@ class Entry implements EntryInterface
             'currency_id' => $this->currency->id,
             'payment_type' => $this->paymentType->id,
             'geolocation' => $this->geolocation,
-            'payee_id' => $this->payee
+            'payee_id' => $this->payee,
+            'label' => $this->labels
         ];
     }
 

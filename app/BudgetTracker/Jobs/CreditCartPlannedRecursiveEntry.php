@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
@@ -15,6 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Services\EntryService;
 use Illuminate\Support\Facades\Log;
 
 class CreditCartPlannedRecursiveEntry implements ShouldQueue
@@ -34,17 +36,25 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Find credit card entry to insert");
         try {
 
             $accounts = $this->findCreditCards();
             foreach($accounts as $account) {
+                Log::debug("Found account ".$account->id);
                 $entry = $this->entry($account->installementValue,$account);
 
                 if($this->exist($entry->getNote()) === false) {
-                    $service = new ExpensesService();
+                    $service = new EntryService();
                     $entryArray = $entry->toArray();
                     $entryArray['user_id'] = $account->user_id;
-                    $service->save($entryArray);
+
+                    $type = EntryType::Incoming;
+                    if($entry->getAmount() < 0) {
+                        $type = EntryType::Expenses;
+                    }
+
+                    $service->save($entryArray,$type);
                 }
             }
 
@@ -55,9 +65,9 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
 
     /**
      * find planned entries
-     * @return Account
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function findCreditCards() : Account
+    private function findCreditCards() : \Illuminate\Database\Eloquent\Collection
     {   
         return Account::where('installement',1)->get();
     }
@@ -82,9 +92,11 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
     private function exist($note): bool
     {
         $entry = Entry::where('note', $note)->get();
-        if(empty($entry)) {
+        if($entry->count() == 0) {
+            Log::debug("No entry found with ".$note);
             return false;
         }
+        Log::debug("Founded entry ".$note);
         return true;
     }
 }

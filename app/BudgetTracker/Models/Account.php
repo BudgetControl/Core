@@ -32,9 +32,6 @@ class Account extends Model
         
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
-        if(empty($this->attributes['user_id'])) {
-            $this->attributes['user_id'] = UserService::getCacheUserID();
-        }
     }
 
     /**

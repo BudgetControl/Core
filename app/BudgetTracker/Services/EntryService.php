@@ -12,6 +12,7 @@ use App\Http\Services\UserService;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PaymentsTypes;
 use Exception;
 
@@ -39,10 +40,12 @@ class EntryService
   /**
    * save a resource
    * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
    * 
    * @return void
    */
-  public function save(array $data): void
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
   {
     try {
 
@@ -58,13 +61,19 @@ class EntryService
         new DateTime($data['date_time']),
         $data['label'],
         $data['confirmed'],
-        $data['waranty']
+        $data['waranty'],
+        new \stdClass(),
+        $data['transfer'],
+        $payee,
+        $type
       );
 
       $entryModel = new EntryModel();
       if (!empty($data['uuid'])) {
         $entryModel = EntryModel::findFromUuid($data['uuid']);
       }
+
+      $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
       $entryModel->account_id = $entry->getAccount()->id;
       $entryModel->amount = $entry->getAmount();
@@ -76,11 +85,12 @@ class EntryService
       $entryModel->planned = $entry->getPlanned();
       $entryModel->waranty = $entry->getWaranty();
       $entryModel->confirmed = $entry->getConfirmed();
-      $entryModel->user_id = UserService::getCacheUserID();
+      $entryModel->type = $entry->getType();
+      $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+      $entryModel->save();
+
       $this->attachLabels($entry->getLabels(), $entryModel);
-      if ($data['confirmed'] == 1) {
-        AccountsService::updateBalance($entryModel->amount, $entryModel->account_id);
-      }
+
     } catch (\Exception $e) {
       $errorCode = uniqid();
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
