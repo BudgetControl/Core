@@ -34,10 +34,12 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Find credit card entry to insert");
         try {
 
             $accounts = $this->findCreditCards();
             foreach($accounts as $account) {
+                Log::debug("Found account ".$account->id);
                 $entry = $this->entry($account->installementValue,$account);
 
                 if($this->exist($entry->getNote()) === false) {
