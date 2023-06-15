@@ -5,7 +5,7 @@ use App\Charts\Entity\TableChart\TableRowChart;
 
 final class TableChart
 {
-    private array $rows;
+    private array $rows = [];
 
     public function addRows(TableRowChart $row)
     {

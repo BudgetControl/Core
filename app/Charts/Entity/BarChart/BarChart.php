@@ -5,7 +5,7 @@ use App\Charts\Entity\BarChart\BarChartBar;
 
 final class BarChart
 {
-    private array $bar;
+    private array $bar = [];
 
     public function addBar(BarChartBar $bar)
     {

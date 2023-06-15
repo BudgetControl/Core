@@ -2,8 +2,10 @@
 
 namespace App\BudgetTracker\Models;
 
+use App\BudgetTracker\Factories\LabelsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Http\Services\UserService;
 
 class Labels extends Model
@@ -23,6 +25,16 @@ class Labels extends Model
         foreach ($attributes as $k => $v) {
             $this->$k = $v;
         }
+    }
+
+    
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(array $attributes = []): Factory
+    {
+        return LabelsFactory::new($attributes);
     }
 
     /**
