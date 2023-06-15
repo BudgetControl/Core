@@ -44,8 +44,10 @@ class TableChartService extends ChartDataService
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
+                $previusDate = $date;
+
                 $data = $this->incomingCategory($date['start'], $date['end'], $category->id);
-                $dataPrev = $this->incomingCategory($date['start']->modify('-1 month'), $date['end']->modify('-1 month'), $category->id);
+                $dataPrev = $this->incomingCategory($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $category->id);
 
                 if (!empty($data)) {
                     $wallet = new Wallet();
@@ -78,8 +80,10 @@ class TableChartService extends ChartDataService
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
+                $previusDate = $date;
+
                 $data = $this->incomingLabel($date['start'], $date['end'], $label->id);
-                $dataPrev = $this->incomingLabel($date['start']->modify('-1 month'), $date['end']->modify('-1 month'), $label->id);
+                $dataPrev = $this->incomingLabel($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $label->id);
 
                 if (!empty($data)) {
                     $wallet = new Wallet();
@@ -112,8 +116,10 @@ class TableChartService extends ChartDataService
  
          foreach ($this->dateTime as $date) {
              foreach ($categories as $category) {
-                 $data = $this->expensesCategory($date['start'], $date['end'], $category->id);
-                 $dataPrev = $this->expensesCategory($date['start']->modify('-1 month'), $date['end']->modify('-1 month'), $category->id);
+                $previusDate = $date;
+
+                $data = $this->expensesCategory($date['start'], $date['end'], $category->id);
+                 $dataPrev = $this->expensesCategory($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $category->id);
  
                  if (!empty($data)) {
                      $wallet = new Wallet();
@@ -146,8 +152,10 @@ class TableChartService extends ChartDataService
  
          foreach ($this->dateTime as $date) {
              foreach ($labels as $label) {
+                $previusDate = $date;
+
                  $data = $this->expensesLabel($date['start'], $date['end'], $label->id);
-                 $dataPrev = $this->expensesLabel($date['start']->modify('-1 month'), $date['end']->modify('-1 month'), $label->id);
+                 $dataPrev = $this->expensesLabel($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $label->id);
  
                  if (!empty($data)) {
                      $wallet = new Wallet();
