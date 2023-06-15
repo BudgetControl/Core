@@ -8,6 +8,8 @@ use Tests\TestCase;
 use App\Charts\Entity\LineChart\LineChart;
 use App\Charts\Entity\LineChart\LineChartPoint;
 use App\Charts\Entity\LineChart\LineChartSeries;
+use App\Charts\Entity\TableChart\TableChart;
+use App\Charts\Entity\TableChart\TableRowChart;
 
 
 
@@ -51,6 +53,20 @@ class ChartDataTest extends TestCase
          foreach (self::EXAMPLE_DATA as $data) {
             $bar = new BarChartBar($data['value'],$data['label']);
             $chart->addBar($bar);
+         }
+         
+         $this->assertTrue($chart->isEqualsTo($chart));
+ 
+    }
+
+    public function testTableChart()
+    {
+
+        $chart = new TableChart();
+ 
+         foreach (self::EXAMPLE_DATA as $data) {
+            $bar = new TableRowChart($data['value'],200.00,'label');
+            $chart->addRows($bar);
          }
          
          $this->assertTrue($chart->isEqualsTo($chart));

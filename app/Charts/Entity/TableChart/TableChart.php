@@ -7,7 +7,7 @@ final class TableChart
 {
     private array $rows;
 
-    public function addBar(TableRowChart $row)
+    public function addRows(TableRowChart $row)
     {
         $this->rows[] = $row;
     }
@@ -21,7 +21,7 @@ final class TableChart
     {       
         $hash = '';
         foreach($this->rows as $row) {
-            $hash .= "{".$row->getAmount().$row->getLabel().$row->getPrevAmount().$row->getColor().$row->getPercentage()."}";
+            $hash .= "{".$row->getAmount().$row->getLabel().$row->getPrevAmount().$row->getBounceRate()."}";
         }
         return md5("BarChart:$hash");
     }

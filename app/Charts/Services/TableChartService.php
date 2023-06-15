@@ -55,7 +55,7 @@ class TableChartService extends ChartDataService
                     $walletPrev->sum($dataPrev);
 
                     $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $category->name);
-                    $chart->addBar($row);
+                    $chart->addRows($row);
                 }
             }
         }
@@ -89,7 +89,7 @@ class TableChartService extends ChartDataService
                     $walletPrev->sum($dataPrev);
 
                     $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $label->name);
-                    $chart->addBar($row);
+                    $chart->addRows($row);
                 }
             }
         }
@@ -123,7 +123,7 @@ class TableChartService extends ChartDataService
                      $walletPrev->sum($dataPrev);
  
                      $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $category->name);
-                     $chart->addBar($row);
+                     $chart->addRows($row);
                  }
              }
          }
@@ -157,7 +157,7 @@ class TableChartService extends ChartDataService
                      $walletPrev->sum($dataPrev);
  
                      $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $label->name);
-                     $chart->addBar($row);
+                     $chart->addRows($row);
                  }
              }
          }
