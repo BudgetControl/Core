@@ -150,6 +150,7 @@ class EntryService
             $label->uuid = uniqid();
             $label->name = strtolower($value);
             $label->color = self::COLORS[rand(0, 9)];
+            $label->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();
           }

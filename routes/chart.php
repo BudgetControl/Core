@@ -33,13 +33,20 @@ Route::get('bar/incoming/day', '\App\Charts\Controllers\BarChartController@incom
 Route::get('bar/incoming/category', '\App\Charts\Controllers\BarChartController@incomingByCategory')->middleware('auth.jwt');
 Route::get('bar/incoming/label', '\App\Charts\Controllers\BarChartController@incomingByLabel')->middleware('auth.jwt');
 
+Route::get('table/incoming/category', '\App\Charts\Controllers\TableChartController@incomingByCategory')->middleware('auth.jwt');
+Route::get('table/incoming/label', '\App\Charts\Controllers\TableChartController@incomingByLabel')->middleware('auth.jwt');
+
 Route::get('bar/expenses/year', '\App\Charts\Controllers\BarChartController@expensesYear')->middleware('auth.jwt');
 Route::get('bar/expenses/month', '\App\Charts\Controllers\BarChartController@expensesMonth')->middleware('auth.jwt');
 Route::get('bar/expenses/day', '\App\Charts\Controllers\BarChartController@expensesDay')->middleware('auth.jwt');
 Route::get('bar/expenses/category', '\App\Charts\Controllers\BarChartController@expensesByCategory')->middleware('auth.jwt');
 Route::get('bar/expenses/label', '\App\Charts\Controllers\BarChartController@expensesByLabel')->middleware('auth.jwt');
 
+Route::get('table/expenses/category', '\App\Charts\Controllers\TableChartController@expensesByCategory')->middleware('auth.jwt');
+Route::get('table/expenses/label', '\App\Charts\Controllers\TableChartController@expensesByLabel')->middleware('auth.jwt');
+
 Route::get('bar/incoming-expenses', '\App\Charts\Controllers\BarChartController@incomingExpenses')->middleware('auth.jwt');
+
 
 
 

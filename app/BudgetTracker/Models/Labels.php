@@ -20,10 +20,6 @@ class Labels extends Model
     {
         parent::__construct($attributes);
 
-        if (empty($this->attributes['user_id'])) {
-            $this->attributes['user_id'] = UserService::getCacheUserID();
-        }
-
         foreach ($attributes as $k => $v) {
             $this->$k = $v;
         }

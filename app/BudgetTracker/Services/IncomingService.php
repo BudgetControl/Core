@@ -2,12 +2,13 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\DataObjects\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Incoming as IncomingModel;
 use App\BudgetTracker\Entity\Entries\Incoming;
+use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\UserService;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
@@ -103,26 +104,6 @@ class IncomingService extends EntryService
         }
 
         return $result;
-    }
-
-    /**
-     * retrive Incoming data of specific data
-     */
-    public function incomingFromData(DateTime $date): Wallet
-    {
-        $start = $date->format('Y-m-d h:i:s');
-
-        $end = $date;
-        $end->modify('last day of these month');
-        $end = $date->format('Y-m-d h:i:s');
-
-        $incoming = IncomingModel::where('date_time', '>=', $start)
-        ->where('date_time', '<=', $end)->get();
-
-        $wallet = new Wallet();
-        $wallet->sum($incoming->toArray());
-
-        return $wallet;
     }
 
  }

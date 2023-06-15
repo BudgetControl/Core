@@ -39,9 +39,6 @@ class Payee extends Model
 
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
         $this->attributes['uuid'] = uniqid();
-        if(empty($this->attributes['user_id'])) {
-            $this->attributes['user_id'] = UserService::getCacheUserID();
-        }
 
         foreach ($attributes as $k => $v) {
             $this->$k = $v;
