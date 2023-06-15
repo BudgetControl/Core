@@ -92,9 +92,9 @@ class ApiGetDataTest extends TestCase
     ];
 
     const INCOMING_ID = 1;
-    const EXPENSES_ID = 12;
-    const DEBIT_ID = 21;
-    const TRANSFER_ID = 22;
+    const EXPENSES_ID = 1012;
+    const DEBIT_ID = 2001;
+    const TRANSFER_ID = 2002;
     const PLANNING_RECURSIVELY = 1;
 
     private $headers = '';

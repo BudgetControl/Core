@@ -3,21 +3,20 @@
 namespace App\BudgetTracker\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Models\Debit;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\BudgetTracker\Models\Incoming>
  */
-class PayeeFactory extends Factory
+class LabelsFactory extends Factory
 {
 
+    
     /**
      * The name of the factory's corresponding model.
      *
      * @var class-string<\Illuminate\Database\Eloquent\Model|TModel>
      */
-    protected $model = "\App\\BudgetTracker\\Models\\Payee";
+    protected $model = "\App\\BudgetTracker\\Models\\Labels";
 
     protected static $namespace = 'App\\BudgetTracker\\Factories';
 
@@ -28,12 +27,11 @@ class PayeeFactory extends Factory
      */
     public function definition(): array
     {
-        $amount = fake()->numberBetween(-1,-50);
-
+        
         return [
             'uuid' => uniqid(),
-            'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(5),
+            'color' => '#000999',
             'user_id' => 1
         ];
     }

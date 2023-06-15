@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Models\Payee;
+use App\Http\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
@@ -32,9 +33,8 @@ class PayeeService
 
             if ($entry->count() === 0) {
                 $entry = new Payee();
-                foreach ($data as $k => $v) {
-                    $entry->$k = $v;
-                }
+                $entry->name = $data['name'];
+                $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
                 $entry->save();
             }
