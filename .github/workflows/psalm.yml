@@ -20,12 +20,16 @@ permissions:
 jobs:
   php-security:
     runs-on: ubuntu-latest
+    
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
 
     steps:
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.2'
       - name: Checkout code
         uses: actions/checkout@v3
 
