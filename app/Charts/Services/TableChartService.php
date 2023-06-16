@@ -44,10 +44,8 @@ class TableChartService extends ChartDataService
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
-                $previusDate = $date;
-
                 $data = $this->incomingCategory($date['start'], $date['end'], $category->id);
-                $dataPrev = $this->incomingCategory($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $category->id);
+                $dataPrev = $this->incomingCategory($this->previusMonthDate($date['start']), $this->previusMonthDate($date['end']), $category->id);
 
                 if (!empty($data)) {
                     $wallet = new Wallet();
@@ -80,10 +78,8 @@ class TableChartService extends ChartDataService
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
-                $previusDate = $date;
-
                 $data = $this->incomingLabel($date['start'], $date['end'], $label->id);
-                $dataPrev = $this->incomingLabel($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $label->id);
+                $dataPrev = $this->incomingLabel($this->previusMonthDate($date['start']), $this->previusMonthDate($date['end']), $label->id);
 
                 if (!empty($data)) {
                     $wallet = new Wallet();
@@ -109,69 +105,73 @@ class TableChartService extends ChartDataService
      * @return TableChart
      */
 
-     public function expensesByCategory(): TableChart
-     {
-         $chart = new TableChart();
-         $categories = SubCategory::all();
- 
-         foreach ($this->dateTime as $date) {
-             foreach ($categories as $category) {
-                $previusDate = $date;
+    public function expensesByCategory(): TableChart
+    {
+        $chart = new TableChart();
+        $categories = SubCategory::all();
+
+        foreach ($this->dateTime as $date) {
+            foreach ($categories as $category) {
 
                 $data = $this->expensesCategory($date['start'], $date['end'], $category->id);
-                 $dataPrev = $this->expensesCategory($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $category->id);
- 
-                 if (!empty($data)) {
-                     $wallet = new Wallet();
-                     $wallet->sum($data);
- 
-                     $walletPrev = new Wallet();
-                     $walletPrev->sum($dataPrev);
- 
-                     $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $category->name);
-                     $chart->addRows($row);
-                 }
-             }
-         }
- 
-         return $chart;
-     }
- 
-     /**
-      * get line chart data
-      * @param string $year the start year
-      * @param string $toYear the last year
-      * 
-      * @return TableChart
-      */
- 
-     public function expensesByLabel(): TableChart
-     {
-         $chart = new TableChart();
-         $labels = Labels::user()->get();
- 
-         foreach ($this->dateTime as $date) {
-             foreach ($labels as $label) {
-                $previusDate = $date;
+                $dataPrev = $this->expensesCategory($this->previusMonthDate($date['start']), $this->previusMonthDate($date['end']), $category->id);
 
-                 $data = $this->expensesLabel($date['start'], $date['end'], $label->id);
-                 $dataPrev = $this->expensesLabel($previusDate['start']->modify('-1 month'), $previusDate['end']->modify('-1 month'), $label->id);
- 
-                 if (!empty($data)) {
-                     $wallet = new Wallet();
-                     $wallet->sum($data);
- 
-                     $walletPrev = new Wallet();
-                     $walletPrev->sum($dataPrev);
- 
-                     $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $label->name);
-                     $chart->addRows($row);
-                 }
-             }
-         }
- 
-         return $chart;
-     }
+                if (!empty($data)) {
+                    $wallet = new Wallet();
+                    $wallet->sum($data);
 
-    
+                    $walletPrev = new Wallet();
+                    $walletPrev->sum($dataPrev);
+
+                    $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $category->name);
+                    $chart->addRows($row);
+                }
+            }
+        }
+
+        return $chart;
+    }
+
+    /**
+     * get line chart data
+     * @param string $year the start year
+     * @param string $toYear the last year
+     * 
+     * @return TableChart
+     */
+
+    public function expensesByLabel(): TableChart
+    {
+        $chart = new TableChart();
+        $labels = Labels::user()->get();
+
+        foreach ($this->dateTime as $date) {
+            foreach ($labels as $label) {
+
+                $data = $this->expensesLabel($date['start'], $date['end'], $label->id);
+                $dataPrev = $this->expensesLabel($this->previusMonthDate($date['start']), $this->previusMonthDate($date['end']), $label->id);
+
+                if (!empty($data)) {
+                    $wallet = new Wallet();
+                    $wallet->sum($data);
+
+                    $walletPrev = new Wallet();
+                    $walletPrev->sum($dataPrev);
+
+                    $row = new TableRowChart($wallet->getBalance(), $walletPrev->getBalance(), $label->name);
+                    $chart->addRows($row);
+                }
+            }
+        }
+
+        return $chart;
+    }
+
+    private function previusMonthDate(DateTime $date): DateTime
+    {
+        $newDate = new DateTime($date->format('Y-m-d'));
+        $newDate->modify('-1 month');
+
+        return $newDate;
+    }
 }
