@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: ./budget-tracker_v2-FE/Dockerfile
     environment:
-      - VIRTUAL_HOST=app.budgetcontrol.cloud
+      - VIRTUAL_HOST=${FRONTEND_DOMAIN}
     volumes:
         - ./budget-tracker_v2-FE:/usr/src/app
         - ./budget-tracker_v2-FE/.env:/usr/src/app/.env
@@ -34,8 +34,8 @@ services:
       - ./:/app
       - .env:/app/.env
     environment:
-      - VIRTUAL_HOST=api.budgetcontrol.cloud
+      - VIRTUAL_HOST=${BACKEND_DOMAIN}
     depends_on:
       - database
     restart: unless-stopped
-    command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+    command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=80"

@@ -11,9 +11,11 @@ php version >= 8.2
 * Creation of the dockerfile container
    docker-compose up -d
 * Generate cache file
-   docker exec budgettrackerv2_bemodule_1 php artisan confic:cache
+   docker exec budget-tracker_v2_bemodule_1 php artisan config:cache
 * Make migrations
-   docker exec budgettrackerv2_bemodule_1 php artisan migrate --seed
+   docker exec budget-tracker_v2_bemodule_1 php artisan migrate --seed
+* Clean cache files
+   docker exec budget-tracker_v2_bemodule_1 php artisan optimize
 * Enjoy
    insert utl http://localhost:3333/ ( api/incoming )
    
