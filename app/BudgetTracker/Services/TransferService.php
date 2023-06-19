@@ -38,7 +38,7 @@ class TransferService extends EntryService
                 $data['amount'],
                 Currency::findOrFail($data['currency_id']),
                 $data['note'],
-                SubCategory::findOrFail($data['category_id']),
+                SubCategory::findOrFail(75),
                 Account::findOrFail($data['account_id']),
                 PaymentsTypes::findOrFail($data['payment_type']),
                 new DateTime($data['date_time']),
