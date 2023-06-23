@@ -1,40 +1,41 @@
-version: '2.2'
+version: '3'
 
 services:
-    database:
-      image: mysql:latest
-      restart: unless-stopped
-      ports:
-        - 33306:3306
-      env_file:
-        - .env
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-    bemodule:
-      image: docker.io/bitnami/laravel:10
-      ports:
-        - 3000:8000
-      volumes:
-        - ./:/app
-        - .env:/app/.env
-      depends_on:
-        - database
-        - cache
-      restart: unless-stopped
-      command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
-    cache:
-      image: redis:7.2-rc2-alpine
-      restart: always
-      env_file:
-        - .env
-      ports:
-        - '6379:6379'
-      command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-      volumes: 
-        - cache:/data
-volumes:
-  cache:
-    driver: local
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  database:
+    image: mysql:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+  femodule:
+    build:
+      context: .
+      dockerfile: ./budget-tracker_v2-FE/Dockerfile
+    environment:
+      - VIRTUAL_HOST=${FRONTEND_DOMAIN}
+    volumes:
+        - ./budget-tracker_v2-FE:/usr/src/app
+        - ./budget-tracker_v2-FE/.env:/usr/src/app/.env
+    command: "npm run install:clean"
+    restart: unless-stopped
+  bemodule:
+    image: docker.io/bitnami/laravel:10
+    volumes:
+      - ./:/app
+      - .env:/app/.env
+    environment:
+      - VIRTUAL_HOST=${BACKEND_DOMAIN}
+    depends_on:
+      - database
+    restart: unless-stopped
+    command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=80"
