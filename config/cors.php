@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
     
-    'allowed_origins' => ['http://app.budgetcontrol.cloud','http://localhost:8080'], //This line means allow origin
+    'allowed_origins' => ['http://dev.api.budgetcontrol.cloud','http://app.budgetcontrol.cloud'], //This line means allow origin
     
     'allowed_origins_patterns' => [],
     
