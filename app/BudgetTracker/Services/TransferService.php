@@ -68,6 +68,8 @@ class TransferService extends EntryService
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
 
+            $this->saveInverted($entryModel->toArray());
+
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
@@ -102,4 +104,23 @@ class TransferService extends EntryService
 
         return $result;
     }
+
+    /**
+     * save inverted entry
+     */
+    private function saveInverted(array $entry):void
+    {
+    $newRequest = $entry;
+    if(!empty($entry['id'])) {
+        $newRequest['id'] = $entry['id']++;
+    }
+
+    $newRequest['transfer_id'] = $entry['account_id'];
+    $newRequest['account_id'] = $entry['transfer_id'];
+    $newRequest['amount'] = $entry['amount'] * -1;
+    
+    $this->save($newRequest);
+
+    }
+
 }
