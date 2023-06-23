@@ -27,13 +27,14 @@ final class Expenses extends Entry {
         array $labels = [],
         bool $confirmed = true,
         bool $waranty = false,
+        int $transfer_id = 0,
         object $geolocation = new stdClass(),
         bool $transfer = false,
         Payee|null $payee = null,
         EntryType $type = EntryType::Expenses,
     ) {
 
-        parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$geolocation);
+        parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$transfer_id,$geolocation);
 
         $this->type = EntryType::Expenses;
         $this->transfer = false;

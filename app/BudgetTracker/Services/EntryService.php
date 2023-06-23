@@ -5,6 +5,7 @@ namespace App\BudgetTracker\Services;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Entry as EntryModel;
 use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
@@ -62,6 +63,7 @@ class EntryService
         $data['label'],
         $data['confirmed'],
         $data['waranty'],
+        0,
         new \stdClass(),
         $data['transfer'],
         $payee,
@@ -212,7 +214,7 @@ class EntryService
    * 
    * @return void
    */
-  protected function updateBalance(Entry $newEntry, int $accountId, EntryModel $entry): void
+  protected function updateBalance(EntryInterface $newEntry, int $accountId, EntryModel $entry): void
   {
     try {
       $amount = $newEntry->getAmount();
