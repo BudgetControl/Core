@@ -2,6 +2,8 @@
 
 namespace App\BudgetTracker\Jobs;
 
+use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,6 +11,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\PlannedEntries;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -59,27 +65,22 @@ class InsertPlannedEntry implements ShouldQueue
     {
         try {
             foreach ($data as $request) {
-                $entryService = new EntryService();
+                $entry = new Entry(
+                    $request->amount,
+                    Currency::find($request->currency_id),
+                    $request->note,
+                    SubCategory::find($request->category_id),
+                    Account::find($request->account_id),
+                    PaymentsTypes::find($request->payment_type),
+                    $request->date_time,
+                );
 
-                $paymentType = $request->payment_type;
-                $account = $request->account_id;
-                $currency = $request->currency_id;
-                $category = $request->category_id;
+                $service = new EntryService();
+                $entryArray = $entry->toArray();
+                $entryArray['user_id'] = $request->user_id;
+                $service->save($entryArray);
 
-                $entry = new \stdClass();
-
-                $entry->amount = $request->amount;
-                $entry->note = $request->note;
-                $entry->type = $request->type;
-                $entry->category_id = $category;
-                $entry->payment_type = $paymentType;
-                $entry->account_id = $account;
-                $entry->currency_id = $currency;
-                $entry->planned = 1;
-                $entry->date_time = $request->date_time->format('Y-m-d H:i:s');
-
-                $entryService->save((array) $entry);
-                Log::info("INSERT:: " . json_encode($entry));
+                Log::info("PLANNED INSERT:: " . json_encode($entry));
 
             }
 

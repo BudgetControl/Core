@@ -31,7 +31,10 @@ class AccountFactory extends Factory
             'uuid' => uniqid(),
             'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(10),
-            'color' => fake()->text(20)
+            'color' => fake()->text(20),
+            'type' => 'Bank',
+            'installement' => 0,
+            'currency' => 'EUR'
         ];
     }
 }

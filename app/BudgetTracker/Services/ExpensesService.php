@@ -3,58 +3,76 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Expenses as ExpensesModel;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
-use App\Rules\AmountMinor;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Entity\Entries\Expenses;
+use App\BudgetTracker\Models\Payee;
+use App\Http\Services\UserService;
+use DateTime;
 
 /**
  * Summary of SaveEntryService
  */
-class ExpensesService extends EntryService implements EntryInterface
+class ExpensesService extends EntryService
 {
-    function __construct()
-    {
-      $this->data = Expenses::withRelations()->orderBy('date_time','desc')->where('type',EntryType::Expenses->value);
-    }
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 
             Log::debug("save expenses -- " . json_encode($data));
 
-            self::validate($data);
-            $entry = new Expenses();
+            $entry = new Expenses(
+                $data['amount'],
+                Currency::findOrFail($data['currency_id']),
+                $data['note'],
+                SubCategory::findOrFail($data['category_id']),
+                Account::findOrFail($data['account_id']),
+                PaymentsTypes::findOrFail($data['payment_type']),
+                new DateTime($data['date_time']),
+                $data['label'],
+                $data['confirmed'],
+                $data['waranty'],
+            );
+
+            $entryModel = new ExpensesModel();
             if (!empty($data['uuid'])) {
-                $entry = Expenses::findFromUuid($data['uuid']);
+                $entryModel = ExpensesModel::findFromUuid($data['uuid']);
             }
 
-            $entry->account_id = $data['account_id'];
-            $entry->amount = $data['amount'];
-            $entry->category_id = $data['category_id'];
-            $entry->currency_id = $data['currency_id'];
-            $entry->date_time = $data['date_time'];
-            $entry->note = $data['note'];
-            $entry->payment_type = $data['payment_type'];
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
-            $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
+            $entryModel->account_id = $entry->getAccount()->id;
+            $entryModel->amount = $entry->getAmount();
+            $entryModel->category_id = $entry->getCategory()->id;
+            $entryModel->currency_id = $entry->getCurrency()->id;
+            $entryModel->date_time = $entry->getDateFormat();
+            $entryModel->note = $entry->getNote();
+            $entryModel->payment_type = $entry->getPaymentType()->id;
+            $entryModel->planned = $entry->getPlanned();
+            $entryModel->waranty = $entry->getWaranty();
+            $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+            $entryModel->save();
 
-            $entry->save();
+            $this->attachLabels($entry->getLabels(), $entryModel);
 
-            $this->attachLabels($data['label'], $entry);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -70,7 +88,7 @@ class ExpensesService extends EntryService implements EntryInterface
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
 
-        $entry = Expenses::withRelations()->where('type', EntryType::Expenses->value);
+        $entry = ExpensesModel::withRelations()->user()->where('type', EntryType::Expenses->value);
 
         if ($id === null) {
             $entry = $entry->get();
@@ -86,31 +104,4 @@ class ExpensesService extends EntryService implements EntryInterface
         return $result;
     }
 
-    /**
-     * read a resource
-     *
-     * @param array $data
-     * @return void
-     * @throws ValidationException
-     */
-    public static function validate(array $data): void
-    {
-        $rules = [
-            'id' => ['integer'],
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s','required'],
-            'amount' => ['required', 'numeric', new AmountMinor()],
-            'note' => 'nullable',
-            'waranty' => 'boolean',
-            'transfer' => 'boolean',
-            'confirmed' => 'boolean',
-            'planned' => 'boolean',
-            'category_id' => ['required', 'integer'],
-            'account_id' => ['required', 'integer'],
-            'currency_id' => 'required|boolean',
-            'payment_type' => ['required','integer'],
-            'geolocation_id' => 'integer'
-        ];
-
-        Validator::validate($data, $rules);
-    }
 }

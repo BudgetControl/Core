@@ -51,6 +51,8 @@ class SearchEntriesController extends Controller
 				$entry->where('date_time', '>=', $date['start']);
 				$entry->where('date_time', '<=', $date['end']);
 			}
+
+
 			
 			//FIXME: doesn't works
 			if (!empty($request->tags)) {
@@ -101,7 +103,17 @@ class SearchEntriesController extends Controller
 		}
 
 		$dateTime = new \DateTime();
-		$dateTime->setDate((int)$year,(int)$month,1);
+		if(!empty($year) && empty($month)) {
+			$dateTime->setDate((int)$year,(int)1,1);
+		}
+
+		if(empty($year) && !empty($month)) {
+			$dateTime->setDate((int)$year,(int)1,1);
+		}
+
+		if(empty($year) && empty($month)) {
+			$dateTime->setDate((int)$year,(int)$month,1);
+		}
 
 		return [
 			'start' => $this->getStartDate((int)$year,(int)$month),

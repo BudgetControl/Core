@@ -13,11 +13,14 @@ class TransferSeed extends Seeder
      */
     public function run(): void
     {
-        Transfer::factory(1)->create();
+        Transfer::factory(1)->create([
+            'user_id' => 1
+        ]);
         Transfer::factory(1)->create([
             'transfer_id' => 1,
             'account_id' => 1,
-            'amount' => 200
+            'amount' => 200,
+            'user_id' => 1
         ]);
     }
 }

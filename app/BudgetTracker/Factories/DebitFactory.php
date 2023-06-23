@@ -42,7 +42,8 @@ class DebitFactory extends Factory
             'date_time' => date('Y-m-d H:i:s',time()),
             'payment_type' => 1,
             'confirmed' => 1,
-            'payee_id' => 1
+            'payee_id' => 1,
+            'user_id' => 1
 
         ];
     }

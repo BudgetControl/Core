@@ -26,7 +26,7 @@ class ApiGetDataTest extends TestCase
             "currency_id",
             "payment_type",
             "payee_id",
-            "geolocation_id",
+            "geolocation",
             "label",
             "sub_category" => [
                 "id",
@@ -92,17 +92,20 @@ class ApiGetDataTest extends TestCase
     ];
 
     const INCOMING_ID = 1;
-    const EXPENSES_ID = 12;
-    const DEBIT_ID = 21;
-    const TRANSFER_ID = 22;
+    const EXPENSES_ID = 1012;
+    const DEBIT_ID = 2001;
+    const TRANSFER_ID = 2002;
     const PLANNING_RECURSIVELY = 1;
 
+    private $headers = '';
+
+    
     /**
      * A basic feature test example.
      */
     public function test_incoming_data(): void
     {
-        $response = $this->get('/api/incoming/' . self::INCOMING_ID);
+        $response = $this->get('/api/incoming/' . self::INCOMING_ID,$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::ENTRY);
@@ -116,7 +119,7 @@ class ApiGetDataTest extends TestCase
      */
     public function test_expenses_data(): void
     {
-        $response = $this->get('/api/expenses/' . self::EXPENSES_ID);
+        $response = $this->get('/api/expenses/' . self::EXPENSES_ID,$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::ENTRY);
@@ -130,7 +133,7 @@ class ApiGetDataTest extends TestCase
      */
     public function test_debit_data(): void
     {
-        $response = $this->get('/api/debit/' . self::DEBIT_ID);
+        $response = $this->get('/api/debit/' . self::DEBIT_ID,$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::ENTRY);
@@ -145,7 +148,7 @@ class ApiGetDataTest extends TestCase
      */
     public function test_transfer_data(): void
     {
-        $response = $this->get('/api/transfer/' . self::TRANSFER_ID);
+        $response = $this->get('/api/transfer/' . self::TRANSFER_ID,$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::ENTRY);
@@ -161,7 +164,7 @@ class ApiGetDataTest extends TestCase
      */
     public function test_planning_recursively_data(): void
     {
-        $response = $this->get('/api/planning-recursively/' . self::PLANNING_RECURSIVELY);
+        $response = $this->get('/api/planning-recursively/' . self::PLANNING_RECURSIVELY,$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::PLANNING);
@@ -172,9 +175,17 @@ class ApiGetDataTest extends TestCase
      */
     public function test_payees_data(): void
     {
-        $response = $this->get('/api/payee/');
+        $response = $this->get('/api/payee/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::PAYEE);
+    }
+
+    private function getAuthTokenHeader()
+    {
+        //first we nee to get a new token
+        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
+        $token = $response['token']['plainTextToken'];
+        return ['access_token' => $token];  
     }
 }
