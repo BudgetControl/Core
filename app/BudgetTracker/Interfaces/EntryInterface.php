@@ -23,6 +23,7 @@ interface EntryInterface {
         array $labels = [],
         bool $confirmed = true,
         bool $waranty = false,
+        int $transfer_id = 0,
         object $geolocation = new stdClass(),
         bool $transfer = false,
         Payee $payee = null,

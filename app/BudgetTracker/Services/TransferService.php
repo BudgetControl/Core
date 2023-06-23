@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Services;
 
+use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Transfer as TransferModel;
 use App\BudgetTracker\Models\Account;
@@ -20,15 +21,15 @@ use DateTime;
 class TransferService extends EntryService
 {
 
-  /**
-   * save a resource
-   * @param array $data
-   * @param EntryType|null $type
-   * @param Payee|null $payee
-   * 
-   * @return void
-   */
-  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
+    /**
+     * save a resource
+     * @param array $data
+     * @param EntryType|null $type
+     * @param Payee|null $payee
+     * 
+     * @return void
+     */
+    public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 
@@ -45,6 +46,7 @@ class TransferService extends EntryService
                 $data['label'],
                 $data['confirmed'],
                 $data['waranty'],
+                $data['transfer_id'],
             );
 
             $entryModel = new TransferModel();
@@ -52,7 +54,7 @@ class TransferService extends EntryService
                 $entryModel = TransferModel::findFromUuid($data['uuid']);
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+            $this->updateBalance($entry, $entry->getAccount()->id, $entryModel);
 
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
@@ -68,10 +70,11 @@ class TransferService extends EntryService
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
 
+            $this->saveInverted($entry, $data['transfer_id'], $data['user_id']);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            throw new \Exception("Ops an errro occurred " . $error);
         }
     }
 
@@ -101,5 +104,35 @@ class TransferService extends EntryService
         }
 
         return $result;
+    }
+
+    /**
+     * save inverted entry
+     * @param Entry $entry
+     * @param int $userId
+     * 
+     * @return void
+     */
+    private function saveInverted(Transfer $entry, int $userId): void
+    {
+
+        $transfer_id = $entry->getAccount()->id;
+        $account_id = $entry->getTransfer_id();
+        $amount = $entry->getAmount() * -1;
+
+        $entryModel = new TransferModel();
+        $entryModel->account_id = $account_id;
+        $entryModel->amount = $amount;
+        $entryModel->category_id = $entry->getCategory()->id;
+        $entryModel->currency_id = $entry->getCurrency()->id;
+        $entryModel->date_time = $entry->getDateFormat();
+        $entryModel->note = $entry->getNote();
+        $entryModel->payment_type = $entry->getPaymentType()->id;
+        $entryModel->planned = $entry->getPlanned();
+        $entryModel->waranty = $entry->getWaranty();
+        $entryModel->confirmed = $entry->getConfirmed();
+        $entryModel->transfer_id = $transfer_id;
+        $entryModel->user_id = empty($userId) ? UserService::getCacheUserID() : $userId;
+        $entryModel->save();
     }
 }

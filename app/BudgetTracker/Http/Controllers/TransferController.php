@@ -43,14 +43,6 @@ class TransferController extends Controller implements ControllerResourcesInterf
 			$entry['amount'] = $request['amount'] * -1;
 			$service->save($entry);
 
-			$newRequest = $request->toArray();
-			if(!empty($entry['id'])) {
-				$newRequest['id'] = $entry['id']++;
-			}
-			$newRequest['transfer_id'] = $entry['account_id'];
-			$newRequest['account_id'] = $entry['transfer_id'];
-			$service->save($newRequest);
-
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);

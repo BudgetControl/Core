@@ -52,6 +52,7 @@ class DebitService extends EntryService
                 $data['label'],
                 $data['confirmed'],
                 $data['waranty'],
+                0,
                 new \stdClass(),
                 false,
                 $payee,

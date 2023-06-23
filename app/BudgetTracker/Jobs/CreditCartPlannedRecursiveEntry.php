@@ -17,6 +17,7 @@ use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\TransferService;
 use Illuminate\Support\Facades\Log;
 
 class CreditCartPlannedRecursiveEntry implements ShouldQueue
@@ -45,16 +46,12 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
                 $entry = $this->entry($account->installementValue,$account);
 
                 if($this->exist($entry->getNote()) === false) {
-                    $service = new EntryService();
+                    $service = new TransferService();
                     $entryArray = $entry->toArray();
                     $entryArray['user_id'] = $account->user_id;
+                    $entryArray['transfer_to'] = 33;
 
-                    $type = EntryType::Incoming;
-                    if($entry->getAmount() < 0) {
-                        $type = EntryType::Expenses;
-                    }
-
-                    $service->save($entryArray,$type);
+                    $service->save($entryArray);
                 }
             }
 
