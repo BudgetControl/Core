@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PersonalAccessToken;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\UserService;
+use Illuminate\Support\Facades\Log;
 
 class JwtAuthenticate
 {
@@ -24,7 +25,8 @@ class JwtAuthenticate
 
         $headers = $request->headers;
 
-        if(empty($headers->get('access_token'))) {
+        if(empty($headers->get('X-ACCESS-TOKEN'))) {
+            Log::debug("token: ".json_decode($headers));
             abort(response()->json(['error' => 'no access token'], 401));
         }
 
