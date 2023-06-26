@@ -1,6 +1,6 @@
 <?php
 namespace App\Charts\Entity\TableChart;
-
+use DivisionByZeroError;
 
 final class TableRowChart
 {
@@ -19,9 +19,14 @@ final class TableRowChart
 
     private function bounceRate()
     {
-        $difference = abs($this->amount - $this->prevAmount);
-        $segno = ($this->amount > $this->prevAmount) ? 1 : -1;
-        $percentage = ($difference / $this->amount) * 100 * $segno;
+        try {
+            $difference = abs($this->amount - $this->prevAmount);
+            $segno = ($this->amount > $this->prevAmount) ? 1 : -1;
+            $percentage = ($difference / $this->amount) * 100 * $segno;
+        } catch(DivisionByZeroError $e) {
+            $percentage = 0;
+        }
+
 
         return $percentage;
     }
