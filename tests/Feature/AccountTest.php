@@ -131,6 +131,6 @@ class AccountTest extends TestCase
         //first we nee to get a new token
         $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
         $token = $response['token']['plainTextToken'];
-        return ['access_token' => $token];
+        return ['X-ACCESS-TOKEN' => $token];
     }
 }
