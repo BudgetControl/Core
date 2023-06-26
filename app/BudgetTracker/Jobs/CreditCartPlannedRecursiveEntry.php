@@ -49,7 +49,7 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
                     $service = new TransferService();
                     $entryArray = $entry->toArray();
                     $entryArray['user_id'] = $account->user_id;
-                    $entryArray['transfer_to'] = 33;
+                    $entryArray['transfer_id'] = 33;
 
                     $service->save($entryArray);
                 }
