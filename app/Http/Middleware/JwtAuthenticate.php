@@ -24,18 +24,19 @@ class JwtAuthenticate
     {
 
         $headers = $request->headers;
+        $XACCESSTOKEN = $headers->get('X-ACCESS-TOKEN');
 
-        if(empty($headers->get('X-ACCESS-TOKEN'))) {
+        if(empty($XACCESSTOKEN)) {
             Log::debug("token: ".json_decode($headers));
             abort(response()->json(['error' => 'no access token'], 401));
         }
 
-        $token = PersonalAccessToken::findToken($headers->get('access_token'));
+        $token = PersonalAccessToken::findToken($XACCESSTOKEN);
         if(empty($token)) {
             abort(response()->json(['error' => 'not authorized'], 401));
         }
 
-		UserService::userIDfromToken($headers->get('access_token'));
+		UserService::userIDfromToken($XACCESSTOKEN);
 
         return $next($request);
 
