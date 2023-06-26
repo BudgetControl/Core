@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master"]
   pull_request:
-    branches: [ "develop", "master", "stable-version_2.1" ]
+    branches: [ "develop", "master", "stable/version2.1.1" ]
 
 jobs:
   laravel-tests:
