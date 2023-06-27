@@ -34,6 +34,7 @@ class TransferService extends EntryService
         try {
 
             Log::debug("save transfer -- " . json_encode($data));
+            $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
             $entry = new Transfer(
                 $data['amount'],
@@ -67,10 +68,10 @@ class TransferService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->transfer_id = $data['transfer_id'];
-            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+            $entryModel->user_id = $user_id;
             $entryModel->save();
 
-            $this->saveInverted($entry, $data['transfer_id'], $data['user_id']);
+            $this->saveInverted($entry, $data['transfer_id'], $user_id);
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
@@ -132,7 +133,7 @@ class TransferService extends EntryService
         $entryModel->waranty = $entry->getWaranty();
         $entryModel->confirmed = $entry->getConfirmed();
         $entryModel->transfer_id = $transfer_id;
-        $entryModel->user_id = empty($userId) ? UserService::getCacheUserID() : $userId;
+        $entryModel->user_id = $userId;
         $entryModel->save();
     }
 }
