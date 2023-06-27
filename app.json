@@ -2,9 +2,12 @@
   "environments": {
     "test": {
       "scripts": {
-        "test-setup": "composer install",
-        "test": "php artisan test",
-        "addons": ["jawsdb-maria"]
+        "postdeploy": "touch database/database.sqlite && php artisan migrate --seed --force",
+        "buildpacks": [
+          {
+            "url": "https://github.com/heroku/heroku-buildpack-php"
+          }
+        ]
       }
     }
   }

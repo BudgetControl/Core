@@ -15,6 +15,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\Helpers\Helpers;
 use Exception;
 
 /**
@@ -22,18 +23,6 @@ use Exception;
  */
 class EntryService
 {
-  const COLORS = [
-    "bg-blueGray-200 text-blueGray-600",
-    "bg-red-200 text-red-600",
-    "bg-orange-200 text-orange-600",
-    "bg-amber-200 text-amber-600",
-    "bg-teal-200 text-teal-600",
-    "bg-lightBlue-200 text-lightBlue-600",
-    "bg-indigo-200 text-indigo-600",
-    "bg-purple-200 text-purple-600",
-    "bg-pink-200 text-pink-600",
-    "bg-emerald-200 text-emerald-600 border-white",
-  ];
 
   protected $data;
 
@@ -151,7 +140,7 @@ class EntryService
             $label = new Labels();
             $label->uuid = uniqid();
             $label->name = strtolower($value);
-            $label->color = self::COLORS[rand(0, 9)];
+            $label->color = Helpers::color();
             $label->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();
