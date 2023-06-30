@@ -283,6 +283,55 @@ class AccountTest extends TestCase
             'id' => 9,
             'note' => 'foo bar'
         ]);
+
+        $request = '{ 
+            "uuid": "649be7171e9cc",
+            "amount": -100.00,
+            "note" : "test",
+            "category_id":12,
+            "account_id" : 9,
+            "currency_id": 1,
+            "payment_type" : 1,
+            "date_time": "2023-09-28 10:10:10", 
+            "label": [],
+            "user_id": 1,
+            "waranty": 1,
+            "confirmed": 1,
+            "user_id": 1
+        }';
+        $request = json_decode($request);
+        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $request = json_decode($request);
+        $this->assertDatabaseHas(Account::class, [
+            'balance' => 460,
+            'id' => 9,
+            'note' => 'foo bar'
+        ]);
+
+        $request['date_time'] = "2023-05-28 10:10:10";
+        $request['amount'] = -300.00;
+        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->assertDatabaseHas(Account::class, [
+            'balance' => 160,
+            'id' => 9,
+            'note' => 'foo bar'
+        ]);
+
+        $request['amount'] = -100.00;
+        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->assertDatabaseHas(Account::class, [
+            'balance' => 360,
+            'id' => 9,
+            'note' => 'foo bar'
+        ]);
+
+        $request['amount'] = 1000.00;
+        $this->post('/api/incoming/', $request, $this->getAuthTokenHeader());
+        $this->assertDatabaseHas(Account::class, [
+            'balance' => 1460,
+            'id' => 9,
+            'note' => 'foo bar'
+        ]);
         
     }
 
