@@ -109,7 +109,7 @@ final class Debit implements EntryInterface {
     {
         return [
             'type' => $this->type->value,
-            'date_time' => $this->date_time->format('Y-m-d h:i:s'),
+            'date_time' => $this->date_time->format('Y-m-d H:i:s'),
             'amount' => $this->amount,
             'note' => $this->note,
             'waranty' => $this->waranty,
@@ -274,7 +274,7 @@ final class Debit implements EntryInterface {
      */
     public function getDateFormat(): string
     {
-        return $this->date_time->format('Y-m-d h:i:s');
+        return $this->date_time->format('Y-m-d H:i:s');
     }
 
     /**

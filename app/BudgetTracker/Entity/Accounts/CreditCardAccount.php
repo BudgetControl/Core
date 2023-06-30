@@ -23,7 +23,7 @@ final class CreditCardAccount extends Account {
         $this->color = $color;
         $this->installement = $installement;
         $this->installementValue = $installementValue;
-        $this->date = $date->format('Y-m-d h:i:s');
+        $this->date = $date->format('Y-m-d H:i:s');
 
         if($installement === true) {
             $this->installementValidate();

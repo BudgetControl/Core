@@ -40,7 +40,7 @@ class AccountDataTest extends TestCase
         $this->assertEquals($currency, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
-        $this->assertEquals($date->format('Y-m-d h:i:s'), $user->getDate());
+        $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
         $this->assertEquals($installement, $user->getInstallement());
     }
 
@@ -60,7 +60,7 @@ class AccountDataTest extends TestCase
         $this->assertEquals($currency, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
-        $this->assertEquals($date->format('Y-m-d h:i:s'), $user->getDate());
+        $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
         $this->assertEquals($installement, $user->getInstallement());
         $this->assertEquals($installementValue, $user->getInstallementValue());
     }
@@ -81,6 +81,6 @@ class AccountDataTest extends TestCase
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($amount, $user->getAmount());
-        $this->assertEquals($date->format('Y-m-d h:i:s'), $user->getDate());
+        $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
     }
 }

@@ -20,7 +20,7 @@ final class SavingAccount extends Account {
         $this->currency = $currency;
         $this->color = $color;
         $this->amount = $amout;
-        $this->date = $date->format('Y-m-d h:i:s');
+        $this->date = $date->format('Y-m-d H:i:s');
         $this->balance = $balance;
 
         $this->validate();
