@@ -211,10 +211,10 @@ class EntryService
       $confirmed = $newEntry->getConfirmed();
       
       //only new entry
-      if(!empty($entry) && $confirmed == 1 && $planned == 0) {
+      if(empty($entry->amount)) {
         AccountsService::updateBalance($amount,$accountId);
       }
-  
+
       //conditions
       switch(true) {
         case ($amount != $entry->amount && $confirmed == 1 && $planned = 0):
