@@ -72,6 +72,7 @@ class TransferService extends EntryService
             $entryModel->save();
 
             $this->saveInverted($entry, $data['transfer_id'], $user_id);
+            
         } catch (\Exception $e) {
             $error = uniqid();
             Log::error("$error " . $e->getMessage());
@@ -135,5 +136,8 @@ class TransferService extends EntryService
         $entryModel->transfer_id = $transfer_id;
         $entryModel->user_id = $userId;
         $entryModel->save();
+
+        $this->updateBalance($entry, $account_id, $entryModel);
+
     }
 }
