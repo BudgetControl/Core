@@ -137,7 +137,7 @@ class AccountTest extends TestCase
             "account_id" : 10,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "' . $dateTime->format('Y-m-d h:i:s') . '", 
+            "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "user_id": 1,
             "waranty": 1,
@@ -178,7 +178,7 @@ class AccountTest extends TestCase
             "account_id" : 10,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "' . $dateTime->format('Y-m-d h:i:s') . '", 
+            "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "user_id": 1,
             "waranty": 1,
@@ -207,7 +207,7 @@ class AccountTest extends TestCase
             "account_id" : 9,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "' . $dateTime->format('Y-m-d h:i:s') . '", 
+            "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "user_id": 1,
             "waranty": 1,
@@ -236,7 +236,7 @@ class AccountTest extends TestCase
             "account_id" : 9,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "' . $dateTime->format('Y-m-d h:i:s') . '", 
+            "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "user_id": 1,
             "waranty": 1,
@@ -275,7 +275,7 @@ class AccountTest extends TestCase
         ]);
 
         $request['confirmed'] = 1;
-        $request['date_time'] = $dateTime->format('Y-m-d h:i:s');
+        $request['date_time'] = $dateTime->format('Y-m-d H:i:s');
         $reuqest['note'] = 'foo bar';
         $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
         $this->assertDatabaseHas(Account::class, [

@@ -24,7 +24,7 @@ class Entry extends Model
         'created_at'  => 'date:Y-m-d',
         'updated_at'  => 'date:Y-m-d',
         'deletad_at'  => 'date:Y-m-d',
-        'date_time' =>  'date:Y-m-d h:i:s'
+        'date_time' =>  'date:Y-m-d H:i:s'
     ];
 
     public function __construct(array $attributes = [])

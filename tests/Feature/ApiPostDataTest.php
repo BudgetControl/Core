@@ -207,7 +207,7 @@ class ApiPostDataTest extends TestCase
             "account_id" : 1,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "'.$dateTime->format('Y-m-d h:i:s').'", 
+            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
             "label": [],
             "user_id": 1,
             "waranty": 1,
