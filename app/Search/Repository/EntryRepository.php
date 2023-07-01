@@ -3,7 +3,9 @@
 namespace Search\Repository;
 
 use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Entry;
+use App\BudgetTracker\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use DateTime;
@@ -19,9 +21,12 @@ class EntryRepository {
 
     public function __construct()
     {
-        $this->query = DB::table('entries');
-        //$this->query->with('label')->with('subCategory.category')->with('account')->withTrashed()->orderBy('date_time','desc')
-        //->where('user_id',UserService::getCacheUserID());
+        $e = new Entry();
+        $entryTable = $e->getTable();
+
+        $this->query = DB::table($entryTable);
+        $this->query->where("$entryTable.user_id",UserService::getCacheUserID());
+
     }
 
     public function get(array $column = ['*']): Collection
@@ -127,5 +132,24 @@ class EntryRepository {
     public function waranty(): self
     {
         $this->query->where('waranty',1);
+    }
+
+    public static function getCategoryName(int $id): string
+    {
+        $sb = new SubCategory();
+        $categoryTable = $sb->getTable();
+
+        return DB::table($categoryTable)->where('id',$id)->get(['name']);
+
+    }
+
+    public static function getAccountName(int $id): string
+    {
+
+        $a = new Account();
+        $accountTable = $a->getTable();
+
+        return DB::table($accountTable)->where('id',$id)->get(['name']);
+
     }
 }

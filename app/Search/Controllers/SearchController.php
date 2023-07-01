@@ -26,7 +26,7 @@ class SearchController {
 
         return response()->json([
             'incoming' => [
-                'data' => $incomig->getEntry(),
+                'data' => $incomig->getEntry(),'account_id',
                 'balance' => $incomig->getBalance()
             ],
             'expenses' => [

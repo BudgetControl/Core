@@ -4,14 +4,18 @@ namespace Search\Services;
 
 use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Http\Controllers\SearchEntriesController;
 use App\BudgetTracker\Interfaces\EntryInterface;
 use DateTime;
+use Exception;
 use Illuminate\Support\Collection;
 use Search\Entity\Search;
 use Search\Repository\EntryRepository;
 
 class SearchService
 {
+    const COLUMN = ['id', 'uuid', 'date_time', 'amount', 'note', 'type', 'waranty', 'confirmed', 'planned', 'category_id', 'account_id', 'currency_id', 'payee_id', 'transfer_id', 'payment_type', 'geolocation'];
+    const FILTER = ['account_id', 'category_id', 'label'];
 
     /** @var DateTime */
     private $dateTime;
@@ -63,7 +67,7 @@ class SearchService
 
         $repository->dateTime($this->dateTime, '<=');
 
-        $result = $repository->get();
+        $result = $repository->get(self::COLUMN);
 
         return [
             $this->makeIncomingObj($result),
@@ -71,14 +75,41 @@ class SearchService
             $this->makeTransferObj($result),
             $this->makeDebitObj($result)
         ];
+    }
 
+    /**
+     * group by one column
+     * @param array $obj
+     * @param string $column
+     * 
+     * @return array
+     * @throw Exception
+     */
+    public function groupBy(array $objs, string $filter): array
+    {
+        if (!in_array($filter, self::FILTER)) {
+            throw new Exception('{"error":"no filter avaible for the selecion, change your filter"}');
+        }
+
+        foreach ($objs as $obj) {
+            $id = $obj->$filter;
+            $label = $this->getLabelGroup($filter,$id);
+
+            if (!isset($group[$label])) {
+                $group[$label] = [];
+            }
+
+            $group[$label][] = $obj;
+        }
+
+        return $group;
     }
 
     private function makeIncomingObj(Collection $collections): Search
     {
         $entity = new Search();
-        foreach($collections as $collection) {
-            if($collection->type === EntryType::Incoming->value) {
+        foreach ($collections as $collection) {
+            if ($collection->type === EntryType::Incoming->value) {
                 $entity->setEntry($collection);
             }
         }
@@ -89,8 +120,8 @@ class SearchService
     private function makeExpensesObj(Collection $collections): Search
     {
         $entity = new Search();
-        foreach($collections as $collection) {
-            if($collection->type === EntryType::Expenses->value) {
+        foreach ($collections as $collection) {
+            if ($collection->type === EntryType::Expenses->value) {
                 $entity->setEntry($collection);
             }
         }
@@ -101,8 +132,8 @@ class SearchService
     private function makeTransferObj(Collection $collections): Search
     {
         $entity = new Search();
-        foreach($collections as $collection) {
-            if($collection->type === EntryType::Transfer->value) {
+        foreach ($collections as $collection) {
+            if ($collection->type === EntryType::Transfer->value) {
                 $entity->setEntry($collection);
             }
         }
@@ -113,8 +144,8 @@ class SearchService
     private function makeDebitObj(Collection $collections): Search
     {
         $entity = new Search();
-        foreach($collections as $collection) {
-            if($collection->type === EntryType::Debit->value) {
+        foreach ($collections as $collection) {
+            if ($collection->type === EntryType::Debit->value) {
                 $entity->setEntry($collection);
             }
         }
@@ -122,4 +153,24 @@ class SearchService
         return $entity;
     }
 
+    private function getLabelGroup(string $filter, int $id): string
+    {
+        $label = '';
+
+        switch ($filter) {
+            case 'category_id':
+                $label = EntryRepository::getCategoryName($id);
+                break;
+            case 'account_id':
+                $label = EntryRepository::getAccountName($id);
+                break;
+            default:
+                throw new Exception('{"error":"no filter setted"}');
+                break;
+        }
+
+        $label = json_decode($label);
+        return $label[0]->name;
+
+    }
 }
