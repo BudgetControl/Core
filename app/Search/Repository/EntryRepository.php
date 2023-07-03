@@ -9,8 +9,6 @@ use App\BudgetTracker\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use DateTime;
-use App\Http\Services\UserService;
-use Illuminate\Database\Query\Builder;
 
 class EntryRepository {
 
@@ -18,53 +16,52 @@ class EntryRepository {
 
     /** @var DB */
     protected $query;
+    protected $type = [];
 
     public function __construct()
     {
-        $e = new Entry();
-        $entryTable = $e->getTable();
-
-        $this->query = DB::table($entryTable);
-        $this->query->where("$entryTable.user_id",UserService::getCacheUserID());
-
+        $this->query = Entry::withRelations()->orderBy('date_time');
     }
 
     public function get(array $column = ['*']): Collection
     {
+        $this->getType();
         return $this->query->get($column);
     }
 
     public function getById(array $ids,array $column = ['*']): Collection
     {
+        $this->getType();
         return $this->query->whereIn('id',$ids)->get($column);
     }
 
     public function getByUuid(array $ids,array $column = ['*']): Collection
     {
+        $this->getType();
         return $this->query->whereIn('uuid',$ids)->get($column);
     }
 
     public function incoming(): self
     {
-        $this->query->where('type',EntryType::Incoming->value);
+        $this->type[] = EntryType::Incoming->value;
         return $this;
     }
 
     public function expenses(): self
     {
-        $this->query->where('type',EntryType::Expenses->value);
+        $this->type[] = EntryType::Expenses->value;
         return $this;
     }
 
     public function transfer(): self
     {
-        $this->query->where('type',EntryType::Transfer->value);
+        $this->type[] = EntryType::Transfer->value;
         return $this;
     }
 
     public function debit(): self
     {
-        $this->query->where('type',EntryType::Debit->value);
+        $this->type[] = EntryType::Debit->value;
         return $this;
     }
 
@@ -151,5 +148,12 @@ class EntryRepository {
 
         return DB::table($accountTable)->where('id',$id)->get(['name']);
 
+    }
+
+    private function getType(): void
+    {
+        if(!empty($this->type)) {
+            $this->query->whereIn('type',$this->type);
+        }
     }
 }

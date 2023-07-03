@@ -16,4 +16,5 @@ use Illuminate\Http\Request;
 */
 
 
-Route::apiResource('all', \Search\Controllers\SearchController::class);
+Route::get('all', "\Search\Controllers\SearchController@index");
+Route::post('filter', '\Search\Controllers\SearchController@show');

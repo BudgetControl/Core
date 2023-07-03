@@ -13,6 +13,11 @@ final class Search {
     /** @var float */
     private $balance;
 
+    public function __construct()
+    {
+        $this->entry = [];
+    }
+
     /**
      * Get the value of entry
      */ 
@@ -26,9 +31,9 @@ final class Search {
      *
      * @return  self
      */ 
-    public function setEntry(stdClass $entry): self
+    public function setEntry(\App\BudgetTracker\Models\Entry $entry): self
     {
-        $this->entry[] = $entry;
+        $this->entry[] = $entry->toArray();
 
         return $this;
     }

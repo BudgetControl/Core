@@ -2,10 +2,7 @@
 
 namespace Search\Services;
 
-use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Http\Controllers\SearchEntriesController;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use DateTime;
 use Exception;
 use Illuminate\Support\Collection;
@@ -28,10 +25,11 @@ class SearchService
     /**
      * find all data
      * @param array $filter {"account":[31],"category":[16],"type":["incoming"],"tags":[201],"text":"test","planned":"0","year":2022,"month":4}
+     * @param int $cursor
      * 
-     * @return array
+     * @return Search
      */
-    public function find(array $filter): array
+    public function find(array $filter): Search
     {
         $repository = new EntryRepository();
 
@@ -69,12 +67,7 @@ class SearchService
 
         $result = $repository->get(self::COLUMN);
 
-        return [
-            $this->makeIncomingObj($result),
-            $this->makeExpensesObj($result),
-            $this->makeTransferObj($result),
-            $this->makeDebitObj($result)
-        ];
+        return $this->makeObj($result);
     }
 
     /**
@@ -105,49 +98,11 @@ class SearchService
         return $group;
     }
 
-    private function makeIncomingObj(Collection $collections): Search
+    private function makeObj(Collection $collections): Search
     {
         $entity = new Search();
         foreach ($collections as $collection) {
-            if ($collection->type === EntryType::Incoming->value) {
                 $entity->setEntry($collection);
-            }
-        }
-
-        return $entity;
-    }
-
-    private function makeExpensesObj(Collection $collections): Search
-    {
-        $entity = new Search();
-        foreach ($collections as $collection) {
-            if ($collection->type === EntryType::Expenses->value) {
-                $entity->setEntry($collection);
-            }
-        }
-
-        return $entity;
-    }
-
-    private function makeTransferObj(Collection $collections): Search
-    {
-        $entity = new Search();
-        foreach ($collections as $collection) {
-            if ($collection->type === EntryType::Transfer->value) {
-                $entity->setEntry($collection);
-            }
-        }
-
-        return $entity;
-    }
-
-    private function makeDebitObj(Collection $collections): Search
-    {
-        $entity = new Search();
-        foreach ($collections as $collection) {
-            if ($collection->type === EntryType::Debit->value) {
-                $entity->setEntry($collection);
-            }
         }
 
         return $entity;
@@ -173,4 +128,5 @@ class SearchService
         return $label[0]->name;
 
     }
+
 }

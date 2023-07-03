@@ -6,9 +6,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Search\Services;
 use Search\Services\SearchService;
+use Illuminate\Pagination\Paginator;
+use Search\Entity\Search;
 
 class SearchController {
     
+    const PAGINATION = 30;
 
 	//
 	/**
@@ -16,75 +19,64 @@ class SearchController {
 	 * @return JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): JsonResponse
+	public function index(Request $filter): JsonResponse
 	{
+        $page = $filter->query('page');
+
         $month = date('m',time());
         $year = date('Y',time());
 
 		$service = new SearchService($month,$year);
-        list($incomig,$expenses,$transfer,$debit) = $service->find([]);
+        $entry = $service->find([]);
+        $paginator = $this->paginate($entry->getEntry(),$page);
 
-        return response()->json([
-            'incoming' => [
-                'data' => $incomig->getEntry(),'account_id',
-                'balance' => $incomig->getBalance()
-            ],
-            'expenses' => [
-                'data' => $expenses->getEntry(),
-                'balance' => $expenses->getBalance()
-            ],
-            'transfer' => [
-                'data' => $transfer->getEntry(),
-                'balance' => $transfer->getBalance()
-            ],
-            'debit' => [
-                'data' => $debit->getEntry(),
-                'balance' => $debit->getBalance()
-            ],
+		return response()->json([
+                'data' => $paginator->items(),
+                'balance' => $entry->getBalance(),
+                'hasMorePages' => $paginator->hasMorePages(),
+                'currentPage' => $page,
         ]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function store(Request $request): Response
-	{
-			
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param int $id
+	 * @param Request $filter
 	 * @return JsonResponse
 	 */
-	public function show(int $id): JsonResponse
-	{
-		
+	public function show(Request $filter): JsonResponse
+	{	
+        $page = $filter->query('page');
+
+		$month = $filter->month;
+		if(empty($month)) {
+			$month = date('m',time());
+		}
+
+		$year = $filter->year;
+		if(empty($year)) {
+			$year = date('Y',time());
+		}
+
+		$service = new SearchService($month,$year);
+        $entry = $service->find($filter->toArray());
+        $paginator = $this->paginate($entry->getEntry(),$page);
+
+		return response()->json([
+                'data' => $paginator->items(),
+                'balance' => $entry->getBalance(),
+                'hasMorePages' => $paginator->hasMorePages(),
+                'currentPage' => $page,
+        ]);
+
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function update(Request $request): Response
-	{
-			
-	}
+    private function paginate(array $items, int $page): Paginator
+    {   
+        $items = array_slice($items, self::PAGINATION * $page);
+        $paginator = new Paginator($items,self::PAGINATION,$page);
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param int $id
-	 * @return Response
-	 */
-	public function destroy(int $id): Response
-	{
-	}
+        return $paginator;
+    }
 
 }

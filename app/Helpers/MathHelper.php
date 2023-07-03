@@ -41,7 +41,6 @@ class MathHelper
     {
       $cost = (float) 0.00;
       foreach ($data as $value) {
-        $value = (array) $value;
         $cost += (float) $value['amount'];
       }
       return $cost;
