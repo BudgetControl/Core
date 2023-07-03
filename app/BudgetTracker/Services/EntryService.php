@@ -3,72 +3,84 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Entry as EntryModel;
+use App\BudgetTracker\Entity\Entries\Entry;
 use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Models\Entry;
-use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
+use App\Http\Services\UserService;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\Payee;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\Helpers\Helpers;
+use Exception;
 
 /**
  * Summary of SaveEntryService
  */
-class EntryService implements EntryInterface
+class EntryService
 {
-  const COLORS = [
-    "bg-blueGray-200 text-blueGray-600",
-    "bg-red-200 text-red-600",
-    "bg-orange-200 text-orange-600",
-    "bg-amber-200 text-amber-600",
-    "bg-teal-200 text-teal-600",
-    "bg-lightBlue-200 text-lightBlue-600",
-    "bg-indigo-200 text-indigo-600",
-    "bg-purple-200 text-purple-600",
-    "bg-pink-200 text-pink-600",
-    "bg-emerald-200 text-emerald-600 border-white",
-  ];
 
   protected $data;
 
-  function __construct()
-  {
-    $this->data = Entry::withRelations()->orderBy('date_time', 'desc');
-  }
 
   /**
    * save a resource
    * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
    * 
    * @return void
    */
-  public function save(array $data): void
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
   {
     try {
 
       Log::debug("save entry -- " . json_encode($data));
 
-      self::validate($data);
-      $entry = new Entry();
+      $entry = new Entry(
+        $data['amount'],
+        Currency::findOrFail($data['currency_id']),
+        $data['note'],
+        SubCategory::findOrFail($data['category_id']),
+        Account::findOrFail($data['account_id']),
+        PaymentsTypes::findOrFail($data['payment_type']),
+        new DateTime($data['date_time']),
+        $data['label'],
+        $data['confirmed'],
+        $data['waranty'],
+        0,
+        new \stdClass(),
+        $data['transfer'],
+        $payee,
+        $type
+      );
+
+      $entryModel = new EntryModel();
       if (!empty($data['uuid'])) {
-        $entry = Entry::findFromUuid($data['uuid']);
+        $entryModel = EntryModel::findFromUuid($data['uuid']);
       }
 
-      $entry->type = (float) $data['amount'] <= 0 ? EntryType::Expenses->value : EntryType::Incoming->value;
-      $entry->account_id = $data['account_id'];
-      $entry->amount = $data['amount'];
-      $entry->category_id = $data['category_id'];
-      $entry->currency_id = $data['currency_id'];
-      $entry->date_time = $data['date_time'];
-      $entry->note = $data['note'];
-      $entry->payment_type = $data['payment_type'];
+      $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
-      $entry->planned = $this->isPlanning(new \DateTime($entry->date_time));
+      $entryModel->account_id = $entry->getAccount()->id;
+      $entryModel->amount = $entry->getAmount();
+      $entryModel->category_id = $entry->getCategory()->id;
+      $entryModel->currency_id = $entry->getCurrency()->id;
+      $entryModel->date_time = $entry->getDateFormat();
+      $entryModel->note = $entry->getNote();
+      $entryModel->payment_type = $entry->getPaymentType()->id;
+      $entryModel->planned = $entry->getPlanned();
+      $entryModel->waranty = $entry->getWaranty();
+      $entryModel->confirmed = $entry->getConfirmed();
+      $entryModel->type = $entry->getType();
+      $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+      $entryModel->save();
 
-      $entry->save();
-
-      $this->attachLabels($data['label'], $entry);
+      $this->attachLabels($entry->getLabels(), $entryModel);
 
     } catch (\Exception $e) {
       $errorCode = uniqid();
@@ -89,7 +101,7 @@ class EntryService implements EntryInterface
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = Entry::withRelations()->orderBy('date_time', 'desc');
+    $entry = EntryModel::withRelations()->user()->orderBy('date_time', 'desc')->where('user_id', UserService::getCacheUserID());
 
     if ($id === null) {
       $entry = $entry->get();
@@ -106,94 +118,6 @@ class EntryService implements EntryInterface
   }
 
   /**
-   * set data to start stats
-   * @param string $date
-   * 
-   * @return self
-   */
-  public function setDateStart(string $date): self
-  {
-    $date = new DateTime($date);
-    $this->data->where('date_time', '>=', $date->format('Y-m-d H:i:s'));
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param string $date
-   * 
-   * @return self
-   */
-  public function setDateEnd(string $date): self
-  {
-    $date = new DateTime($date);
-    $this->data->where('date_time', '<=', $date->format('Y-m-d H:i:s'));
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param bool $date
-   * 
-   * @return self
-   */
-  public function setPlanning(bool $planning): self
-  {
-    if($planning === true) {
-      $this->data->whereIn('planned', [0,1]);
-    } else {
-      $this->data->whereIn('planned', [0]);
-    }
-    return $this;
-  }
-
-  /**
-   * set data to start stats
-   * @param string $column
-   * @param string|int $valueOrSign
-   * @param string|int $value
-   * 
-   * @return self
-   */
-  public function addConditions(string $column, string|int $valueOrSign, string|int $value = ''): self
-  {
-    if($value === '') {
-      $this->data->where($column, $valueOrSign);
-    } else {
-      $this->data->where($column, $valueOrSign, $value);
-    }
-
-    return $this;
-  }
-
-
-    /** 
-     * chek if is planned entry
-     * @param DateTime $dateTime
-     * 
-     * @return bool
-     */
-    protected function isPlanning(DateTime $dateTime): bool
-    {
-        $today = new \DateTime();
-        if ($dateTime->getTimestamp() > $today->getTimestamp()) {
-            return true;
-        }
-
-    return false;
-  }
-
-  /**
-   * retrive data
-   * 
-   * @return Entry
-   */
-  public function get()
-  { 
-    return $this->data->get();
-  }
-
-   /**
    * save labels data
    * @param array $labels
    * 
@@ -216,7 +140,8 @@ class EntryService implements EntryInterface
             $label = new Labels();
             $label->uuid = uniqid();
             $label->name = strtolower($value);
-            $label->color = self::COLORS[rand(0, 9)];
+            $label->color = Helpers::color();
+            $label->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();
           }
@@ -235,31 +160,17 @@ class EntryService implements EntryInterface
   }
 
   /**
-   * read a resource
-   *
-   * @param array $data
-   * @return void
-   * @throws ValidationException
+   * generate geolocation object
+   * @param string $geoloc
+   * 
+   * @return string
    */
-  public static function validate(array $data): void
+  protected function geolocation(string $geoloc): string
   {
-    $rules = [
-      'id' => ['integer'],
-      'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
-      'amount' => ['required', 'numeric'],
-      'note' => 'nullable',
-      'waranty' => 'boolean',
-      'transfer' => 'boolean',
-      'confirmed' => 'boolean',
-      'planned' => 'boolean',
-      'category_id' => ['required', 'integer'],
-      'account_id' => ['required', 'integer'],
-      'currency_id' => 'required|boolean',
-      'payment_type' => ['required', 'integer'],
-      'geolocation_id' => 'integer'
-    ];
+    $obj = new \stdClass();
+    $obj->geoloc = $geoloc;
 
-    Validator::validate($data, $rules);
+    return json_encode($obj);
   }
 
   /**
@@ -282,5 +193,50 @@ class EntryService implements EntryInterface
     }
 
     return $returnEntry;
+  }
+
+  /**
+   * update balance
+   * @param Entry $amount
+   * @param int $accountId
+   * @param EntryModel $entry
+   * 
+   * @return void
+   */
+  protected function updateBalance(EntryInterface $newEntry, int $accountId, EntryModel $entry): void
+  {
+    try {
+      $amount = $newEntry->getAmount();
+      $planned = $newEntry->getPlanned();
+      $confirmed = $newEntry->getConfirmed();
+      
+      //only new entry
+      if(empty($entry->amount)) {
+        AccountsService::updateBalance($amount,$accountId);
+      }
+
+      //conditions
+      switch(true) {
+        case ($amount != $entry->amount && $confirmed == 1 && $planned = 0):
+          AccountsService::updateBalance($entry->amount * -1,$accountId);
+          AccountsService::updateBalance($amount,$accountId);
+          break;
+        case ($planned == 1 && $entry->planned == 0):
+          AccountsService::updateBalance($entry->amount * -1,$accountId);
+          break;
+        case ($planned = 0 && $entry->planned == 1 && $confirmed == 1):
+          AccountsService::updateBalance($entry->amount,$accountId);
+          break;
+        case ($entry->planned = 0 && $entry->confirmed == 0 && $confirmed == 1):
+          AccountsService::updateBalance($entry->amount,$accountId);
+          break;
+        case ($entry->planned = 0 && $entry->confirmed == 1 && $confirmed == 0):
+          AccountsService::updateBalance($entry->amount * -1,$accountId);
+          break;
+      }
+    } catch (Exception $e) {
+      Log::error("Unable to update account balance $accountId");
+    }
+    
   }
 }

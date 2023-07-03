@@ -5,7 +5,9 @@ namespace App\BudgetTracker\Http\Controllers;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
@@ -61,8 +63,10 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
+		$entry = Entry::findOrFail($id);
 		try {
 			Incoming::destroy($id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

@@ -33,7 +33,8 @@ class PayeeFactory extends Factory
         return [
             'uuid' => uniqid(),
             'date_time' => date('Y-m-d H:i:s',time()),
-            'name' => fake()->text(5)
+            'name' => fake()->text(5),
+            'user_id' => 1
         ];
     }
 }

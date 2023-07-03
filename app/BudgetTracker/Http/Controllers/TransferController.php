@@ -6,8 +6,10 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Services\TransferService;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Transfer;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
@@ -41,14 +43,6 @@ class TransferController extends Controller implements ControllerResourcesInterf
 			$entry['amount'] = $request['amount'] * -1;
 			$service->save($entry);
 
-			$newRequest = $request->toArray();
-			if(!empty($entry['id'])) {
-				$newRequest['id'] = $entry['id']++;
-			}
-			$newRequest['transfer_id'] = $entry['account_id'];
-			$newRequest['account_id'] = $entry['transfer_id'];
-			$service->save($newRequest);
-
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
@@ -75,8 +69,10 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
+		$entry = Entry::findOrFail($id);
 		try {
 			Transfer::destroy($id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

@@ -21,7 +21,6 @@ class ActivatePlannedEntries implements ShouldQueue
     public function __construct()
     {
         $this->handle();
-        return true;
     }
 
     /**
@@ -34,6 +33,8 @@ class ActivatePlannedEntries implements ShouldQueue
             $entry->planned = 0;
             $entry->updated_at = date('Y-m-d H:i:s', time());
             $entry->save();
+            
+            Log::info("Activated entry: ".json_encode($entry->toArray()));
         }
     }
 

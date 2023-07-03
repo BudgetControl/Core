@@ -1,7 +1,7 @@
 <?php
 
-use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 
 /*
@@ -15,24 +15,27 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::apiResource('incoming', \App\BudgetTracker\Http\Controllers\IncomingController::class);
-Route::apiResource('expenses', \App\BudgetTracker\Http\Controllers\ExpensesController::class);
-Route::apiResource('debit', \App\BudgetTracker\Http\Controllers\DebitController::class);
-Route::apiResource('transfer', \App\BudgetTracker\Http\Controllers\TransferController::class);
-Route::apiResource('planning-recursively', \App\BudgetTracker\Http\Controllers\PlanningRecursivelyController::class);
-Route::apiResource('payee', \App\BudgetTracker\Http\Controllers\PayeeController::class);
-Route::apiResource('entry', \App\BudgetTracker\Http\Controllers\EntryController::class);
+Route::apiResource('incoming', \App\BudgetTracker\Http\Controllers\IncomingController::class)->middleware('auth.jwt');
+Route::apiResource('expenses', \App\BudgetTracker\Http\Controllers\ExpensesController::class)->middleware('auth.jwt');
+Route::apiResource('debit', \App\BudgetTracker\Http\Controllers\DebitController::class)->middleware('auth.jwt');
+Route::apiResource('transfer', \App\BudgetTracker\Http\Controllers\TransferController::class)->middleware('auth.jwt');
+Route::apiResource('planning-recursively', \App\BudgetTracker\Http\Controllers\PlanningRecursivelyController::class)->middleware('auth.jwt');
+Route::apiResource('payee', \App\BudgetTracker\Http\Controllers\PayeeController::class)->middleware('auth.jwt');
+Route::apiResource('entry', \App\BudgetTracker\Http\Controllers\EntryController::class)->middleware('auth.jwt');
 
 Route::apiResource('categories', \App\BudgetTracker\Http\Controllers\CategoryController::class);
-Route::apiResource('accounts', \App\BudgetTracker\Http\Controllers\AccountController::class);
+Route::apiResource('accounts', \App\BudgetTracker\Http\Controllers\AccountController::class)->middleware('auth.jwt');
 Route::apiResource('labels', \App\BudgetTracker\Http\Controllers\LabelController::class);
 Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyController::class);
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
 
-Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesController@find');
+Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesController@find')->middleware('auth.jwt');
 Route::get('entry/account/{id}', function (string $id) {
     return \App\BudgetTracker\Http\Controllers\EntryController::getEntriesFromAccount((int) $id);
-});
+})->middleware('auth.jwt');
 
-Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import');
+Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import')->middleware('auth.jwt');
+
+/** make accounts api */
+Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');

@@ -4,25 +4,28 @@ namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\PlannedEntries;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Models\Payee;
+use App\Http\Services\UserService;
 
 /**
  * Summary of SaveEntryService
  */
-class PlanningRecursivelyService extends EntryService implements EntryInterface
+class PlanningRecursivelyService extends EntryService
 {
 
-    /**
-     * save a resource
-     * @param array $data
-     * 
-     * @return void
-     */
-    public function save(array $data): void
+  /**
+   * save a resource
+   * @param array $data
+   * @param EntryType|null $type
+   * @param Payee|null $payee
+   * 
+   * @return void
+   */
+  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 
@@ -48,6 +51,7 @@ class PlanningRecursivelyService extends EntryService implements EntryInterface
             $entry->date_time = $data['date_time'];
             $entry->note = $data['note'];
             $entry->payment_type = $data['payment_type'];
+            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
             $entry->save();
 
