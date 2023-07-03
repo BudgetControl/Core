@@ -209,9 +209,8 @@ class EntryService
       $amount = $newEntry->getAmount();
       $planned = $newEntry->getPlanned();
       $confirmed = $newEntry->getConfirmed();
-      
       //only new entry
-      if(empty($entry->amount)) {
+      if(empty($entry->amount) && $newEntry->planned == 0 && $newEntry->confirmed == 1) {
         AccountsService::updateBalance($amount,$accountId);
       }
 
