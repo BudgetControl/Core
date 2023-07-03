@@ -67,6 +67,7 @@ class SearchController {
                 'balance' => $entry->getBalance(),
                 'hasMorePages' => $paginator->hasMorePages(),
                 'currentPage' => $page,
+                'paginate' => true,
         ]);
 
 	}
