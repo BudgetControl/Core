@@ -45,7 +45,7 @@ class DebitService extends EntryService
                 $data['amount'],
                 Currency::findOrFail($data['currency_id']),
                 $data['note'],
-                SubCategory::findOrFail($data['category_id']),
+                SubCategory::findOrFail(DebitModel::DEFAULT_CATEGORY),
                 Account::findOrFail($data['account_id']),
                 PaymentsTypes::findOrFail($data['payment_type']),
                 new DateTime($data['date_time']),
@@ -67,7 +67,6 @@ class DebitService extends EntryService
 
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
-            $entryModel->category_id = $entry->getCategory()->id;
             $entryModel->currency_id = $entry->getCurrency()->id;
             $entryModel->date_time = $entry->getDateFormat();
             $entryModel->note = $entry->getNote();

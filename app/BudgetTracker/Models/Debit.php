@@ -11,6 +11,8 @@ class Debit extends Entry
 {
     use HasFactory;
 
+    const DEFAULT_CATEGORY = 55;
+
     /**
      *
      * @return void
@@ -20,7 +22,7 @@ class Debit extends Entry
         parent::__construct($attributes);
         
         $this->attributes['type'] = EntryType::Debit->value;
-        $this->attributes['category_id'] = 55;
+        $this->attributes['category_id'] = self::DEFAULT_CATEGORY;
         
     }
 

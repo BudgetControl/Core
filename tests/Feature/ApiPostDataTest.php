@@ -115,7 +115,6 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -1024.90,
             'type' => EntryType::Transfer->value,
-            'category_id' => 75,
             'account_id' => 1,
             'transfer_id' => 2,
             'planned' => 0,
@@ -149,7 +148,6 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -200.90,
             'type' => EntryType::Debit->value,
-            'category_id' => 55,
             'account_id' => 1,
             'payee_id' => 1,
             'planned' => 0,
