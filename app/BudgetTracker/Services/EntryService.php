@@ -210,27 +210,29 @@ class EntryService
       $planned = $newEntry->getPlanned();
       $confirmed = $newEntry->getConfirmed();
       //only new entry
-      if(empty($entry->amount) && $newEntry->planned == 0 && $newEntry->confirmed == 1) {
+      if(empty($entry->amount) && $newEntry->getPlanned() == 0 && $newEntry->getConfirmed() == 1) {
         AccountsService::updateBalance($amount,$accountId);
       }
 
       //conditions
       switch(true) {
-        case ($amount != $entry->amount && $confirmed == 1 && $planned = 0):
+        case $amount != $entry->amount && $confirmed == 1 && $planned = 0:
           AccountsService::updateBalance($entry->amount * -1,$accountId);
           AccountsService::updateBalance($amount,$accountId);
           break;
-        case ($planned == 1 && $entry->planned == 0):
+        case $planned == 1 && $entry->planned == 0:
           AccountsService::updateBalance($entry->amount * -1,$accountId);
           break;
-        case ($planned = 0 && $entry->planned == 1 && $confirmed == 1):
+        case $planned = 0 && $entry->planned == 1 && $confirmed == 1:
           AccountsService::updateBalance($entry->amount,$accountId);
           break;
-        case ($entry->planned = 0 && $entry->confirmed == 0 && $confirmed == 1):
+        case $entry->planned = 0 && $entry->confirmed == 0 && $confirmed == 1:
           AccountsService::updateBalance($entry->amount,$accountId);
           break;
-        case ($entry->planned = 0 && $entry->confirmed == 1 && $confirmed == 0):
+        case $entry->planned = 0 && $entry->confirmed == 1 && $confirmed == 0:
           AccountsService::updateBalance($entry->amount * -1,$accountId);
+          break;
+        default;
           break;
       }
     } catch (Exception $e) {
