@@ -237,6 +237,7 @@ class EntryService
       }
     } catch (Exception $e) {
       Log::error("Unable to update account balance $accountId");
+      Log::error($e->getMessage());
     }
     
   }
