@@ -9,25 +9,37 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\EntryService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
+use Illuminate\Pagination\Paginator;
 
-class EntryController extends Controller implements ControllerResourcesInterface
+class EntryController extends Controller
 {
+	const PAGINATION = 30;
+
 	//
 	/**
 	 * Display a listing of the resource.
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
-		$date = New \DateTime();
+		$page = $filter->query('page');
+
+		$date = new \DateTime();
 		$date->modify('last day of this month');
-		
-		$incoming = Entry::withRelations()
-		->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
-		->limit(30)
-		->get();
-		return response()->json(new ResponseService(['elements' => $incoming]));
+
+		$entry = Entry::withRelations()
+			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
+			->get();
+
+		$paginator = $this->paginate($entry->toArray(), $page);
+
+		return response()->json([
+			'data' => $paginator->items(),
+			'hasMorePages' => $paginator->hasMorePages(),
+			'currentPage' => $page,
+			"paginate" => true
+		]);
 	}
 
 	/**
@@ -55,7 +67,7 @@ class EntryController extends Controller implements ControllerResourcesInterface
 	 */
 	static public function getEntriesFromAccount(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Entry::withRelations()->where("account_id",$id)->get();
+		$incoming = Entry::withRelations()->where("account_id", $id)->get();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -85,5 +97,13 @@ class EntryController extends Controller implements ControllerResourcesInterface
 		} catch (\Exception $e) {
 			return response($e->getMessage());
 		}
+	}
+
+	private function paginate(array $items, int $page): Paginator
+	{
+		$items = array_slice($items, self::PAGINATION * $page);
+		$paginator = new Paginator($items, self::PAGINATION, $page);
+
+		return $paginator;
 	}
 }

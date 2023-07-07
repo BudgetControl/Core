@@ -20,7 +20,7 @@ class EntryRepository {
 
     public function __construct()
     {
-        $this->query = Entry::withRelations()->orderBy('date_time');
+        $this->query = Entry::withRelations()->orderBy('date_time','desc');
     }
 
     public function get(array $column = ['*']): Collection

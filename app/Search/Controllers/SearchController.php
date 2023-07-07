@@ -61,13 +61,15 @@ class SearchController {
 		$service = new SearchService($month,$year);
         $entry = $service->find($filter->toArray());
         $paginator = $this->paginate($entry->getEntry(),$page);
+		$items = $paginator->items();
+		$paginate = count($items) >= 1;
 
 		return response()->json([
-                'data' => $paginator->items(),
+                'data' => $items,
                 'balance' => $entry->getBalance(),
                 'hasMorePages' => $paginator->hasMorePages(),
                 'currentPage' => $page,
-                'paginate' => true,
+                'paginate' => $paginate,
         ]);
 
 	}

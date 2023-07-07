@@ -13,13 +13,18 @@ class SearchService
 {
     const COLUMN = ['id', 'uuid', 'date_time', 'amount', 'note', 'type', 'waranty', 'confirmed', 'planned', 'category_id', 'account_id', 'currency_id', 'payee_id', 'transfer_id', 'payment_type', 'geolocation'];
     const FILTER = ['account_id', 'category_id', 'label'];
+    const TIME_ZONE = 'europe/berlin';
 
     /** @var DateTime */
     private $dateTime;
+    private $lastDayTime;
 
     public function __construct(string $month, string $year)
     {
         $this->dateTime = new DateTime("$year-$month-01 00:00:00");
+        $lastDay = new DateTime($this->dateTime->format("Y-m-d"),new \DateTimeZone(self::TIME_ZONE));
+        $lastDay->modify("last day of this month");
+        $this->lastDayTime = $lastDay;
     }
 
     /**
@@ -63,7 +68,8 @@ class SearchService
             }
         }
 
-        $repository->dateTime($this->dateTime, '<=');
+
+        $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
 
         $result = $repository->get(self::COLUMN);
 
