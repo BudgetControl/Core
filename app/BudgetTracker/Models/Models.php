@@ -5,10 +5,11 @@ namespace App\BudgetTracker\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Services\UserService;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Models extends Model
 {
-  use HasFactory;
+  use HasFactory,SoftDeletes;
 
   public $hidden = [
     "created_at",
