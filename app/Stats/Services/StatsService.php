@@ -170,7 +170,9 @@ class StatsService
 
         if ($planning === true) {
             $plannedEntries = $this->getPlannedEntry();
-            $wallet->sum($plannedEntries->toArray());
+            $installementValue = $this->getInstallementValue();
+            $entries = array_merge($plannedEntries->toArray(),$installementValue->toArray());
+            $wallet->sum($entries);
         }
 
         return $wallet->getBalance();
@@ -199,6 +201,11 @@ class StatsService
             ->get('entries.amount');
 
         return $entry;
+    }
+
+    private function getInstallementValue(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Account::where('installement', 1)->get('installementValue as amount');
     }
 
     /** 
