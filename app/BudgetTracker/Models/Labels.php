@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Http\Services\UserService;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Labels extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public $hidden = [
         "created_at",
