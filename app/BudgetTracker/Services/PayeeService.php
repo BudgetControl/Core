@@ -2,9 +2,8 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Payee;
+use App\Http\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
@@ -13,7 +12,7 @@ use App\Rules\AmountMinor;
 /**
  * Summary of SaveEntryService
  */
-class PayeeService implements EntryInterface
+class PayeeService
 {
 
     /**
@@ -34,9 +33,8 @@ class PayeeService implements EntryInterface
 
             if ($entry->count() === 0) {
                 $entry = new Payee();
-                foreach ($data as $k => $v) {
-                    $entry->$k = $v;
-                }
+                $entry->name = $data['name'];
+                $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
                 $entry->save();
             }

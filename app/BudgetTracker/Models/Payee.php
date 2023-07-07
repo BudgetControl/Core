@@ -6,10 +6,12 @@ use App\BudgetTracker\Factories\PayeeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Services\UserService;
 
 class Payee extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public $hidden = [
         "created_at",
@@ -48,7 +50,7 @@ class Payee extends Model
         'created_at'  => 'date:Y-m-d',
         'updated_at'  => 'date:Y-m-d',
         'deletad_at'  => 'date:Y-m-d',
-        'date_time' =>  'date:Y-m-d h:i:s'
+        'date_time' =>  'date:Y-m-d H:i:s'
     ];
 
     public function account()
@@ -59,5 +61,13 @@ class Payee extends Model
     public function entry()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeUser($query): void
+    {
+        $query->where('user_id',UserService::getCacheUserID());
     }
 }

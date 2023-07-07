@@ -1,0 +1,37 @@
+version: 2.1
+orbs:
+  heroku: circleci/heroku@2.0.0
+jobs:
+  build:
+    docker:
+      - image: cimg/php:8.2.5
+
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+      - run:
+          name: "Install Dependencies"
+          command: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+  deploy_app:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+          force: true
+      - run:
+          command: |
+            heroku run --app=${HEROKU_APP_NAME} php artisan migrate --force
+workflows:
+  deploy:
+    jobs:
+      - build
+      - deploy_app

@@ -37,18 +37,11 @@ Route::get('{type}/{year?}/{month?}/{day?}/{planned?}', function (string $type, 
             $end = strtotime("$year/$monthNumber/$day");
         }
 
-        $stats = new \App\Stats\Controllers\StatsController();
-
-        $stats->setDateStart(
-            date('Y/m/d H:i:s', $start)
-        )
-            ->setDateEnd(
-                date('Y/m/d H:i:s', $end)
-            );
+        $stats = new \App\Stats\Controllers\StatsController(date('Y/m/d H:i:s', $start),date('Y/m/d H:i:s', $end));
 
         return $stats->$type($planned);
     } catch (Exception $e) {
-        var_dump($e->getMessage());
+        \Illuminate\Support\Facades\Log::critical($e->getMessage());
         return response("Ops an error occured... check url params", 500);
     }
-});
+})->middleware('auth.jwt');

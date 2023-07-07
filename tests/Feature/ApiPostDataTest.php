@@ -12,14 +12,19 @@ use Tests\TestCase;
 
 class ApiPostDataTest extends TestCase
 {
+
+    private $headers = '';
+
+
     /**
      * A basic feature test example.
      */
     public function test_incoming_data(): void
     {
+
         $request = $this->makeRequest(100.90, new DateTime());
 
-        $response = $this->postJson('/api/incoming',(array) $request);
+        $response = $this->postJson('/api/incoming',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
@@ -40,7 +45,7 @@ class ApiPostDataTest extends TestCase
     {
         $request = $this->makeRequest(100.90, new DateTime('+5day'));
 
-        $response = $this->postJson('/api/incoming',(array) $request);
+        $response = $this->postJson('/api/incoming',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
@@ -62,7 +67,7 @@ class ApiPostDataTest extends TestCase
         $request = $this->makeRequest(100.90, new DateTime('+1Month'));
         $request->planning = 'daily';
 
-        $response = $this->postJson('/api/planning-recursively',(array) $request);
+        $response = $this->postJson('/api/planning-recursively',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(PlannedEntries::class,[
@@ -82,7 +87,7 @@ class ApiPostDataTest extends TestCase
     {
         $request = $this->makeRequest(-100.90, new DateTime());
 
-        $response = $this->postJson('/api/expenses',(array) $request);
+        $response = $this->postJson('/api/expenses',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
@@ -104,13 +109,12 @@ class ApiPostDataTest extends TestCase
         $request = $this->makeRequest(1024.90, new DateTime());
         $request->transfer_id = 2;
 
-        $response = $this->postJson('/api/transfer',(array) $request);
+        $response = $this->postJson('/api/transfer',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -1024.90,
             'type' => EntryType::Transfer->value,
-            'category_id' => 75,
             'account_id' => 1,
             'transfer_id' => 2,
             'planned' => 0,
@@ -138,13 +142,12 @@ class ApiPostDataTest extends TestCase
         $request = $this->makeRequest(-200.90, new DateTime());
         $request->payee_id = 'Gino';
 
-        $response = $this->postJson('/api/debit',(array) $request);
+        $response = $this->postJson('/api/debit',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -200.90,
             'type' => EntryType::Debit->value,
-            'category_id' => 55,
             'account_id' => 1,
             'payee_id' => 1,
             'planned' => 0,
@@ -166,7 +169,7 @@ class ApiPostDataTest extends TestCase
         $request->payee_id = 'Mimmo';
         $request->category_id = 55;
 
-        $response = $this->postJson('/api/debit',(array) $request);
+        $response = $this->postJson('/api/debit',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertDatabaseHas(Entry::class,[
@@ -184,6 +187,7 @@ class ApiPostDataTest extends TestCase
             'name' => 'Mimmo',
         ]);
     }
+    
 
     /**
      * build model request
@@ -201,10 +205,22 @@ class ApiPostDataTest extends TestCase
             "account_id" : 1,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "'.$dateTime->format('Y-m-d h:i:s').'", 
-            "label": []
+            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
+            "label": [],
+            "user_id": 1,
+            "waranty": 1,
+            "confirmed": 1,
+            "user_id": 1
         }';
 
         return json_decode($request);
+    }
+
+    private function getAuthTokenHeader()
+    {
+        //first we nee to get a new token
+        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
+        $token = $response['token']['plainTextToken'];
+        return ['X-ACCESS-TOKEN' => $token];  
     }
 }

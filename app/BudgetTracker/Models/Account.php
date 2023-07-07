@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Http\Services\UserService;
 
 class Account extends Model
 {
@@ -19,7 +19,22 @@ class Account extends Model
         "deleted_at"
       ];
 
-        /**
+    protected $casts = [
+        'created_at'  => 'date:Y-m-d',
+        'updated_at'  => 'date:Y-m-d',
+        'deletad_at'  => 'date:Y-m-d',
+        'date_time' =>  'date:Y-m-d H:i:s'
+    ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
+        $this->attributes['uuid'] = uniqid();
+    }
+
+    /**
      * Create a new factory instance for the model.
      */
     protected static function newFactory(array $attributes = []): Factory
@@ -27,23 +42,25 @@ class Account extends Model
         return AccountFactory::new($attributes);
     }
 
+    
     /**
-     * Create a new Eloquent model instance.
-     *
-     * @param  array  $attributes
-     * @return void
-     */
-    /**
-     *
-     * @return void
-     */
-    public function __construct(array $attributes = [])
-    {   
-        parent::__construct($attributes);
-        
-        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
-        $this->attributes['uuid'] = uniqid();
-        
+     *  find with specify uuid
+     *  @param string $uuid
+     *  
+     *  @return Entry
+     * */
+    public static function findFromUuid(string $uuid): Account
+    {
+        return Account::where('uuid',$uuid)->where('user_id',UserService::getCacheUserID())->firstOrFail();
     }
+
+    /**
+     * scope user
+     */
+    public function scopeUser($query): void
+    {
+        $query->where('user_id',UserService::getCacheUserID());
+    }
+
 
 }

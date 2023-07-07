@@ -46,14 +46,18 @@ class StatsGetDataTest extends TestCase
         "version"
 ];
 
+    private $headers = '';
+
     /**
      * A basic feature test example.
      */
     public function test_incoming_stats(): void
     {
+        
+
         Incoming::factory(1)->create();
 
-        $response = $this->get('/api/stats/incoming/');
+        $response = $this->get('/api/stats/incoming/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -69,7 +73,7 @@ class StatsGetDataTest extends TestCase
     {
         Incoming::factory(1)->create();
 
-        $response = $this->get('/api/stats/incoming/'.date('Y',time()));
+        $response = $this->get('/api/stats/incoming/'.date('Y',time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -85,7 +89,7 @@ class StatsGetDataTest extends TestCase
     {
         Incoming::factory(1)->create();
 
-        $response = $this->get('/api/stats/incoming/'.date('Y',time()).'/'.date("M",time()));
+        $response = $this->get('/api/stats/incoming/'.date('Y',time()).'/'.date("M",time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -101,7 +105,7 @@ class StatsGetDataTest extends TestCase
     {
         Incoming::factory(1)->create();
 
-        $response = $this->get('/api/stats/incoming/'.date('Y',time()).'/'.date("M",time()).'/'.date('d',time()));
+        $response = $this->get('/api/stats/incoming/'.date('Y',time()).'/'.date("M",time()).'/'.date('d',time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -117,7 +121,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/expenses/');
+        $response = $this->get('/api/stats/expenses/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -133,7 +137,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/expenses/'.date('Y',time()));
+        $response = $this->get('/api/stats/expenses/'.date('Y',time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -149,7 +153,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/expenses/'.date('Y',time()).'/'.date("M",time()));
+        $response = $this->get('/api/stats/expenses/'.date('Y',time()).'/'.date("M",time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -165,7 +169,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/expenses/'.date('Y',time()).'/'.date("M",time()).'/'.date('d',time()));
+        $response = $this->get('/api/stats/expenses/'.date('Y',time()).'/'.date("M",time()).'/'.date('d',time()),$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -181,7 +185,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/total/');
+        $response = $this->get('/api/stats/total/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::WALLET);
@@ -197,7 +201,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/total/planned/');
+        $response = $this->get('/api/stats/total/planned/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::RESPONSE);
@@ -213,7 +217,7 @@ class StatsGetDataTest extends TestCase
     {
         Expenses::factory(1)->create();
 
-        $response = $this->get('/api/stats/wallets/');
+        $response = $this->get('/api/stats/wallets/',$this->getAuthTokenHeader());
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::WALLETS);
@@ -222,4 +226,11 @@ class StatsGetDataTest extends TestCase
         $this->assertTrue($test_amount <= 0 || $test_amount >= 0 );
     }
 
+    private function getAuthTokenHeader()
+    {
+        //first we nee to get a new token
+        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
+        $token = $response['token']['plainTextToken'];
+        return ['X-ACCESS-TOKEN' => $token];  
+    }
 }
