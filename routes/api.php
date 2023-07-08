@@ -30,7 +30,6 @@ Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyCon
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
 
-Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesController@find')->middleware('auth.jwt');
 Route::get('entry/account/{id}', function (string $id) {
     return \App\BudgetTracker\Http\Controllers\EntryController::getEntriesFromAccount((int) $id);
 })->middleware('auth.jwt');
