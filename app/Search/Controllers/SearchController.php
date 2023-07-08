@@ -62,7 +62,7 @@ class SearchController {
         $entry = $service->find($filter->toArray());
         $paginator = $this->paginate($entry->getEntry(),$page);
 		$items = $paginator->items();
-		$paginate = count($items) >= 1;
+		$paginate = count($items) >= self::PAGINATION;
 
 		return response()->json([
                 'data' => $items,
@@ -76,7 +76,9 @@ class SearchController {
 
     private function paginate(array $items, int $page): Paginator
     {   
-        $items = array_slice($items, self::PAGINATION * $page);
+		if(count($items) >= self::PAGINATION) {
+			$items = array_slice($items, self::PAGINATION * $page);
+		}
         $paginator = new Paginator($items,self::PAGINATION,$page);
 
         return $paginator;
