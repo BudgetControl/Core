@@ -96,12 +96,12 @@ class EntryService
    * @return object with a resource
    * @throws \Exception
    */
-  public static function read(int $id = null): object
+  public function read(int $id = null): object
   {
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = EntryModel::withRelations()->user()->orderBy('date_time', 'desc')->where('user_id', UserService::getCacheUserID());
+    $entry = EntryModel::withRelations()->user()->orderBy('date_time', 'desc');
 
     if ($id === null) {
       $entry = $entry->get();

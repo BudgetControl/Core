@@ -24,7 +24,8 @@ class DebitController extends Controller implements ControllerResourcesInterface
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = DebitService::read();
+		$service = new DebitService();
+		$incoming = $service->read();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -53,7 +54,8 @@ class DebitController extends Controller implements ControllerResourcesInterface
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = DebitService::read($id);
+		$service = new DebitService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 

@@ -18,9 +18,10 @@ class PlanningRecursivelyController extends Controller implements ControllerReso
 	 * @throws \Exception
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
-	{
-		$incoming = PlanningRecursivelyService::read();
-		return response()->json(new ResponseService($incoming));
+	{	
+		$service = new PlanningRecursivelyService();
+		$incoming = $service->read(); 
+		return response()->json($incoming);
 	}
 
 	/**
@@ -48,7 +49,8 @@ class PlanningRecursivelyController extends Controller implements ControllerReso
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = PlanningRecursivelyService::read($id);
+		$service = new PlanningRecursivelyService();
+		$incoming = $service->read($id); 
 		return response()->json(new ResponseService($incoming));
 	}
 

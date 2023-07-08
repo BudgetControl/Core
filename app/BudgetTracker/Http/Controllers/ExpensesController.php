@@ -21,7 +21,8 @@ class ExpensesController extends Controller implements ControllerResourcesInterf
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = ExpensesService::read();
+		$service = new ExpensesService();
+		$incoming = $service->read();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -50,7 +51,8 @@ class ExpensesController extends Controller implements ControllerResourcesInterf
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = ExpensesService::read($id);
+		$service = new ExpensesService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 

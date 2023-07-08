@@ -24,7 +24,8 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = TransferService::read();
+		$service = new TransferService();
+		$incoming = $service->read();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -57,7 +58,8 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = TransferService::read($id);
+		$service = new TransferService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 

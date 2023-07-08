@@ -22,7 +22,8 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = IncomingService::read();
+		$service = new IncomingService();
+		$incoming = $service->read();
 		return response()->json(new ResponseService($incoming));
 	}
 
@@ -51,7 +52,8 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = IncomingService::read($id);
+		$service = new IncomingService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 

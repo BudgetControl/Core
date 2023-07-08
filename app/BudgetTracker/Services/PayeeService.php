@@ -50,7 +50,7 @@ class PayeeService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(int $id = null): object
     {
         Log::debug("read payee -- $id");
         $result = new \stdClass();

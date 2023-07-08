@@ -78,8 +78,9 @@ class EntryController extends Controller
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
-	{
-		$incoming = EntryService::read($id);
+	{	
+		$service = new EntryService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 

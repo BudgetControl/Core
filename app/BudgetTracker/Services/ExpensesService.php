@@ -83,7 +83,7 @@ class ExpensesService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(int $id = null): object
     {
         Log::debug("read expenses -- $id");
         $result = new \stdClass();

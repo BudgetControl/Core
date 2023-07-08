@@ -87,7 +87,7 @@ class TransferService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(int $id = null): object
     {
         Log::debug("read entry -- $id");
         $result = new \stdClass();

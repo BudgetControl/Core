@@ -46,7 +46,8 @@ class PayeeController extends Controller implements ControllerResourcesInterface
      */
     public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $payee = PayeeService::read($id);
+        $service = new PayeeService();
+        $payee = $service->read($id);
         return response()->json(new ResponseService($payee));
     }
 
