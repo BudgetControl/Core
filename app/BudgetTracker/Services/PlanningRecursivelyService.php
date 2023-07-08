@@ -51,6 +51,7 @@ class PlanningRecursivelyService extends EntryService
             $entry->date_time = $data['date_time'];
             $entry->note = $data['note'];
             $entry->payment_type = $data['payment_type'];
+            $entry->end_date_time = $data['end_date_time'];
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
             $entry->save();

@@ -17,7 +17,7 @@ class IncomingFactory extends Factory
      *
      * @var class-string<\Illuminate\Database\Eloquent\Model|TModel>
      */
-    public $model = "\App\\BudgetTracker\\Models\\Incoming";
+    protected $model = "\App\\BudgetTracker\\Models\\Incoming";
 
     protected static $namespace = 'App\\BudgetTracker\\Factories';
 

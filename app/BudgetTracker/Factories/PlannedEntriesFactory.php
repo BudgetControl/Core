@@ -50,6 +50,7 @@ class PlannedEntriesFactory extends Factory
             'account_id' => 1,
             'currency_id' => 1,
             'date_time' => $date,
+            'end_date_time' => null,
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 1,
