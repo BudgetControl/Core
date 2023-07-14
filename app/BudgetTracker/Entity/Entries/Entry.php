@@ -31,6 +31,7 @@ class Entry implements EntryInterface
     protected object $geolocation;
     protected array $labels;
     protected Payee|null $payee = null;
+    protected string|null $uuid = null;
 
     public function __construct(
         float $amount,
@@ -274,5 +275,28 @@ class Entry implements EntryInterface
     public function getPayee(): Payee
     {
         return $this->payee;
+    }
+
+    /**
+     * Get the value of uuid
+     */ 
+    public function getUuid()
+    {
+        if($this->uuid === null) {
+            $this->uuid = uniqid();
+        }
+        return $this->uuid;
+    }
+
+    /**
+     * Set the value of uuid
+     *
+     * @return  self
+     */ 
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 }

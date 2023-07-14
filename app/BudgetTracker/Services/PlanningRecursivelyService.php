@@ -17,6 +17,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use Exception;
+use App\BudgetTracker\Exceptions\EntryException;
 
 /**
  * Summary of SaveEntryService
@@ -47,13 +48,14 @@ class PlanningRecursivelyService extends EntryService
             }
 
             $entry = new PlannedEntries(['type' => $type, 'planning' => PlanningType::from($data['planning'])]);
-            if (!empty($data['id'])) {
-                $entry = PlannedEntries::find($data['id']);
+            if (!empty($data['uuid'])) {
+                $entry = PlannedEntries::where('uuid',$data['uuid'])->first();
             }
 
             $entryData = $this->makeObj($data);
+            
             $entryData = $entryData->toArray();
-
+            $entry->uuid = $entryData['uuid'];
             $entry->account_id = $entryData['account_id'];
             $entry->amount = $entryData['amount'];
             $entry->category_id = $entryData['category_id'];
@@ -63,6 +65,7 @@ class PlanningRecursivelyService extends EntryService
             $entry->payment_type = $entryData['payment_type'];
             $entry->end_date_time = $entryData['end_date_time'];
             $entry->planning = $entryData['planning'];
+            $entry->type = $type;
             $entry->user_id = empty($entryData['user_id']) ? UserService::getCacheUserID() : $entryData['user_id'];
 
             $entry->save();
@@ -70,9 +73,8 @@ class PlanningRecursivelyService extends EntryService
             $this->attachLabels($data['label'], $entry);
             
         } catch (\Exception $e) {
-            $error = uniqid();
-            Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            Log::error($e->getMessage());
+            throw new EntryException("Ops an errro occurred ",500);
         }
     }
 
@@ -83,19 +85,30 @@ class PlanningRecursivelyService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read planning recursively  -- $id");
 
-        $entries = PlannedEntries::user()->get();
+        $entries = PlannedEntries::user();
+
+        if($id !== null) {
+            $entries->where('uuid',$id);
+        }
+
         $resourses = [];
-        foreach($entries as $entry) {
+        $entries->whereNull('deleted_at');
+
+        foreach($entries->get() as $entry) {
             $plannedEntry = $this->makeObj($entry->toArray());
             $resourses[] = $plannedEntry->get();
         }
 
         $result = new \stdClass();
         $result->data = $resourses;
+
+        if(count($result->data) === 1) {
+            $result->data = $result->data[0];
+        }
 
         return $result;
     }
@@ -110,7 +123,6 @@ class PlanningRecursivelyService extends EntryService
     public static function validate(array $data): void
     {
         $rules = [
-            'id' => ['integer'],
             'date_time' => ['date', 'date_format:Y-m-d H:i:s'],
             'account_id' => 'required|boolean',
             'name' => 'string'
@@ -140,7 +152,10 @@ class PlanningRecursivelyService extends EntryService
             new \stdClass(),
           );
 
-          $plannedEntry->setPlanning($planning)->setEndDateTime($endDateTime);
+          $plannedEntry->setPlanning($planning)
+          ->setEndDateTime($endDateTime)
+          ->setUuid($data['uuid']);
+
           return $plannedEntry;
     }
 

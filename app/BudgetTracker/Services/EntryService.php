@@ -96,7 +96,7 @@ class EntryService
    * @return object with a resource
    * @throws \Exception
    */
-  public function read(int $id = null): object
+  public function read(string|null $id = null): object
   {
     Log::debug("read entry -- $id");
     $result = new \stdClass();
@@ -106,7 +106,7 @@ class EntryService
     if ($id === null) {
       $entry = $entry->get();
     } else {
-      $entry = $entry->find($id);
+      $entry = $entry->where('uuid',$id)->get();
     }
 
     if (!empty($entry)) {

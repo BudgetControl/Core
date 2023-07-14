@@ -9,7 +9,6 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\EntryService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
-use Illuminate\Pagination\Paginator;
 
 class EntryController extends Controller
 {
@@ -32,14 +31,10 @@ class EntryController extends Controller
 			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
 			->get();
 
-		$paginator = $this->paginate($entry->toArray(), $page);
+		$paginateController = new PaginatorController($entry->toArray(),self::PAGINATION);
+		$paginator = $paginateController->paginate($page);
 
-		return response()->json([
-			'data' => $paginator->items(),
-			'hasMorePages' => $paginator->hasMorePages(),
-			'currentPage' => $page,
-			"paginate" => true
-		]);
+		return response()->json($paginator);
 	}
 
 	/**
@@ -78,7 +73,7 @@ class EntryController extends Controller
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
-	{	
+	{
 		$service = new EntryService();
 		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
@@ -100,11 +95,4 @@ class EntryController extends Controller
 		}
 	}
 
-	private function paginate(array $items, int $page): Paginator
-	{
-		$items = array_slice($items, self::PAGINATION * $page);
-		$paginator = new Paginator($items, self::PAGINATION, $page);
-
-		return $paginator;
-	}
 }

@@ -36,7 +36,7 @@ class UserService
     static public function getCacheUserID(): int
     {
 
-        if(env('APP_ENV') == 'testing') {
+        if(env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
             return 1;
             die;
         }

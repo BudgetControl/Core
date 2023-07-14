@@ -20,6 +20,8 @@ class PlannedEntry extends Entry {
     private $planning;
     /** @var DateTime */
     private $endDateTime;
+    /** @var string */
+    protected string|null $uuid = null;
     /**
      * Summary of __construct
      * @param float $amount
@@ -113,6 +115,7 @@ class PlannedEntry extends Entry {
         }
 
         return [
+            'uuid' => $this->uuid,
             'type' => $this->type->value,
             'date_time' => $this->date_time->format('Y-m-d H:i:s'),
             'amount' => $this->amount,
@@ -141,6 +144,7 @@ class PlannedEntry extends Entry {
         }
 
         return [
+            'uuid' => $this->uuid,
             'type' => $this->type->value,
             'date_time' => $this->date_time->format('Y-m-d H:i:s'),
             'amount' => $this->amount,
@@ -158,5 +162,29 @@ class PlannedEntry extends Entry {
             'planning' => $this->planning,
             'end_date_time' => $endDateTime,
         ];
+    }
+
+    /**
+     * Get the value of uuid
+     */ 
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Set the value of uuid
+     *
+     * @return  self
+     */ 
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        if($this->uuid === null) {
+            $this->uuid = uniqid();
+        }
+
+        return $this;
     }
 }
