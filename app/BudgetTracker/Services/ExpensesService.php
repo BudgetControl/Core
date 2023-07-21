@@ -83,7 +83,7 @@ class ExpensesService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
@@ -91,14 +91,9 @@ class ExpensesService extends EntryService
         $entry = ExpensesModel::withRelations()->user()->where('type', EntryType::Expenses->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found expenses -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

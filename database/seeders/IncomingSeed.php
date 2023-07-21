@@ -16,12 +16,19 @@ class IncomingSeed extends Seeder
     public function run(): void
     {
 
-        $incoming = Incoming::factory(1000)->create([
+        Incoming::factory(200)->create([
             'user_id' => 1
         ]);
 
         $labels = Labels::factory(10)->create([
             'user_id' => 1
+        ]);
+
+        Incoming::factory(1)->create([
+            'user_id' => 1,
+            'uuid' => '64b54cc566d77_test',
+            'account_id' => 1,
+            'amount' => 1000
         ]);
 
         Incoming::all()->each(function ($incoming) use ($labels) {

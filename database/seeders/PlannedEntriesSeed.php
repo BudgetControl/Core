@@ -16,5 +16,19 @@ class PlannedEntriesSeed extends Seeder
         PlannedEntries::factory(10)->create([
             'user_id' => 1
         ]);
+
+        $date = new \DateTime();
+        $date->modify("+ 1month");
+
+        PlannedEntries::factory(1)->create([
+            'user_id' => 1,
+            'end_date_time' => $date->format('Y-m-d H:i:s')
+        ]);
+
+        PlannedEntries::factory(1)->create([
+            'user_id' => 1,
+            'end_date_time' => $date->format('Y-m-d H:i:s'),
+            'uuid' => '64b54cc56942d_test'
+        ]);
     }
 }

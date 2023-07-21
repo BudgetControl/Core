@@ -92,7 +92,7 @@ class DebitService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read debit -- $id");
         $result = new \stdClass();
@@ -100,14 +100,9 @@ class DebitService extends EntryService
         $entryModel = DebitModel::withRelations()->user()->where('type', EntryType::Debit->value);
 
         if ($id === null) {
-            $entryModel = $entryModel->get();
+            $result = $entryModel->get();
         } else {
-            $entryModel = $entryModel->find($id);
-        }
-
-        if (!empty($entryModel)) {
-            Log::debug("found debit -- " . $entryModel->toJson());
-            $result = $entryModel;
+            $result = $entryModel->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

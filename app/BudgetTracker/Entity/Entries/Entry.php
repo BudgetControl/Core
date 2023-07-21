@@ -31,6 +31,8 @@ class Entry implements EntryInterface
     protected object $geolocation;
     protected array $labels;
     protected Payee|null $payee = null;
+    protected string|null $uuid = null;
+    protected int $transfer_id;
 
     public function __construct(
         float $amount,
@@ -158,7 +160,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of amount
-     */ 
+     */
     public function getAmount(): float
     {
         return $this->amount;
@@ -166,15 +168,15 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of currency
-     */ 
-    public function getCurrency(): Currency 
+     */
+    public function getCurrency(): Currency
     {
         return $this->currency;
     }
 
     /**
      * Get the value of type
-     */ 
+     */
     public function getType(): EntryType
     {
         return $this->type;
@@ -182,7 +184,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of note
-     */ 
+     */
     public function getNote(): string
     {
         return $this->note;
@@ -190,7 +192,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of date_time
-     */ 
+     */
     public function getDateTime(): DateTIme
     {
         return $this->date_time;
@@ -198,7 +200,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of waranty
-     */ 
+     */
     public function getWaranty(): bool
     {
         return $this->waranty;
@@ -206,7 +208,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of transfer
-     */ 
+     */
     public function getTransfer(): bool
     {
         return $this->transfer;
@@ -214,7 +216,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of confirmed
-     */ 
+     */
     public function getConfirmed(): bool
     {
         return $this->confirmed;
@@ -222,7 +224,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of category
-     */ 
+     */
     public function getCategory(): SubCategory
     {
         return $this->category;
@@ -230,7 +232,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of account
-     */ 
+     */
     public function getAccount(): Account
     {
         return $this->account;
@@ -238,7 +240,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of paymentType
-     */ 
+     */
     public function getPaymentType(): PaymentsTypes
     {
         return $this->paymentType;
@@ -246,7 +248,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of geolocation
-     */ 
+     */
     public function getGeolocation(): stdClass
     {
         return $this->geolocation;
@@ -254,7 +256,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of labels
-     */ 
+     */
     public function getLabels(): array
     {
         return $this->labels;
@@ -270,9 +272,52 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of payee
-     */ 
+     */
     public function getPayee(): Payee
     {
         return $this->payee;
+    }
+
+    /**
+     * Get the value of uuid
+     */
+    public function getUuid()
+    {
+        if ($this->uuid === null) {
+            $this->uuid = uniqid();
+        }
+        return $this->uuid;
+    }
+
+    /**
+     * Set the value of uuid
+     *
+     * @return  self
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of transfer_id
+     */
+    public function getTransfer_id()
+    {
+        return $this->transfer_id;
+    }
+
+    /**
+     * Set the value of transfer_id
+     *
+     * @return  self
+     */
+    public function setTransfer_id($transfer_id)
+    {
+        $this->transfer_id = $transfer_id;
+
+        return $this;
     }
 }

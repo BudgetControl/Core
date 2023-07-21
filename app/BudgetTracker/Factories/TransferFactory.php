@@ -27,11 +27,11 @@ class TransferFactory extends Factory
      */
     public function definition(): array
     {
-        $amount = -200;
+        
 
         return [
             'uuid' => uniqid(),
-            'amount' => $amount,
+            'amount' => 200,
             'note' => fake()->text(80),
             'type' => EntryType::Transfer->value,
             'transfer' => 1,

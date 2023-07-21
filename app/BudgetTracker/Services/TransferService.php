@@ -87,7 +87,7 @@ class TransferService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read entry -- $id");
         $result = new \stdClass();
@@ -95,14 +95,9 @@ class TransferService extends EntryService
         $entry = TransferModel::withRelations()->user()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found transfer -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

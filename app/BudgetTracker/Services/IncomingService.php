@@ -85,7 +85,7 @@ class IncomingService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|int|null $id = null): object
     {
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
@@ -93,14 +93,9 @@ class IncomingService extends EntryService
         $entry = IncomingModel::withRelations()->user()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found incoming -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

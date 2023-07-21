@@ -4,12 +4,12 @@ namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Services\PlanningRecursivelyService;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Models\PlannedEntries;
+use App\BudgetTracker\Services\EntryService;
 
-class PlanningRecursivelyController extends Controller implements ControllerResourcesInterface
+class PlanningRecursivelyController extends EntryService
 {
 	//
 	/**
@@ -17,10 +17,16 @@ class PlanningRecursivelyController extends Controller implements ControllerReso
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
-	{
-		$incoming = PlanningRecursivelyService::read();
-		return response()->json(new ResponseService($incoming));
+	public function index(request $request): \Illuminate\Http\JsonResponse
+	{	
+		$page = $request->query('page');
+		$service = new PlanningRecursivelyService();
+		$incoming = $service->read(); 
+
+		$paginator = new PaginatorController($incoming->data,30);
+		$response = $paginator->paginate($page);
+
+		return response()->json($response);
 	}
 
 	/**
@@ -46,10 +52,12 @@ class PlanningRecursivelyController extends Controller implements ControllerReso
 	 * @param int $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(int|string $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = PlanningRecursivelyService::read($id);
-		return response()->json(new ResponseService($incoming));
+		$service = new PlanningRecursivelyService();
+		$incoming = $service->read($id); 
+
+		return response()->json($incoming);
 	}
 
 	/**
@@ -58,10 +66,11 @@ class PlanningRecursivelyController extends Controller implements ControllerReso
 	 * @param int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		try {
-			PlannedEntries::destroy($id);
+			$entry = PlannedEntries::where('uuid',$id)->firstOrFail();
+			PlannedEntries::destroy($entry->id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

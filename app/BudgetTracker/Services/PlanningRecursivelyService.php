@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Models\Payee;
 use App\Http\Services\UserService;
+use App\BudgetTracker\Entity\Entries\PlannedEntry;
+use DateTime;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
+use Exception;
+use App\BudgetTracker\Exceptions\EntryException;
 
 /**
  * Summary of SaveEntryService
@@ -40,27 +48,33 @@ class PlanningRecursivelyService extends EntryService
             }
 
             $entry = new PlannedEntries(['type' => $type, 'planning' => PlanningType::from($data['planning'])]);
-            if (!empty($data['id'])) {
-                $entry = PlannedEntries::find($data['id']);
+            if (!empty($data['uuid'])) {
+                $entry = PlannedEntries::where('uuid',$data['uuid'])->first();
             }
 
-            $entry->account_id = $data['account_id'];
-            $entry->amount = $data['amount'];
-            $entry->category_id = $data['category_id'];
-            $entry->currency_id = $data['currency_id'];
-            $entry->date_time = $data['date_time'];
-            $entry->note = $data['note'];
-            $entry->payment_type = $data['payment_type'];
-            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+            $entryData = $this->makeObj($data);
+            
+            $entryData = $entryData->toArray();
+            $entry->uuid = $entryData['uuid'];
+            $entry->account_id = $entryData['account_id'];
+            $entry->amount = $entryData['amount'];
+            $entry->category_id = $entryData['category_id'];
+            $entry->currency_id = $entryData['currency_id'];
+            $entry->date_time = $entryData['date_time'];
+            $entry->note = $entryData['note'];
+            $entry->payment_type = $entryData['payment_type'];
+            $entry->end_date_time = $entryData['end_date_time'];
+            $entry->planning = $entryData['planning'];
+            $entry->type = $type;
+            $entry->user_id = empty($entryData['user_id']) ? UserService::getCacheUserID() : $entryData['user_id'];
 
             $entry->save();
 
             $this->attachLabels($data['label'], $entry);
             
         } catch (\Exception $e) {
-            $error = uniqid();
-            Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred ".$error);
+            Log::error($e->getMessage());
+            throw new EntryException("Ops an errro occurred ",500);
         }
     }
 
@@ -71,22 +85,29 @@ class PlanningRecursivelyService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    static public function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read planning recursively  -- $id");
-        $result = new \stdClass();
 
-        $entry = PlannedEntries::withRelations()->where('type', EntryType::Incoming->value);
+        $entries = PlannedEntries::user();
 
-        if ($id === null) {
-            $entry = PlannedEntries::get();
-        } else {
-            $entry = PlannedEntries::find($id);
+        if($id !== null) {
+            $entries->where('uuid',$id);
         }
 
-        if (!empty($entry)) {
-            Log::debug("found planning recursively -- " . $entry->toJson());
-            $result = $entry;
+        $resourses = [];
+        $entries->whereNull('deleted_at');
+
+        foreach($entries->get() as $entry) {
+            $plannedEntry = $this->makeObj($entry->toArray());
+            $resourses[] = $plannedEntry->get();
+        }
+
+        $result = new \stdClass();
+        $result->data = $resourses;
+
+        if(count($result->data) === 1) {
+            $result->data = $result->data[0];
         }
 
         return $result;
@@ -102,7 +123,6 @@ class PlanningRecursivelyService extends EntryService
     public static function validate(array $data): void
     {
         $rules = [
-            'id' => ['integer'],
             'date_time' => ['date', 'date_format:Y-m-d H:i:s'],
             'account_id' => 'required|boolean',
             'name' => 'string'
@@ -110,4 +130,34 @@ class PlanningRecursivelyService extends EntryService
 
         Validator::validate($data, $rules);
     }
+
+    protected function makeObj(array $data): PlannedEntry
+    {
+        $endDateTime = empty($data['end_date_time']) ? null : new DateTime($data['end_date_time']);
+        $planning = PlanningType::from($data['planning']);
+        $label = empty($data['label']) ? [] : $data['label'];
+        $uuid = empty($data['uuid']) ? null : $data['uuid'];
+
+        $plannedEntry = new PlannedEntry(
+            $data['amount'],
+            Currency::findOrFail($data['currency_id']),
+            $data['note'],
+            SubCategory::with('category')->findOrFail($data['category_id']),
+            Account::findOrFail($data['account_id']),
+            PaymentsTypes::findOrFail($data['payment_type']),
+            new DateTime($data['date_time']),
+            $label,
+            $data['confirmed'],
+            $data['waranty'],
+            0,
+            new \stdClass(),
+          );
+
+          $plannedEntry->setPlanning($planning)
+          ->setEndDateTime($endDateTime)
+          ->setUuid($uuid);
+
+          return $plannedEntry;
+    }
+
 }

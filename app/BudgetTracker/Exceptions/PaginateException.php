@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
-class EntryException extends Exception
+class PaginateException extends Exception
 {
     public function render(): Response
     {
-        $error = "An error occurred on Entry services";
+        $error = "Paginate error";
         $errorCode = uniqid();
         $statusCode = empty($this->getCode()) ? 200 : $this->getCode();
         $file = $this->getFile();

@@ -14,7 +14,7 @@ use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 
-class TransferController extends Controller implements ControllerResourcesInterface
+class TransferController extends EntryController
 {
 	//
 	/**
@@ -22,12 +22,17 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
-		$incoming = TransferService::read();
-		return response()->json(new ResponseService($incoming));
-	}
+		$page = $filter->query('page');
+		$service = new TransferService();
+		$incoming = $service->read();
 
+		$paginateController = new PaginatorController($incoming->toArray(),self::PAGINATION);
+		$paginator = $paginateController->paginate($page);
+
+		return response()->json($paginator);
+	}
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -52,27 +57,31 @@ class TransferController extends Controller implements ControllerResourcesInterf
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = TransferService::read($id);
+		$service = new TransferService();
+		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param int $id
+	 * @param istringnt $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
-		$entry = Entry::findOrFail($id);
+		$entry = Entry::where('uuid',$id)->firstOrFail();
+		$entryTransfer = Entry::where('id',$entry->transfer_id)->firstOrFail();
 		try {
-			Transfer::destroy($id);
+			Transfer::destroy($entry->id);
+			Transfer::destroy($entryTransfer->id);
 			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
+			AccountsService::updateBalance($entryTransfer->amount * -1,$entryTransfer->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
