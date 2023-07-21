@@ -6,6 +6,7 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\EntryService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
@@ -63,7 +64,7 @@ class EntryController extends Controller
 	static public function getEntriesFromAccount(int $id): \Illuminate\Http\JsonResponse
 	{
 		$incoming = Entry::withRelations()->where("account_id", $id)->get();
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 	/**
@@ -72,11 +73,11 @@ class EntryController extends Controller
 	 * @param int $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
 		$service = new EntryService();
 		$incoming = $service->read($id);
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 	/**
@@ -85,10 +86,12 @@ class EntryController extends Controller
 	 * @param int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		try {
-			Entry::destroy($id);
+			$entry = Entry::where('uuid',$id)->firstOrFail();
+			Entry::destroy($entry->id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

@@ -35,11 +35,6 @@ class PlannedEntriesFactory extends Factory
 
         $date = "$year-$month-$day 12:20:32";
 
-        $planned = 0;
-        if(strtotime($date) > time()) {
-            $planned = 1;
-        }
-
         return [
             'uuid' => uniqid(),
             'amount' => $amount,

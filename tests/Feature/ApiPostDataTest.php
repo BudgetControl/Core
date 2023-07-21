@@ -8,12 +8,16 @@ use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PlannedEntries;
 use DateTime;
 use App\BudgetTracker\Models\Entry;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use App\BudgetTracker\Models\Account;
 
 class ApiPostDataTest extends TestCase
 {
 
     private $headers = '';
+
+    const ACCOUNT_ID = '64b59d645b752_test';
 
 
     /**
@@ -187,7 +191,6 @@ class ApiPostDataTest extends TestCase
             'name' => 'Mimmo',
         ]);
     }
-    
 
     /**
      * build model request
@@ -223,4 +226,5 @@ class ApiPostDataTest extends TestCase
         $token = $response['token']['plainTextToken'];
         return ['X-ACCESS-TOKEN' => $token];  
     }
+
 }

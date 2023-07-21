@@ -12,7 +12,7 @@ use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 
-class IncomingController extends Controller implements ControllerResourcesInterface
+class IncomingController extends EntryController
 {
 	//
 	/**
@@ -20,11 +20,16 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
+		$page = $filter->query('page');
 		$service = new IncomingService();
 		$incoming = $service->read();
-		return response()->json(new ResponseService($incoming));
+
+		$paginateController = new PaginatorController($incoming->toArray(),self::PAGINATION);
+		$paginator = $paginateController->paginate($page);
+
+		return response()->json($paginator);
 	}
 
 	/**
@@ -47,31 +52,14 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
 		$service = new IncomingService();
 		$incoming = $service->read($id);
 		return response()->json(new ResponseService($incoming));
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(int $id): \Illuminate\Http\Response
-	{
-		$entry = Entry::findOrFail($id);
-		try {
-			Incoming::destroy($id);
-			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
-			return response("Resource is deleted");
-		} catch (\Exception $e) {
-			return response($e->getMessage());
-		}
-	}
 }

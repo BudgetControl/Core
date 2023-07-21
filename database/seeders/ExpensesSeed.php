@@ -14,12 +14,19 @@ class ExpensesSeed extends Seeder
      */
     public function run(): void
     {
-        $expenses = Expenses::factory(1000)->create([
+        Expenses::factory(200)->create([
             'user_id' => 1
         ]);
 
         $labels = Labels::factory(10)->create([
             'user_id' => 1
+        ]);
+
+        Expenses::factory(1)->create([
+            'user_id' => 1,
+            'uuid' => '64b54cc5677e0_test',
+            'account_id' => 1,
+            'amount' => -1000
         ]);
 
         Expenses::all()->each(function ($expenses) use ($labels) {

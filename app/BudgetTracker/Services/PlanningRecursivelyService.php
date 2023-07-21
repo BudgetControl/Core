@@ -136,6 +136,7 @@ class PlanningRecursivelyService extends EntryService
         $endDateTime = empty($data['end_date_time']) ? null : new DateTime($data['end_date_time']);
         $planning = PlanningType::from($data['planning']);
         $label = empty($data['label']) ? [] : $data['label'];
+        $uuid = empty($data['uuid']) ? null : $data['uuid'];
 
         $plannedEntry = new PlannedEntry(
             $data['amount'],
@@ -154,7 +155,7 @@ class PlanningRecursivelyService extends EntryService
 
           $plannedEntry->setPlanning($planning)
           ->setEndDateTime($endDateTime)
-          ->setUuid($data['uuid']);
+          ->setUuid($uuid);
 
           return $plannedEntry;
     }

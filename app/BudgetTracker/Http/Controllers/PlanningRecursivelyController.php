@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\BudgetTracker\Services\PlanningRecursivelyService;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Models\PlannedEntries;
+use App\BudgetTracker\Services\EntryService;
 
-class PlanningRecursivelyController extends Controller
+class PlanningRecursivelyController extends EntryService
 {
 	//
 	/**
@@ -68,8 +69,8 @@ class PlanningRecursivelyController extends Controller
 	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		try {
-			$id = PlannedEntries::where('uuid',$id)->firstOrFail('id')['id'];
-			PlannedEntries::destroy($id);
+			$entry = PlannedEntries::where('uuid',$id)->firstOrFail();
+			PlannedEntries::destroy($entry->id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
