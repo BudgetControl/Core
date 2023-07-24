@@ -4,16 +4,19 @@ namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\EntryService;
-use League\Config\Exception\ValidationException;
-use App\BudgetTracker\Services\ResponseService;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class EntryController extends Controller
 {
 	const PAGINATION = 30;
+
+	const FILTER = ['account','category','type','label'];
+
+	private $entry;
 
 	//
 	/**
@@ -28,11 +31,16 @@ class EntryController extends Controller
 		$date = new \DateTime();
 		$date->modify('last day of this month');
 
-		$entry = Entry::withRelations()
-			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
-			->get();
+		$this->entry = Entry::withRelations()
+			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
 
-		$paginateController = new PaginatorController($entry->toArray(),self::PAGINATION);
+		if(!empty($filter->query('filter'))) {
+			$this->filter($filter->query('filter'));
+		}
+		
+		$this->entry = $this->entry->get();
+
+		$paginateController = new PaginatorController($this->entry->toArray(),self::PAGINATION);
 		$paginator = $paginateController->paginate($page);
 
 		return response()->json($paginator);
@@ -98,4 +106,39 @@ class EntryController extends Controller
 		}
 	}
 
+	/**
+	 * check valid filter
+	 * @param array $filter
+	 * 
+	 * @return void
+	 * @throws Exception
+	 */
+	private function filter(array $filter): void
+	{
+		foreach($filter as $key => $value) {
+			if(!in_array($key,self::FILTER)) {
+				throw new \Exception("Filter must be one of these account, type, category, label - ".$key." is not valid!");
+			}
+		}
+
+		if(!empty($filter['account'])) {
+			$this->entry->where('account_id', $filter['account']);
+		}
+
+		if(!empty($filter['category'])) {
+			$this->entry->where('category_id', $filter['category']);
+		}
+
+		if(!empty($filter['type'])) {
+			$this->entry->where('type', $filter['type']);
+		}
+
+		if(!empty($filter['label'])) {
+			$tags = (array) $filter['label'];
+			$this->entry->whereHas('label', function (Builder $q) use ($tags) {
+				$q->whereIn('labels.id', $tags);
+			});
+		}
+
+	}
 }

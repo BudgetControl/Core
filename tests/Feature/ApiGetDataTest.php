@@ -220,6 +220,39 @@ class ApiGetDataTest extends TestCase
         $response->assertJsonStructure(self::PAYEE);
     }
 
+    public function test_filter_account_entry()
+    {
+        $response = $this->get('/api/entry?filter[account]=10&page=0', $this->getAuthTokenHeader());
+        
+        $response->assertStatus(200);
+        foreach($response['data'] as $data) {
+            $assert = $data['account_id'] === 10;
+            $this->assertTrue($assert);
+        }
+    }
+
+    public function test_filter_account_category_entry()
+    {
+        $response = $this->get('/api/entry?filter[account]=10&filter[category]=5&page=0', $this->getAuthTokenHeader());
+        
+        $response->assertStatus(200);
+        foreach($response['data'] as $data) {
+            $assert = $data['category_id'] === 5 && $data['account_id'] === 10;
+            $this->assertTrue($assert);
+        }
+    }
+
+    public function test_filter_type_entry()
+    {
+        $response = $this->get('/api/entry?filter[type]=incoming&page=0', $this->getAuthTokenHeader());
+        
+        $response->assertStatus(200);
+        foreach($response['data'] as $data) {
+            $assert = $data['type'] === 'incoming';
+            $this->assertTrue($assert);
+        }
+    }
+
     private function getAuthTokenHeader()
     {
         //first we nee to get a new token
