@@ -61,7 +61,7 @@ class EntryService
 
       $entryModel = new EntryModel();
       if (!empty($data['uuid'])) {
-        $entryModel = EntryModel::findFromUuid($data['uuid']);
+        $entryModel = EntryModel::findFromUuid($data['uuid'],$data['user_id']);
       }
 
       $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
@@ -141,7 +141,7 @@ class EntryService
             $label->uuid = uniqid();
             $label->name = strtolower($value);
             $label->color = Helpers::color();
-            $label->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $model->user_id;
+            $label->user_id = empty($model->user_id) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();
           }
@@ -223,6 +223,9 @@ class EntryService
         case $planned == 1 && $entry->planned == 0:
           AccountsService::updateBalance($entry->amount * -1,$accountId);
           break;
+        case $planned == 0 && $entry->planned == 1:
+            AccountsService::updateBalance($entry->amount,$accountId);
+            break;
         case $planned = 0 && $entry->planned == 1 && $confirmed == 1:
           AccountsService::updateBalance($entry->amount,$accountId);
           break;
