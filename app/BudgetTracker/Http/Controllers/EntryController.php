@@ -4,18 +4,17 @@ namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\EntryService;
-use League\Config\Exception\ValidationException;
-use App\BudgetTracker\Services\ResponseService;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class EntryController extends Controller
 {
 	const PAGINATION = 30;
 
-	const FILTER = ['account','category','type'];
+	const FILTER = ['account','category','type','label'];
 
 	private $entry;
 
@@ -35,7 +34,9 @@ class EntryController extends Controller
 		$this->entry = Entry::withRelations()
 			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
 
-		$this->filter($filter->query('filter'));
+		if(!empty($filter->query('filter'))) {
+			$this->filter($filter->query('filter'));
+		}
 		
 		$this->entry = $this->entry->get();
 
@@ -116,7 +117,7 @@ class EntryController extends Controller
 	{
 		foreach($filter as $key => $value) {
 			if(!in_array($key,self::FILTER)) {
-				throw new \Exception("Filter must be one of these account, type, category, ".$key." is not valid!");
+				throw new \Exception("Filter must be one of these account, type, category, label - ".$key." is not valid!");
 			}
 		}
 
@@ -130,6 +131,13 @@ class EntryController extends Controller
 
 		if(!empty($filter['type'])) {
 			$this->entry->where('type', $filter['type']);
+		}
+
+		if(!empty($filter['label'])) {
+			$tags = (array) $filter['label'];
+			$this->entry->whereHas('label', function (Builder $q) use ($tags) {
+				$q->whereIn('labels.id', $tags);
+			});
 		}
 
 	}
