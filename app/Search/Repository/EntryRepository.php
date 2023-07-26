@@ -8,6 +8,7 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use DateTime;
 
 class EntryRepository {
