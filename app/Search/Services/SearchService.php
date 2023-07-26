@@ -46,8 +46,8 @@ class SearchService
             $repository->category($filter['category']);
         }
 
-        if (!empty($filter['label'])) {
-            $repository->label($filter['label']);
+        if (!empty($filter['tags'])) {
+            $repository->label($filter['tags']);
         }
 
         if (!empty($filter['text'])) {
