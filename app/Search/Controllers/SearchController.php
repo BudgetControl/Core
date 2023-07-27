@@ -47,15 +47,20 @@ class SearchController {
 	public function show(Request $filter): JsonResponse
 	{	
         $page = $filter->query('page');
-
 		$month = $filter->month;
-		if(empty($month)) {
-			$month = date('m',time());
+		$year = $filter->year;
+
+		if(!empty($month)) {
+			if(empty($year)) {
+				$year = date('Y',time());
+			}
 		}
 
-		$year = $filter->year;
-		if(empty($year)) {
-			$year = date('Y',time());
+		if(empty($month)) {
+			$month = '01';
+			if(empty($year)) {
+				$year = date('Y',time());
+			}
 		}
 
 		$service = new SearchService($month,$year);
