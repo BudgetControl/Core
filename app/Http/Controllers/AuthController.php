@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Encryptable;
+use Exception;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -109,6 +109,27 @@ class AuthController extends Controller
             $user->email = $request['email'];
             $user->password = bcrypt($request['password']);
             $user->save();
+
+            try {
+                //create first free account
+                $serviceAccount = new AccountsService();
+                $serviceAccount->save([
+                    "user_id" => $user->id,
+                    "name" => "Cash",
+                    "color" => "F9A602",
+                    "type" => "Cash",
+                    "balance" => 0,
+                    "installement" => false,
+                    "installementValue" => 0,
+                    "currency" => "EUR",
+                    "amount" => 0
+                ]);
+            } catch (Exception $e) {
+                Log::error("Unable to create new account on signup, user wil be deleted");
+                Log::error($e);
+
+                $user->delete();
+            }
     
             return $this->authenticate($request);
 
