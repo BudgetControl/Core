@@ -68,8 +68,9 @@ class SearchService
             }
         }
 
-
-        $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
+        if(!empty($filter['month']) || !empty($filter['year'])) {
+            $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
+        }
 
         $result = $repository->get(self::COLUMN);
 
