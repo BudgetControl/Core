@@ -3,10 +3,8 @@
 namespace App\Http\Services;
 
 use App\Models\PersonalAccessToken;
-use App\Models\User;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -20,6 +18,7 @@ class UserService
         $session = session()->getId();
 
         if(Cache::has($session)) {
+            Log::info("Current session $session");
             return Cache::get($session);
         }
 
@@ -36,7 +35,8 @@ class UserService
     static public function getCacheUserID(): int
     {
 
-        if(env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
+        if(env('APP_ENV') == 'testing') {
+            Log::info("Start session DEBUG MODE");
             return 1;
             die;
         }

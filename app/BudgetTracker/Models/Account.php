@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Http\Services\UserService;
+use Illuminate\Database\Eloquent\Builder;
 
 class Account extends Model
 {
@@ -61,7 +62,7 @@ class Account extends Model
     /**
      * scope user
      */
-    public function scopeUser($query): void
+    public function scopeUser(Builder $query): void
     {
         $query->where('user_id',UserService::getCacheUserID());
     }

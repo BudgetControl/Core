@@ -2,6 +2,7 @@ version: '2.2'
 
 services:
     database:
+      container_name: budgetcontrol-db
       image: mysql:latest
       restart: unless-stopped
       ports:
@@ -14,6 +15,7 @@ services:
         MYSQL_PASSWORD: ${DB_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
     bemodule:
+      container_name: budgetcontrol-services
       image: docker.io/bitnami/laravel:10
       ports:
         - 3000:8000
@@ -26,6 +28,7 @@ services:
       restart: unless-stopped
       command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
     cache:
+      container_name: budgetcontrol-redis
       image: redis:7.2-rc2-alpine
       restart: always
       env_file:
