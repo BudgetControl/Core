@@ -1,6 +1,8 @@
 # Budget tracker V2 App - BackAnd application
 Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
+![version](https://img.shields.io/badge/version-1.0-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) <a href="https://github.com/marcodefelice/budgetcontrol-service/issues?q=is%3Aopen+is%3Aissue" target="_blank">![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/vue-notus.svg)</a> <a href="https://github.com/marcodefelice/budgetcontrol-service/issues?q=is%3Aissue+is%3Aclosed" target="_blank">![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/vue-notus.svg)</a>  <a href="https://discord.gg/jv3RayP9" target="_blank">![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)</a>
+
 ## Requirment
 php version >= 8.2
 
