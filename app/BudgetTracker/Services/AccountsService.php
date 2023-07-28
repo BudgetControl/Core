@@ -72,18 +72,18 @@ class AccountsService
      */
     public function read(int $id = null): Collection
     {
-        Log::debug("read accounts -- $id");
 
         $entry = Account::user();
 
         if ($id === null) {
-            $entry = $entry->get();
+            $accounts = $entry->get();
         } else {
-            $entry = $entry->firstOrFail($id);
+            $accounts = $entry->firstOrFail($id);
         }
 
-        return $entry;
+        return $accounts;
     }
+ 
 
     /**
      * make object to save
