@@ -52,10 +52,12 @@ class InsertPlannedEntry implements ShouldQueue
         $date = date("Y-m-d H:i:s",time());
         $newDate = strtotime($date . "+1 month");
 
-        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d',$newDate))
-        ->where("end_date_time", "<=",date('Y-m-d H:i:s',time()))
-        ->get();
+        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s',$newDate))
+        ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
+        ->orWhere("end_date_time", null);
         Log::info("Found " . $entry->count() . " of new entry to insert");
+        echo $entry->toSql();
+        die;
         return $entry;
     }
 
