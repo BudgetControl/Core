@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Bus\Queueable;
@@ -17,6 +18,7 @@ use App\BudgetTracker\Models\Currency;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class InsertPlannedEntry implements ShouldQueue
 {
@@ -67,6 +69,8 @@ class InsertPlannedEntry implements ShouldQueue
     {
         try {
             foreach ($data as $request) {
+                $type = EntryType::from($request->type);
+
                 $entry = new Entry(
                     $request->amount,
                     Currency::find($request->currency_id),
@@ -74,13 +78,13 @@ class InsertPlannedEntry implements ShouldQueue
                     SubCategory::find($request->category_id),
                     Account::find($request->account_id),
                     PaymentsTypes::find($request->payment_type),
-                    $request->date_time,
+                    $request->date_time
                 );
 
                 $service = new EntryService();
                 $entryArray = $entry->toArray();
                 $entryArray['user_id'] = $request->user_id;
-                $service->save($entryArray);
+                $service->save($entryArray,$type);
 
                 Log::info("PLANNED INSERT:: " . json_encode($entry));
 
