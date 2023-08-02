@@ -77,7 +77,7 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
 
         return new EntriesEntry(
             $amount,
-            Currency::find(1),
+            Currency::find(11),
             $account->name . ' '. $newDate,
             SubCategory::find(55),
             $account,
