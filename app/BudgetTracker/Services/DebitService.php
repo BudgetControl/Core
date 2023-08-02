@@ -63,8 +63,6 @@ class DebitService extends EntryService
                 $entryModel = DebitModel::findFromUuid($data['uuid']);
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->currency_id = $entry->getCurrency()->id;
@@ -77,6 +75,8 @@ class DebitService extends EntryService
             $entryModel->payee_id = $entry->getPayee()->id;
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
+            
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
         } catch (\Exception $e) {
             $error = uniqid();

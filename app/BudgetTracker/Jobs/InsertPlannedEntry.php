@@ -72,15 +72,7 @@ class InsertPlannedEntry implements ShouldQueue
             foreach ($data as $request) {
                 $type = EntryType::from($request->type);
 
-                $entry = new Entry(
-                    $request->amount,
-                    Currency::find($request->currency_id),
-                    $request->note,
-                    SubCategory::find($request->category_id),
-                    Account::find($request->account_id),
-                    PaymentsTypes::find($request->payment_type),
-                    $request->date_time
-                );
+                $entry = $request;
 
                 $service = new EntryService();
                 $entryArray = $entry->toArray();

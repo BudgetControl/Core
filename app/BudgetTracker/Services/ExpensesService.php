@@ -52,8 +52,6 @@ class ExpensesService extends EntryService
                 $entryModel = ExpensesModel::findFromUuid($data['uuid']);
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -68,6 +66,7 @@ class ExpensesService extends EntryService
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
+            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
         } catch (\Exception $e) {
             $error = uniqid();

@@ -55,8 +55,6 @@ class TransferService extends EntryService
                 $entryModel = TransferModel::findFromUuid($data['uuid']);
             }
 
-            $this->updateBalance($entry, $entry->getAccount()->id, $entryModel);
-
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -72,6 +70,7 @@ class TransferService extends EntryService
             $entryModel->save();
 
             $this->saveInverted($entry, $data['transfer_id'], $user_id);
+            $this->updateBalance($entry, $entry->getAccount()->id, $entryModel);
             
         } catch (\Exception $e) {
             $error = uniqid();
