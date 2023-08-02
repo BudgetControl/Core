@@ -64,8 +64,6 @@ class EntryService
         $entryModel = EntryModel::findFromUuid($data['uuid'],$data['user_id']);
       }
 
-      $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
       $entryModel->account_id = $entry->getAccount()->id;
       $entryModel->amount = $entry->getAmount();
       $entryModel->category_id = $entry->getCategory()->id;
@@ -81,6 +79,7 @@ class EntryService
       $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
+      $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
 
     } catch (\Exception $e) {
       $errorCode = uniqid();

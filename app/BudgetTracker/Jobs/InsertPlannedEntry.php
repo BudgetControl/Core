@@ -55,6 +55,7 @@ class InsertPlannedEntry implements ShouldQueue
         $newDate = strtotime($date . "+1 month");
 
         $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s',$newDate))
+        ->where("deleted_at",null)
         ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
         ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
@@ -71,15 +72,7 @@ class InsertPlannedEntry implements ShouldQueue
             foreach ($data as $request) {
                 $type = EntryType::from($request->type);
 
-                $entry = new Entry(
-                    $request->amount,
-                    Currency::find($request->currency_id),
-                    $request->note,
-                    SubCategory::find($request->category_id),
-                    Account::find($request->account_id),
-                    PaymentsTypes::find($request->payment_type),
-                    $request->date_time
-                );
+                $entry = $request;
 
                 $service = new EntryService();
                 $entryArray = $entry->toArray();
