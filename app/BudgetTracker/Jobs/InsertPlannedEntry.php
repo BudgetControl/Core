@@ -54,7 +54,7 @@ class InsertPlannedEntry implements ShouldQueue
 
         $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s',$newDate))
         ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
-        ->orWhere("end_date_time", null);
+        ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
         return $entry;
     }
