@@ -35,7 +35,7 @@ class EntryService
    * 
    * @return void
    */
-  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
+  public function save(array $data, EntryType $type, Payee|null $payee = null): void
   {
     try {
 
