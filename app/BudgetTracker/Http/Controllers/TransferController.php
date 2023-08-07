@@ -54,6 +54,27 @@ class TransferController extends EntryController
 		}
 	}
 
+		/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, string $uuid): \Illuminate\Http\Response
+	{
+		try {
+			$service = new TransferService($uuid);
+
+			$entry = $request->toArray();
+			$entry['amount'] = $request['amount'] * -1;
+			$service->save($entry);
+
+			return response('All data stored');
+		} catch (\Exception $e) {
+			return response($e->getMessage(), 500);
+		}
+	}
+
 	/**
 	 * Display the specified resource.
 	 *

@@ -20,6 +20,7 @@ class TransferSeed extends Seeder
             'amount' => -200,
             'user_id' => 1,
             'uuid' => '64b54d02cdcfd_test',
+            'transfer_relation' => '64b54d02cdcft_test'
         ]);
 
 
@@ -29,6 +30,7 @@ class TransferSeed extends Seeder
             'amount' => 200,
             'user_id' => 1,
             'uuid' => '64b54d02cdcft_test',
+            'transfer_relation' => '64b54d02cdcfd_test'
         ]);
 
     }

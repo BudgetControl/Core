@@ -25,6 +25,12 @@ class EntryService
 {
 
   protected $data;
+  protected $uuid;
+
+  public function __construct(string $uuid = "")
+  {
+    $this->uuid = $uuid;
+  }
 
 
   /**
@@ -43,25 +49,24 @@ class EntryService
 
       $entry = new Entry(
         $data['amount'],
+        $type,
         Currency::findOrFail($data['currency_id']),
         $data['note'],
+        new DateTime($data['date_time']),
+        $data['waranty'],
+        $data['transfer'],
+        $data['confirmed'],
         SubCategory::findOrFail($data['category_id']),
         Account::findOrFail($data['account_id']),
         PaymentsTypes::findOrFail($data['payment_type']),
-        new DateTime($data['date_time']),
-        $data['label'],
-        $data['confirmed'],
-        $data['waranty'],
-        0,
         new \stdClass(),
-        $data['transfer'],
-        $payee,
-        $type
+        $data['label']
       );
 
       $entryModel = new EntryModel();
-      if (!empty($data['uuid'])) {
-        $entryModel = EntryModel::findFromUuid($data['uuid'],$data['user_id']);
+      if (!empty($this->uuid)) {
+        AccountsService::updateBalance($entryModel->amount *-1,$entryModel->account_id);
+        $entryModel = EntryModel::findFromUuid($this->uuid,$data['user_id']);
       }
 
       $entryModel->account_id = $entry->getAccount()->id;
@@ -79,7 +84,7 @@ class EntryService
       $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
-      $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
+      $this->updateBalance($entry);
 
     } catch (\Exception $e) {
       $errorCode = uniqid();
@@ -196,51 +201,21 @@ class EntryService
 
   /**
    * update balance
-   * @param Entry $amount
-   * @param int $accountId
-   * @param EntryModel $entry
+   * @param EntryInterface $entry
    * 
    * @return void
    */
-  protected function updateBalance(EntryInterface $newEntry, int $accountId, EntryModel $entry): void
+  protected function updateBalance(EntryInterface $entry): void
   {
-    try {
-      $amount = $newEntry->getAmount();
-      $planned = $newEntry->getPlanned();
-      $confirmed = $newEntry->getConfirmed();
-      //only new entry
-      if(empty($entry->amount) && $newEntry->getPlanned() == 0 && $newEntry->getConfirmed() == 1) {
-        AccountsService::updateBalance($amount,$accountId);
-      }
+      $amount = $entry->getAmount();
+      $isPlanned = $entry->getPlanned();
+      $isConfirmed = $entry->getConfirmed();
+      $account = $entry->getAccount();
 
-      //conditions
-      switch(true) {
-        case $amount != $entry->amount && $confirmed == 1 && $planned = 0:
-          AccountsService::updateBalance($entry->amount * -1,$accountId);
-          AccountsService::updateBalance($amount,$accountId);
-          break;
-        case $planned == 1 && $entry->planned == 0:
-          AccountsService::updateBalance($entry->amount * -1,$accountId);
-          break;
-        case $planned == 0 && $entry->planned == 1:
-            AccountsService::updateBalance($entry->amount,$accountId);
-            break;
-        case $planned = 0 && $entry->planned == 1 && $confirmed == 1:
-          AccountsService::updateBalance($entry->amount,$accountId);
-          break;
-        case $entry->planned = 0 && $entry->confirmed == 0 && $confirmed == 1:
-          AccountsService::updateBalance($entry->amount,$accountId);
-          break;
-        case $entry->planned = 0 && $entry->confirmed == 1 && $confirmed == 0:
-          AccountsService::updateBalance($entry->amount * -1,$accountId);
-          break;
-        default;
-          break;
+      //update balance
+      if($isPlanned == false && $isConfirmed == true) {
+        AccountsService::updateBalance($amount,$account->id);
+        Log::debug("Update balance ".$amount." , ".$account->id);
       }
-    } catch (Exception $e) {
-      Log::error("Unable to update account balance $accountId");
-      Log::error($e->getMessage());
-    }
-    
   }
 }
