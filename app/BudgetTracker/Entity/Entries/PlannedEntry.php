@@ -20,8 +20,6 @@ class PlannedEntry extends Entry {
     private $planning;
     /** @var DateTime */
     private $endDateTime;
-    /** @var string */
-    protected string|null $uuid = null;
     /**
      * Summary of __construct
      * @param float $amount
@@ -42,24 +40,24 @@ class PlannedEntry extends Entry {
      */
     public function __construct(
         float $amount,
+        EntryType $type,
         Currency $currency,
         string $note,
+        DateTime $date_time,
+        DateTime $endDateTime,
+        bool $waranty,
+        bool $transfer,
+        bool $confirmed,
         SubCategory $category,
         Account $account,
         PaymentsTypes $paymentType,
-        DateTime $date_time,
-        array $labels = [],
-        bool $confirmed = true,
-        bool $waranty = false,
-        int $transfer_id = 0,
-        object $geolocation = new stdClass(),
-        bool $transfer = false,
-        Payee|null $payee = null,
-        EntryType $type = EntryType::Incoming,
+        object $geolocation,
+        array $labels,
+        PlanningType $planning,
     ) {
-
-        parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$transfer_id,$geolocation);
-
+        parent::__construct($amount,$type,$currency,$note,$date_time,$waranty,$transfer,$confirmed,$category,$account,$paymentType,$geolocation,$labels);
+        $this->planning = $planning;
+        $this->endDateTime = $endDateTime;
     }
 
     /**
@@ -128,7 +126,6 @@ class PlannedEntry extends Entry {
             'currency_id' => $this->currency->id,
             'payment_type' => $this->paymentType->id,
             'geolocation' => $this->geolocation,
-            'payee_id' => $this->payee,
             'label' => $this->labels,
             'planning' => $this->planning,
             'end_date_time' => $endDateTime,
@@ -157,34 +154,10 @@ class PlannedEntry extends Entry {
             'currency' => $this->currency,
             'payment_type' => $this->paymentType,
             'geolocation' => $this->geolocation,
-            'payee' => $this->payee,
             'label' => $this->labels,
             'planning' => $this->planning,
             'end_date_time' => $endDateTime,
         ];
     }
 
-    /**
-     * Get the value of uuid
-     */ 
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Set the value of uuid
-     *
-     * @return  self
-     */ 
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
-
-        if($this->uuid === null) {
-            $this->uuid = uniqid();
-        }
-
-        return $this;
-    }
 }

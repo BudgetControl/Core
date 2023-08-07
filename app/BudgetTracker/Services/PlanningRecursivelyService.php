@@ -25,15 +25,15 @@ use App\BudgetTracker\Exceptions\EntryException;
 class PlanningRecursivelyService extends EntryService
 {
 
-  /**
-   * save a resource
-   * @param array $data
-   * @param EntryType|null $type
-   * @param Payee|null $payee
-   * 
-   * @return void
-   */
-  public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
+    /**
+     * save a resource
+     * @param array $data
+     * @param EntryType|null $type
+     * @param Payee|null $payee
+     * 
+     * @return void
+     */
+    public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
         try {
 
@@ -41,19 +41,13 @@ class PlanningRecursivelyService extends EntryService
 
             self::validate($data);
 
-            if ($data['amount'] < 0) {
-                $type = EntryType::Expenses->value;
-            } else {
-                $type = EntryType::Incoming->value;
-            }
-
             $entry = new PlannedEntries(['type' => $type, 'planning' => PlanningType::from($data['planning'])]);
             if (!empty($data['uuid'])) {
-                $entry = PlannedEntries::where('uuid',$data['uuid'])->first();
+                $entry = PlannedEntries::where('uuid', $data['uuid'])->first();
             }
 
             $entryData = $this->makeObj($data);
-            
+
             $entryData = $entryData->toArray();
             $entry->uuid = $entryData['uuid'];
             $entry->account_id = $entryData['account_id'];
@@ -65,16 +59,16 @@ class PlanningRecursivelyService extends EntryService
             $entry->payment_type = $entryData['payment_type'];
             $entry->end_date_time = $entryData['end_date_time'];
             $entry->planning = $entryData['planning'];
-            $entry->type = $type;
+            $entry->type = $entryData['type'];
+            $entry->end_date_time = $entryData['end_date_time'];
             $entry->user_id = empty($entryData['user_id']) ? UserService::getCacheUserID() : $entryData['user_id'];
 
             $entry->save();
 
             $this->attachLabels($data['label'], $entry);
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            throw new EntryException("Ops an errro occurred ",500);
+            throw new EntryException("Ops an errro occurred ", 500);
         }
     }
 
@@ -91,14 +85,14 @@ class PlanningRecursivelyService extends EntryService
 
         $entries = PlannedEntries::user();
 
-        if($id !== null) {
-            $entries->where('uuid',$id);
+        if ($id !== null) {
+            $entries->where('uuid', $id);
         }
 
         $resourses = [];
         $entries->whereNull('deleted_at');
 
-        foreach($entries->get() as $entry) {
+        foreach ($entries->get() as $entry) {
             $plannedEntry = $this->makeObj($entry->toArray());
             $resourses[] = $plannedEntry->get();
         }
@@ -106,7 +100,7 @@ class PlanningRecursivelyService extends EntryService
         $result = new \stdClass();
         $result->data = $resourses;
 
-        if(count($result->data) === 1) {
+        if (count($result->data) === 1) {
             $result->data = $result->data[0];
         }
 
@@ -133,31 +127,38 @@ class PlanningRecursivelyService extends EntryService
 
     protected function makeObj(array $data): PlannedEntry
     {
-        $endDateTime = empty($data['end_date_time']) ? null : new DateTime($data['end_date_time']);
+        $endDateTime = new DateTime($data['end_date_time']);
         $planning = PlanningType::from($data['planning']);
         $label = empty($data['label']) ? [] : $data['label'];
-        $uuid = empty($data['uuid']) ? null : $data['uuid'];
+
+        if ($data['amount'] < 0) {
+            $type = EntryType::Expenses;
+        } else {
+            $type = EntryType::Incoming;
+        }
 
         $plannedEntry = new PlannedEntry(
             $data['amount'],
+            $type,
             Currency::findOrFail($data['currency_id']),
             $data['note'],
+            new DateTime($data['date_time']),
+            $endDateTime,
+            $data['waranty'],
+            false,
+            $data['confirmed'],
             SubCategory::with('category')->findOrFail($data['category_id']),
             Account::findOrFail($data['account_id']),
             PaymentsTypes::findOrFail($data['payment_type']),
-            new DateTime($data['date_time']),
-            $label,
-            $data['confirmed'],
-            $data['waranty'],
-            0,
             new \stdClass(),
-          );
+            $label,
+            $planning
+        );
 
-          $plannedEntry->setPlanning($planning)
-          ->setEndDateTime($endDateTime)
-          ->setUuid($uuid);
+        if (!empty($data['uuid'])) {
+            $plannedEntry->setUuid($data['uuid']);
+        }
 
-          return $plannedEntry;
+        return $plannedEntry;
     }
-
 }

@@ -10,6 +10,15 @@
     <testsuite name="Search">
       <directory suffix="Test.php">./app/Search/Tests</directory>
     </testsuite>
+    <testsuite name="BudgetTracker">
+      <directory suffix="Test.php">./app/BudgetTracker/Tests</directory>
+    </testsuite>
+    <testsuite name="Stats">
+      <directory suffix="Test.php">./app/Stats/Tests</directory>
+    </testsuite>
+    <testsuite name="Charts">
+      <directory suffix="Test.php">./app/Charts/Tests</directory>
+    </testsuite>
   </testsuites>
   <coverage/>
   <php>

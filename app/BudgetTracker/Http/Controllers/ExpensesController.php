@@ -50,6 +50,23 @@ class ExpensesController extends EntryController
 	}
 
 	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, string $uuid): \Illuminate\Http\Response
+	{
+		try {
+			$service = new ExpensesService($uuid);
+			$service->save($request->toArray());
+			return response('All data stored');
+		} catch (\Exception $e) {
+			return response($e->getMessage(), 500);
+		}
+	}
+
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param string $id

@@ -104,7 +104,6 @@ class ApiGetDataTest extends TestCase
                 "user_id"
             ],
             "geolocation",
-            "payee",
             "label",
             "planning",
             "end_date_time",

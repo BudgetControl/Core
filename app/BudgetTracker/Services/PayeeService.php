@@ -79,7 +79,6 @@ class PayeeService
     public static function validate(array $data): void
     {
         $rules = [
-            'id' => ['integer'],
             'date_time' => ['date', 'date_format:Y-m-d H:i:s'],
             'name' => 'string'
         ];
