@@ -30,7 +30,6 @@ class ActivatePlannedEntries implements ShouldQueue
     public function handle(): void
     {
         Log::info("Start activate planned JOB");
-        $service = new EntryService();
 
         foreach($this->findPlannedEntries() as $entry) {
 
@@ -39,6 +38,7 @@ class ActivatePlannedEntries implements ShouldQueue
             $data['updated_at'] = date('Y-m-d H:i:s', time());
             $data['label'] = [];
 
+            $service = new EntryService($data['uuid']);
             $service->save($data,EntryType::from($data['type']));
 
             Log::info("Activated entry: ".json_encode($entry->toArray()));
