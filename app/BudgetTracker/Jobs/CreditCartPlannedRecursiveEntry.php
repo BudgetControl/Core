@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
+use App\BudgetTracker\Entity\Entries\Transfer;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
@@ -19,6 +20,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\TransferService;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class CreditCartPlannedRecursiveEntry implements ShouldQueue
 {
@@ -75,14 +77,18 @@ class CreditCartPlannedRecursiveEntry implements ShouldQueue
         $day = $date->format('d');
         $newDate = date('Y',time()).'-'.date('m',time()).'-'.$day;
 
-        return new EntriesEntry(
+        return new Transfer(
             $amount,
             Currency::find(11),
             $account->name . ' '. $newDate,
-            SubCategory::find(55),
+            new \DateTime($newDate),
+            false,
+            true,
             $account,
             PaymentsTypes::find(1),
-            new \DateTime($newDate),
+            new stdClass(),
+            [],
+            0
         );
     }
 
