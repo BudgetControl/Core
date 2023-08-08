@@ -15,8 +15,7 @@ use App\BudgetTracker\Models\PlannedEntries;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\Labels;
-use DateTime;
+
 use Exception;
 use Illuminate\Support\Facades\Log;
 use stdClass;
@@ -50,7 +49,7 @@ class InsertPlannedEntry implements ShouldQueue
      * get planned entry from date
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function getPlannedEntry(): Entry
+    private function getPlannedEntry()
     {
         $date = date("Y-m-d H:i:s",time());
         $newDate = strtotime($date . "+1 month");
@@ -60,24 +59,7 @@ class InsertPlannedEntry implements ShouldQueue
         ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
         ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
-
-        return new Entry(
-            $entry->amount,
-            Currency::findOrFail($entry->currency_id),
-            $entry->note,
-            SubCategory::findOrFail($entry->category_id),
-            Account::findOrFail($entry->account_id),
-            PaymentsTypes::findOrFail($entry->payment_type),
-            new DateTime($entry->date_time),
-            [],
-            true,
-            false,
-            0,
-            new stdClass(),
-            false,
-            null,
-            EntryType::from($entry->type)
-        );
+        return $entry;
     }
 
     /**
