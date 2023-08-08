@@ -24,6 +24,13 @@ class ExpensesSeed extends Seeder
             'date_time' => "2023-04-12 20:10:00"
         ]);
 
+        Expenses::factory(1)->create([
+            'user_id' => 1,
+            'date_time' => date('Y-m-d H:i:s'),
+            'uuid' => '64b54cc5677e0_job',
+            'planned' => 1
+        ]);
+
         Expenses::factory(20)->create([
             'user_id' => 1,
             'planned' => 1,
