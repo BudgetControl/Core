@@ -130,10 +130,9 @@ class Entry extends Model
      *  
      *  @return mixed
      * */
-    public static function findFromUuid(string $uuid, int $user_id = 0)
+    public static function findFromUuid(string $uuid)
     {
-        $userId = empty($user_id) ? UserService::getCacheUserID() : $user_id;
-        return Entry::where('uuid',$uuid)->where('user_id',$userId)->first();
+        return Entry::where('uuid',$uuid)->first();
     }
 
     /**
