@@ -31,17 +31,23 @@ class ActivatePlannedEntries implements ShouldQueue
     {
         Log::info("Start activate planned JOB");
 
-        foreach($this->findPlannedEntries() as $entry) {
+        $plannedEntry = $this->findPlannedEntries();
 
-            $data = $entry->toArray();
-            $data['planned'] = 0;
-            $data['updated_at'] = date('Y-m-d H:i:s', time());
-            $data['label'] = [];
+        if($plannedEntry->count() != 0) {
+            foreach($this->findPlannedEntries() as $entry) {
 
-            $service = new EntryService($data['uuid']);
-            $service->save($data,EntryType::from($data['type']));
-
-            Log::info("Activated entry: ".json_encode($entry->toArray()));
+                $data = $entry->toArray();
+                $data['planned'] = 0;
+                $data['updated_at'] = date('Y-m-d H:i:s', time());
+                $data['label'] = [];
+    
+                $service = new EntryService($data['uuid']);
+                $service->save($data,EntryType::from($data['type']));
+    
+                Log::info("Activated entry: ".json_encode($entry->toArray()));
+            }
+        } else {
+            Log::debug("No entry to activate found");
         }
     }
 
