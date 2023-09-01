@@ -183,6 +183,7 @@ class ImportService implements ImportServiceInterface
           } else {
             $labels = Labels::whereIn('name',[$value[5]])->get();
             foreach($labels as $label) {
+              Log::debug("Found these labels " . $label->name);
               $tags[] = $label->name;
             }
             
