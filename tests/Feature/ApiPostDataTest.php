@@ -70,6 +70,7 @@ class ApiPostDataTest extends TestCase
     {
         $request = $this->makeRequest(100.90, new DateTime('+1Month'));
         $request->planning = 'daily';
+        $request->end_date_time = "2025-08-10 00:00:00";
 
         $response = $this->postJson('/api/planning-recursively',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);

@@ -20,27 +20,18 @@ final class Expenses extends Entry {
         float $amount,
         Currency $currency,
         string $note,
+        DateTime $date_time,
+        bool $waranty,
+        bool $confirmed,
         SubCategory $category,
         Account $account,
         PaymentsTypes $paymentType,
-        DateTime $date_time,
-        array $labels = [],
-        bool $confirmed = true,
-        bool $waranty = false,
-        int $transfer_id = 0,
-        object $geolocation = new stdClass(),
-        bool $transfer = false,
-        Payee|null $payee = null,
-        EntryType $type = EntryType::Expenses,
+        object $geolocation,
+        array $labels,
     ) {
 
-        parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$transfer_id,$geolocation);
-
-        $this->type = EntryType::Expenses;
-        $this->transfer = false;
-
+        parent::__construct($amount,EntryType::Expenses,$currency,$note,$date_time,$waranty,false,$confirmed,$category,$account,$paymentType,$geolocation,$labels);
         $this->validate();
-
     }
 
     /**
@@ -49,9 +40,9 @@ final class Expenses extends Entry {
      * @return void
      * @throws ValidationException
      */
-    public function validate(): void
+    private function validate(): void
     {
-        if($this->amount > 0) {
+        if($this->getAmount() > 0) {
             throw new ValidationException(
                 new NetteException('Amount must be minor than 0')
             );

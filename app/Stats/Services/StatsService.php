@@ -10,6 +10,7 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Transfer;
+use App\Http\Services\UserService;
 use DateTime;
 
 class StatsService
@@ -140,7 +141,7 @@ class StatsService
      * 
      * @return array
      */
-    public function debit(bool $planning): array
+    public function debit(): array
     {
         $entry = Debit::user();
         $entry->where('date_time', '<=', $this->endDate)
@@ -198,6 +199,7 @@ class StatsService
             ->where('entries.date_time', '<=', $dateTime)
             ->where('entries.date_time', '>=', $dateTimeFirst)
             ->where('accounts.installement', 0)
+            ->where('accounts.user_id',UserService::getCacheUserID())
             ->get('entries.amount');
 
         return $entry;
@@ -205,7 +207,7 @@ class StatsService
 
     private function getInstallementValue(): \Illuminate\Database\Eloquent\Collection
     {
-        return Account::where('installement', 1)->get('installementValue as amount');
+        return Account::user()->where('installement', 1)->get('installementValue as amount');
     }
 
     /** 

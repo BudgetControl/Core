@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
@@ -54,9 +55,10 @@ class EntryController extends Controller
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
 	{
+		$type = EntryType::from($request->type);
 		try {
 			$service = new EntryService();
-			$service->save($request->toArray());
+			$service->save($request->toArray(),$type);
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);

@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Bus\Queueable;
@@ -17,6 +18,7 @@ use App\BudgetTracker\Models\Currency;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class InsertPlannedEntry implements ShouldQueue
 {
@@ -52,9 +54,10 @@ class InsertPlannedEntry implements ShouldQueue
         $date = date("Y-m-d H:i:s",time());
         $newDate = strtotime($date . "+1 month");
 
-        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d',$newDate))
-        ->where("end_date_time", "<=",date('Y-m-d H:i:s',time()))
-        ->get();
+        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s',$newDate))
+        ->where("deleted_at",null)
+        ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
+        ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
         return $entry;
     }
@@ -67,20 +70,14 @@ class InsertPlannedEntry implements ShouldQueue
     {
         try {
             foreach ($data as $request) {
-                $entry = new Entry(
-                    $request->amount,
-                    Currency::find($request->currency_id),
-                    $request->note,
-                    SubCategory::find($request->category_id),
-                    Account::find($request->account_id),
-                    PaymentsTypes::find($request->payment_type),
-                    $request->date_time,
-                );
+                $type = EntryType::from($request->type);
+
+                $entry = $request;
 
                 $service = new EntryService();
                 $entryArray = $entry->toArray();
                 $entryArray['user_id'] = $request->user_id;
-                $service->save($entryArray);
+                $service->save($entryArray,$type);
 
                 Log::info("PLANNED INSERT:: " . json_encode($entry));
 

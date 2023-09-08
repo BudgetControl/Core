@@ -32,7 +32,6 @@ class Entry extends Model
         parent::__construct($attributes);
         
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
-        $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
 
@@ -129,12 +128,11 @@ class Entry extends Model
      *  find with specify uuid
      *  @param string $uuid
      *  
-     *  @return Entry
+     *  @return mixed
      * */
-    public static function findFromUuid(string $uuid, int $user_id = 0): Entry
+    public static function findFromUuid(string $uuid)
     {
-        $userId = empty($user_id) ? UserService::getCacheUserID() : $user_id;
-        return Entry::where('uuid',$uuid)->where('user_id',$userId)->firstOrFail();
+        return Entry::where('uuid',$uuid)->first();
     }
 
     /**

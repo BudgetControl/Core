@@ -46,8 +46,8 @@ class SearchService
             $repository->category($filter['category']);
         }
 
-        if (!empty($filter['label'])) {
-            $repository->label($filter['label']);
+        if (!empty($filter['tags'])) {
+            $repository->label($filter['tags']);
         }
 
         if (!empty($filter['text'])) {
@@ -68,8 +68,9 @@ class SearchService
             }
         }
 
-
-        $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
+        if(!empty($filter['month']) || !empty($filter['year'])) {
+            $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
+        }
 
         $result = $repository->get(self::COLUMN);
 

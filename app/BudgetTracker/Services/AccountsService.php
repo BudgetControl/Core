@@ -5,6 +5,7 @@ namespace App\BudgetTracker\Services;
 use App\BudgetTracker\Models\Account;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Entity\Accounts\BankAccount;
+use App\BudgetTracker\Entity\Accounts\CashAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
 use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Interfaces\AccountInterface;
@@ -45,7 +46,6 @@ class AccountsService
 
             $entry->name = $account['name'];
             $entry->type = $account['type'];
-            $entry->date = $account['date'];
             $entry->color = $account['color'];
             $entry->balance = $account['balance'];
             $entry->installement = $account['installement'];
@@ -72,18 +72,18 @@ class AccountsService
      */
     public function read(int $id = null): Collection
     {
-        Log::debug("read accounts -- $id");
 
         $entry = Account::user();
 
         if ($id === null) {
-            $entry = $entry->get();
+            $accounts = $entry->get();
         } else {
-            $entry = $entry->firstOrFail($id);
+            $accounts = $entry->firstOrFail($id);
         }
 
-        return $entry;
+        return $accounts;
     }
+ 
 
     /**
      * make object to save
@@ -94,6 +94,10 @@ class AccountsService
      */
     private function makeObject(array $data): void
     {
+        if(empty($data['date'])) {
+            $data['date'] = date("Y-m-d H:i:s");
+        }
+        
         switch ($data['type']) {
             case 'CreditCard':
                 $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installement'], $data['installementValue']);
@@ -103,6 +107,9 @@ class AccountsService
                 break;
             case 'Saving':
                 $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['balance'], $this->makeTime($data['date']));
+                break;
+            case 'Cash':
+                $this->account = new CashAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['balance'], $this->makeTime($data['date']));
                 break;
             default:
                 throw new \Exception("Account type is ivalid");

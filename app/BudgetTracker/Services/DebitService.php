@@ -10,6 +10,7 @@ use App\BudgetTracker\Entity\Entries\Debit;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\Http\Services\UserService;
 use Exception;
@@ -20,6 +21,11 @@ use DateTime;
  */
 class DebitService extends EntryService
 {
+
+    public function __construct(string $uuid = "")
+    {
+        parent::__construct($uuid);
+    }
     
   /**
    * save a resource
@@ -31,7 +37,6 @@ class DebitService extends EntryService
    */
   public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
-        try {
             Log::debug("save debit -- " . json_encode($data));
 
             $payeeService = new PayeeService();
@@ -45,26 +50,24 @@ class DebitService extends EntryService
                 $data['amount'],
                 Currency::findOrFail($data['currency_id']),
                 $data['note'],
-                SubCategory::findOrFail(DebitModel::DEFAULT_CATEGORY),
+                new DateTime($data['date_time']),
+                $data['confirmed'],
                 Account::findOrFail($data['account_id']),
                 PaymentsTypes::findOrFail($data['payment_type']),
-                new DateTime($data['date_time']),
+                new \stdClass(), //geoloc
                 $data['label'],
-                $data['confirmed'],
-                $data['waranty'],
-                0,
-                new \stdClass(),
-                false,
                 $payee,
             );
 
             $entryModel = new DebitModel();
-            if (!empty($data['uuid'])) {
-                $entryModel = DebitModel::findFromUuid($data['uuid']);
+            if (!empty($this->uuid)) {
+                $entry->setUuid($this->uuid);
+                $entryDb = Entry::findFromUuid($this->uuid);
+                AccountsService::updateBalance($entryDb->amount *-1,$entryDb->account_id);
+                $entryModel = $entryDb;
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
+            $entryModel->uuid = $entry->getUuid();
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->currency_id = $entry->getCurrency()->id;
@@ -77,12 +80,10 @@ class DebitService extends EntryService
             $entryModel->payee_id = $entry->getPayee()->id;
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
+            
+            $this->updateBalance($entry);
 
-        } catch (\Exception $e) {
-            $error = uniqid();
-            Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred " . $error);
-        }
+    
     }
 
     /**

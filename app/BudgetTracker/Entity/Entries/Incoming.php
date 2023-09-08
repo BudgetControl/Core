@@ -8,39 +8,31 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Interfaces\EntryInterface;
 use League\Config\Exception\ValidationException;
 use Nette\Schema\ValidationException as NetteException;
 use App\BudgetTracker\Models\Payee;
 use stdClass;
 use DateTime;
 
-final class Incoming extends Entry {
+class Incoming extends Entry {
 
     public function __construct(
         float $amount,
         Currency $currency,
         string $note,
+        DateTime $date_time,
+        bool $waranty,
+        bool $confirmed,
         SubCategory $category,
         Account $account,
         PaymentsTypes $paymentType,
-        DateTime $date_time,
-        array $labels = [],
-        bool $confirmed = true,
-        bool $waranty = false,
-        int $transfer_id = 0,
-        object $geolocation = new stdClass(),
-        bool $transfer = false,
-        Payee|null $payee = null,
-        EntryType $type = EntryType::Incoming,
+        object $geolocation,
+        array $labels,
     ) {
 
-        parent::__construct($amount,$currency,$note,$category,$account,$paymentType,$date_time,$labels,$confirmed,$waranty,$transfer_id,$geolocation);
-
-        $this->type = EntryType::Incoming;
-        $this->transfer = false;
-
+        parent::__construct($amount,EntryType::Incoming,$currency,$note,$date_time,$waranty,false,$confirmed,$category,$account,$paymentType,$geolocation,$labels);
         $this->validate();
-
     }
 
     /**
@@ -51,7 +43,7 @@ final class Incoming extends Entry {
      */
     private function validate(): void
     {
-        if($this->amount < 0) {
+        if($this->getAmount() < 0) {
             throw new ValidationException(
                 new NetteException('Amount must be greather than 0')
             );

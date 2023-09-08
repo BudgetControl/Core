@@ -8,6 +8,7 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use DateTime;
 
 class EntryRepository {
@@ -20,7 +21,7 @@ class EntryRepository {
 
     public function __construct()
     {
-        $this->query = Entry::withRelations()->orderBy('date_time','desc');
+        $this->query = Entry::withRelations();
     }
 
     public function get(array $column = ['*']): Collection
@@ -83,6 +84,7 @@ class EntryRepository {
 
     public function dateTimeBetween(DateTime $dateStart, DateTime $dateEnd): self
     {
+
         $this->query->where('date_time','>=', $dateStart->format(self::DATE_FORMAT));
         $this->query->where('date_time','<=', $dateEnd->format(self::DATE_FORMAT));
 
@@ -119,16 +121,19 @@ class EntryRepository {
     public function confirmed(): self
     {
         $this->query->where('confirmed',1);
+        return $this;
     }
 
     public function planned(): self
     {
         $this->query->where('planned',1);
+        return $this;
     }
 
     public function waranty(): self
     {
         $this->query->where('waranty',1);
+        return $this;
     }
 
     public static function getCategoryName(int $id): string
