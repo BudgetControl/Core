@@ -153,51 +153,6 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
 <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
   <div style="background-color: #ecf0f1;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
   <!--[if (!mso)&(!IE)]><!--><div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-  
-<table id="u_content_text_1" style="font-family:'Raleway',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:50px 50px 0px;font-family:'Raleway',sans-serif;" align="left">
-        <div class="v-text-align" style="font-size: 16px; line-height: 140%; text-align: left; word-wrap: break-word;">
-            <p style="line-height: 140%;"><strong>We have received a email change request for your Unlayer account Lorem Ipsum from:</strong></p>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table id="u_content_text_2" style="font-family:'Raleway',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 50px 20px;font-family:'Raleway',sans-serif;" align="left">
-        
-        <div class="v-text-align" style="font-size: 14px; line-height: 140%; text-align: justify; word-wrap: break-word;">
-            <p style="line-height: 140%;"><span data-metadata="&lt;!--(figmeta)eyJmaWxlS2V5IjoiRVBOQnBrM1JpR2RYbHdTalJhVG5KSCIsInBhc3RlSUQiOjE0NTg5MzAwOTAsImRhdGFUeXBlIjoic2NlbmUifQo=(/figmeta)--&gt;" style="line-height: 19.6px;"></span><span style="line-height: 19.6px;"></span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s specimen book.<br /><br />when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry has been the industry's standard dummy text.</p>
-        </div>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table id="u_content_button_1" style="font-family:'Raleway',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 50px;font-family:'Raleway',sans-serif;" align="left">
-        
-  <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
-<div class="v-text-align" align="left">
-  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:162px;" arcsize="0%"  stroke="f" fillcolor="#047183"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
-    <a href="" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-      <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">Change Email</span></strong></span>
-    </a>
-    <!--[if mso]></center></v:roundrect><![endif]-->
-</div>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
 
 @yield('content')
 

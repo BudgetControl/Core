@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\Encryptable;
 use Exception;
 use Illuminate\Validation\ValidationException;
+use App\Mailer\Services\MailService;
+use App\Mailer\Entities\AuthMail;
+use App\Mailer\Exceptions\MailExeption;
+use Illuminate\Log\Logger;
 
 class AuthController extends Controller
 {
@@ -130,6 +134,8 @@ class AuthController extends Controller
 
                 $user->delete();
             }
+
+            $this->sendMail($user);
     
             return $this->authenticate($request);
 
@@ -150,5 +156,29 @@ class AuthController extends Controller
     {
         Auth::logout();
         return response()->json(['message' => 'Logged out'], 200);
+    }
+
+    /**
+     * 
+     */
+    private function sendMail(User $user)
+    {
+        $data = [
+            'username' => $user->name,
+            'email' => $user->email,
+            'confirm_link' => 'link'
+        ];
+
+        try {
+            $mailer = new MailService(new AuthMail(
+                'Registrazione',
+                $data
+            ));
+    
+            $mailer->send($user->email);
+        } catch (MailExeption $e) {
+            Log::emergency("Unable to send email :".$e->getMessage());
+        }   
+       
     }
 }

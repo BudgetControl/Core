@@ -10,7 +10,7 @@ use App\Mailer\Entities\Mail;
 final class AuthMail extends Mail implements MailInterface
 {
     protected $dataValidation = [
-        'username', 'email', 'link'
+        'username', 'email', 'confirm_link'
     ];
     
     public function __construct(string $subject, array $data)

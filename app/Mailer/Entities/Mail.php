@@ -12,6 +12,7 @@ class Mail extends Mailable implements MailInterface
     public $subjectData = "New mail from Budget Control";
     /** @var string  */
     public $fromAddress = "postmaster@budgetcontrol.cloud";
+    private array $data;
 
     protected $dataValidation = [
         'username', 'email', 'link'
@@ -20,14 +21,14 @@ class Mail extends Mailable implements MailInterface
     public function __construct(array $data)
     {
         View::addLocation(__DIR__."/../Views");
-        $this->viewData = $data;
+        $this->data = $data;
     }
 
     public function build(): Mailable
     {
         $this->validate();
         return $this->from(env("MAIL_FROM", $this->fromAddress),env("APP_NAME"))->subject($this->subjectData)
-            ->view($this->view, $this->viewData);
+            ->view($this->view, $this->data);
     }
 
     /**
@@ -48,7 +49,7 @@ class Mail extends Mailable implements MailInterface
     {
         $status = false;
 
-        $array = $this->viewData;
+        $array = $this->data;
         $expectedKeys = $this->dataValidation;
 
         $arrayKeys = array_keys($array);
@@ -58,7 +59,7 @@ class Mail extends Mailable implements MailInterface
 
         $status = $arrayKeys === $expectedKeys;
 
-        foreach($this->viewData as $data) {
+        foreach($this->data as $data) {
             if(empty($data)) {
                 $status = false;
             }

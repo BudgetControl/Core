@@ -10,34 +10,22 @@
 
                     Hello {{username}},
 
-                    Thank you for registering with Budget Control, your home budget management solution. We're thrilled to have you on board and help you effectively manage your household finances.
+                    We received a request to reset your password for your Budget Control account. To set a new password and regain access to your account, please follow the steps below:
 
-                    Here's a summary of your registration details:
+                    Password Reset Instructions:
 
-                    Email Address: {{email}}
+                    Click on the following <a href="{{reset_link">link</a> to reset your password:
+                    {{reset_link}}
 
-                    To complete your registration and activate your email address, please follow the steps below:
+                    You will be directed to a page where you can create a new password. Please choose a strong and secure password.
 
-                    Email Activation Instructions:
+                    After setting your new password, click "Submit" or "Reset Password."
 
-                    Click on the following <a href="{{confirm_link}}">link</a> to activate your email address:
-                    {{confirm_link}}
+                    If you did not request a password reset, please ignore this email. Your account's security is important to us, and no changes have been made.
 
-                    You will be directed to a page confirming your email address activation.
+                    If you encounter any issues or need further assistance, please don't hesitate to contact our support team at [Support Email Address].
 
-                    You are now ready to get started. Log in to the app with your credentials to begin monitoring and managing your budget effortlessly.
-
-                    Remember that Budget Control offers a range of helpful features, including:
-
-                    Recording your daily expenses and income.
-                    Viewing detailed charts and reports to track your finances.
-                    Setting personalized savings goals.
-                    Receiving reminders for payment deadlines and monthly budgets.
-                    If you have any questions or need assistance, please don't hesitate to contact us. We're here to help.
-
-                    We wish you an exceptional experience with Budget Control and success in achieving your financial goals.
-
-                    Thank you again for choosing Budget Control!
+                    Thank you for using Budget Control, and we apologize for any inconvenience this may have caused.
 
                     Best regards,
                     The Budget Control Team
