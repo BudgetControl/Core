@@ -77,6 +77,7 @@ class InsertPlannedEntry implements ShouldQueue
                 $service = new EntryService();
                 $entryArray = $entry->toArray();
                 $entryArray['user_id'] = $request->user_id;
+                $entryArray['label'] = [];
                 $service->save($entryArray,$type);
 
                 Log::info("PLANNED INSERT:: " . json_encode($entry));

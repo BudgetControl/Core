@@ -66,9 +66,11 @@ class EntryService
       $entryModel = new EntryModel();
       if (!empty($this->uuid)) {
           $entry->setUuid($this->uuid);
-          $entryDb = EntryModel::findFromUuid($this->uuid);
-          AccountsService::updateBalance($entryDb->amount *-1,$entryDb->account_id);
-          $entryModel = $entryDb;
+          $entryQuery = EntryModel::findFromUuid($this->uuid);
+          $entryQuery->amount = $entryQuery->amount *-1;
+          $entryDb = EntryModel::buildEntity($entryQuery->toArray(),$type);
+          $this->updateBalance($entryDb);
+          $entryModel = $entryQuery;
       }
 
       $entryModel->uuid = $entry->getUuid();

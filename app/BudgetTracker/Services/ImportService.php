@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Enums\AccountType;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Services\CategoryService;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Exceptions\ImportException;
@@ -26,9 +27,10 @@ class ImportService implements ImportServiceInterface
 
   const HEADER_CSV = [
     "currency",
+    "date",
     "amount",
     "note",
-    "date",
+    "category",
     "labels",
     "account",
   ];
@@ -53,7 +55,7 @@ class ImportService implements ImportServiceInterface
       Log::debug($file);
 
       $this->getLastItem();
-      $data = $this->read(";");
+      $data = $this->read(",");
 
       if ($data !== false) {
         Log::debug("import " . json_encode($data));
@@ -104,18 +106,18 @@ class ImportService implements ImportServiceInterface
 
         if ($key != 0 && !empty($value)) {
 
-          $amount = $value[1];
+          $amount = $value[2];
 
-          $dataToCheck = new \DateTime($value[3]);
+          $dataToCheck = new \DateTime($value[1]);
           $dataToCheck->modify("first day of this month");
-          $startTime = $dataToCheck->format('Y-m-d');
+          $startTime = $dataToCheck->format('Y-m-d H:m:s');
 
           $dataToCheck->modify("last day of this month");
-          $endTime = $dataToCheck->format('Y-m-d');
+          $endTime = $dataToCheck->format('Y-m-d H:m:s');
 
-          $account = Account::where('name',trim($value[5]))->first();
+          $account = Account::where('name',trim($value[6]))->first();
           if(empty($account)) {
-            throw new ImportException("No acoount found with name ".$value[5],500);
+            throw new ImportException("No acoount found with name ".$value[6],500);
           }
 
           $currency = Currency::where("name", strtolower(trim($value[0])))->first();
@@ -154,15 +156,19 @@ class ImportService implements ImportServiceInterface
             $entry->amount = (float) $amount * -1;
           }
 
-          $entry->note = $value[2];
+          $entry->note = $value[3];
 
           $entry->account_id= $account->id;
           $entry->currency_id = $currency->id;
-          $entry->date_time = $value[3] . " 00:00:00";
+          $entry->date_time = $value[1] . " 00:00:00";
           $entry->payment_type = 2;
           
           $CategoryService = new CategoryService();
-          $category = $CategoryService->getCategoryIdFromAction($value[2]);
+          if(empty($value[4])) {
+            $category = $CategoryService->getCategoryIdFromAction($value[3]);
+          } else {
+            $category = SubCategory::where("name", $value[4])->first()->name;
+          }
           Log::debug("Found these category " . $category);
 
           if ($toupdate === false) {
@@ -171,22 +177,27 @@ class ImportService implements ImportServiceInterface
           }
 
           $tags = [];
-          if (empty($this->labels)) {
-            $tags = [$CategoryService->getLabelIdFromAction($value[2])];
+          if (empty($value[5])) {
+            $tags = [$CategoryService->getLabelIdFromAction($value[3])];
             Log::debug("Found these labels " . json_encode($tags));
           } else {
-            $labels = Labels::whereIn('id',$this->labels)->get();
+            $labels = Labels::whereIn('name',[$value[5]])->get();
             foreach($labels as $label) {
+              Log::debug("Found these labels " . $label->name);
               $tags[] = $label->name;
             }
             
           }
 
           $entry->label = $tags;
+          $entry->waranty = 0;
+          $entry->transfer = 0;
+          $entry->confirmed = 1;
 
           Log::debug("Store datata ::" . json_encode($entry));
+          $type = $amount < 0 ? EntryType::Expenses : EntryType::Incoming;
 
-          $entryService->save((array) $entry);
+          $entryService->save((array) $entry, $type);
           Log::info("Insert data");
         }
       }
@@ -248,8 +259,8 @@ class ImportService implements ImportServiceInterface
     Log::debug("CHECK UPDATE: " . json_encode($data->toArray()));
     $result = false;
 
-    if ($value[1] != $data->amount) {
-      Log::debug("Entry update amount with " . $value[1]);
+    if ($value[2] != $data->amount) {
+      Log::debug("Entry update amount with " . $value[2]);
       $result = true;
     }
 
