@@ -89,22 +89,28 @@ Front-end is developed with Vue Notus template Back-end is developed with larave
 * DELETE /api/planning-recursively
 * DELETE /api/payee 
 
-### Struttura delle directory
-_ node_modules: contiene tutte le dipendenze del progetto installate tramite npm.
-_ public: contiene file statici accessibili direttamente dal client (es. immagini, file CSS, JavaScript).
-_ data: contiene i dati salvati dall'applicazione in formato JSON
-_ components: contiene i componenti dell'applicazione.
-__ buttons: contiene i pulsanti e le action dell'applicazione.
-__ cards: contiene le card specifiche e stilizzate
-__ table: contiene tabelle ed elementi tabellari per le pagine
-_ pages: contiene le views dell'applicazione
-_ services: qui vengono implementati tutti i vari servizi
 
-## Tecnologie utilizzate
-php - laravel 10
+## DEBUG MODE WITH Xdebug
+You can set-up xdebug interactive debuging mode
 
-## Autori
+1. configure your IDE for every microservice
+
+### Xdebug configuration to insert in your IDE ( visual-studio )
+{
+    "name": "Listen for Xdebug",
+    "type": "php",
+    "request": "launch",
+    "port": 9003,
+    "pathMappings": {
+        "/var/www/workdir": "${workspaceRoot}",
+    }
+}
+
+### Xdebug configuration for IDE ( php storm )
+https://www.jetbrains.com/help/phpstorm/troubleshooting-php-debugging.html#no-debug-server-is-configured% 
+
+## Author
 * Marco De Felice
 
-## Licenza
+## License
 Apache License, Version 2.0
