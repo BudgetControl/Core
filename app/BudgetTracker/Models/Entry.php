@@ -2,11 +2,14 @@
 
 namespace App\BudgetTracker\Models;
 
+use App\BudgetTracker\Interfaces\EntryInterface;
+use App\BudgetTracker\Entity\Entries\Entry as EntryObject;
 use Illuminate\Database\Eloquent\Model;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Http\Services\UserService;
+use DateTime;
 
 class Entry extends Model
 {
@@ -132,7 +135,7 @@ class Entry extends Model
      * */
     public static function findFromUuid(string $uuid)
     {
-        return Entry::where('uuid',$uuid)->first();
+        return Entry::where('uuid',$uuid)->with('label')->first();
     }
 
     /**
@@ -141,6 +144,28 @@ class Entry extends Model
     public function scopeUser($query): void
     {
         $query->where('user_id',UserService::getCacheUserID());
+    }
+
+    /**
+     * 
+     */
+    public static function buildEntity(array $data, EntryType $type): EntryInterface
+    {
+        return new EntryObject(
+            $data['amount'],
+            $type,
+            Currency::findOrFail($data['currency_id']),
+            $data['note'],
+            new DateTime($data['date_time']),
+            $data['waranty'],
+            $data['transfer'],
+            $data['confirmed'],
+            SubCategory::findOrFail($data['category_id']),
+            Account::findOrFail($data['account_id']),
+            PaymentsTypes::findOrFail($data['payment_type']),
+            new \stdClass(),
+            $data['label']
+          );
     }
 
 }
