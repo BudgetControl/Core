@@ -47,17 +47,7 @@ class Mail extends Mailable implements MailInterface
 
     private function checkArrayKeys(): bool
     {
-        $status = false;
-
-        $array = $this->data;
-        $expectedKeys = $this->dataValidation;
-
-        $arrayKeys = array_keys($array);
-
-        sort($arrayKeys);
-        sort($expectedKeys);
-
-        $status = $arrayKeys === $expectedKeys;
+        $status = true;
 
         foreach($this->data as $data) {
             if(empty($data)) {

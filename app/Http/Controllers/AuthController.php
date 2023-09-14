@@ -165,7 +165,7 @@ class AuthController extends Controller
     {
         $data = [
             'username' => $user->name,
-            'email' => $user->email,
+            'email' => $user->email->email,
             'confirm_link' => 'link'
         ];
 

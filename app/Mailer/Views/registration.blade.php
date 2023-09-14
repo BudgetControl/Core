@@ -8,20 +8,20 @@
             <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 50px 50px;font-family:'Raleway',sans-serif;" align="left">
                 <div class="v-text-align" align="left">
 
-                    Hello {{username}},
+                    Hello {{$username}},
 
                     Thank you for registering with Budget Control, your home budget management solution. We're thrilled to have you on board and help you effectively manage your household finances.
 
                     Here's a summary of your registration details:
 
-                    Email Address: {{email}}
+                    Email Address: {{$email}}
 
                     To complete your registration and activate your email address, please follow the steps below:
 
                     Email Activation Instructions:
 
-                    Click on the following <a href="{{confirm_link}}">link</a> to activate your email address:
-                    {{confirm_link}}
+                    Click on the following <a href="{{$confirm_link}}">link</a> to activate your email address:
+                    {{$confirm_link}}
 
                     You will be directed to a page confirming your email address activation.
 
@@ -43,7 +43,7 @@
                     The Budget Control Team
 
                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:162px;" arcsize="0%"  stroke="f" fillcolor="#047183"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
-                    <a href="{{confirm_link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
+                    <a href="{{$confirm_link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
                         <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">Confirm Email</span></strong></span>
                     </a>
                     <!--[if mso]></center></v:roundrect><![endif]-->
