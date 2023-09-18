@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BudgetTracker\Services\AccountsService;
+use App\Http\Exceptions\AuthException;
+use App\Http\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -13,11 +15,16 @@ use Illuminate\Validation\ValidationException;
 use App\Mailer\Services\MailService;
 use App\Mailer\Entities\AuthMail;
 use App\Mailer\Exceptions\MailExeption;
+use App\Mailer\Entities\RecoveryPasswordMail;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Log\Logger;
 
 class AuthController extends Controller
 {
     use Encryptable;
+
+    const URL_PSW_RESET = '/auth/reset/';
+    const URL_SIGNUP_CONFIRM = '/auth/confirm/';
 
     /**
      * make authentication for API user
@@ -93,6 +100,57 @@ class AuthController extends Controller
         }
     }
 
+    public function recovery(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $user = User::where('email', self::encrypt(['email' => $request->email]))->firstOrFail();
+            $service = new AuthService();
+            $service->user = $user;
+    
+            $userData = $user->toArray();
+            $userData['link'] = env("APP_URL").self::URL_PSW_RESET.$service->link($user);
+        } catch (ModelNotFoundException $e){
+            return response()->json(['error' => 'User is not valid'], 401);
+        }
+
+        try {
+
+            $mailer = new MailService(
+                new RecoveryPasswordMail(
+                    "Recovery password",
+                    $userData
+                )
+                );
+            
+            $mailer->send($user->email);
+    
+            return response()->json(['success' => 'Sended recovery'], 200);
+            
+        } catch(ValidationException $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function reset(Request $request, string $token): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $service = new AuthService();
+            $user = $service->retriveToken($token);
+        } catch (AuthException $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+
+        if(empty($user)) {
+            return response()->json(['error' => 'Token is not valid'], 401);
+        }
+
+        $user->password = bcrypt($request['password']);
+        $user->save();
+
+        return response()->json(['success' => 'Success recovery'], 200);
+    }
+
     /**
      * register user
      * @param Request $request
@@ -101,6 +159,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        $service = new AuthService();
         try {
             $request->validate([
                 'name' => 'required|max:255',
@@ -108,11 +167,7 @@ class AuthController extends Controller
                 'password' => 'required|min:8',
             ]);
     
-            $user = new User();
-            $user->name = $request['name'];
-            $user->email = $request['email'];
-            $user->password = bcrypt($request['password']);
-            $user->save();
+            $user = $service->signUp($request->toArray());
 
             try {
                 //create first free account
@@ -147,6 +202,7 @@ class AuthController extends Controller
 
         
     }
+
     /**
      * logout user
      * 
@@ -164,9 +220,9 @@ class AuthController extends Controller
     private function sendMail(User $user)
     {
         $data = [
-            'username' => $user->name,
+            'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => 'link'
+            'confirm_link' => env("APP_URL").self::URL_SIGNUP_CONFIRM.$user->link
         ];
 
         try {
@@ -180,5 +236,11 @@ class AuthController extends Controller
             Log::emergency("Unable to send email :".$e->getMessage());
         }   
        
+    }
+
+    public function confirm(string $token)
+    {
+        $service = new AuthService();
+        $service->confirm($token);
     }
 }

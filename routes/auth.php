@@ -35,6 +35,21 @@ Route::post('/register',function(Request $request) {
     return $auth->register($request);
 });
 
+Route::get('/confirm/{token}',function(string $token) {
+    $auth = new AuthController();
+    return $auth->confirm($token);
+});
+
+Route::post('/recovery',function(Request $request) {
+    $auth = new AuthController();
+    return $auth->recovery($request);
+});
+
+Route::put('/recovery/{token}',function(Request $request, string $token) {
+    $auth = new AuthController();
+    return $auth->reset($request, $token);
+});
+
 Route::get('/logout',function() {
     $auth = new AuthController();
     return $auth->logout();

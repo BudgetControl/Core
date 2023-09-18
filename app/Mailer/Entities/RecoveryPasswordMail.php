@@ -7,15 +7,12 @@ use App\Mailer\Exceptions\MailExeption;
 use Illuminate\Support\Facades\View;
 use App\Mailer\Entities\Mail;
 
-final class AuthMail extends Mail implements MailInterface
+final class RecoveryPasswordMail extends Mail implements MailInterface
 {
-    protected $dataValidation = [
-        'name', 'email', 'confirm_link'
-    ];
-    
+
     public function __construct(string $subject, array $data)
     {
-        $this->view = "registration";
+        $this->view = "recovery_password";
         $this->subject = $subject;
 
         parent::__construct($data);

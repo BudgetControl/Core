@@ -49,9 +49,4 @@ class UserService
         return Cache::get($session);
 
     }
-
-    static public function generateConfirmationLink(int $userID): string
-    {
-        
-    }
 }

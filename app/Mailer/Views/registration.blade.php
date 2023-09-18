@@ -8,39 +8,42 @@
             <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 50px 50px;font-family:'Raleway',sans-serif;" align="left">
                 <div class="v-text-align" align="left">
 
-                    Hello {{$username}},
+                    <p>Hello {{$name}},</br>
 
-                    Thank you for registering with Budget Control, your home budget management solution. We're thrilled to have you on board and help you effectively manage your household finances.
+                        Thank you for registering with Budget Control, your home budget management solution. We're thrilled to have you on board and help you effectively manage your household finances.</p>
 
-                    Here's a summary of your registration details:
+                    <p>Here's a summary of your registration details:</br>
 
-                    Email Address: {{$email}}
+                        Email Address: {{$email}}</br>
 
-                    To complete your registration and activate your email address, please follow the steps below:
+                        To complete your registration and activate your email address, please follow the steps below:</br></p>
 
-                    Email Activation Instructions:
+                    <p>Email Activation Instructions:</br>
 
-                    Click on the following <a href="{{$confirm_link}}">link</a> to activate your email address:
-                    {{$confirm_link}}
+                        Click on the following <a href="{{$confirm_link}}">link</a> to activate your email address:</br>
+                        {{$confirm_link}}
+                    </p>
 
-                    You will be directed to a page confirming your email address activation.
+                    <p>You will be directed to a page confirming your email address activation.</br>
 
-                    You are now ready to get started. Log in to the app with your credentials to begin monitoring and managing your budget effortlessly.
+                        You are now ready to get started. Log in to the app with your credentials to begin monitoring and managing your budget effortlessly.</br>
 
-                    Remember that Budget Control offers a range of helpful features, including:
+                        Remember that Budget Control offers a range of helpful features, including:</br></p>
 
-                    Recording your daily expenses and income.
-                    Viewing detailed charts and reports to track your finances.
-                    Setting personalized savings goals.
-                    Receiving reminders for payment deadlines and monthly budgets.
-                    If you have any questions or need assistance, please don't hesitate to contact us. We're here to help.
+                    <ul>
+                        <li>Recording your daily expenses and income.</li>
+                        <li>Viewing detailed charts and reports to track your finances.</li>
+                        <li>Setting personalized savings goals.</li>
+                        <li>Receiving reminders for payment deadlines and monthly budgets.</li>
+                    </ul>
+                    <p>If you have any questions or need assistance, please don't hesitate to contact us. We're here to help.</br>
 
-                    We wish you an exceptional experience with Budget Control and success in achieving your financial goals.
+                        We wish you an exceptional experience with Budget Control and success in achieving your financial goals.</br>
 
-                    Thank you again for choosing Budget Control!
+                        Thank you again for choosing Budget Control!</p>
 
-                    Best regards,
-                    The Budget Control Team
+                    <p>Best regards,</br>
+                        The Budget Control Team</p>
 
                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:162px;" arcsize="0%"  stroke="f" fillcolor="#047183"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
                     <a href="{{$confirm_link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">

@@ -15,6 +15,8 @@ class User extends Authenticatable
 {
     use HasFactory, HasApiTokens, Encryptable;
 
+    public $link;
+
     /**
      *  encryptable data
      */

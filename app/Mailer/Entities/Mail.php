@@ -15,7 +15,7 @@ class Mail extends Mailable implements MailInterface
     private array $data;
 
     protected $dataValidation = [
-        'username', 'email', 'link'
+        'name', 'email', 'link'
     ];
 
     public function __construct(array $data)
@@ -49,8 +49,8 @@ class Mail extends Mailable implements MailInterface
     {
         $status = true;
 
-        foreach($this->data as $data) {
-            if(empty($data)) {
+        foreach($this->dataValidation as $_ => $field) {
+            if(empty($this->data[$field])) {
                 $status = false;
             }
         }

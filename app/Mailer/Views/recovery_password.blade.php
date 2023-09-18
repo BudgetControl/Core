@@ -8,30 +8,30 @@
             <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 50px 50px;font-family:'Raleway',sans-serif;" align="left">
                 <div class="v-text-align" align="left">
 
-                    Hello {{username}},
+                    <p>Hello {{$name}},</br>
 
-                    We received a request to reset your password for your Budget Control account. To set a new password and regain access to your account, please follow the steps below:
+                    We received a request to reset your password for your Budget Control account. To set a new password and regain access to your account, please follow the steps below:</p>
 
-                    Password Reset Instructions:
+                    <p>Password Reset Instructions:</br>
 
-                    Click on the following <a href="{{reset_link">link</a> to reset your password:
-                    {{reset_link}}
+                    Click on the following <a href="{{$link}}">link</a> to reset your password:</br>
+                    {{$link}}</p>
 
-                    You will be directed to a page where you can create a new password. Please choose a strong and secure password.
+                    <p>You will be directed to a page where you can create a new password. Please choose a strong and secure password.</br>
 
-                    After setting your new password, click "Submit" or "Reset Password."
+                    After setting your new password, click "Submit" or "Reset Password."</br>
 
-                    If you did not request a password reset, please ignore this email. Your account's security is important to us, and no changes have been made.
+                    If you did not request a password reset, please ignore this email. Your account's security is important to us, and no changes have been made.</br>
 
-                    If you encounter any issues or need further assistance, please don't hesitate to contact our support team at [Support Email Address].
+                    If you encounter any issues or need further assistance, please don't hesitate to contact our support team at [Support Email Address].</br>
 
-                    Thank you for using Budget Control, and we apologize for any inconvenience this may have caused.
+                    Thank you for using Budget Control, and we apologize for any inconvenience this may have caused.</p>
 
-                    Best regards,
-                    The Budget Control Team
+                    <p>Best regards,</br>
+                    The Budget Control Team</p>
 
                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:162px;" arcsize="0%"  stroke="f" fillcolor="#047183"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
-                    <a href="{{confirm_link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
+                    <a href="{{$link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
                         <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">Confirm Email</span></strong></span>
                     </a>
                     <!--[if mso]></center></v:roundrect><![endif]-->

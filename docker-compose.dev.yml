@@ -2,39 +2,8 @@ version: '2.2'
 
 services:
     database:
-      image: mysql:latest
-      restart: unless-stopped
       ports:
         - 3306:3306
-      env_file:
-        - .env
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-    bemodule:
-      image: docker.io/bitnami/laravel:10
-      ports:
-        - 3000:8000
-      volumes:
-        - ./:/app
-        - .env:/app/.env
-      depends_on:
-        - database
-        - cache
-      restart: unless-stopped
-      command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
-    cache:
-      image: redis:7.2-rc2-alpine
-      restart: always
-      env_file:
-        - .env
-      ports:
-        - '6379:6379'
-      command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-      volumes: 
-        - cache:/data
     mailhog:
       container_name: mailhog-service
       image: mailhog/mailhog:latest
@@ -42,6 +11,3 @@ services:
       ports:
         - 1025:1025
         - 8025:8025
-volumes:
-  cache:
-    driver: local
