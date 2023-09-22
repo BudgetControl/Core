@@ -22,9 +22,6 @@
                     <!--[if mso]>
     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:162px;" arcsize="0%"  stroke="f" fillcolor="#047183"><w:anchorlock/><center style="color:#FFFFFF;">
     <![endif]-->
-                    <a href="{{$link}}" target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #047183; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:30%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-                        <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">Confirm Email</span></strong></span>
-                    </a>
                     <!--[if mso]></center></v:roundrect><![endif]-->
                 </div>
 

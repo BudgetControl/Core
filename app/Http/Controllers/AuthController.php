@@ -114,7 +114,7 @@ class AuthController extends Controller
             $service->user = $user;
     
             $userData = $user->toArray();
-            $userData['link'] = env("APP_URL").self::URL_PSW_RESET.$service->link($user);
+            $userData['link'] = env("APP_URL").self::URL_PSW_RESET.$service->token($user);
         } catch (ModelNotFoundException $e){
             return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
@@ -237,7 +237,7 @@ class AuthController extends Controller
 
         try {
             $mailer = new MailService(new AuthMail(
-                'Registrazione',
+                'Welcome to '.env("APP_NAME"),
                 $data
             ));
     

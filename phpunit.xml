@@ -19,6 +19,12 @@
     <testsuite name="Charts">
       <directory suffix="Test.php">./app/Charts/Tests</directory>
     </testsuite>
+    <testsuite name="Auth">
+      <directory suffix="Test.php">./app/Http/Tests</directory>
+    </testsuite>
+    <!-- <testsuite name="Mailer">
+      <directory suffix="Test.php">./app/Mailer/Tests</directory>
+    </testsuite> -->
   </testsuites>
   <coverage/>
   <php>
