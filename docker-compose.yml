@@ -5,8 +5,6 @@ services:
       container_name: budgetcontrol-db
       image: mysql:latest
       restart: unless-stopped
-      ports:
-        - 33306:3306
       env_file:
         - .env
       environment:

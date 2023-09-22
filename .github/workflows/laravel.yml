@@ -24,6 +24,14 @@ jobs:
         touch database/database.sqlite
     - name: Generate key
       run: php artisan key:generate
+    - name: Create cache path
+      run: |
+        mkdir storage/framework
+        mkdir storage/framework/cache
+        mkdir storage/framework/cache/data
+        mkdir storage/framework/sessions
+        mkdir storage/views
+        mkdir storage/framework/views
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Directory Storage Permissions

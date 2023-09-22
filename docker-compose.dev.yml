@@ -1,0 +1,13 @@
+version: '2.2'
+
+services:
+    database:
+      ports:
+        - 3306:3306
+    mailhog:
+      container_name: mailhog-service
+      image: mailhog/mailhog:latest
+      restart: always
+      ports:
+        - 1025:1025
+        - 8025:8025

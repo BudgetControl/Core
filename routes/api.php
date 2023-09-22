@@ -1,7 +1,9 @@
 <?php
 
+use App\Mailer\Services\MailService;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Mailer\Services\Registration;
 use Illuminate\Http\Request;
 
 /*
@@ -38,3 +40,12 @@ Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportControl
 
 /** make accounts api */
 Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');
+
+Route::get('test', function() {
+    $test = new Registration(
+        [
+            'username' => 1, 'email' => 2, 'link' => 3
+        ]
+    );
+    $test->send('marco.defelice890@gmail.com');
+});
