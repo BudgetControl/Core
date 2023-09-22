@@ -35,6 +35,11 @@ Route::post('/register',function(Request $request) {
     return $auth->register($request);
 });
 
+Route::post('/verify-email',function(Request $request) {
+    $auth = new AuthController();
+    return $auth->sendVerifyEmail($request);
+});
+
 Route::get('/confirm/{token}',function(string $token) {
     $auth = new AuthController();
     return $auth->confirm($token);

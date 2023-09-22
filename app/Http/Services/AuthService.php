@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
-    public User $user;
+    public ?User $user;
+
+    public function __construct(User|null $user = null)
+    {
+        $this->user = $user;
+    }
 
     public function signUp(array $request)
     {
@@ -24,16 +29,14 @@ class AuthService
         $user->save();
 
         $this->user = $user;
-        $this->user->link = $this->link($user);
-
 
         return $user;
     }
 
-    public function link(User $user): string
+    public function token(): string
     {
-        $key = (string) $user->email->email.$user->password.$user->name.microtime();
-        return $this->generateToken($key);
+        $key = (string) $this->user->email->email.$this->user->password.$this->user->name.microtime();
+        return self::generateToken($key);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BudgetTracker\Services\AccountsService;
 use App\Http\Exceptions\AuthException;
+use App\Http\Middleware\JsonResponse;
 use App\Http\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,7 @@ class AuthController extends Controller
 {
     use Encryptable;
 
-    const URL_PSW_RESET = '/auth/reset/';
+    const URL_PSW_RESET = '/auth/reset-password/';
     const URL_SIGNUP_CONFIRM = '/auth/confirm/';
 
     /**
@@ -53,6 +54,11 @@ class AuthController extends Controller
             }
 
             $user = Auth::user();
+            //first check if user have confirmed the email
+            if(is_null($user->email_verified_at)) {
+                throw new AuthException("User email is not verified");
+            };
+
             $token = $user->retriveNotExpiredToken();
 
             if (empty($token)) {
@@ -110,7 +116,7 @@ class AuthController extends Controller
             $userData = $user->toArray();
             $userData['link'] = env("APP_URL").self::URL_PSW_RESET.$service->link($user);
         } catch (ModelNotFoundException $e){
-            return response()->json(['error' => 'User is not valid'], 401);
+            return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
 
         try {
@@ -219,10 +225,13 @@ class AuthController extends Controller
      */
     private function sendMail(User $user)
     {
+        $AuthService = new AuthService($user);
+        $token = $AuthService->token();
+
         $data = [
             'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => env("APP_URL").self::URL_SIGNUP_CONFIRM.$user->link
+            'confirm_link' => env("APP_URL").self::URL_SIGNUP_CONFIRM.$token
         ];
 
         try {
@@ -242,5 +251,21 @@ class AuthController extends Controller
     {
         $service = new AuthService();
         $service->confirm($token);
+    }
+
+    /** 
+     * send email verify 
+     * 
+     * @param Request $request
+     * */
+    public function sendVerifyEmail(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $email = self::encrypt(['email' => $request->email]);
+        $user = User::where("email",$email)->firstOrFail();
+
+        $this->sendMail($user);
+
+        return response()->json(["success" => "email sended"]);
+
     }
 }

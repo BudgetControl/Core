@@ -63,10 +63,6 @@ td {
   border-collapse: collapse;
 }
 
-p {
-  margin: 0;
-}
-
 .ie-container table,
 .mso-container table {
   table-layout: fixed;
@@ -116,6 +112,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
     <tr>
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px 0px 40px;font-family:'Raleway',sans-serif;" align="left">
         
+      <img src="logo" alt="logo" />
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 class Mail extends Mailable implements MailInterface
 {
     public $view = 'mail-base';
-    public $subjectData = "New mail from Budget Control";
+    public $subject = "New mail from Budget Control";
     /** @var string  */
     public $fromAddress = "postmaster@budgetcontrol.cloud";
     private array $data;
@@ -27,7 +27,7 @@ class Mail extends Mailable implements MailInterface
     public function build(): Mailable
     {
         $this->validate();
-        return $this->from(env("MAIL_FROM", $this->fromAddress),env("APP_NAME"))->subject($this->subjectData)
+        return $this->from(env("MAIL_FROM", $this->fromAddress),env("APP_NAME"))->subject($this->subject)
             ->view($this->view, $this->data);
     }
 
