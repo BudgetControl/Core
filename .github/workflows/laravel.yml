@@ -28,6 +28,7 @@ jobs:
       run: |
         mkdir storage/framework
         mkdir storage/framework/cache
+        mkdir storage/framework/cache/data
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Directory Storage Permissions
