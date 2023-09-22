@@ -192,6 +192,7 @@ class AuthController extends Controller
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
                 Log::error($e);
+                throw new AuthException("Unable to create new account on signup, user wil be deleted");
 
                 $user->delete();
             }

@@ -52,6 +52,8 @@ jobs:
           MYSQL_PASSWORD: roottest
           MYSQL_DATABASE: budget_testing
           MYSQL_HOST: 127.0.0.1
+          CACHE_DRIVER: none
+          SESSION_DRIVER: array
         ports:
           - 3306:3306
         options: >-
