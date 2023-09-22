@@ -31,6 +31,7 @@ jobs:
         mkdir storage/framework/cache/data
         mkdir storage/framework/sessions
         mkdir storage/views
+        mkdir storage/framework/views
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Directory Storage Permissions
@@ -52,8 +53,6 @@ jobs:
           MYSQL_PASSWORD: roottest
           MYSQL_DATABASE: budget_testing
           MYSQL_HOST: 127.0.0.1
-          CACHE_DRIVER: none
-          SESSION_DRIVER: array
         ports:
           - 3306:3306
         options: >-
