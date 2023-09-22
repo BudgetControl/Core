@@ -42,7 +42,6 @@ class AuthTest extends TestCase
         $response = $this->post('/auth/register', $payload);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::TOKEN);
 
         $this->assertDatabaseHas("accounts",[
             "user_id" => 2 

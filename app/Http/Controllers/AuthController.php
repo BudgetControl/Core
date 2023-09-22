@@ -163,7 +163,7 @@ class AuthController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): \Illuminate\Http\JsonResponse
     {
         $service = new AuthService();
         try {
@@ -198,7 +198,7 @@ class AuthController extends Controller
 
             $this->sendMail($user);
     
-            return $this->authenticate($request);
+            return response()->json(["succedd" => "Registration successfully"]);
 
         } catch(ValidationException $e) {
 
