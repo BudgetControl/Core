@@ -24,7 +24,7 @@ jobs:
         touch database/database.sqlite
     - name: Generate key
       run: php artisan key:generate
-    - name: Create chache path
+    - name: Create cache path
       run: |
         mkdir storage/framework
         mkdir storage/framework/cache
