@@ -19,7 +19,7 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Labels::orderBy('name')->get();
+		$incoming = Labels::User()->orderBy('name')->get();
 		return response()->json(new ResponseService($incoming));
 	}
 
