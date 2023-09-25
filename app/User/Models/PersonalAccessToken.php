@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\User\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\PersonalAccessToken as PersonalAccessTokenModel;

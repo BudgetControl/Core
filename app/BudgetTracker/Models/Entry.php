@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use DateTime;
 
 class Entry extends Model

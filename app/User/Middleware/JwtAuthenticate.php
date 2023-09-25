@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\User\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use App\Models\PersonalAccessToken;
+use App\User\Models\PersonalAccessToken;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use Illuminate\Support\Facades\Log;
 
 class JwtAuthenticate
@@ -39,7 +39,6 @@ class JwtAuthenticate
     
             UserService::userIDfromToken($XACCESSTOKEN);
         }
-        
 
         return $next($request);
 

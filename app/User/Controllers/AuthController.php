@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\User\Controllers;
 
 use App\BudgetTracker\Services\AccountsService;
-use App\Http\Exceptions\AuthException;
-use App\Http\Middleware\JsonResponse;
-use App\Http\Services\AuthService;
+use App\User\Exceptions\AuthException;
+use App\User\Middleware\JsonResponse;
+use App\User\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\User\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Encryptable;
 use Exception;

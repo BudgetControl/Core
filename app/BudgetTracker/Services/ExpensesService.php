@@ -12,7 +12,7 @@ use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Expenses;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Payee;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use DateTime;
 
 /**

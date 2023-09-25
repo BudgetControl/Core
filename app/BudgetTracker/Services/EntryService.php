@@ -9,7 +9,7 @@ use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;

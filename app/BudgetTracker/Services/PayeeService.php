@@ -3,7 +3,7 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Models\Payee;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;

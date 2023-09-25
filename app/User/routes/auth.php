@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\User\Controllers\AuthController;
+use App\User\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -60,4 +61,12 @@ Route::get('/logout',function() {
     return $auth->logout();
 });
 
+Route::get('/profile',function(Request $request) {
+    $auth = new ProfileController();
+    return $auth->index($request);
+});
 
+Route::delete('/delete',function(Request $request) {
+    $auth = new ProfileController();
+    return $auth->delete($request);
+});

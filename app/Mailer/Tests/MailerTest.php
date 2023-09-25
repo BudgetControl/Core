@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Services\AuthService;
+use App\User\Services\AuthService;
 use Tests\TestCase;
 
 class MailerTest extends TestCase

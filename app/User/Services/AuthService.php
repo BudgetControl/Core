@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\User\Services;
 
-use App\Http\Exceptions\AuthException;
-use App\Models\PersonalAccessToken;
-use App\Models\User;
+use App\User\Exceptions\AuthException;
+use App\User\Models\PersonalAccessToken;
+use App\User\Models\User;
 use DateInterval;
 use DateTime;
 use Exception;
