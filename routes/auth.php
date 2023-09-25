@@ -60,4 +60,8 @@ Route::get('/logout',function() {
     return $auth->logout();
 });
 
+Route::delete('/user',function() {
+    $auth = new AuthController();
+    return $auth->delete();
+});
 

@@ -269,4 +269,13 @@ class AuthController extends Controller
         return response()->json(["success" => "email sended"]);
 
     }
+
+    /**
+     *  delete user 
+     */
+    public function delete()
+    {
+        $user = Auth::user();
+        User::delete($user->id);
+    }
 }
