@@ -2,7 +2,7 @@
 
 use App\Mailer\Services\MailService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\User\Controllers\AuthController;
 use App\Mailer\Services\Registration;
 use Illuminate\Http\Request;
 

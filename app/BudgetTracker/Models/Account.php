@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 
 class Account extends Model

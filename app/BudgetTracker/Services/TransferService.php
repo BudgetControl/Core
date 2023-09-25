@@ -11,7 +11,7 @@ use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Transfer;
 use App\BudgetTracker\Interfaces\EntryInterface;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\Payee;
 use Illuminate\Support\Facades\Log;
 use DateTime;

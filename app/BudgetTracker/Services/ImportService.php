@@ -38,7 +38,7 @@ class ImportService implements ImportServiceInterface
   public $filePath = null;
   private $file_handle;
 
-  /* @var \App\Models\Entry */
+  /* @var \App\User\Models\Entry */
   private $items = null;
 
   /**

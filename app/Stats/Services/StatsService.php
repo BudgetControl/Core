@@ -10,7 +10,8 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Transfer;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
+use App\Helpers\MathHelper;
 use DateTime;
 
 class StatsService
@@ -21,8 +22,18 @@ class StatsService
     private string $startDatePassed;
     private string $endDatePassed;
 
-    public function __construct(string $startDate, string $endDate)
+    public function __construct(?string $startDate = null, ?string $endDate = null)
     {
+        if (is_null($startDate)) {
+            // Primo giorno del mese corrente
+            $startDate = date('Y-m-01');
+        }
+
+        if (is_null($endDate)) {
+            // Ultimo giorno del mese corrente
+            $endDate = date('Y-m-t');
+        }
+
         $this->setDateEnd($endDate);
         $this->setDateStart($startDate);
     }
@@ -65,7 +76,7 @@ class StatsService
      * 
      * @return array
      */
-    public function incoming(bool $planning): Array
+    public function incoming(bool $planning): array
     {
         $entry = Incoming::user();
         $entry->where('date_time', '<=', $this->endDate)
@@ -83,7 +94,9 @@ class StatsService
             $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -111,7 +124,9 @@ class StatsService
             $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -131,7 +146,9 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -151,7 +168,9 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
     }
 
     /**
@@ -248,6 +267,31 @@ class StatsService
         }
 
         return $wallet->getBalance();
+    }
+
+    /**
+     * build stats standard response
+     * @param array $data
+     * @param array $dataOld
+     * 
+     * @return array
+     */
+    private function buildResponse(array $data, array $dataOld)
+    {
+        $wallet = new Wallet();
+        $wallet->sum($data);
+
+        $walletPassed = new Wallet();
+        $walletPassed->sum($dataOld);
+
+        $firstValue = $wallet->getBalance();
+        $secondValue = $walletPassed->getBalance();
+
+        return [
+            'total' => $firstValue,
+            'total_passed' => $secondValue,
+            'percentage' => MathHelper::percentage($firstValue, $secondValue)
+        ];
     }
 
 }

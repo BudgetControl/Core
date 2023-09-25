@@ -12,7 +12,7 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\PaymentsTypes;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use Exception;
 use DateTime;
 

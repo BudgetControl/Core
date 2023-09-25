@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Models\Payee;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use App\BudgetTracker\Entity\Entries\PlannedEntry;
 use DateTime;
 use App\BudgetTracker\Models\SubCategory;

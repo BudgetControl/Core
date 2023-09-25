@@ -1,13 +1,34 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\User\Services;
 
-use App\Models\PersonalAccessToken;
+use App\User\Models\User;
+use App\User\Models\PersonalAccessToken;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class UserService
 {
+    private readonly string $token;
+
+    public function __construct(string $token)
+    {
+        $this->token = $token;
+    }
+    
+    /**
+     * retrive user
+     */
+
+    public function get(): User
+    {
+        $token = $this->token;
+        $tokenCache = PersonalAccessToken::findToken($token);
+        $user = User::find($tokenCache->tokenable_id);
+        $this->userIDfromToken($token);
+
+        return $user;
+    }
     /**
      * get ID user from access token
      * @param string $token

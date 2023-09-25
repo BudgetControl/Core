@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\User\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
-use App\Models\PersonalAccessToken;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Support\Facades\Crypt;
+use App\User\Models\PersonalAccessToken;
 use App\Traits\Encryptable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Encryptable;
+    use HasFactory, HasApiTokens, Encryptable, SoftDeletes;
 
     public $link;
 

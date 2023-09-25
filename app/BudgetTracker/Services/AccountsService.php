@@ -12,7 +12,7 @@ use App\BudgetTracker\Interfaces\AccountInterface;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use App\BudgetTracker\Entity\Wallet;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 
 /**
  * Summary of SaveEntryService
