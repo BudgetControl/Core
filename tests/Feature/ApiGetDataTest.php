@@ -111,13 +111,13 @@ class ApiGetDataTest extends TestCase
     ];
 
     const PAYEE = [
-        "data" => [
-            [
-                "id",
-                "uuid",
-                "name",
-                "date_time"
-            ]
+        [
+            "date_time",
+            "entry",
+            "id",
+            "name",
+            "user_id",
+            "uuid"
         ]
     ];
 

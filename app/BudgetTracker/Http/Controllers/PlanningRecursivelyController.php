@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Services\PlanningRecursivelyService;
 use App\BudgetTracker\Services\ResponseService;
@@ -11,6 +12,8 @@ use App\BudgetTracker\Services\EntryService;
 
 class PlanningRecursivelyController extends EntryService
 {
+	use Paginate;
+
 	//
 	/**
 	 * Display a listing of the resource.
@@ -23,8 +26,14 @@ class PlanningRecursivelyController extends EntryService
 		$service = new PlanningRecursivelyService();
 		$incoming = $service->read(); 
 
-		$paginator = new PaginatorController($incoming->data,30);
-		$response = $paginator->paginate($page);
+		$response = $incoming->toArray();
+
+		$this->setEl(30);
+		$this->setData($response);
+
+		if($page >= 0) {
+			$response = $this->paginate($page);
+		}
 
 		return response()->json($response);
 	}
