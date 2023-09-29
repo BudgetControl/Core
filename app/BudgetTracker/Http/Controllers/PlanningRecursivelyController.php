@@ -28,14 +28,7 @@ class PlanningRecursivelyController extends EntryService
 
 		$response = $incoming->toArray();
 
-		$this->setEl(30);
-		$this->setData($response);
-
-		if($page >= 0) {
-			$response = $this->paginate($page);
-		}
-
-		return response()->json($response);
+		return response()->json(["data" => $response]);
 	}
 
 	/**
@@ -49,6 +42,23 @@ class PlanningRecursivelyController extends EntryService
 		try {
 			$debitService = new PlanningRecursivelyService();
 			$debitService->save($request->toArray());
+			return response('All data stored');
+		} catch (\Exception $e) {
+			return response($e->getMessage(), 500);
+		}
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, string $uuid): \Illuminate\Http\Response
+	{
+		try {
+			$service = new PlanningRecursivelyService($uuid);
+			$service->save($request->toArray());
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);

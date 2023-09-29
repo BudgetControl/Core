@@ -57,7 +57,6 @@ class PlanningRecursivelyService extends EntryService
             $entry->date_time = $entryData['date_time'];
             $entry->note = $entryData['note'];
             $entry->payment_type = $entryData['payment_type'];
-            $entry->end_date_time = $entryData['end_date_time'];
             $entry->planning = $entryData['planning'];
             $entry->type = $entryData['type'];
             $entry->end_date_time = $entryData['end_date_time'];
@@ -83,19 +82,15 @@ class PlanningRecursivelyService extends EntryService
     {
         Log::debug("read planning recursively  -- $id");
 
-        $entries = PlannedEntries::user();
+        $entries = PlannedEntries::user()->with('account')->with("subCategory.category")->where("deleted_at", null);
 
         if ($id !== null) {
             $entries->where('uuid', $id);
         }
 
         $resourses = [];
-        $entries->whereNull('deleted_at');
 
-        foreach ($entries->get() as $entry) {
-            $plannedEntry = $this->makeObj($entry->toArray());
-            $resourses[] = $plannedEntry->get();
-        }
+        $resources = $entries->get();
 
         $result = new \stdClass();
         $result->data = $resourses;
@@ -104,7 +99,7 @@ class PlanningRecursivelyService extends EntryService
             $result->data = $result->data[0];
         }
 
-        return $result;
+        return $resources;
     }
 
     /**
