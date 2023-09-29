@@ -52,6 +52,7 @@ class ApiGetDataTest extends TestCase
     ];
 
     const PLANNING = [
+            ["uuid",
             "type",
             "date_time",
             "amount",
@@ -104,7 +105,7 @@ class ApiGetDataTest extends TestCase
             "geolocation",
             "label",
             "planning",
-            "end_date_time",
+            "end_date_time",]
     ];
 
     const PAYEE = [
