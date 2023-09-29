@@ -52,7 +52,6 @@ class ApiGetDataTest extends TestCase
     ];
 
     const PLANNING = [
-        "data" => [
             "uuid",
             "type",
             "date_time",
@@ -107,7 +106,6 @@ class ApiGetDataTest extends TestCase
             "label",
             "planning",
             "end_date_time",
-        ]
     ];
 
     const PAYEE = [
