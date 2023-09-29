@@ -16,49 +16,51 @@ class SearchTest extends TestCase
 
     const ENTRY = [
         "data" => [
-            [
-                "uuid",
-                "amount",
-                "note",
-                "type",
-                "waranty",
-                "confirmed",
-                "planned",
-                "category_id",
-                "account_id",
-                "transfer_id",
-                "currency_id",
-                "payment_type",
-                "payee_id",
-                "geolocation",
-                "label",
-                "sub_category" => [
-                    "id",
-                    "date_time",
+            "data" => [
+                [
                     "uuid",
-                    "name",
+                    "amount",
+                    "note",
+                    "type",
+                    "waranty",
+                    "confirmed",
+                    "planned",
                     "category_id",
-                    "category" => [
+                    "account_id",
+                    "transfer_id",
+                    "currency_id",
+                    "payment_type",
+                    "payee_id",
+                    "geolocation",
+                    "label",
+                    "sub_category" => [
                         "id",
                         "date_time",
                         "uuid",
                         "name",
-                        "icon"
-                    ]
-                ],
-                "account" => [
-                    "id",
-                    "uuid",
-                    "name",
-                    "color"
-                ],
-                "geolocation"
-            ]
-        ],
-        "balance",
-        "hasMorePages",
-        "currentPage",
-        "paginate"
+                        "category_id",
+                        "category" => [
+                            "id",
+                            "date_time",
+                            "uuid",
+                            "name",
+                            "icon"
+                        ]
+                    ],
+                    "account" => [
+                        "id",
+                        "uuid",
+                        "name",
+                        "color"
+                    ],
+                    "geolocation"
+                ]
+            ],
+            "balance",
+            "hasMorePages",
+            "currentPage",
+            "paginate"
+        ]
     ];
 
     /**
