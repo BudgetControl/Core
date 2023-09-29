@@ -89,21 +89,8 @@ class ApiGetDataTest extends TestCase
                 "amount",
                 "balance"
             ],
-            "currency" => [
-                "id",
-                "date_time",
-                "uuid",
-                "name"
-            ],
-            "payment_type" => [
-                "id",
-                "date_time",
-                "uuid",
-                "name",
-                "user_id"
-            ],
-            "geolocation",
-            "label",
+            "currency_id",
+            "payment_type",
             "planning",
             "end_date_time",]
     ];
