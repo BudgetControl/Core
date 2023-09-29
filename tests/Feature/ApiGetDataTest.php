@@ -52,8 +52,7 @@ class ApiGetDataTest extends TestCase
     ];
 
     const PLANNING = [
-        "data" => [
-            "uuid",
+            ["uuid",
             "type",
             "date_time",
             "amount",
@@ -61,7 +60,7 @@ class ApiGetDataTest extends TestCase
             "waranty",
             "transfer",
             "confirmed",
-            "category" => [
+            "sub_category" => [
                 "id",
                 "date_time",
                 "uuid",
@@ -90,24 +89,10 @@ class ApiGetDataTest extends TestCase
                 "amount",
                 "balance"
             ],
-            "currency" => [
-                "id",
-                "date_time",
-                "uuid",
-                "name"
-            ],
-            "payment_type" => [
-                "id",
-                "date_time",
-                "uuid",
-                "name",
-                "user_id"
-            ],
-            "geolocation",
-            "label",
+            "currency_id",
+            "payment_type",
             "planning",
-            "end_date_time",
-        ]
+            "end_date_time",]
     ];
 
     const PAYEE = [

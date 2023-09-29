@@ -101,7 +101,7 @@ class SearchTest extends TestCase
         $payload = [
             "account" => null,
             "category" => [2],
-            "type" => ["expenses"],
+            "type" => [],
             "tags" => [],
             "text" => null,
             "planned" => null

@@ -7,6 +7,7 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
+use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,7 +67,7 @@ class EntryController extends Controller
 		$type = EntryType::from($request->type);
 		try {
 			$service = new EntryService();
-			$service->save($request->toArray(),$type);
+			$service->save($request->toArray(),$type,Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);

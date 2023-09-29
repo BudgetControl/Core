@@ -86,6 +86,10 @@ class EntryService
       $entryModel->confirmed = $entry->getConfirmed();
       $entryModel->type = $entry->getType();
       $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+      //TODO: fixme
+      if(!is_null($payee)) {
+        $entryModel->payee_id = $payee->id;
+      }
       $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);

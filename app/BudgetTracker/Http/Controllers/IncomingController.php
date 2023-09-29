@@ -2,12 +2,14 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
@@ -50,7 +52,7 @@ class IncomingController extends EntryController
 	{
 		try {
 			$service = new IncomingService();
-			$service->save($request->toArray());
+			$service->save($request->toArray(), EntryType::Incoming, Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
@@ -67,7 +69,7 @@ class IncomingController extends EntryController
 	{
 		try {
 			$service = new IncomingService($uuid);
-			$service->save($request->toArray());
+			$service->save($request->toArray(), EntryType::Expenses, Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
