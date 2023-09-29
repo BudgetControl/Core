@@ -16,51 +16,49 @@ class SearchTest extends TestCase
 
     const ENTRY = [
         "data" => [
-            "data" => [
-                [
+            [
+                "uuid",
+                "amount",
+                "note",
+                "type",
+                "waranty",
+                "confirmed",
+                "planned",
+                "category_id",
+                "account_id",
+                "transfer_id",
+                "currency_id",
+                "payment_type",
+                "payee_id",
+                "geolocation",
+                "label",
+                "sub_category" => [
+                    "id",
+                    "date_time",
                     "uuid",
-                    "amount",
-                    "note",
-                    "type",
-                    "waranty",
-                    "confirmed",
-                    "planned",
+                    "name",
                     "category_id",
-                    "account_id",
-                    "transfer_id",
-                    "currency_id",
-                    "payment_type",
-                    "payee_id",
-                    "geolocation",
-                    "label",
-                    "sub_category" => [
+                    "category" => [
                         "id",
                         "date_time",
                         "uuid",
                         "name",
-                        "category_id",
-                        "category" => [
-                            "id",
-                            "date_time",
-                            "uuid",
-                            "name",
-                            "icon"
-                        ]
-                    ],
-                    "account" => [
-                        "id",
-                        "uuid",
-                        "name",
-                        "color"
-                    ],
-                    "geolocation"
-                ]
-            ],
-            "balance",
-            "hasMorePages",
-            "currentPage",
-            "paginate"
-        ]
+                        "icon"
+                    ]
+                ],
+                "account" => [
+                    "id",
+                    "uuid",
+                    "name",
+                    "color"
+                ],
+                "geolocation"
+            ]
+        ],
+        "balance",
+        "hasMorePages",
+        "currentPage",
+        "paginate"
     ];
 
     /**
@@ -103,7 +101,7 @@ class SearchTest extends TestCase
         $payload = [
             "account" => null,
             "category" => [2],
-            "type" => ["expenses"],
+            "type" => [],
             "tags" => [],
             "text" => null,
             "planned" => null
