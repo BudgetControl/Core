@@ -52,7 +52,6 @@ class ApiGetDataTest extends TestCase
     ];
 
     const PLANNING = [
-            "uuid",
             "type",
             "date_time",
             "amount",
