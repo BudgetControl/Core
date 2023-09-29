@@ -60,7 +60,7 @@ class ApiGetDataTest extends TestCase
             "waranty",
             "transfer",
             "confirmed",
-            "category" => [
+            "subCategory" => [
                 "id",
                 "date_time",
                 "uuid",
