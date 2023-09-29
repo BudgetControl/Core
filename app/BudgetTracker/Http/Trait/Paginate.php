@@ -9,7 +9,7 @@ trait Paginate {
 
     /** int $el element of data */
     private int $el;
-    private array $data;
+    private array $itemsData;
 
     /**
      * 
@@ -32,7 +32,7 @@ trait Paginate {
 
     protected function paginator(int $page): Paginator
     {
-        $items = array_slice($this->data, $this->el * $page);
+        $items = array_slice($this->itemsData, $this->el * $page);
 		$paginator = new Paginator($items, $this->el, $page);
 
 		return $paginator;
@@ -69,7 +69,7 @@ trait Paginate {
      */
     public function getData(): array
     {
-        return $this->data;
+        return $this->itemsData;
     }
 
     /**
@@ -81,7 +81,7 @@ trait Paginate {
      */
     public function setData(array $data): self
     {
-        $this->data = $data;
+        $this->itemsData = $data;
 
         return $this;
     }
