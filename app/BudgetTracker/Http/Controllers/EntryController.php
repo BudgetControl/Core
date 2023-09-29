@@ -4,6 +4,7 @@ namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\AccountsService;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EntryController extends Controller
 {
+	use Paginate;
+	
 	const PAGINATION = 30;
 
 	const FILTER = ['account','category','type','label'];
@@ -40,11 +43,16 @@ class EntryController extends Controller
 		}
 		
 		$this->entry = $this->entry->get();
+		$response = $this->entry->toArray();
 
-		$paginateController = new PaginatorController($this->entry->toArray(),self::PAGINATION);
-		$paginator = $paginateController->paginate($page);
+		$this->setEl(30);
+		$this->setData($response);
 
-		return response()->json($paginator);
+		if($page >= 0) {
+			$response = $this->paginate($page);
+		}
+
+		return response()->json($response);
 	}
 
 	/**

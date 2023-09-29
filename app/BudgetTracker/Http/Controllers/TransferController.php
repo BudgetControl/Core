@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use App\BudgetTracker\Services\TransferService;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
@@ -16,6 +17,8 @@ use App\BudgetTracker\Services\ResponseService;
 
 class TransferController extends EntryController
 {
+	use Paginate;
+	
 	//
 	/**
 	 * Display a listing of the resource.
@@ -28,10 +31,16 @@ class TransferController extends EntryController
 		$service = new TransferService();
 		$incoming = $service->read();
 
-		$paginateController = new PaginatorController($incoming->toArray(),self::PAGINATION);
-		$paginator = $paginateController->paginate($page);
+		$response = $incoming->toArray();
 
-		return response()->json($paginator);
+		$this->setEl(30);
+		$this->setData($response);
+
+		if($page >= 0) {
+			$response = $this->paginate($page);
+		}
+
+		return response()->json($response);
 	}
 	/**
 	 * Store a newly created resource in storage.

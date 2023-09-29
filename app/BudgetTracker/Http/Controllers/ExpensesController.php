@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
@@ -14,6 +15,8 @@ use App\BudgetTracker\Services\ResponseService;
 
 class ExpensesController extends EntryController
 {
+	use Paginate;
+	
 	//
 	/**
 	 * Display a listing of the resource.
@@ -26,10 +29,16 @@ class ExpensesController extends EntryController
 		$service = new ExpensesService();
 		$incoming = $service->read();
 
-		$paginateController = new PaginatorController($incoming->toArray(),self::PAGINATION);
-		$paginator = $paginateController->paginate($page);
+		$response = $incoming->toArray();
 
-		return response()->json($paginator);
+		$this->setEl(30);
+		$this->setData($response);
+
+		if($page >= 0) {
+			$response = $this->paginate($page);
+		}
+
+		return response()->json($response);
 	}
 
 	/**

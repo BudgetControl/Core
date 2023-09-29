@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Http\Controllers;
 
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Debit;
@@ -16,6 +17,7 @@ use App\BudgetTracker\Services\ResponseService;
 
 class DebitController extends EntryController
 {
+	use Paginate;
 	//
 	/**
 	 * Display a listing of the resource.
@@ -27,11 +29,19 @@ class DebitController extends EntryController
 		$page = $filter->query('page');
 		$service = new DebitService();
 		$incoming = $service->read();
+		$response = $incoming->toArray();
 
-		$paginateController = new PaginatorController($incoming->toArray(),self::PAGINATION);
-		$paginator = $paginateController->paginate($page);
+		if(!is_null($page)) {
+			$this->setEl(30);
+			$this->setData($response);
+			if($page >= 0) {
+				$response = $this->paginate($page);
+			}
+		}
 
-		return response()->json($paginator);
+
+
+		return response()->json($response);
 	}
 
 	/**

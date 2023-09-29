@@ -1,20 +1,15 @@
 <?php
-namespace App\BudgetTracker\Http\Controllers;
+namespace App\BudgetTracker\Http\Trait;
 
 use Illuminate\Pagination\Paginator;
 use App\BudgetTracker\Exceptions\PaginateException;
 
 
-class PaginatorController {
+trait Paginate {
 
     /** int $el element of data */
     private int $el;
     private array $data;
-    public function __construct(array $data, int $el)
-    {
-        $this->data = $data;
-        $this->el = $el;
-    }
 
     /**
      * 
@@ -41,5 +36,53 @@ class PaginatorController {
 		$paginator = new Paginator($items, $this->el, $page);
 
 		return $paginator;
+    }
+
+    /**
+     * Get the value of el
+     *
+     * @return int
+     */
+    public function getEl(): int
+    {
+        return $this->el;
+    }
+
+    /**
+     * Set the value of el
+     *
+     * @param int $el
+     *
+     * @return self
+     */
+    public function setEl(int $el): self
+    {
+        $this->el = $el;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of data
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set the value of data
+     *
+     * @param array $data
+     *
+     * @return self
+     */
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+
+        return $this;
     }
 }
