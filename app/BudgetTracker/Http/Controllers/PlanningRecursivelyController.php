@@ -74,7 +74,7 @@ class PlanningRecursivelyController extends EntryService
 	public function show(int|string $id): \Illuminate\Http\JsonResponse
 	{
 		$service = new PlanningRecursivelyService();
-		$incoming = $service->read($id); 
+		$incoming = $service->read($id)[0]; 
 
 		return response()->json($incoming);
 	}
