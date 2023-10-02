@@ -51,7 +51,7 @@ class ApiGetDataTest extends TestCase
     const ENTRY = ["data" => self::ENTRIES];
 
     const PLANNING = [
-            ["uuid",
+            "uuid",
             "type",
             "date_time",
             "amount",
@@ -91,7 +91,7 @@ class ApiGetDataTest extends TestCase
             "currency_id",
             "payment_type",
             "planning",
-            "end_date_time",]
+            "end_date_time"
     ];
 
     const PAYEE = [
