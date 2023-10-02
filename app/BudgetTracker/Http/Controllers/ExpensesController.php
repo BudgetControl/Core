@@ -87,7 +87,7 @@ class ExpensesController extends EntryController
 	{
 		$service = new ExpensesService();
 		$incoming = $service->read($id);
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 }

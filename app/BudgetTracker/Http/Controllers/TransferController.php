@@ -94,7 +94,7 @@ class TransferController extends EntryController
 	{
 		$service = new TransferService();
 		$incoming = $service->read($id);
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 	/**

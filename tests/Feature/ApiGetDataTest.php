@@ -2,14 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Tests\Feature\AuthTest;
 
 class ApiGetDataTest extends TestCase
 {
-    const ENTRY = [
-        "data" => [
+    const ENTRIES = [
             "uuid",
             "amount",
             "note",
@@ -48,8 +46,9 @@ class ApiGetDataTest extends TestCase
                 "color"
             ],
             "geolocation"
-        ]
     ];
+
+    const ENTRY = ["data" => self::ENTRIES];
 
     const PLANNING = [
             ["uuid",
@@ -131,9 +130,9 @@ class ApiGetDataTest extends TestCase
         $response = $this->get('/api/incoming/' . self::INCOMING_ID, $this->getAuthTokenHeader());
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::ENTRY);
+        $response->assertJsonStructure(self::ENTRIES);
 
-        $test_amount = $response['data']['amount'];
+        $test_amount = $response['amount'];
         $this->assertTrue($test_amount >= 0);
     }
 
@@ -145,9 +144,9 @@ class ApiGetDataTest extends TestCase
         $response = $this->get('/api/expenses/' . self::EXPENSES_ID, $this->getAuthTokenHeader());
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::ENTRY);
+        $response->assertJsonStructure(self::ENTRIES);
 
-        $test_amount = $response['data']['amount'];
+        $test_amount = $response['amount'];
         $this->assertTrue($test_amount <= 0);
     }
 
@@ -159,9 +158,9 @@ class ApiGetDataTest extends TestCase
         $response = $this->get('/api/debit/' . self::DEBIT_ID, $this->getAuthTokenHeader());
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::ENTRY);
+        $response->assertJsonStructure(self::ENTRIES);
 
-        $test_payee = $response['data']['payee_id'];
+        $test_payee = $response['payee_id'];
         $this->assertTrue(!empty($test_payee));
     }
 
@@ -174,10 +173,10 @@ class ApiGetDataTest extends TestCase
         $response = $this->get('/api/transfer/' . self::TRANSFER_ID, $this->getAuthTokenHeader());
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(self::ENTRY);
+        $response->assertJsonStructure(self::ENTRIES);
 
-        $test_transfer_id = $response['data']['transfer_id'];
-        $test_coount_id = $response['data']['account_id'];
+        $test_transfer_id = $response['transfer_id'];
+        $test_coount_id = $response['account_id'];
         $this->assertTrue(!empty($test_transfer_id));
         $this->assertTrue($test_coount_id != $test_transfer_id);
     }
