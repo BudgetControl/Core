@@ -86,7 +86,7 @@ class IncomingController extends EntryController
 	{
 		$service = new IncomingService();
 		$incoming = $service->read($id);
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 }

@@ -88,7 +88,7 @@ class DebitController extends EntryController
 	{
 		$service = new DebitService();
 		$incoming = $service->read($id);
-		return response()->json(new ResponseService($incoming));
+		return response()->json($incoming);
 	}
 
 }

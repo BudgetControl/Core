@@ -11,6 +11,7 @@ use DateTime;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Expenses;
 use Tests\TestCase;
+use Tests\Feature\AuthTest;
 
 class StatsGetDataTest extends TestCase
 {
