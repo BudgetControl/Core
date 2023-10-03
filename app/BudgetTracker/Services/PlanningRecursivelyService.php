@@ -39,7 +39,7 @@ class PlanningRecursivelyService extends EntryService
 
             Log::debug("save planning recursively -- " . json_encode($data));
 
-            self::validate($data);
+            //self::validate($data); FIXME: 
 
             $entry = new PlannedEntries(['type' => $type, 'planning' => PlanningType::from($data['planning'])]);
             if (!empty($data['uuid'])) {
@@ -113,7 +113,7 @@ class PlanningRecursivelyService extends EntryService
     {
         $rules = [
             'date_time' => ['date', 'date_format:Y-m-d H:i:s'],
-            'account_id' => 'required|boolean',
+            'account_id' => 'required|integer',
             'name' => 'string'
         ];
 
