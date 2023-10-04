@@ -32,6 +32,7 @@ class CategorySeeders extends Seeder
             $dbSubCat->uuid = $value->uuid;
             $dbSubCat->name = $value->name;
             $dbSubCat->category_id = $db->id;
+            $dbSubCat->type = $db->type;
             $dbSubCat->save();
           }
 
