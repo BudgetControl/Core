@@ -21,4 +21,11 @@ class Category extends Model
     public function subcategory() {
        return $this->hasMany(SubCategory::class);
     }
+
+    public static function getCateroyGroup(string $group)
+    {
+      return self::leftJoin("sub_categories",'sub_categories.category_id','=','categories.id')
+      ->where('categories.type',$group)
+      ->get();
+    }
 }

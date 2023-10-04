@@ -7,12 +7,16 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Investments;
+use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Transfer;
 use App\User\Services\UserService;
 use App\Helpers\MathHelper;
 use DateTime;
+use Exception;
 
 class StatsService
 {
@@ -78,13 +82,47 @@ class StatsService
      */
     public function incoming(bool $planning): array
     {
+        $categories = $this->getCategoryId(EntryType::Incoming->value);
+
         $entry = Incoming::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Incoming->value);
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
 
         $entryOld = Incoming::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Incoming->value);
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+
+        if ($planning === true) {
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
+        } else {
+            $entry->where('planned',0);
+            $entryOld->where('planned',0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function investments(bool $planning): array
+    {
+        $categories = $this->getCategoryId(EntryType::Investments->value);
+
+        $entry = Investments::user();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+
+        $entryOld = Investments::user();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -108,13 +146,15 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
+        $categories = $this->getCategoryId(EntryType::Expenses->value);
+
         $entry = Expenses::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Expenses->value);
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
 
         $entryOld = Expenses::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Expenses->value);
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -292,6 +332,24 @@ class StatsService
             'total_passed' => $secondValue,
             'percentage' => MathHelper::percentage($firstValue, $secondValue)
         ];
+    }
+
+    /**
+     *  retrive only category id
+     */
+    private function getCategoryId(string $type): array
+    {
+        $results = [];
+        $categories = Category::getCateroyGroup($type);
+        foreach($categories as $cat) {
+            $results[] = $cat->id;
+        }
+
+        if(empty($results)) {
+            throw new Exception("Ops no category foud with type ( $type )", 500);
+        }
+
+        return $results;
     }
 
 }
