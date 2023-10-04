@@ -201,7 +201,7 @@ class ApiPostDataTest extends TestCase
    {
 
        $request = $this->makeRequest(-1000, new DateTime());
-       $request['category_id'] = 50;
+       $request['category_id'] = 60;
 
        $response = $this->postJson('/api/investments',(array) $request,$this->getAuthTokenHeader());
        $response->assertStatus(200);
