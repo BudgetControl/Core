@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 
 Route::apiResource('incoming', \App\BudgetTracker\Http\Controllers\IncomingController::class)->middleware('auth.jwt');
 Route::apiResource('expenses', \App\BudgetTracker\Http\Controllers\ExpensesController::class)->middleware('auth.jwt');
-Route::apiResource('investments', \App\BudgetTracker\Http\Controllers\ExpensesController::class)->middleware('auth.jwt');
+Route::apiResource('investments', \App\BudgetTracker\Http\Controllers\InvestmentsController::class)->middleware('auth.jwt');
 Route::apiResource('debit', \App\BudgetTracker\Http\Controllers\DebitController::class)->middleware('auth.jwt');
 Route::apiResource('transfer', \App\BudgetTracker\Http\Controllers\TransferController::class)->middleware('auth.jwt');
 Route::apiResource('planning-recursively', \App\BudgetTracker\Http\Controllers\PlanningRecursivelyController::class)->middleware('auth.jwt');
