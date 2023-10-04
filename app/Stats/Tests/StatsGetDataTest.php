@@ -10,6 +10,7 @@ use App\BudgetTracker\Models\Incoming;
 use DateTime;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Investments;
 use Tests\TestCase;
 use Tests\Feature\AuthTest;
 
@@ -225,6 +226,22 @@ class StatsGetDataTest extends TestCase
 
         $test_amount = $response['data'][0]['total_wallet'];
         $this->assertTrue($test_amount <= 0 || $test_amount >= 0 );
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_investments_stats(): void
+    {
+        Investments::factory(1)->create();
+
+        $response = $this->get('/api/stats/investments/',$this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::RESPONSE);
+
+        $test_amount = $response['data']['total'];
+        $this->assertTrue($test_amount <= 0);
     }
 
     private function getAuthTokenHeader()
