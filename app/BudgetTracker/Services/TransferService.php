@@ -10,16 +10,90 @@ use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Transfer;
-use App\Http\Services\UserService;
+use App\BudgetTracker\Interfaces\EntryInterface;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\Payee;
 use Illuminate\Support\Facades\Log;
 use DateTime;
+use stdClass;
 
 /**
  * Summary of SaveEntryService
  */
 class TransferService extends EntryService
-{
+{   
+
+    public function __construct(string $uuid = "")
+    {
+        parent::__construct($uuid);
+    }
+
+    /**
+     * 
+     */
+    private function prepare(array $data): Transfer
+    {
+        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+        $uuid = null;
+
+        $entry = new Transfer(
+            $data['amount'],
+            Currency::findOrFail($data['currency_id']),
+            $data['note'],
+            new DateTime($data['date_time']),
+            $data['waranty'],
+            $data['confirmed'],
+            Account::findOrFail($data['account_id']),
+            PaymentsTypes::findOrFail($data['payment_type']),
+            new \stdClass(),
+            $data['label'],
+            $data['transfer_id']
+        );
+
+        if(!empty($this->uuid)) {
+            $transfer = TransferModel::findFromUuid($this->uuid,$user_id);
+            if(!empty($transfer)) {
+                $entry->setUuid($this->uuid);
+            }
+        }
+
+        return $entry;
+    }
+
+    /**
+     * 
+     */
+    private function prepareInverted(array $data): Transfer
+    {
+        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+        $uuid = null;
+
+        $entry = new Transfer(
+            $data['amount'] * -1,
+            Currency::findOrFail($data['currency_id']),
+            $data['note'],
+            new DateTime($data['date_time']),
+            $data['waranty'],
+            $data['confirmed'],
+            Account::findOrFail($data['account_id']),
+            PaymentsTypes::findOrFail($data['payment_type']),
+            new \stdClass(),
+            $data['label'],
+            $data['account_id']
+        );
+
+        if(!empty($this->uuid)) {
+            $transfer = TransferModel::findFromUuid($data['transfer_relation'],$user_id);
+            if(!empty($transfer)) {
+                $entry->setUuid($data['transfer_relation']);
+            }
+        }
+
+        $entry->setAccount(Account::find($data['transfer_id']));
+
+        return $entry;
+
+    }
 
     /**
      * save a resource
@@ -31,53 +105,48 @@ class TransferService extends EntryService
      */
     public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
-        try {
+        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
-            Log::debug("save transfer -- " . json_encode($data));
-            $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+        $transfer = $this->prepare($data);
+        $transferInverted = $this->prepareInverted($data);
 
-            $entry = new Transfer(
-                $data['amount'],
-                Currency::findOrFail($data['currency_id']),
-                $data['note'],
-                SubCategory::findOrFail(75),
-                Account::findOrFail($data['account_id']),
-                PaymentsTypes::findOrFail($data['payment_type']),
-                new DateTime($data['date_time']),
-                $data['label'],
-                $data['confirmed'],
-                $data['waranty'],
-                $data['transfer_id'],
-            );
+        $transfer->setTransfer_relation($transferInverted->getUuid());
+        $transferInverted->setTransfer_relation($transfer->getUuid());
 
-            $entryModel = new TransferModel();
-            if (!empty($data['uuid'])) {
-                $entryModel = TransferModel::findFromUuid($data['uuid']);
-            }
+        $this->commitSave($transfer,$user_id);
+        $this->commitSave($transferInverted,$user_id);
 
-            $this->updateBalance($entry, $entry->getAccount()->id, $entryModel);
+    }
 
-            $entryModel->account_id = $entry->getAccount()->id;
-            $entryModel->amount = $entry->getAmount();
-            $entryModel->category_id = $entry->getCategory()->id;
-            $entryModel->currency_id = $entry->getCurrency()->id;
-            $entryModel->date_time = $entry->getDateFormat();
-            $entryModel->note = $entry->getNote();
-            $entryModel->payment_type = $entry->getPaymentType()->id;
-            $entryModel->planned = $entry->getPlanned();
-            $entryModel->waranty = $entry->getWaranty();
-            $entryModel->confirmed = $entry->getConfirmed();
-            $entryModel->transfer_id = $data['transfer_id'];
-            $entryModel->user_id = $user_id;
-            $entryModel->save();
+    private function commitSave(Transfer $entry, int $userId): void
+    {   
 
-            $this->saveInverted($entry, $data['transfer_id'], $user_id);
-            
-        } catch (\Exception $e) {
-            $error = uniqid();
-            Log::error("$error " . $e->getMessage());
-            throw new \Exception("Ops an errro occurred " . $error);
+        $entryModel = new TransferModel();
+        $findEntry = TransferModel::findFromUuid($entry->getUuid(),$userId);
+        if (!empty($findEntry)) {
+            AccountsService::updateBalance($entry->getAmount() *-1,$entry->getAccount()->id);
+            $entryModel = $findEntry;
         }
+
+        $entryModel->uuid = $entry->getUuid();
+        $entryModel->account_id = $entry->getAccount()->id;
+        $entryModel->amount = $entry->getAmount();
+        $entryModel->category_id = $entry->getCategory()->id;
+        $entryModel->currency_id = $entry->getCurrency()->id;
+        $entryModel->date_time = $entry->getDateFormat();
+        $entryModel->note = $entry->getNote();
+        $entryModel->payment_type = $entry->getPaymentType()->id;
+        $entryModel->planned = $entry->getPlanned();
+        $entryModel->waranty = $entry->getWaranty();
+        $entryModel->confirmed = $entry->getConfirmed();
+        $entryModel->transfer_relation = $entry->getTransfer_relation();
+        $entryModel->transfer_id = $entry->getTransfer_id();
+        $entryModel->user_id = $userId;
+        $entryModel->save();
+
+        $this->updateBalance($entry);
+        $this->attachLabels($entry->getLabels(),$entryModel);
+
     }
 
     /**
@@ -87,7 +156,7 @@ class TransferService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read entry -- $id");
         $result = new \stdClass();
@@ -95,49 +164,12 @@ class TransferService extends EntryService
         $entry = TransferModel::withRelations()->user()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found transfer -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;
     }
 
-    /**
-     * save inverted entry
-     * @param Entry $entry
-     * @param int $userId
-     * 
-     * @return void
-     */
-    private function saveInverted(Transfer $entry, int $userId): void
-    {
-
-        $transfer_id = $entry->getAccount()->id;
-        $account_id = $entry->getTransfer_id();
-        $amount = $entry->getAmount() * -1;
-
-        $entryModel = new TransferModel();
-        $entryModel->account_id = $account_id;
-        $entryModel->amount = $amount;
-        $entryModel->category_id = $entry->getCategory()->id;
-        $entryModel->currency_id = $entry->getCurrency()->id;
-        $entryModel->date_time = $entry->getDateFormat();
-        $entryModel->note = $entry->getNote();
-        $entryModel->payment_type = $entry->getPaymentType()->id;
-        $entryModel->planned = $entry->getPlanned();
-        $entryModel->waranty = $entry->getWaranty();
-        $entryModel->confirmed = $entry->getConfirmed();
-        $entryModel->transfer_id = $transfer_id;
-        $entryModel->user_id = $userId;
-        $entryModel->save();
-
-        $this->updateBalance($entry, $account_id, $entryModel);
-
-    }
 }

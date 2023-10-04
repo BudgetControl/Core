@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\Http\Controllers\Controller;
+use App\User\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\ActionJobConfiguration;
 use App\BudgetTracker\Models\SubCategory;

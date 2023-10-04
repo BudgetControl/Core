@@ -8,12 +8,17 @@ use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PlannedEntries;
 use DateTime;
 use App\BudgetTracker\Models\Entry;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use App\BudgetTracker\Models\Account;
+use Tests\Feature\AuthTest;
 
 class ApiPostDataTest extends TestCase
 {
 
     private $headers = '';
+
+    const ACCOUNT_ID = '64b59d645b752_test';
 
 
     /**
@@ -66,6 +71,7 @@ class ApiPostDataTest extends TestCase
     {
         $request = $this->makeRequest(100.90, new DateTime('+1Month'));
         $request->planning = 'daily';
+        $request->end_date_time = "2025-08-10 00:00:00";
 
         $response = $this->postJson('/api/planning-recursively',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
@@ -187,7 +193,29 @@ class ApiPostDataTest extends TestCase
             'name' => 'Mimmo',
         ]);
     }
-    
+
+    /**
+    * A basic feature test example.
+    */
+   public function test_investments_data(): void
+   {
+
+       $request = $this->makeRequest(-1000, new DateTime());
+       $request->category_id = 60;
+
+       $response = $this->postJson('/api/investments',(array) $request,$this->getAuthTokenHeader());
+       $response->assertStatus(200);
+
+       $this->assertDatabaseHas(Entry::class,[
+           'amount' => -1000,
+           'type' => EntryType::Investments->value,
+           'category_id' => 60,
+           'account_id' => 1,
+           'planned' => 0,
+           'transfer' => 0,
+           'confirmed' => 1
+       ]);
+   }
 
     /**
      * build model request
@@ -223,4 +251,5 @@ class ApiPostDataTest extends TestCase
         $token = $response['token']['plainTextToken'];
         return ['X-ACCESS-TOKEN' => $token];  
     }
+
 }

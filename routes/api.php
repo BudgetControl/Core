@@ -1,7 +1,9 @@
 <?php
 
+use App\Mailer\Services\MailService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\User\Controllers\AuthController;
+use App\Mailer\Services\Registration;
 use Illuminate\Http\Request;
 
 /*
@@ -17,6 +19,7 @@ use Illuminate\Http\Request;
 
 Route::apiResource('incoming', \App\BudgetTracker\Http\Controllers\IncomingController::class)->middleware('auth.jwt');
 Route::apiResource('expenses', \App\BudgetTracker\Http\Controllers\ExpensesController::class)->middleware('auth.jwt');
+Route::apiResource('investments', \App\BudgetTracker\Http\Controllers\InvestmentsController::class)->middleware('auth.jwt');
 Route::apiResource('debit', \App\BudgetTracker\Http\Controllers\DebitController::class)->middleware('auth.jwt');
 Route::apiResource('transfer', \App\BudgetTracker\Http\Controllers\TransferController::class)->middleware('auth.jwt');
 Route::apiResource('planning-recursively', \App\BudgetTracker\Http\Controllers\PlanningRecursivelyController::class)->middleware('auth.jwt');
@@ -30,7 +33,6 @@ Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyCon
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
 
-Route::post('search', '\App\BudgetTracker\Http\Controllers\SearchEntriesController@find')->middleware('auth.jwt');
 Route::get('entry/account/{id}', function (string $id) {
     return \App\BudgetTracker\Http\Controllers\EntryController::getEntriesFromAccount((int) $id);
 })->middleware('auth.jwt');
@@ -39,3 +41,12 @@ Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportControl
 
 /** make accounts api */
 Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');
+
+Route::get('test', function() {
+    $test = new Registration(
+        [
+            'username' => 1, 'email' => 2, 'link' => 3
+        ]
+    );
+    $test->send('marco.defelice890@gmail.com');
+});

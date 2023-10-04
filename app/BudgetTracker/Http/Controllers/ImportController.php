@@ -73,7 +73,8 @@ class ImportController extends Controller
 				$file = fopen('php://output', 'w');
 				fputcsv($file, self::header_export, ";");
 				
-				$data = EntryService::read();
+				$entryService = new EntryService();
+				$data = $entryService->read();
 				foreach ($data as $e) {
 					fputcsv($file, $this->build_csv_data($e), ";");
 				}

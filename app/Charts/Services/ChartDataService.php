@@ -2,13 +2,15 @@
 
 namespace App\Charts\Services;
 
-use App\BudgetTracker\Enums\EntryType;
+use DateTime;
 use App\BudgetTracker\Models\Debit;
+use Doctrine\DBAL\Driver\Exception;
+use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Transfer;
 use App\Charts\Entity\LineChart\LineChart;
-use DateTime;
 
 class ChartDataService
 {
@@ -25,7 +27,7 @@ class ChartDataService
     {
         return Incoming::user()->where('date_time', '>=', $this->startDate($start))
             ->where('planned', 0)->where('confirmed', 1)
-            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Incoming->value)->get()
+            ->where('date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))->get()
             ->toArray();
     }
 
@@ -81,7 +83,7 @@ class ChartDataService
     {
         return Expenses::user()->where('date_time', '>=', $this->startDate($start))
             ->where('planned', 0)->where('confirmed', 1)
-            ->where('date_time', '<=', $this->endDate($end))->where('type', EntryType::Expenses->value)->get()
+            ->where('date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))->get()
             ->toArray();
     }
 
@@ -157,5 +159,23 @@ class ChartDataService
     private function endDate(DateTime $date): string
     {
         return $date->format('Y-m-d');
+    }
+
+    /**
+     *  retrive only category id
+     */
+    private function getCategoryId(string $type): array
+    {
+        $results = [];
+        $categories = Category::getCateroyGroup($type);
+        foreach($categories as $cat) {
+            $results[] = $cat->id;
+        }
+
+        if(empty($results)) {
+            throw new Exception("Ops no category foud with type ( $type )", 500);
+        }
+
+        return $results;
     }
 }

@@ -21,8 +21,8 @@ class PayeeController extends Controller implements ControllerResourcesInterface
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $payes = Payee::all();
-        return response()->json(new ResponseService($payes));
+        $payes = Payee::User()->with('entry')->get();
+        return response()->json($payes);
     }
 
     /**
@@ -46,7 +46,8 @@ class PayeeController extends Controller implements ControllerResourcesInterface
      */
     public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        $payee = PayeeService::read($id);
+        $service = new PayeeService();
+        $payee = $service->read($id);
         return response()->json(new ResponseService($payee));
     }
 
@@ -58,7 +59,8 @@ class PayeeController extends Controller implements ControllerResourcesInterface
      */
     public function destroy(int $id): \Illuminate\Http\Response
     {
-        Payee::deleted($id);
+        $payee = Payee::findOrFail($id);
+        $payee->delete();
         return response('Payee deleted');
     }
 }

@@ -5,16 +5,18 @@ namespace App\BudgetTracker\Exceptions;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class EntryException extends Exception
 {
-    public function render(Request $request): Response
+    public function render(): Response
     {
-        $status = 500;
         $error = "An error occurred on Entry services";
-        $help = "Contact the sales team to verify";
         $errorCode = uniqid();
+        $statusCode = empty($this->getCode()) ? 200 : $this->getCode();
+        $file = $this->getFile();
 
-        return response(["error" => $error, "help" => $help, "error_code" => $errorCode], $status);
+        Log::critical($errorCode.' '.$this->getMessage());
+        return response(["error" => $error, "error_code" => $errorCode, "message" => $this->getMessage(), 'file' => $file], $statusCode);
     }
 }

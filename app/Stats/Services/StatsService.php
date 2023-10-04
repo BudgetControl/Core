@@ -7,10 +7,16 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Investments;
+use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Transfer;
+use App\User\Services\UserService;
+use App\Helpers\MathHelper;
 use DateTime;
+use Exception;
 
 class StatsService
 {
@@ -20,8 +26,18 @@ class StatsService
     private string $startDatePassed;
     private string $endDatePassed;
 
-    public function __construct(string $startDate, string $endDate)
+    public function __construct(?string $startDate = null, ?string $endDate = null)
     {
+        if (is_null($startDate)) {
+            // Primo giorno del mese corrente
+            $startDate = date('Y-m-01');
+        }
+
+        if (is_null($endDate)) {
+            // Ultimo giorno del mese corrente
+            $endDate = date('Y-m-t');
+        }
+
         $this->setDateEnd($endDate);
         $this->setDateStart($startDate);
     }
@@ -64,15 +80,17 @@ class StatsService
      * 
      * @return array
      */
-    public function incoming(bool $planning): Array
+    public function incoming(bool $planning): array
     {
+        $categories = $this->getCategoryId(EntryType::Incoming->value);
+
         $entry = Incoming::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Incoming->value);
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
 
         $entryOld = Incoming::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Incoming->value);
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -82,7 +100,41 @@ class StatsService
             $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function investments(bool $planning): array
+    {
+        $categories = $this->getCategoryId(EntryType::Investments->value);
+
+        $entry = Investments::user();
+        $entry->where('date_time', '<=', $this->endDate)
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+
+        $entryOld = Investments::user();
+        $entryOld->where('date_time', '<=', $this->endDatePassed)
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+
+        if ($planning === true) {
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
+        } else {
+            $entry->where('planned',0);
+            $entryOld->where('planned',0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -94,13 +146,15 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
+        $categories = $this->getCategoryId(EntryType::Expenses->value);
+
         $entry = Expenses::user();
         $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Expenses->value);
+        ->where('date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
 
         $entryOld = Expenses::user();
         $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Expenses->value);
+        ->where('date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -110,7 +164,9 @@ class StatsService
             $entryOld->where('planned',0);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -130,7 +186,9 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
 
     }
 
@@ -140,7 +198,7 @@ class StatsService
      * 
      * @return array
      */
-    public function debit(bool $planning): array
+    public function debit(): array
     {
         $entry = Debit::user();
         $entry->where('date_time', '<=', $this->endDate)
@@ -150,7 +208,9 @@ class StatsService
         $entryOld->where('date_time', '<=', $this->endDatePassed)
         ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
     }
 
     /**
@@ -170,7 +230,9 @@ class StatsService
 
         if ($planning === true) {
             $plannedEntries = $this->getPlannedEntry();
-            $wallet->sum($plannedEntries->toArray());
+            $installementValue = $this->getInstallementValue();
+            $entries = array_merge($plannedEntries->toArray(),$installementValue->toArray());
+            $wallet->sum($entries);
         }
 
         return $wallet->getBalance();
@@ -196,9 +258,15 @@ class StatsService
             ->where('entries.date_time', '<=', $dateTime)
             ->where('entries.date_time', '>=', $dateTimeFirst)
             ->where('accounts.installement', 0)
+            ->where('accounts.user_id',UserService::getCacheUserID())
             ->get('entries.amount');
 
         return $entry;
+    }
+
+    private function getInstallementValue(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Account::user()->where('installement', 1)->get('installementValue as amount');
     }
 
     /** 
@@ -239,6 +307,49 @@ class StatsService
         }
 
         return $wallet->getBalance();
+    }
+
+    /**
+     * build stats standard response
+     * @param array $data
+     * @param array $dataOld
+     * 
+     * @return array
+     */
+    private function buildResponse(array $data, array $dataOld)
+    {
+        $wallet = new Wallet();
+        $wallet->sum($data);
+
+        $walletPassed = new Wallet();
+        $walletPassed->sum($dataOld);
+
+        $firstValue = $wallet->getBalance();
+        $secondValue = $walletPassed->getBalance();
+
+        return [
+            'total' => $firstValue,
+            'total_passed' => $secondValue,
+            'percentage' => MathHelper::percentage($firstValue, $secondValue)
+        ];
+    }
+
+    /**
+     *  retrive only category id
+     */
+    private function getCategoryId(string $type): array
+    {
+        $results = [];
+        $categories = Category::getCateroyGroup($type);
+        foreach($categories as $cat) {
+            $results[] = $cat->id;
+        }
+
+        if(empty($results)) {
+            throw new Exception("Ops no category foud with type ( $type )", 500);
+        }
+
+        return $results;
     }
 
 }

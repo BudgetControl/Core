@@ -2,32 +2,58 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
+use App\BudgetTracker\Models\Payee;
+use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\EntryService;
-use League\Config\Exception\ValidationException;
-use App\BudgetTracker\Services\ResponseService;
+use Illuminate\Database\Eloquent\Builder;
 
-class EntryController extends Controller implements ControllerResourcesInterface
+
+class EntryController extends Controller
 {
+	use Paginate;
+	
+	const PAGINATION = 30;
+
+	const FILTER = ['account','category','type','label'];
+
+	private $entry;
+
 	//
 	/**
 	 * Display a listing of the resource.
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
-		$date = New \DateTime();
+		$page = $filter->query('page');
+
+		$date = new \DateTime();
 		$date->modify('last day of this month');
+
+		$this->entry = Entry::withRelations()
+			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
+
+		if(!empty($filter->query('filter'))) {
+			$this->filter($filter->query('filter'));
+		}
 		
-		$incoming = Entry::withRelations()
-		->where('date_Time', '<=', $date->format('Y-m-d H:i:s'))
-		->limit(30)
-		->get();
-		return response()->json(new ResponseService(['elements' => $incoming]));
+		$this->entry = $this->entry->get();
+		$response = $this->entry->toArray();
+
+		$this->setEl(30);
+		$this->setData($response);
+
+		if($page >= 0) {
+			$response = $this->paginate($page);
+		}
+
+		return response()->json($response);
 	}
 
 	/**
@@ -38,9 +64,10 @@ class EntryController extends Controller implements ControllerResourcesInterface
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
 	{
+		$type = EntryType::from($request->type);
 		try {
 			$service = new EntryService();
-			$service->save($request->toArray());
+			$service->save($request->toArray(),$type,Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
@@ -55,8 +82,8 @@ class EntryController extends Controller implements ControllerResourcesInterface
 	 */
 	static public function getEntriesFromAccount(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Entry::withRelations()->where("account_id",$id)->get();
-		return response()->json(new ResponseService($incoming));
+		$incoming = Entry::withRelations()->where("account_id", $id)->get();
+		return response()->json($incoming);
 	}
 
 	/**
@@ -65,10 +92,11 @@ class EntryController extends Controller implements ControllerResourcesInterface
 	 * @param int $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = EntryService::read($id);
-		return response()->json(new ResponseService($incoming));
+		$service = new EntryService();
+		$incoming = $service->read($id);
+		return response()->json($incoming);
 	}
 
 	/**
@@ -77,13 +105,51 @@ class EntryController extends Controller implements ControllerResourcesInterface
 	 * @param int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		try {
-			Entry::destroy($id);
+			$entry = Entry::where('uuid',$id)->firstOrFail();
+			Entry::destroy($entry->id);
+			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
 		}
+	}
+
+	/**
+	 * check valid filter
+	 * @param array $filter
+	 * 
+	 * @return void
+	 * @throws Exception
+	 */
+	private function filter(array $filter): void
+	{
+		foreach($filter as $key => $value) {
+			if(!in_array($key,self::FILTER)) {
+				throw new \Exception("Filter must be one of these account, type, category, label - ".$key." is not valid!");
+			}
+		}
+
+		if(!empty($filter['account'])) {
+			$this->entry->where('account_id', $filter['account']);
+		}
+
+		if(!empty($filter['category'])) {
+			$this->entry->where('category_id', $filter['category']);
+		}
+
+		if(!empty($filter['type'])) {
+			$this->entry->where('type', $filter['type']);
+		}
+
+		if(!empty($filter['label'])) {
+			$tags = (array) $filter['label'];
+			$this->entry->whereHas('label', function (Builder $q) use ($tags) {
+				$q->whereIn('labels.id', $tags);
+			});
+		}
+
 	}
 }

@@ -28,12 +28,14 @@ ARG XDEBUG_MODE=develop,debug
 
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
+COPY bin/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+###########################################
 
 RUN mkdir /var/www/script
-COPY deployment/entrypoint.sh /var/www/script/entrypoint.sh
+COPY bin/entrypoint.sh /var/www/script/entrypoint.sh
 RUN chmod +x /var/www/script/entrypoint.sh
 
-EXPOSE 9000
 EXPOSE 3000
 
 ENTRYPOINT [ "/var/www/script/entrypoint.sh" ] 

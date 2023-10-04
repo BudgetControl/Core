@@ -15,6 +15,7 @@ return [
 
     'paths' => [
         resource_path('views'),
+        __DIR__."../app/Mailer/Views"
     ],
 
     /*

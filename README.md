@@ -1,7 +1,8 @@
 # Budget tracker V2 App - BackAnd application
 Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
-![version](https://img.shields.io/badge/version-1.0-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) <a href="https://github.com/budgetcontrol/services/issues?q=is%3Aopen+is%3Aissue" target="_blank">![GitHub issues](https://img.shields.io/github/issues/budgetcontrol/Services)
+![version](https://img.shields.io/badge/version-1.1.1-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) <a 
+href="https://github.com/budgetcontrol/services/issues?q=is%3Aopen+is%3Aissue" target="_blank">![GitHub issues](https://img.shields.io/github/issues/budgetcontrol/Services)
 </a> <a href="https://github.com/budgetcontrol/services/issues?q=is%3Aissue+is%3Aclosed" target="_blank">![GitHub closed issues](https://img.shields.io/github/issues-closed/budgetcontrol/Services?color=green)
 </a> <a href="https://github.com/budgetcontrol/services/issues?q=is%3Aissue+is%3Aopen+label%3Abug" target="_blank">![GitHub issues by-label](https://img.shields.io/github/issues/budgetcontrol/Services/bug?color=red)
 </a><a href="https://discord.gg/jv3RayP9" target="_blank">![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)</a>
@@ -15,10 +16,11 @@ php version >= 8.2
 * Copy file .env.example on .env 
 * Creation of the dockerfile container
    docker-compose up -d
+* Wait composer install into docker container are finished
 * Generate cache file
-   docker exec budgettrackerv2_bemodule_1 php artisan confic:cache
+   docker exec budgetcontrol-services php artisan config:cache
 * Make migrations
-   docker exec budgettrackerv2_bemodule_1 php artisan migrate --seed
+   docker exec budgetcontrol-services php artisan migrate --seed
 * Enjoy
    insert utl http://localhost:3333/ ( api/incoming )
    
@@ -87,22 +89,28 @@ Front-end is developed with Vue Notus template Back-end is developed with larave
 * DELETE /api/planning-recursively
 * DELETE /api/payee 
 
-### Struttura delle directory
-_ node_modules: contiene tutte le dipendenze del progetto installate tramite npm.
-_ public: contiene file statici accessibili direttamente dal client (es. immagini, file CSS, JavaScript).
-_ data: contiene i dati salvati dall'applicazione in formato JSON
-_ components: contiene i componenti dell'applicazione.
-__ buttons: contiene i pulsanti e le action dell'applicazione.
-__ cards: contiene le card specifiche e stilizzate
-__ table: contiene tabelle ed elementi tabellari per le pagine
-_ pages: contiene le views dell'applicazione
-_ services: qui vengono implementati tutti i vari servizi
 
-## Tecnologie utilizzate
-php - laravel 10
+## DEBUG MODE WITH Xdebug
+You can set-up xdebug interactive debuging mode
 
-## Autori
+1. configure your IDE for every microservice
+
+### Xdebug configuration to insert in your IDE ( visual-studio )
+{
+    "name": "Listen for Xdebug",
+    "type": "php",
+    "request": "launch",
+    "port": 9003,
+    "pathMappings": {
+        "/var/www/workdir": "${workspaceRoot}",
+    }
+}
+
+### Xdebug configuration for IDE ( php storm )
+https://www.jetbrains.com/help/phpstorm/troubleshooting-php-debugging.html#no-debug-server-is-configured% 
+
+## Author
 * Marco De Felice
 
-## Licenza
+## License
 Apache License, Version 2.0

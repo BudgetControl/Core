@@ -8,10 +8,11 @@ use App\BudgetTracker\Entity\Entries\Incoming;
 use App\BudgetTracker\Models\Labels;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Models\Payee;
 
@@ -20,6 +21,11 @@ use App\BudgetTracker\Models\Payee;
  */
 class IncomingService extends EntryService
 {
+
+    public function __construct(string $uuid = "")
+    {
+        parent::__construct($uuid);
+    }
 
   /**
    * save a resource
@@ -39,22 +45,25 @@ class IncomingService extends EntryService
                 $data['amount'],
                 Currency::findOrFail($data['currency_id']),
                 $data['note'],
+                new DateTime($data['date_time']),
+                $data['waranty'],
+                $data['confirmed'],
                 SubCategory::findOrFail($data['category_id']),
                 Account::findOrFail($data['account_id']),
                 PaymentsTypes::findOrFail($data['payment_type']),
-                new DateTime($data['date_time']),
-                $data['label'],
-                $data['confirmed'],
-                $data['waranty'],
+                new \stdClass(),
+                $data['label']
             );
 
             $entryModel = new IncomingModel();
-            if (!empty($data['uuid'])) {
-                $entryModel = IncomingModel::findFromUuid($data['uuid']);
+            if (!empty($this->uuid)) {
+                $entry->setUuid($this->uuid);
+                $entryDb = Entry::findFromUuid($this->uuid);
+                AccountsService::updateBalance($entryDb->amount *-1,$entryDb->account_id);
+                $entryModel = $entryDb;
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
+            $entryModel->uuid = $entry->getUuid();
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -65,11 +74,16 @@ class IncomingService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
+            $entryModel->type = EntryType::Incoming->value;
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
-
+            //TODO: fixme
+            if(!is_null($payee)) {
+                $entryModel->payee_id = $payee->id;
+            }
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
+            $this->updateBalance($entry);
 
         } catch (\Exception $e) {
             $error = uniqid();
@@ -85,7 +99,7 @@ class IncomingService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|int|null $id = null): object
     {
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
@@ -93,14 +107,9 @@ class IncomingService extends EntryService
         $entry = IncomingModel::withRelations()->user()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found incoming -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

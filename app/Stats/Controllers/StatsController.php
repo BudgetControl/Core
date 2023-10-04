@@ -7,7 +7,6 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Services\ResponseService;
 use App\Helpers\EntriesMath;
-use App\Helpers\MathHelper;
 use \Illuminate\Http\JsonResponse;
 use App\Stats\Services\StatsService;
 use DateTime;
@@ -37,7 +36,7 @@ class StatsController extends Controller
 
         return response()->json(
             new ResponseService(
-                $this->buildResponse($result['total'], $result['total_passed'])
+                $result
             )
         );
     }
@@ -55,7 +54,25 @@ class StatsController extends Controller
 
         return response()->json(
             new ResponseService(
-               $this->buildResponse($result['total'], $result['total_passed'])
+                $result
+            )
+        );
+    }
+    
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return JsonResponse
+     */
+    public function investments(bool $planning): JsonResponse
+    {
+        $service = new StatsService($this->startDate, $this->endDate);
+        $result = $service->investments($planning);
+
+        return response()->json(
+            new ResponseService(
+                $result
             )
         );
     }
@@ -69,11 +86,11 @@ class StatsController extends Controller
     public function transfer(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        $result =$service->transfer($planning);
+        $result = $service->transfer($planning);
 
         return response()->json(
             new ResponseService(
-               $this->buildResponse($result['total'], $result['total_passed'])
+                $result
             )
         );
     }
@@ -87,11 +104,11 @@ class StatsController extends Controller
     public function debit(bool $planning): JsonResponse
     {
         $service = new StatsService($this->startDate, $this->endDate);
-        $result =$service->debit($planning);
+        $result = $service->debit($planning);
 
         return response()->json(
             new ResponseService(
-               $this->buildResponse($result['total'], $result['total_passed'])
+                $result
             )
         );
     }
@@ -120,33 +137,8 @@ class StatsController extends Controller
         $service = new StatsService($this->startDate, $this->endDate);
 
         return response()->json(new ResponseService(
-            $service->wallets(Account::all())
+            $service->wallets(Account::user()->get())
         ));
-    }
-
-    /**
-     * build stats standard response
-     * @param array $data
-     * @param array $dataOld
-     * 
-     * @return array
-     */
-    private function buildResponse(array $data, array $dataOld)
-    {
-        $wallet = new Wallet();
-        $wallet->sum($data);
-
-        $walletPassed = new Wallet();
-        $walletPassed->sum($dataOld);
-
-        $firstValue = $wallet->getBalance();
-        $secondValue = $walletPassed->getBalance();
-
-        return [
-            'total' => $firstValue,
-            'total_passed' => $secondValue,
-            'percentage' => MathHelper::percentage($firstValue, $secondValue)
-        ];
     }
 
     /**
