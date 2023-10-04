@@ -58,6 +58,24 @@ class StatsController extends Controller
             )
         );
     }
+    
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return JsonResponse
+     */
+    public function investments(bool $planning): JsonResponse
+    {
+        $service = new StatsService($this->startDate, $this->endDate);
+        $result = $service->investments($planning);
+
+        return response()->json(
+            new ResponseService(
+                $result
+            )
+        );
+    }
 
     /**
      * retrive data

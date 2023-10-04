@@ -195,6 +195,29 @@ class ApiPostDataTest extends TestCase
     }
 
     /**
+    * A basic feature test example.
+    */
+   public function test_investments_data(): void
+   {
+
+       $request = $this->makeRequest(-1000, new DateTime());
+       $request->category_id = 60;
+
+       $response = $this->postJson('/api/investments',(array) $request,$this->getAuthTokenHeader());
+       $response->assertStatus(200);
+
+       $this->assertDatabaseHas(Entry::class,[
+           'amount' => -1000,
+           'type' => EntryType::Investments->value,
+           'category_id' => 60,
+           'account_id' => 1,
+           'planned' => 0,
+           'transfer' => 0,
+           'confirmed' => 1
+       ]);
+   }
+
+    /**
      * build model request
      * @param float $amount
      * @param DateTime $dateTime

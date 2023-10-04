@@ -25,6 +25,7 @@ class CategorySeeders extends Seeder
           $db->uuid = $cat->category->uuid;
           $db->name = strtolower($cat->category->label);
           $db->icon = $cat->category->icon;
+          $db->type = $cat->category->type;
           $db->save();
           foreach ($cat->subCateogy as $key => $value) {
 

@@ -7,4 +7,5 @@ enum EntryType : string {
     case Expenses = 'expenses';
     case Transfer = 'transfer';
     case Debit = 'debit';
+    case Investments = 'investments';
 }
