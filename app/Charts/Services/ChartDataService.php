@@ -83,7 +83,7 @@ class ChartDataService
     {
         return Expenses::user()->where('date_time', '>=', $this->startDate($start))
             ->where('planned', 0)->where('confirmed', 1)
-            ->where('date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))->get()
+            ->where('date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Expenses->value))->get()
             ->toArray();
     }
 
