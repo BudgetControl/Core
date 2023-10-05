@@ -43,7 +43,7 @@ final class Search {
      */ 
     public function getBalance(): float
     {
-        $amount = MathHelper::sum($this->entry);
+        $amount = sum($this->entry);
         return $amount;
     }
 

@@ -330,7 +330,7 @@ class StatsService
         return [
             'total' => $firstValue,
             'total_passed' => $secondValue,
-            'percentage' => MathHelper::percentage($firstValue, $secondValue)
+            'percentage' => percentage($firstValue, $secondValue)
         ];
     }
 
