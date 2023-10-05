@@ -153,7 +153,7 @@ class EntryService
             $label = new Labels();
             $label->uuid = uniqid();
             $label->name = strtolower($value);
-            $label->color = Helpers::color();
+            $label->color = color();
             $label->user_id = empty($model->user_id) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();

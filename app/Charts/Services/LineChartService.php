@@ -22,9 +22,15 @@ class LineChartService extends ChartDataService
     public function __construct(array $dateTime)
     {
         foreach ($dateTime as $date) {
+            $startDate = new DateTime($date['start']);
+            $startDate->modify('first day of month');
+
+            $endDate = new DateTime($date['end']);
+            $endDate->modify('last day of month');
+
             $this->dateTime[] = [
-                'start' => new DateTime($date['start']),
-                'end' => new DateTime($date['end']),
+                'start' => $startDate->format("Y-m-d"),
+                'end' => $endDate->format("Y-m-d"),
             ];
         }
     }
