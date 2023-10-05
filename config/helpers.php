@@ -85,6 +85,22 @@ if (!function_exists('sum')) {
     }
 }
 
+if(!function_exists("last_day_of_month")) {
+    function last_day_of_month(string $dateTime, string $format = 'Y-m-d'): string {
+        $date = new DateTime($dateTime);
+        $date->modify('last day of this month');
+        return $date->format($format);
+    }
+}
+
+if(!function_exists("first_day_of_month")) {
+    function first_day_of_month(string $dateTime, string $format = 'Y-m-d'): string {
+        $date = new DateTime($dateTime);
+        $date->modify('first day of this month');
+        return $date->format($format);
+    }
+}
+
 if(!function_exists('sum_entries')) {
 
     /**
