@@ -10,6 +10,7 @@ use App\Charts\Entity\LineChart\LineChartPoint;
 use App\BudgetTracker\Enums\EntryType;
 use App\Charts\Entity\LineChart\LineChartSeries;
 use DateTime;
+use DateTimeZone;
 
 class LineChartService extends ChartDataService
 {
@@ -23,8 +24,8 @@ class LineChartService extends ChartDataService
     {
         foreach ($dateTime as $date) {
             $this->dateTime[] = [
-                'start' => new DateTime($date['start']),
-                'end' => new DateTime($date['end']),
+                'start' => new DateTime(first_day_of_month($date['start'])),
+                'end' => new DateTime(last_day_of_month($date['end'])),
             ];
         }
     }

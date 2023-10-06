@@ -51,7 +51,7 @@ final class Wallet {
     public function sum(array $entries): void
     {
       if(!empty($entries)) {
-            $this->balance += MathHelper::sum($entries);
+            $this->balance += sum($entries);
         }
     }
 }

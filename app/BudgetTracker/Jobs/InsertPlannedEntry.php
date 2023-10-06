@@ -105,6 +105,9 @@ class InsertPlannedEntry implements ShouldQueue
                     case "monthly":
                     $increment = "+1 Month";
                     break;
+                    case "weekly":
+                    $increment = "+7 Day";
+                    break;
                     case "yearly":
                     $increment = "+1 Year";
                     break;
