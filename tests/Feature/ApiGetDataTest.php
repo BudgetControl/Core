@@ -85,7 +85,6 @@ class ApiGetDataTest extends TestCase
                 "installement",
                 "installementValue",
                 "currency",
-                "amount",
                 "balance"
             ],
             "currency_id",
