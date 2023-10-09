@@ -13,7 +13,7 @@ class AccountDataTest extends TestCase
     public function testAccountBankDataObject()
     {
         $name = 'john_doe';
-        $color = '#928343';
+        $color = '#92834321';
         $balance = 1024.00;
         $currency = '1';
 
@@ -28,7 +28,7 @@ class AccountDataTest extends TestCase
     public function testAccountCreditCardInstallementDataObject()
     {
         $name = 'john_doe';
-        $color = '#928343';
+        $color = '#92834321';
         $balance = 1024.00;
         $currency = '1';
         $date = new \DateTime();
@@ -47,7 +47,7 @@ class AccountDataTest extends TestCase
     public function testAccountCreditCardDataObject()
     {
         $name = 'john_doe';
-        $color = '#928343';
+        $color = '#92834321';
         $balance = 1024.00;
         $currency = '1';
         $date = new \DateTime();
@@ -68,7 +68,7 @@ class AccountDataTest extends TestCase
     public function testAccountSavingDataObject()
     {
         $name = 'john_doe';
-        $color = '#928343';
+        $color = '#92834312';
         $balance = 1024.00;
         $currency = '1';
         $amount = 200;
