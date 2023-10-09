@@ -19,7 +19,7 @@ class AccountTest extends TestCase
         "currency" => "1",
         "installement" => 0,
         "balance" => 0,
-        "exclude_from_stats" => 1
+        "exclude_from_stats" => 0
     ];
 
     const STRUCTURE = [
