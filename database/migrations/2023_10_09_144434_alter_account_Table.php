@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('accounts', function (Blueprint $table) {
             $table->boolean('exclude_from_stats')->default(false);
+            $table->dropColumn("amount");
         });
     }
 

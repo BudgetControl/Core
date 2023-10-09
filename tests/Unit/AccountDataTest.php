@@ -17,7 +17,7 @@ class AccountDataTest extends TestCase
         $balance = 1024.00;
         $currency = 'EUR';
 
-        $user = new BankAccount($name,$currency,$color,$balance);
+        $user = new BankAccount($name,$currency,$color,$balance,0);
 
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($currency, $user->getCurrency());
@@ -34,7 +34,7 @@ class AccountDataTest extends TestCase
         $date = new \DateTime();
         $installement = false;
 
-        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement);
+        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,0);
 
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($currency, $user->getCurrency());
@@ -54,7 +54,7 @@ class AccountDataTest extends TestCase
         $installement = true;
         $installementValue = 100;
 
-        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,$installementValue);
+        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,0);
 
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($currency, $user->getCurrency());
@@ -74,7 +74,7 @@ class AccountDataTest extends TestCase
         $amount = 200;
         $date = new \DateTime();
 
-        $user = new SavingAccount($name,$currency,$color,$amount, $balance, $date);
+        $user = new SavingAccount($name,$currency,$color, $balance, $date,0);
 
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($currency, $user->getCurrency());
