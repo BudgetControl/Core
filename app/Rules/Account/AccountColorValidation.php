@@ -20,7 +20,7 @@ class AccountColorValidation implements ValidationRule
          $code = str_replace(' ', '', $value);
          $code = str_replace('#', '', $value);
 
-         if (strlen($code) !== 6) {
+         if (strlen($code) !== 8) {
              $result = false;
          }
  

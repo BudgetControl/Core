@@ -35,6 +35,9 @@ class Account implements AccountInterface
     /** @var \DateTime|null */
     protected $date = null;
 
+    /** @var bool */
+    protected $excludeFromStats = false;
+
     public function toArray()
     {
         return [
@@ -46,7 +49,7 @@ class Account implements AccountInterface
             'installementValue' => $this->installementValue,
             'date' => $this->date,
             'balance' => $this->balance,
-            'amount' => $this->amount
+            'exclude_from_stats' => $this->excludeFromStats
         ];
     }
 
@@ -122,4 +125,9 @@ class Account implements AccountInterface
     {
         return $this->installement;
     }
+
+    public function hash(): string{
+        return "";
+    }
+    
 }
