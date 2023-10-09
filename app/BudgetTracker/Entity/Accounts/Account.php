@@ -130,4 +130,12 @@ class Account implements AccountInterface
         return "";
     }
     
+
+    /**
+     * Get the value of excludeFromStats
+     */
+    public function getExcludeFromStats()
+    {
+        return $this->excludeFromStats;
+    }
 }

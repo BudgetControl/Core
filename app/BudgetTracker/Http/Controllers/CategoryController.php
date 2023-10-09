@@ -36,6 +36,17 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	}
 
 	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, int $id): \Illuminate\Http\Response
+	{
+		return response('nothing');
+	}
+
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param int $id
