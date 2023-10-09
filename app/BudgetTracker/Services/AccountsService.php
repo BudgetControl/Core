@@ -59,6 +59,7 @@ class AccountsService
             $entry->currency = $account['currency'];
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
+            $entry->date = empty(@$account['date']) ? null : $account['date'];
 
             $entry->save();
             

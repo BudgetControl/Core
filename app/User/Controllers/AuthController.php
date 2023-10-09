@@ -184,11 +184,9 @@ class AuthController extends Controller
                     "color" => "#F9A60214",
                     "type" => "Cash",
                     "balance" => 0,
-                    "installement" => false,
                     "installementValue" => 0,
                     "currency" => 1,
                     "exclude_from_stats" => 0
-
                 ]);
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
