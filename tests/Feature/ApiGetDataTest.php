@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Tests\Feature\AuthTest;
+require_once 'app/User/Tests/AuthTest.php';
 
 class ApiGetDataTest extends TestCase
 {

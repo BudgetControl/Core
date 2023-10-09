@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->boolean('exclude_from_stats')->default(false);
+            $table->integer('exclude_from_stats')->default(false);
             $table->dropColumn("amount");
         });
     }
