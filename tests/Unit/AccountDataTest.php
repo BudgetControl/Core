@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\BudgetTracker\Entity\Accounts\BankAccount;
 use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
-
+use App\BudgetTracker\Entity\Accounts\CreditCardRevolvingAccount;
 
 class AccountDataTest extends TestCase
 {
@@ -20,7 +20,7 @@ class AccountDataTest extends TestCase
         $user = new BankAccount($name,$currency,$color,$balance,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals($currency, $user->getCurrency());
+        $this->assertEquals(1, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
     }
@@ -37,7 +37,7 @@ class AccountDataTest extends TestCase
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals($currency, $user->getCurrency());
+        $this->assertEquals(1, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -51,17 +51,35 @@ class AccountDataTest extends TestCase
         $balance = 1024.00;
         $currency = '1';
         $date = new \DateTime();
-        $installement = true;
-        $installementValue = 100;
 
-        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,0);
+        $user = new CreditCardAccount($name,$currency,$color,$balance,$date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals($currency, $user->getCurrency());
+        $this->assertEquals(1, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
-        $this->assertEquals($installement, $user->getInstallement());
+        $this->assertEquals(false, $user->getInstallement());
+    }
+
+    public function testAccountCreditCardRevolvingDataObject()
+    {
+        $name = 'john_doe';
+        $color = '#92834321';
+        $balance = 1024.00;
+        $currency = '1';
+        $date = new \DateTime();
+        $installement = true;
+        $installementValue = 100;
+
+        $user = new CreditCardRevolvingAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,true);
+
+        $this->assertEquals($name, $user->getName());
+        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals($color, $user->getColor());
+        $this->assertEquals($balance, $user->getBalance());
+        $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
+        $this->assertEquals($installement, true);
         $this->assertEquals($installementValue, $user->getInstallementValue());
     }
 
@@ -71,16 +89,14 @@ class AccountDataTest extends TestCase
         $color = '#92834312';
         $balance = 1024.00;
         $currency = '1';
-        $amount = 200;
         $date = new \DateTime();
 
         $user = new SavingAccount($name,$currency,$color, $balance, $date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals($currency, $user->getCurrency());
+        $this->assertEquals(1, $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
-        $this->assertEquals($amount, $user->getAmount());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
     }
 }
