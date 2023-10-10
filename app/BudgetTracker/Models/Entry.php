@@ -143,7 +143,16 @@ class Entry extends Model
      */
     public function scopeUser($query): void
     {
-        $query->where('user_id',UserService::getCacheUserID());
+        $query->where('entries.user_id',UserService::getCacheUserID());
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeStats($query): void
+    {
+        $query->leftJoin('accounts', 'accounts.id', '=', 'entries.account_id')
+        ->where("accounts.exclude_from_stats",0);
     }
 
     /**

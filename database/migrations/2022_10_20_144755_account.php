@@ -20,6 +20,7 @@ return new class extends Migration
         $table->string("uuid");
         $table->string("name");
         $table->string("color")->default("bg-lightBlue-200 text-lightBlue-600");
+        $table->integer('exclude_from_stats')->default(0);
         $table->softDeletes();
       });
     }

@@ -11,7 +11,7 @@ use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use App\BudgetTracker\Models\Account;
-use Tests\Feature\AuthTest;
+require_once 'app/User/Tests/AuthTest.php';
 
 class DeleteDataTest extends TestCase
 {

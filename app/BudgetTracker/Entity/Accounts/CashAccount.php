@@ -13,26 +13,26 @@ use DateTime;
 
 final class CashAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $amout, float $balance, DateTime $date)
+    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $exclude_from_stats)
     {
         $this->name = $name;
         $this->type = AccountType::Cash;
         $this->currency = $currency;
         $this->color = $color;
-        $this->amount = $amout;
         $this->date = $date->format('Y-m-d H:i:s');
         $this->balance = $balance;
+        $this->excludeFromStats = $exclude_from_stats;
 
         $this->validate();
 
     }
 
-    private function hash(): string
+    public function hash(): string
     {
         return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->date}");
     }
 
-    public function isEqualsTo(SavingAccount $account): bool
+    public function isEqualsTo(CashAccount $account): bool
     {
         return $this->hash() === $account->hash();
     }

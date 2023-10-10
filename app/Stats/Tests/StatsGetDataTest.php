@@ -12,7 +12,8 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Investments;
 use Tests\TestCase;
-use Tests\Feature\AuthTest;
+
+require_once 'app/User/Tests/AuthTest.php';
 
 class StatsGetDataTest extends TestCase
 {

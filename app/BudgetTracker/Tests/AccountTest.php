@@ -7,17 +7,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\BudgetTracker\Models\Account;
-use Tests\Feature\AuthTest;
+
+require_once 'app/User/Tests/AuthTest.php';
 
 class AccountTest extends TestCase
 {
     const PAYLOAD = [
         "name" => "bank account",
         "type" => "Bank",
-        "color" =>  "#000123",
-        "currency" => "EUR",
+        "color" =>  "#00012223",
+        "currency" => "1",
         "installement" => 0,
-        "balance" => 0
+        "balance" => 0,
+        "exclude_from_stats" => 0
     ];
 
     const STRUCTURE = [
@@ -71,7 +73,7 @@ class AccountTest extends TestCase
         $request['installement'] = 1;
         $request['installementValue'] = 200.00;
         $request['date'] = '2023-06-12';
-        $request['type'] = 'CreditCard';
+        $request['type'] = 'Credit Card';
 
         $response = $this->post('/api/accounts/', $request, $this->getAuthTokenHeader());
 

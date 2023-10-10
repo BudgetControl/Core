@@ -2,17 +2,19 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Models\Account;
+use DateTime;
+use App\User\Services\UserService;
 use Illuminate\Support\Facades\Log;
+use App\BudgetTracker\Entity\Wallet;
+use App\BudgetTracker\Models\Account;
+use Illuminate\Database\Eloquent\Collection;
 use App\BudgetTracker\Entity\Accounts\BankAccount;
 use App\BudgetTracker\Entity\Accounts\CashAccount;
-use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
-use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Interfaces\AccountInterface;
-use DateTime;
-use Illuminate\Database\Eloquent\Collection;
-use App\BudgetTracker\Entity\Wallet;
-use App\User\Services\UserService;
+use App\BudgetTracker\Entity\Accounts\SavingAccount;
+use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
+use App\BudgetTracker\Entity\Accounts\InvestmentAccount;
+use App\BudgetTracker\Entity\Accounts\CreditCardRevolvingAccount;
 
 /**
  * Summary of SaveEntryService
@@ -21,6 +23,12 @@ class AccountsService
 {
     /** @var AccountInterface */
     private $account;
+    private int|null $id;
+
+    public function __construct(?int $id = null)
+    {
+        $this->id = $id;
+    }
 
     /**
      * save a resource
@@ -36,12 +44,10 @@ class AccountsService
             Log::debug("save Account -- " . json_encode($data));
 
             $this->makeObject($data);
-
             $account = $this->account->toArray();
-
             $entry = new Account();
-            if (!empty($data['uuid'])) {
-                $entry = Account::findFromUuid($data['uuid']);
+            if (!empty($this->id)) {
+                $entry = Account::findOrFail($this->id);
             }
 
             $entry->name = $account['name'];
@@ -51,8 +57,9 @@ class AccountsService
             $entry->installement = $account['installement'];
             $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
-            $entry->amount = $account['amount'];
-            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];;
+            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+            $entry->exclude_from_stats = $account['exclude_from_stats'];
+            $entry->date = empty(@$account['date']) ? null : $account['date'];
 
             $entry->save();
             
@@ -98,18 +105,24 @@ class AccountsService
             $data['date'] = date("Y-m-d H:i:s");
         }
         
-        switch ($data['type']) {
-            case 'CreditCard':
-                $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installement'], $data['installementValue']);
+        switch (trim($data['type'])) {
+            case 'Credit Card':
+                $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['exclude_from_stats']);
+                break;
+            case 'Credit Card Revolving':
+                $this->account = new CreditCardRevolvingAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installement'], $data['installementValue'],$data['exclude_from_stats']);
                 break;
             case 'Bank':
-                $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['balance']);
+                $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['balance'],$data['exclude_from_stats']);
                 break;
             case 'Saving':
-                $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['balance'], $this->makeTime($data['date']));
+                $this->account = new SavingAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']),$data['exclude_from_stats']);
                 break;
             case 'Cash':
-                $this->account = new CashAccount($data['name'], $data['currency'], $data['color'], $data['amount'], $data['balance'], $this->makeTime($data['date']));
+                $this->account = new CashAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']),$data['exclude_from_stats']);
+                break;
+            case 'Investment':
+                $this->account = new InvestmentAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $data['exclude_from_stats']);
                 break;
             default:
                 throw new \Exception("Account type is ivalid");
