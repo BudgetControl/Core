@@ -5,7 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Tests\Feature\AuthTest;
+
+require_once 'app/User/Tests/AuthTest.php';
 
 class ApiGetChartTest extends TestCase
 {
