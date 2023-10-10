@@ -32,7 +32,7 @@ class AccountsService
 
     public function all()
     {
-        return Account::all();
+        return Account::Sorting()->get();
     }
 
     /**
