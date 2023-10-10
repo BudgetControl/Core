@@ -30,6 +30,11 @@ class AccountsService
         $this->id = $id;
     }
 
+    public function all()
+    {
+        return Account::all();
+    }
+
     /**
      * save a resource
      * @param array $data
