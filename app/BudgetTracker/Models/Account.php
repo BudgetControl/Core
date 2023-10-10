@@ -75,5 +75,18 @@ class Account extends Model
         $query->where('exclude_from_stats',0);
     }
 
+    /**
+     * Get all of the models from the database.
+     *
+     * @param  array|mixed  $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function all($columns = ['*'])
+    {
+        self::orderBy('sorting');
+        $data = parent::all($columns);
+        return $data;
+    }
+
 
 }

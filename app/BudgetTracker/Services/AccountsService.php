@@ -60,6 +60,7 @@ class AccountsService
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
             $entry->date = empty(@$account['date']) ? null : $account['date'];
+            $entry->sorting = empty(@$data['sorting']) ? null : $data['sorting'];
 
             $entry->save();
             
