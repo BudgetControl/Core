@@ -21,7 +21,7 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	public function index(): \Illuminate\Http\JsonResponse
 	{
 		$account = new AccountsService();
-		$account = $account->read();
+		$account = $account->all();
 		return response()->json(new ResponseService($account->toArray()));
 	}
 
