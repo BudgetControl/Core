@@ -83,13 +83,13 @@ class TransferService extends EntryService
         );
 
         if(!empty($this->uuid)) {
-            $transfer = TransferModel::findFromUuid($entry['transfer_relation'],$user_id);
+            $transfer = TransferModel::findFromUuid($entry->getTransfer_relation(),$user_id);
             if(!empty($transfer)) {
-                $entry->setUuid($entry['transfer_relation']);
+                $entry->setUuid($entry->getTransfer_relation());
             }
         }
 
-        $entry->setAccount(Account::find($data['transfer_id']));
+        $entry->setAccount(Account::find($entry->getTransfer()));
 
         return $entry;
 
