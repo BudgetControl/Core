@@ -65,8 +65,6 @@ class TransferService extends EntryService
      */
     private function prepareInverted(array $data): Transfer
     {
-        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
-        $uuid = null;
 
         $entry = new Transfer(
             $data['amount'] * -1,
@@ -75,7 +73,7 @@ class TransferService extends EntryService
             new DateTime($data['date_time']),
             $data['waranty'],
             $data['confirmed'],
-            Account::findOrFail($data['account_id']),
+            Account::findOrFail($data['transfer_id']),
             PaymentsTypes::findOrFail($data['payment_type']),
             new \stdClass(),
             $data['label'],
@@ -84,13 +82,11 @@ class TransferService extends EntryService
 
         //Is if a update?
         if(!empty($this->uuid)) {
-            $transfer = TransferModel::findFromUuid($data['transfer_to'],$user_id);
+            $transfer = TransferModel::findFromUuid($this->uuid);
             if(!empty($transfer)) {
-                $entry->setUuid($transfer->uuid);
+                $entry->setUuid($transfer->transfer_relation);
             }
         }
-
-        $entry->setAccount(Account::find($data['transfer_id']));
 
         return $entry;
 
