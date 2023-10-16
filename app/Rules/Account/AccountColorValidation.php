@@ -15,14 +15,18 @@ class AccountColorValidation implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $result = true;
+        $result = false;
         
          $code = str_replace(' ', '', $value);
          $code = str_replace('#', '', $value);
 
-         if (strlen($code) !== 8) {
-             $result = false;
+         if (strlen($code) === 8) {
+             $result = true;
          }
+
+         if (strlen($code) === 6) {
+            $result = true;
+        }
  
          if (!ctype_xdigit($code)) {
             $result = false;
