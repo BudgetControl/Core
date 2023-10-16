@@ -16,6 +16,7 @@ class SearchTest extends TestCase
 
     const ENTRY = [
         "data" => [
+            [
                 "uuid",
                 "amount",
                 "note",
@@ -52,6 +53,7 @@ class SearchTest extends TestCase
                     "color"
                 ],
                 "geolocation"
+            ]
         ],
         "balance",
         "hasMorePages",
