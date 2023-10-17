@@ -14,6 +14,10 @@ class Account extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected  $fillable = [
+        'sorting'
+    ];
+
     public $hidden = [
         "created_at",
         "updated_at",

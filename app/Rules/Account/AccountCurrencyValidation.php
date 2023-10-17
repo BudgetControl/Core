@@ -18,7 +18,7 @@ class AccountCurrencyValidation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = false;
-        $currency = ModelsCurrency::findOrFail($value);
+        $currency = ModelsCurrency::where('name',$value)->firstOrFail();
         
         if(array_key_exists($currency->name,Currency::data)) {
             $result = true;
