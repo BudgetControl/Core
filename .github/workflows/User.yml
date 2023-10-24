@@ -2,9 +2,7 @@ name: Laravel
 
 on:
   push:
-    branches: [ "master"]
-  pull_request:
-    branches: ["master", "stable/*" ]
+    branches: ["feature/user/*", "bugfix/user/*" ]
 
 jobs:
   laravel-tests:
@@ -33,9 +31,9 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_DATABASE: database/database.sqlite app/BudgetTracker/User
         LANG: it
-      run: vendor/bin/phpunit
+      run: vendor/bin/phpunit 
     services:
       mysql:
         image: mysql:latest
