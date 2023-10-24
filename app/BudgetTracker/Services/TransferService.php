@@ -121,7 +121,6 @@ class TransferService extends EntryService
         $entryModel = new TransferModel();
         $findEntry = TransferModel::findFromUuid($entry->getUuid(),$userId);
         if (!empty($findEntry)) {
-            AccountsService::updateBalance($entry->getAmount() *-1,$entry->getAccount()->id);
             $entryModel = $findEntry;
         }
 
