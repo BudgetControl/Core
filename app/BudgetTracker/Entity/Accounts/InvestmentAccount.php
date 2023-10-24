@@ -9,20 +9,16 @@ use App\Rules\Account\AccountTypeValidation;
 use App\Rules\Account\AccountColorValidation;
 use App\Rules\Account\AccountCurrencyValidation;
 
-use DateTime;
+final class InvestmentAccount extends Account {
 
-final class SavingAccount extends Account {
-
-    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, $exclude_from_stats)
+    public function __construct(string $name, string $currency, string $color, float $balance, bool $exclude_from_stats)
     {
         $this->name = $name;
-        $this->type = AccountType::Saving;
+        $this->type = AccountType::Investment;
         $this->currency = $currency;
         $this->color = $color;
-        $this->date = $date->format('Y-m-d H:i:s');
-        $this->balance = $balance;
         $this->excludeFromStats = $exclude_from_stats;
-        $this->excludeFromStats = true;
+        $this->balance = $balance;
 
         $this->validate();
 
@@ -30,10 +26,10 @@ final class SavingAccount extends Account {
 
     public function hash(): string
     {
-        return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->date}");
+        return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}");
     }
 
-    public function isEqualsTo(SavingAccount $account): bool
+    public function isEqualsTo(BankAccount $account): bool
     {
         return $this->hash() === $account->hash();
     }
@@ -52,8 +48,6 @@ final class SavingAccount extends Account {
             'type' => ['required', new AccountTypeValidation()],
             'color' => ['required',new AccountColorValidation()],
             'currency' => ['required', new AccountCurrencyValidation()],
-            'installementValue' => ['required','numeric'],
-            'date' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
             'balance' =>  ['required','numeric'],
         ];
 

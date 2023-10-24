@@ -181,13 +181,12 @@ class AuthController extends Controller
                 $serviceAccount->save([
                     "user_id" => $user->id,
                     "name" => "Cash",
-                    "color" => "F9A602",
+                    "color" => "#F9A60214",
                     "type" => "Cash",
                     "balance" => 0,
-                    "installement" => false,
                     "installementValue" => 0,
-                    "currency" => "EUR",
-                    "amount" => 0
+                    "currency" => 1,
+                    "exclude_from_stats" => 0
                 ]);
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");

@@ -137,7 +137,7 @@ class StatsController extends Controller
         $service = new StatsService($this->startDate, $this->endDate);
 
         return response()->json(new ResponseService(
-            $service->wallets(Account::user()->get())
+            $service->wallets(Account::user()->sorting()->get())
         ));
     }
 

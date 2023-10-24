@@ -21,7 +21,7 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	public function index(): \Illuminate\Http\JsonResponse
 	{
 		$account = new AccountsService();
-		$account = $account->read();
+		$account = $account->all();
 		return response()->json(new ResponseService($account->toArray()));
 	}
 
@@ -57,14 +57,15 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
+	 * @param string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request): \Illuminate\Http\Response
+	public function update(Request $request, int $id): \Illuminate\Http\Response
 	{
-		$account = new AccountsService();
+		$account = new AccountsService($id);
 		$account->save($request->toArray());
 
-		return response('all data stored'); 	
+		return response('all data stored');
 	}
 
 	/**

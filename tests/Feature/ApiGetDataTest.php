@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Tests\Feature\AuthTest;
+require_once 'app/User/Tests/AuthTest.php';
 
 class ApiGetDataTest extends TestCase
 {
@@ -85,7 +85,6 @@ class ApiGetDataTest extends TestCase
                 "installement",
                 "installementValue",
                 "currency",
-                "amount",
                 "balance"
             ],
             "currency_id",

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use App\BudgetTracker\Constants\Currency;
 use App\BudgetTracker\Enums\AccountType as AccountEnums;
+use App\BudgetTracker\Models\Currency as ModelsCurrency;
 
 class AccountCurrencyValidation implements ValidationRule
 {
@@ -17,8 +18,9 @@ class AccountCurrencyValidation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = false;
+        $currency = ModelsCurrency::findOrFail($value);
         
-        if(array_key_exists($value,Currency::data)) {
+        if(array_key_exists($currency->name,Currency::data)) {
             $result = true;
         }
 

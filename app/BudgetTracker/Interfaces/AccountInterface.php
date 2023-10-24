@@ -48,5 +48,7 @@ interface AccountInterface {
      * Get the value of installement
      */ 
     public function getInstallement();
+
+    public function hash(): string;
     
 }

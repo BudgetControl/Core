@@ -11,19 +11,20 @@ use App\Rules\Account\AccountCurrencyValidation;
 
 final class BankAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $balance)
+    public function __construct(string $name, string $currency, string $color, float $balance, bool $exclude_from_stats)
     {
         $this->name = $name;
         $this->type = AccountType::Bank;
         $this->currency = $currency;
         $this->color = $color;
         $this->balance = $balance;
+        $this->excludeFromStats = $exclude_from_stats;
 
         $this->validate();
 
     }
 
-    private function hash(): string
+    public function hash(): string
     {
         return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}");
     }

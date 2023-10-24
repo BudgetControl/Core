@@ -64,7 +64,20 @@ class Account extends Model
      */
     public function scopeUser(Builder $query): void
     {
-        $query->where('user_id',UserService::getCacheUserID());
+        $query->where('accounts.user_id',UserService::getCacheUserID());
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeStats(Builder $query): void
+    {
+        $query->where('exclude_from_stats',0);
+    }
+
+    public function scopeSorting(Builder $query): void
+    {
+        $query->orderBy("sorting");
     }
 
 
