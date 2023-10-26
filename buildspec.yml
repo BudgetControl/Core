@@ -43,3 +43,8 @@ phases:
    commands:
      - echo Run test
      - ./vendor/bin/phpunit
+
+artifacts:
+  files:
+    - '**/*'
+  name: serviceapplication-$(date +%Y-%m-%d)
