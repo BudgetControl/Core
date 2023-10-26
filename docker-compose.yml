@@ -21,7 +21,6 @@ services:
         dockerfile: Dockerfile
       volumes:
         - ./:/var/www/workdir
-        - .env:/app/.env
         - ../logapp:/app/storage/logs
       depends_on:
         - database
