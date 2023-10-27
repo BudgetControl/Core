@@ -22,17 +22,17 @@
     <testsuite name="Auth">
       <directory suffix="Test.php">./app/User/Tests</directory>
     </testsuite>
-    <!-- <testsuite name="Mailer">
-      <directory suffix="Test.php">./app/Mailer/Tests</directory>
-    </testsuite> -->
   </testsuites>
   <coverage/>
   <php>
     <env name="APP_ENV" value="testing"/>
     <env name="BCRYPT_ROUNDS" value="4"/>
     <env name="CACHE_DRIVER" value="array"/>
-    <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
-    <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+    <env name="DB_CONNECTION" value="mysql_phpunit"/>
+    <env name="PHPUNIT_DB_HOST" value="budgetcontrol-db"/>
+    <env name="PHPUNIT_DB_DATABASE" value="budgetV2_phpunit"/>
+    <env name="PHPUNIT_DB_USERNAME" value="rootuser"/>
+    <env name="PHPUNIT_DB_PASSWORD" value="rootpasswrord"/>
     <env name="MAIL_MAILER" value="array"/>
     <env name="QUEUE_CONNECTION" value="sync"/>
     <env name="SESSION_DRIVER" value="array"/>

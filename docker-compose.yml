@@ -58,3 +58,7 @@ services:
 volumes:
   mysql_persistent:
   bc_cache:
+
+networks:
+  budgetcontrol_network:
+    driver: bridge

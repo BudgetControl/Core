@@ -63,6 +63,18 @@ return [
             ]) : [],
         ],
 
+        'mysql_phpunit' => [
+            'driver' => 'mysql',
+            'host' => env('PHPUNIT_DB_HOST', 'localhost'),
+            'database' => env('PHPUNIT_DB_DATABASE', 'forge'),
+            'username' => env('PHPUNIT_DB_USERNAME', 'forge'),
+            'password' => env('PHPUNIT_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
