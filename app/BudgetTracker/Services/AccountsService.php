@@ -59,14 +59,17 @@ class AccountsService
             $entry->type = $account['type'];
             $entry->color = $account['color'];
             $entry->balance = $account['balance'];
-            $entry->installement = $account['installement'];
-            $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
             $entry->date = empty(@$account['date']) ? null : $account['date'];
             if(!empty(@$data['sorting'])) {
                 $entry->sorting = $data['sorting'];
+            }
+
+            if(!empty($account['installement'])) {
+                $entry->installement = $account['installement'];
+                $entry->installementValue = $account['installementValue'];
             }
 
             $entry->save();

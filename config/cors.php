@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
     
-    'allowed_origins' => [env('CORS_DOMAIN')], //This line means allow origin
+    'allowed_origins' => [],
     
     'allowed_origins_patterns' => [],
     
