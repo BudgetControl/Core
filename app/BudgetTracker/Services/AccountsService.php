@@ -88,7 +88,7 @@ class AccountsService
      * @return AccountInterface with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): Collection
+    public function read(int $id = null ): Collection
     {
 
         $entry = Account::user();

@@ -2,9 +2,8 @@
 
 namespace App\BudgetTracker\Jobs;
 
-use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Models\Entry as EntryModel;
 use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,9 +11,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\PlannedEntries;
-use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\Account;
-use App\BudgetTracker\Models\Currency;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +19,10 @@ use stdClass;
 class InsertPlannedEntry implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    const TIME = [
+        'daily','weekly','monthly','yearly'
+    ];
 
     /**
      * Create a new job instance.
@@ -42,20 +42,23 @@ class InsertPlannedEntry implements ShouldQueue
     public function handle()
     {   
         Log::info("Check for planned entries");
-        $this->insertEntry($this->getPlannedEntry());
+        foreach(self::TIME as $time) {
+            $this->insertEntry($this->getPlannedEntry($time));
+        }
     }
 
     /**
      * get planned entry from date
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function getPlannedEntry()
+    private function getPlannedEntry(string $time)
     {
         $date = date("Y-m-d H:i:s",time());
         $newDate = strtotime($date . "+1 month");
 
         $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s',$newDate))
         ->where("deleted_at",null)
+        ->where("planning", $time)
         ->where("end_date_time", ">=",date('Y-m-d H:i:s',time()))
         ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
@@ -69,6 +72,8 @@ class InsertPlannedEntry implements ShouldQueue
     private function insertEntry(\Illuminate\Database\Eloquent\Collection $data)
     {
         try {
+
+            /** @var EntryModel $request  */
             foreach ($data as $request) {
                 $type = EntryType::from($request->type);
 
@@ -78,6 +83,7 @@ class InsertPlannedEntry implements ShouldQueue
                 $entryArray = $entry->toArray();
                 $entryArray['user_id'] = $request->user_id;
                 $entryArray['label'] = [];
+                $entryArray['transfer'] = false;
                 $service->save($entryArray,$type);
 
                 Log::info("PLANNED INSERT:: " . json_encode($entry));
