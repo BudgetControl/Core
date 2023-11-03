@@ -17,8 +17,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new ActivatePlannedEntries())->hourly();
-        $schedule->job(new InsertPlannedEntry())->hourly();
-        $schedule->job(new CreditCartPlannedRecursiveEntry())->monthly();
+        $schedule->job(new InsertPlannedEntry())->daily();
+        // $schedule->job(new CreditCartPlannedRecursiveEntry())->monthly();
     }
 
     /**
