@@ -20,7 +20,7 @@ class AccountDataTest extends TestCase
         $user = new BankAccount($name,$currency,$color,$balance,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
     }
@@ -37,7 +37,7 @@ class AccountDataTest extends TestCase
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -55,7 +55,7 @@ class AccountDataTest extends TestCase
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -75,7 +75,7 @@ class AccountDataTest extends TestCase
         $user = new CreditCardRevolvingAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,true);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -94,7 +94,7 @@ class AccountDataTest extends TestCase
         $user = new SavingAccount($name,$currency,$color, $balance, $date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
