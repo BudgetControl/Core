@@ -15,7 +15,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
 
         $user = new BankAccount($name,$currency,$color,$balance,0);
 
@@ -30,7 +30,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
         $installement = false;
 
@@ -49,7 +49,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
 
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,0);
@@ -67,7 +67,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
         $installement = true;
         $installementValue = 100;
@@ -88,7 +88,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834312';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
 
         $user = new SavingAccount($name,$currency,$color, $balance, $date,0);
