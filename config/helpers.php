@@ -119,3 +119,21 @@ if(!function_exists('sum_entries')) {
 
     }
 }
+
+if(!function_exists('random_color')) {
+
+    /**
+     * generate random exadecimal color
+     */
+    function random_color(): string
+    {
+        $characters = '0123456789ABCDEF';
+        $color = '#';
+    
+        for ($i = 0; $i < 6; $i++) {
+            $color .= $characters[rand(0, 15)];
+        }
+    
+        return $color;
+    }
+}

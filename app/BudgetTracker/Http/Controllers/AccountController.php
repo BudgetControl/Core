@@ -5,10 +5,10 @@ namespace App\BudgetTracker\Http\Controllers;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
-use App\BudgetTracker\Models\Account;
-use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\AccountsService;
+use Exception;
+use Illuminate\Http\Response;
 
 class AccountController extends Controller implements ControllerResourcesInterface
 {
@@ -35,6 +35,25 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	{
 		$account = new AccountsService();
 		$account->save($request->toArray());
+
+		return response('all data stored');
+	}
+
+	/**
+	 * store new sorting value
+	 * @param int $accountId
+	 * @param int $sorting
+	 * 
+	 * @return Response
+	 */
+	public function sorting(int $accountId, int $sorting): Response
+	{
+		if(is_null($sorting)) {
+			throw new Exception("Sorting value muste be valid");
+		}
+
+		$account = new AccountsService($accountId);
+		$account->sorting($sorting);
 
 		return response('all data stored'); 	
 	}
