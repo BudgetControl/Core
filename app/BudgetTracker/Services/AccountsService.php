@@ -63,12 +63,15 @@ class AccountsService
             $entry->type = $account['type'];
             $entry->color = $account['color'];
             $entry->balance = $account['balance'];
-            $entry->installement = $account['installement'];
-            $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
             $entry->date = empty(@$account['date']) ? null : $account['date'];
+
+            if(!empty($account['installement'])) {
+                $entry->installement = $account['installement'];
+                $entry->installementValue = $account['installementValue'];
+            }
 
             $entry->save();
             
@@ -109,7 +112,7 @@ class AccountsService
      * @return AccountInterface with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): Collection
+    public function read(int $id = null ): Collection
     {
 
         $entry = Account::user();

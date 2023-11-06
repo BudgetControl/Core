@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/app
+hooks:
+  BeforeInstall:
+    - location: bin/scripts/BeforeInstall.sh
+  AfterInstall:
+    - location: bin/scripts/InstallApplication.sh
+      timeout: 3600
+  ApplicationStart:
+    - location: bin/scripts/RunFunctionalTests.sh
+      timeout: 3600
+  ValidateService:
+    - location: bin/scripts/MonitorService.sh
+      timeout: 3600
+file_exists_behavior: OVERWRITE

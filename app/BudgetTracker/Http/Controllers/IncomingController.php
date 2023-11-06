@@ -69,6 +69,7 @@ class IncomingController extends EntryController
 	{
 		try {
 			$service = new IncomingService($uuid);
+			$service->revertAccountWallet(EntryType::Incoming);
 			$service->save($request->toArray(), EntryType::Expenses, Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {

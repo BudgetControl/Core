@@ -12,21 +12,24 @@ services:
         MYSQL_USER: ${DB_USERNAME}
         MYSQL_PASSWORD: ${DB_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
+      volumes:
+        - mysql_persistent:/var/lib/mysql
+      networks:
+        - budgetcontrol_network
     bemodule:
       container_name: budgetcontrol-services
       build:
         context: .
         dockerfile: Dockerfile
-      ports:
-        - 3000:3000
       volumes:
         - ./:/var/www/workdir
-        - .env:/app/.env
+        - ../logapp:/app/storage/logs
       depends_on:
         - database
         - cache
       restart: unless-stopped
-      command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+      networks:
+        - budgetcontrol_network
     cache:
       container_name: budgetcontrol-redis
       image: redis:7.2-rc2-alpine
@@ -37,7 +40,35 @@ services:
         - '6379:6379'
       command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
       volumes: 
-        - cache:/data
+        - bc_cache:/data
+      networks:
+        - budgetcontrol_network
+    nginx:
+      container_name: budgetcontrol-proxy
+      image: nginx:stable-alpine
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./bin/nginx:/etc/nginx/conf.d
+        - ./bin/certbot/conf:/etc/letsencrypt
+        - ./bin/certbot/www:/var/www/certbot
+      networks:
+        - budgetcontrol_network
+    certbot:
+      image: certbot/certbot
+      container_name: budgetcontrol-certbot
+      volumes:
+      - ./bin/certbot/conf:/etc/letsencrypt
+      - ./bin/certbot/www:/var/www/certbot
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      networks:
+        - budgetcontrol_network
+
 volumes:
-  cache:
-    driver: local
+  mysql_persistent:
+  bc_cache:
+
+networks:
+  budgetcontrol_network:
+    driver: bridge

@@ -67,9 +67,6 @@ class EntryService
       if (!empty($this->uuid)) {
           $entry->setUuid($this->uuid);
           $entryQuery = EntryModel::findFromUuid($this->uuid);
-          $entryQuery->amount = $entryQuery->amount *-1;
-          $entryDb = EntryModel::buildEntity($entryQuery->toArray(),$type);
-          $this->updateBalance($entryDb);
           $entryModel = $entryQuery;
       }
 
@@ -170,6 +167,19 @@ class EntryService
         }
       }
     }
+  }
+
+  /**
+   * revert account wallet if update
+   */
+  public function revertAccountWallet(EntryType $type): void
+  {
+      if (!empty($this->uuid)) {
+          $entryQuery = EntryModel::findFromUuid($this->uuid);
+          $entryQuery->amount = $entryQuery->amount *-1;
+          $entryDb = EntryModel::buildEntity($entryQuery->toArray(),$type);
+          $this->updateBalance($entryDb);
+      }
   }
 
   /**

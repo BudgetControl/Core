@@ -49,3 +49,4 @@ Homestead.json
 .phpunit.result.cache
 bootstrap/cache/*
 config/cors.php
+bin/certbot/*

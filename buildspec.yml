@@ -1,0 +1,50 @@
+version: 0.2
+
+env:
+  variables:
+    DB_CONNECTION: sqlite
+    DB_DATABASE: database/database.sqlite
+    LANG: it
+
+phases:
+ install:
+   commands:
+     - |
+         #Update
+         apt-get update
+
+         # Install SQLITE3
+         echo Install SQLITE3
+         apt-get install -y sqlite3
+
+         #Install composer
+         echo Install composer
+         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+         php composer-setup.php ;
+         php -r "unlink('composer-setup.php');" ;
+         mv composer.phar /usr/local/bin/composer
+
+         # Create configurations
+         echo Create configurations
+         cp .env.testing .env
+         mkdir -p database
+         touch database/database.sqlite
+         php artisan key:generate
+         chmod -R 777 storage bootstrap/cache
+         chmod -R 777 storage
+
+ build:
+   commands:
+     - echo Install application
+     - composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+     - php artisan migrate --seed
+
+ post_build:
+   commands:
+     - echo Run test
+     - ./vendor/bin/phpunit
+
+artifacts:
+  files:
+    - '**/*'
+  name: serviceapplication-$(date +%Y-%m-%d)

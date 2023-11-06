@@ -58,7 +58,6 @@ class ExpensesService extends EntryService
             if (!empty($this->uuid)) {
                 $entry->setUuid($this->uuid);
                 $entryDb = Entry::findFromUuid($this->uuid);
-                AccountsService::updateBalance($entryDb->amount *-1,$entryDb->account_id);
                 $entryModel = $entryDb;
             }
 

@@ -123,7 +123,7 @@ class Entry extends Model
      */
     public function scopeWithRelations($query): void
     {
-        $query->with('label')->with('subCategory.category')->with('account')->orderBy('date_time','desc')
+        $query->with('label')->with('subCategory.category')->with('account')->with("payee")->orderBy('date_time','desc')
         ->where('user_id',UserService::getCacheUserID());
     }
 
