@@ -16,7 +16,7 @@ class AccountTest extends TestCase
         "name" => "bank account",
         "type" => "Bank",
         "color" =>  "#00012223",
-        "currency" => "1",
+        "currency" => "EUR",
         "installement" => 0,
         "balance" => 0,
         "exclude_from_stats" => 0

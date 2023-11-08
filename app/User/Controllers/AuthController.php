@@ -185,7 +185,7 @@ class AuthController extends Controller
                     "type" => "Cash",
                     "balance" => 0,
                     "installementValue" => 0,
-                    "currency" => 1,
+                    "currency" => 'EUR',
                     "exclude_from_stats" => 0
                 ]);
             } catch (Exception $e) {
