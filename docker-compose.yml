@@ -27,9 +27,9 @@ services:
       depends_on:
         - database
         - cache
-      restart: unless-stopped
       networks:
         - budgetcontrol_network
+      restart: unless-stopped
     cache:
       container_name: budgetcontrol-redis
       image: redis:7.2-rc2-alpine
