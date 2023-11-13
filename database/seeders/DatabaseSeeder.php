@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
                 \Database\Seeders\CurrencySeeders::class,
                 \Database\Seeders\PaymentTypeSeeders::class,
                 \Database\Seeders\LabelSeeders::class,
-                \Database\Seeders\ActionJobConfigSeeders::class,
                 \Database\Seeders\AccountSeed::class,
                 \Database\Seeders\PlannedEntriesSeed::class,
                 \Database\Seeders\PayeesSeed::class,
