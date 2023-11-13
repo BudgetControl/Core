@@ -2,12 +2,16 @@
 
 namespace App\BudgetTracker\Models;
 
-use App\BudgetTracker\Factories\LabelsFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\User\Services\UserService;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\Account\AccountTypeValidation;
+use App\Rules\Account\AccountColorValidation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\BudgetTracker\Factories\LabelsFactory;
+use App\Rules\Account\AccountCurrencyValidation;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Labels extends Model
 {
@@ -16,7 +20,8 @@ class Labels extends Model
     public $hidden = [
         "created_at",
         "updated_at",
-        "deleted_at"
+        "deleted_at",
+        "user_id"
     ];
 
     public function __construct(array $attributes = [])
@@ -27,8 +32,6 @@ class Labels extends Model
             $this->$k = $v;
         }
     }
-
-    
 
     /**
      * Create a new factory instance for the model.
@@ -56,21 +59,28 @@ class Labels extends Model
     }
 
     /**
-     * override get method for not return trashed elements
-     * 
-     * @return \Illuminate\Database\Eloquent\Collection<int, static>
-     */
-    public function get($columns = ['*'])
-    {
-        $results = parent::get($columns);
-        return $results->withoutTrashed();
-    }
-
-    /**
      * scope user
      */
     public function scopeUser($query): void
     {
         $query->where('user_id', UserService::getCacheUserID());
+    }
+    
+    /**
+     * read a resource
+     *
+     * @param array $data
+     * @return void
+     * @throws ValidationException
+     */
+    private function validate(): void
+    {
+        $rules = [
+            'name' => ['required', 'string'],
+            'color' => ['required',new AccountColorValidation()],
+            'user_id' => ['required', 'integer'],
+        ];
+
+        Validator::validate($this->toArray(), $rules);
     }
 }

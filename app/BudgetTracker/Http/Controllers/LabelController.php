@@ -8,6 +8,8 @@ use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Models\Labels;
+use App\BudgetTracker\Services\LabelService;
+use PhpParser\Node\Stmt\Label;
 
 class LabelController extends Controller implements ControllerResourcesInterface
 {
@@ -19,8 +21,10 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Labels::User()->orderBy('name')->get();
-		return response()->json(new ResponseService($incoming));
+		$data = new LabelService();
+		$labels = $data->order('name')->get();
+
+		return response()->json($labels->toArray());
 	}
 
 	/**
@@ -31,7 +35,32 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
 	{
-		return response('nothing');
+		$data = LabelService::create();
+		$data->save([
+			'name' => $request->name,
+			'color' => $request->color,
+			'archive' => $request->archive
+		]);
+
+		return response('ok');
+	}
+
+		/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(int $id, Request $request): \Illuminate\Http\Response
+	{
+		$data = new LabelService(LabelService::SELECT);
+		$data->save([
+			'name' => $request->name,
+			'color' => $request->color,
+			'archive' => $request->archive
+		]);
+
+		return response('ok');
 	}
 
 	/**
@@ -42,7 +71,11 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		return response()->json([],'nothing');
+		$data = new LabelService(LabelService::SELECT);
+		$data->read($id);
+		$labels = $data->get();
+
+		return response()->json($labels->toArray());
 	}
 
 	/**
