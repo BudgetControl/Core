@@ -10,6 +10,7 @@ use App\Rules\Account\AccountColorValidation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\BudgetTracker\Factories\LabelsFactory;
 use App\Rules\Account\AccountCurrencyValidation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -64,23 +65,5 @@ class Labels extends Model
     public function scopeUser($query): void
     {
         $query->where('user_id', UserService::getCacheUserID());
-    }
-    
-    /**
-     * read a resource
-     *
-     * @param array $data
-     * @return void
-     * @throws ValidationException
-     */
-    private function validate(): void
-    {
-        $rules = [
-            'name' => ['required', 'string'],
-            'color' => ['required',new AccountColorValidation()],
-            'user_id' => ['required', 'integer'],
-        ];
-
-        Validator::validate($this->toArray(), $rules);
     }
 }

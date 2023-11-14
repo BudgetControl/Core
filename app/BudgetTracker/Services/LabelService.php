@@ -5,33 +5,59 @@ namespace App\BudgetTracker\Services;
 use Exception;
 use App\User\Services\UserService;
 use App\BudgetTracker\Models\Labels;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use App\BudgetTracker\Entity\BudgetTracker;
 use Illuminate\Database\Eloquent\Collection;
+use App\BudgetTracker\Services\BudgetTrackerService;
 
 class LabelService implements BudgetTrackerService
 {
     private Builder|Model $label;
 
-    const CREATE = 1;
-    const SELECT = 2;
-
-    public function __construct(?int $mode = null)
+    
+    private function __construct(Builder|Model $label)
     {
-        switch($mode) {
-            case self::CREATE:
-                $label = new Labels();
-                break;
-            case self::SELECT:
-                $label = Labels::User();
-                break;
-            default:
-                $label = Labels::User();
-                break;
-                
-        }
-
         $this->label = $label;
+    }
+
+    /**
+     * create new instance 
+     * @param int $id
+     * 
+     * @return self
+     */
+    public static function create(): self
+    {
+        return new LabelService(
+            new Labels()
+        );
+    }
+
+    /**
+     * find an instance 
+     * @param int $id
+     * 
+     * @return self
+     */
+    public static function find(int $id): self
+    {   
+        return new LabelService(
+            Labels::User()->where('id',$id)
+        );
+    }
+
+    /**
+     * select all instance 
+     * @param int $id
+     * 
+     * @return self
+     */
+    public static function select(): self
+    {
+        return new LabelService(
+            Labels::User()
+        );
     }
 
     /**
@@ -42,20 +68,10 @@ class LabelService implements BudgetTrackerService
      */
     public function archived(bool $value = false): self
     {
-        $this->label->where('archive',$value);
-
-        return $this;
-    }
-
-    /**
-     *  read repository
-     *
-     *  @param mixed $field for where clause
-     *  @return self
-     */
-    public function read(mixed $field): self
-    {
-        $this->label->where('id', $field);
+        $this->label->where('archive',0);
+        if($value === true) {
+            $this->label->where('archive',1);
+        }
 
         return $this;
     }
@@ -63,17 +79,35 @@ class LabelService implements BudgetTrackerService
     /**
      *  save repository
      *
-     *  @param array $data for where clause
+     *  @param BudgetTracker $data for where clause
      *  @return void
      */
-    public function save(array $data): void
+    public function update(BudgetTracker $data): void
     {
-        /** @var Labels $label */
-        $label = $this->label;
-        $label->name = $data['name'];
-        $label->color = $data['name'];
+        /** @var \App\BudgetTracker\Entity\Label $data */
+        $label = $this->label->first();
+        $label->name = $data->getName();
+        $label->color = $data->getColor();
+        $label->archive = $data->getArchive();
         $label->user_id = UserService::getCacheUserID();
-        $label->validate();
+
+        $label->save();
+    }
+
+    /**
+     *  save repository
+     *
+     *  @param BudgetTracker $data for where clause
+     *  @return void
+     */
+    public function save(BudgetTracker $data): void
+    {
+        /** @var \App\BudgetTracker\Entity\Label $data */
+        $label = $this->label;
+        $label->name = $data->getName();
+        $label->color = $data->getColor();
+        $label->archive = $data->getArchive();
+        $label->user_id = UserService::getCacheUserID();
 
         $label->save();
     }
@@ -97,9 +131,7 @@ class LabelService implements BudgetTrackerService
      */
     public function get(): Collection
     {
-        $label = $this->label->get('*');
-
-        return $label;
+        return $this->label->get('*');
     }
 
     /**

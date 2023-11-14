@@ -2,14 +2,12 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Entity\Label as EntityLabel;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
-use League\Config\Exception\ValidationException;
-use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Services\LabelService;
-use PhpParser\Node\Stmt\Label;
 
 class LabelController extends Controller implements ControllerResourcesInterface
 {
@@ -21,8 +19,8 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$data = new LabelService();
-		$labels = $data->order('name')->get();
+		$data = LabelService::select();
+		$labels = $data->archived()->order('name')->get();
 
 		return response()->json($labels->toArray());
 	}
@@ -36,11 +34,13 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	public function store(Request $request): \Illuminate\Http\Response
 	{
 		$data = LabelService::create();
-		$data->save([
-			'name' => $request->name,
-			'color' => $request->color,
-			'archive' => $request->archive
-		]);
+		$data->save(
+			new EntityLabel(
+				$request->name,
+				$request->color,
+				$request->archive
+			)
+		);
 
 		return response('ok');
 	}
@@ -51,14 +51,15 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 * @param Request $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(int $id, Request $request): \Illuminate\Http\Response
+	public static function update(int $id, Request $request): \Illuminate\Http\Response
 	{
-		$data = new LabelService(LabelService::SELECT);
-		$data->save([
-			'name' => $request->name,
-			'color' => $request->color,
-			'archive' => $request->archive
-		]);
+		LabelService::find($id)->update(
+			new EntityLabel(
+				$request->name,
+				$request->color,
+				$request->archive
+			)
+		);
 
 		return response('ok');
 	}
@@ -71,10 +72,7 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$data = new LabelService(LabelService::SELECT);
-		$data->read($id);
-		$labels = $data->get();
-
+		$labels = LabelService::find($id)->get();
 		return response()->json($labels->toArray());
 	}
 
