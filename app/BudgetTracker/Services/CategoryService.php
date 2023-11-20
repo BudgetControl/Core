@@ -8,7 +8,6 @@ use App\BudgetTracker\Models\Labels;
 use App\User\Controllers\Controller;
 use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\ActionJobConfiguration;
 
 
 class CategoryService 
@@ -19,8 +18,6 @@ class CategoryService
 
     public function __construct(int $id = 0)
     {
-        $this->categories = ActionJobConfiguration::where("action","category")->get();
-        $this->labels = ActionJobConfiguration::where("action","label")->get();
         $this->id = $id;
     }
 

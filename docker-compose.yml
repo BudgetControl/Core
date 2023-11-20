@@ -39,8 +39,6 @@ services:
       ports:
         - '6379:6379'
       command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-      volumes: 
-        - bc_cache:/data
       networks:
         - budgetcontrol_network
     nginx:

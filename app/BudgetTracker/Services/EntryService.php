@@ -63,11 +63,12 @@ class EntryService
         $data['label']
       );
 
+
       $entryModel = new EntryModel();
       if (!empty($this->uuid)) {
-          $entry->setUuid($this->uuid);
-          $entryQuery = EntryModel::findFromUuid($this->uuid);
-          $entryModel = $entryQuery;
+        $entry->setUuid($this->uuid);
+        $entryQuery = EntryModel::findFromUuid($this->uuid);
+        $entryModel = $entryQuery;
       }
 
       $entryModel->uuid = $entry->getUuid();
@@ -83,16 +84,19 @@ class EntryService
       $entryModel->confirmed = $entry->getConfirmed();
       $entryModel->type = $entry->getType();
       $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+
+      $walletService = new WalletService($entryModel);
+
       //TODO: fixme
-      if(!is_null($payee)) {
+      if (!is_null($payee)) {
         $entryModel->payee_id = $payee->id;
       }
       $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
-      $this->updateBalance($entry);
-
+      $walletService->sum();
     } catch (\Exception $e) {
+
       $errorCode = uniqid();
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
       throw new \Exception("Ops an errro occurred " . $errorCode);
@@ -116,7 +120,7 @@ class EntryService
     if ($id === null) {
       $entry = $entry->get();
     } else {
-      $entry = $entry->where('uuid',$id)->get();
+      $entry = $entry->where('uuid', $id)->get();
     }
 
     if (!empty($entry)) {
@@ -172,14 +176,15 @@ class EntryService
   /**
    * revert account wallet if update
    */
-  public function revertAccountWallet(EntryType $type): void
+  public function revertAccountWallet(): void
   {
-      if (!empty($this->uuid)) {
-          $entryQuery = EntryModel::findFromUuid($this->uuid);
-          $entryQuery->amount = $entryQuery->amount *-1;
-          $entryDb = EntryModel::buildEntity($entryQuery->toArray(),$type);
-          $this->updateBalance($entryDb);
-      }
+    if (!empty($this->uuid)) {
+      $entryQuery = EntryModel::findFromUuid($this->uuid);
+      $entryQuery->amount = $entryQuery->amount * -1;
+
+      $walletService = new WalletService($entryQuery);
+      $walletService->subtract();
+    }
   }
 
   /**
@@ -216,25 +221,5 @@ class EntryService
     }
 
     return $returnEntry;
-  }
-
-  /**
-   * update balance
-   * @param EntryInterface $entry
-   * 
-   * @return void
-   */
-  protected function updateBalance(EntryInterface $entry): void
-  {
-      $amount = $entry->getAmount();
-      $isPlanned = $entry->getPlanned();
-      $isConfirmed = $entry->getConfirmed();
-      $account = $entry->getAccount();
-
-      //update balance
-      if($isPlanned == false && $isConfirmed == true) {
-        AccountsService::updateBalance($amount,$account->id);
-        Log::debug("Update balance ".$amount." , ".$account->id);
-      }
   }
 }
