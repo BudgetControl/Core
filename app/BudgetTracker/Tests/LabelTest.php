@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 require_once 'app/User/Tests/AuthTest.php';
 
-class AccountTest extends TestCase
+class LabelTest extends TestCase
 {
     const STRUCTURE = [
         "archive",
