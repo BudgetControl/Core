@@ -95,6 +95,7 @@ class EntryService
 
       $this->attachLabels($entry->getLabels(), $entryModel);
       $walletService->sum();
+      
     } catch (\Exception $e) {
 
       $errorCode = uniqid();

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class WalletService
 {
 
-    private EntryInterface $entry;
+    private Model $entry;
 
     public function __construct(Model $entry)
     {
@@ -18,7 +18,6 @@ class WalletService
 
     /**
      * update balance
-     * @param EntryInterface $entry
      * 
      * @return void
      */
@@ -40,7 +39,6 @@ class WalletService
 
     /**
      * update balance
-     * @param EntryInterface $entry
      * 
      * @return void
      */
