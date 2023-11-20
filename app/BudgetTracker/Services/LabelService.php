@@ -66,10 +66,10 @@ class LabelService implements BudgetTrackerService
      *  @param bool $value for where clause
      *  @return self
      */
-    public function archived(bool $value = false): self
+    public function archived(int $value = 0): self
     {
         $this->label->where('archive',0);
-        if($value === true) {
+        if($value === 1) {
             $this->label->where('archive',1);
         }
 

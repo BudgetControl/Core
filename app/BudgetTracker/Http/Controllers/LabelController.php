@@ -9,7 +9,7 @@ use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Services\LabelService;
 
-class LabelController extends Controller implements ControllerResourcesInterface
+class LabelController extends Controller
 {
 	//
 	/**
@@ -17,10 +17,10 @@ class LabelController extends Controller implements ControllerResourcesInterface
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(int $archive = 0): \Illuminate\Http\JsonResponse
 	{
 		$data = LabelService::select();
-		$labels = $data->archived()->order('name')->get();
+		$labels = $data->archived($archive)->order('name')->get();
 
 		return response()->json($labels->toArray());
 	}
