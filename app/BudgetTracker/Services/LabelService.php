@@ -108,6 +108,7 @@ class LabelService implements BudgetTrackerService
         $label->color = $data->getColor();
         $label->archive = $data->getArchive();
         $label->user_id = UserService::getCacheUserID();
+        $label->uuid = $data->getUniqid();
 
         $label->save();
     }

@@ -9,12 +9,12 @@ require_once 'app/User/Tests/AuthTest.php';
 class LabelTest extends TestCase
 {
     const STRUCTURE = [
-        "archive",
+        ["archive",
         "color",
         "date_time",
         "id",
         "name",
-        "uuid",
+        "uuid",]
     ];
 
     /**
@@ -31,11 +31,22 @@ class LabelTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_get_label_data(): void
+    {
+        $response = $this->get('/api/labels/1/', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::STRUCTURE);
+    }
+
+    /**
+     * A basic feature test example.
+     */
     public function test_new_label_data(): void
     {
         $data = [
             "archive" => 0,
-            "color" => "#fffghj",
+            "color" => "#000fff",
             "date_time" => date("Y-m-d H:i:s"),
             "name" => 'test',
         ];
@@ -55,7 +66,7 @@ class LabelTest extends TestCase
     {
         $data = [
             "archive" => 0,
-            "color" => "#fffghj",
+            "color" => "#000fff",
             "date_time" => date("Y-m-d H:i:s"),
             "name" => 'test_update',
         ];
@@ -76,7 +87,7 @@ class LabelTest extends TestCase
     {
         $data = [
             "archive" => 1,
-            "color" => "#fffghj",
+            "color" => "#000fff",
             "date_time" => date("Y-m-d H:i:s"),
             "name" => 'test_update',
         ];

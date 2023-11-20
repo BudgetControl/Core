@@ -16,6 +16,7 @@ final class Label implements BudgetTracker
     private string $color;
     private int $archive;
     private int $userId;
+    private string $uniqid;
 
     public function __construct(string $name, string $color, int $archive)
     {
@@ -23,6 +24,7 @@ final class Label implements BudgetTracker
         $this->color = $color;
         $this->archive = $archive;
         $this->userId = UserService::getCacheUserID();
+        $this->uniqid = uniqid();
 
         $this->validate();
     }
@@ -114,5 +116,29 @@ final class Label implements BudgetTracker
     public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Get the value of uniqid
+     *
+     * @return string
+     */
+    public function getUniqid(): string
+    {
+        return $this->uniqid;
+    }
+
+    /**
+     * Set the value of uniqid
+     *
+     * @param string $uniqid
+     *
+     * @return self
+     */
+    public function setUniqid(string $uniqid): self
+    {
+        $this->uniqid = $uniqid;
+
+        return $this;
     }
 }

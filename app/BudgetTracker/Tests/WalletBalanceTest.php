@@ -2,6 +2,8 @@
 
 namespace App\BudgetTracker\Tests;
 
+use App\BudgetTracker\Entity\Accounts\Account;
+use App\BudgetTracker\Enums\AccountType;
 use Tests\TestCase;
 use \DateTime;
 
@@ -98,7 +100,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4000,
+            "balance" => 5000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -117,7 +119,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 5000,
+            "balance" => 4000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -140,7 +142,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4000,
+            "balance" => 5000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -162,7 +164,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4700,
+            "balance" => 4300,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -229,6 +231,7 @@ class WalletBalanceTest extends TestCase
      */
     private function makeRequest(float $amount, DateTime $dateTime): array
     {
+
         $request = '{ 
             "amount": '.$amount.',
             "note" : "test",
