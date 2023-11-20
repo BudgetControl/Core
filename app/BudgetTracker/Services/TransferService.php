@@ -119,6 +119,8 @@ class TransferService extends EntryService
     {   
 
         $entryModel = new TransferModel();
+        $walletService = new WalletService($entryModel);
+
         $findEntry = TransferModel::findFromUuid($entry->getUuid(),$userId);
         if (!empty($findEntry)) {
             $entryModel = $findEntry;
@@ -140,7 +142,7 @@ class TransferService extends EntryService
         $entryModel->user_id = $userId;
         $entryModel->save();
 
-        $this->updateBalance($entry);
+        $walletService->sum();
         $this->attachLabels($entry->getLabels(),$entryModel);
 
     }

@@ -177,4 +177,12 @@ class Entry extends Model
           );
     }
 
+    /**
+     * public function is equaò
+     */
+    public function equal(Entry $entry): bool
+    {
+        return $this->toArray() === $entry->toArray();
+    }
+
 }

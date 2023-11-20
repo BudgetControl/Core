@@ -81,7 +81,9 @@ class ExpensesService extends EntryService
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
-            $this->updateBalance($entry);
+            
+            $walletService = new WalletService($entryModel);
+            $walletService->sum();
 
         } catch (\Exception $e) {
             $error = uniqid();

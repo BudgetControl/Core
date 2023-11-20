@@ -80,7 +80,8 @@ class DebitService extends EntryService
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entryModel->save();
             
-            $this->updateBalance($entry);
+            $walletService = new WalletService($entryModel);
+            $walletService->sum();
 
     
     }

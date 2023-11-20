@@ -15,6 +15,7 @@ use App\BudgetTracker\Services\TransferService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\BudgetTracker\Services\WalletService;
 
 class TransferController extends EntryController
 {
@@ -111,8 +112,13 @@ class TransferController extends EntryController
 		try {
 			Transfer::destroy($entry->id);
 			Transfer::destroy($entryTransfer->id);
-			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
-			AccountsService::updateBalance($entryTransfer->amount * -1,$entryTransfer->account_id);
+
+			$walletService = new WalletService($entry);
+			$walletService->subtract();
+			
+			$walletService = new WalletService($entryTransfer);
+			$walletService->subtract();
+
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
