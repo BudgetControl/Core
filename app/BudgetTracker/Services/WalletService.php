@@ -20,7 +20,6 @@ class WalletService
         $this->entry = $entry;
         $entryDB = Model::where('uuid', $entry->getUuid())->first();
         $this->oldEntry = EntryService::create($entryDB, EntryType::from($entryDB->type));
-
     }
 
     /**
@@ -33,7 +32,7 @@ class WalletService
         //first check if is confirmed
         if ($this->checkConfirmed() === true) {
             // now check if is planned
-            if ($this->checkPlanned() === true) {
+            if ($this->checkPlanned() === false) {
                 $entry = $this->entry;
 
                 $amount = $entry->getAmount();
@@ -56,15 +55,17 @@ class WalletService
         //first check if is confirmed
         if ($this->checkConfirmed() === true) {
             // now check if is planned
-            $entry = $this->entry;
+            if ($this->checkPlanned() === false) {
+                $entry = $this->entry;
 
-            $amount = $entry->getAmount();
-            $account = $entry->getAccount()->id;
+                $amount = $entry->getAmount();
+                $account = $entry->getAccount()->id;
 
-            //update balance
-            $amount = $amount * -1;
-            AccountsService::updateBalance($amount, $account);
-            Log::debug("subtract balance " . $amount . " , " . $account);
+                //update balance
+                $amount = $amount * -1;
+                AccountsService::updateBalance($amount, $account);
+                Log::debug("subtract balance " . $amount . " , " . $account);
+            }
         }
     }
 
