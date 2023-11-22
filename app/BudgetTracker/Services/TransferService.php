@@ -141,7 +141,9 @@ class TransferService extends EntryService
         $entryModel->user_id = $userId;
         $entryModel->save();
 
-        $walletService = new WalletService($entryModel);
+        $walletService = new WalletService(
+            EntryService::create($entryModel->toArray(), EntryType::Transfer)
+        );
         $walletService->sum();
         $this->attachLabels($entry->getLabels(),$entryModel);
 

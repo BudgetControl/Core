@@ -85,7 +85,9 @@ class InvestmentsService extends EntryService
 
             $this->attachLabels($entry->getLabels(), $entryModel);
             
-            $walletService = new WalletService($entryModel);
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Investments)
+            );
             $walletService->sum();
 
         } catch (\Exception $e) {

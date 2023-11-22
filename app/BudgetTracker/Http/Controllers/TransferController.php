@@ -8,6 +8,8 @@ use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Transfer;
 use App\BudgetTracker\Http\Trait\Paginate;
+use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\WalletService;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\ResponseService;
@@ -15,7 +17,6 @@ use App\BudgetTracker\Services\TransferService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
-use App\BudgetTracker\Services\WalletService;
 
 class TransferController extends EntryController
 {
@@ -113,10 +114,10 @@ class TransferController extends EntryController
 			Transfer::destroy($entry->id);
 			Transfer::destroy($entryTransfer->id);
 
-			$walletService = new WalletService($entry);
+			$walletService = new WalletService(EntryService::create($entry->toArray(), EntryType::Transfer));
 			$walletService->subtract();
 			
-			$walletService = new WalletService($entryTransfer);
+			$walletService = new WalletService(EntryService::create($entryTransfer->toArray(), EntryType::Transfer));
 			$walletService->subtract();
 
 			return response("Resource is deleted");

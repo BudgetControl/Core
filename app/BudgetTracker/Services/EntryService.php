@@ -47,22 +47,7 @@ class EntryService
 
       Log::debug("save entry -- " . json_encode($data));
 
-      $entry = new Entry(
-        $data['amount'],
-        $type,
-        Currency::findOrFail($data['currency_id']),
-        $data['note'],
-        new DateTime($data['date_time']),
-        $data['waranty'],
-        $data['transfer'],
-        $data['confirmed'],
-        SubCategory::findOrFail($data['category_id']),
-        Account::findOrFail($data['account_id']),
-        PaymentsTypes::findOrFail($data['payment_type']),
-        new \stdClass(),
-        $data['label']
-      );
-
+      $entry = self::create($data, $type);
 
       $entryModel = new EntryModel();
       if (!empty($this->uuid)) {
@@ -85,7 +70,9 @@ class EntryService
       $entryModel->type = $entry->getType();
       $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
-      $walletService = new WalletService($entryModel);
+      $walletService = new WalletService(
+        EntryService::create($entryModel->toArray(), $entry->getType())
+      );
 
       //TODO: fixme
       if (!is_null($payee)) {
@@ -183,7 +170,9 @@ class EntryService
       $entryQuery = EntryModel::findFromUuid($this->uuid);
       $entryQuery->amount = $entryQuery->amount * -1;
 
-      $walletService = new WalletService($entryQuery);
+      $walletService = new WalletService(
+        EntryService::create($entryQuery->toArray(),EntryType::from($entryQuery->type))
+      );
       $walletService->subtract();
     }
   }
@@ -222,5 +211,27 @@ class EntryService
     }
 
     return $returnEntry;
+  }
+
+  /**
+   * create entity
+   */
+  public static function create(array $data, EntryType $type): Entry
+  {
+    return new Entry(
+      $data['amount'],
+      $type,
+      Currency::findOrFail($data['currency_id']),
+      $data['note'],
+      new DateTime($data['date_time']),
+      $data['waranty'],
+      $data['transfer'],
+      $data['confirmed'],
+      SubCategory::findOrFail($data['category_id']),
+      Account::findOrFail($data['account_id']),
+      PaymentsTypes::findOrFail($data['payment_type']),
+      new \stdClass(),
+      $data['label']
+    );
   }
 }

@@ -83,7 +83,9 @@ class IncomingService extends EntryService
 
             $this->attachLabels($entry->getLabels(), $entryModel);
             
-            $walletService = new WalletService($entryModel);
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Incoming)
+            );
             $walletService->sum();
 
         } catch (\Exception $e) {
