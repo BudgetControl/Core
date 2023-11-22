@@ -78,10 +78,11 @@ class EntryService
       if (!is_null($payee)) {
         $entryModel->payee_id = $payee->id;
       }
-      $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
       $walletService->sum();
+      
+      $entryModel->save();
       
     } catch (\Exception $e) {
 

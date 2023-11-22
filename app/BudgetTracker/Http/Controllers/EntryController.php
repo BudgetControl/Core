@@ -110,12 +110,13 @@ class EntryController extends Controller
 	{
 		try {
 			$entry = Entry::where('uuid',$id)->firstOrFail();
-			Entry::destroy($entry->id);
 			
 			$walletService = new WalletService(
 				EntryService::create($entry->toArray(), EntryType::from($entry->type))
 			);
 			$walletService->subtract();
+
+			Entry::destroy($entry->id);
 			
 			return response("Resource is deleted");
 		} catch (\Exception $e) {

@@ -78,14 +78,15 @@ class ExpensesService extends EntryService
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
             }
-            $entryModel->save();
-
-            $this->attachLabels($entry->getLabels(), $entryModel);
             
             $walletService = new WalletService(
                 EntryService::create($entryModel->toArray(), EntryType::Expenses)
             );
             $walletService->sum();
+            
+            $entryModel->save();
+
+            $this->attachLabels($entry->getLabels(), $entryModel);
 
         } catch (\Exception $e) {
             $error = uniqid();
