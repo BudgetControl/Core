@@ -15,6 +15,7 @@ use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
 use App\BudgetTracker\Entity\Accounts\InvestmentAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardRevolvingAccount;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Summary of SaveEntryService
@@ -109,10 +110,10 @@ class AccountsService
      * read a resource
      * @param int $id of resource
      * 
-     * @return AccountInterface with a resource
+     * @return Model with a resource
      * @throws \Exception
      */
-    public function read(int $id = null ): Collection
+    public function read(int $id = null ): Model
     {
 
         $entry = Account::user();
@@ -120,7 +121,7 @@ class AccountsService
         if ($id === null) {
             $accounts = $entry->get();
         } else {
-            $accounts = $entry->where("id = $id")->firstOrFail();
+            $accounts = $entry->where("id", $id)->firstOrFail();
         }
 
         return $accounts;
