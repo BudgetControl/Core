@@ -5,12 +5,13 @@ namespace App\BudgetTracker\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User\Services\UserService;
 use App\BudgetTracker\Models\Category;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Services\CategoryService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\ResponseService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Http\Controllers\Controller;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
-use App\BudgetTracker\Services\CategoryService;
 
 class CategoryController extends Controller implements ControllerResourcesInterface
 {
@@ -23,7 +24,7 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	public function index(): \Illuminate\Http\JsonResponse
 	{
 		$service = new CategoryService();
-		return response()->json(new ResponseService($service->all()));
+		return response()->json($service->all());
 	}
 
 	/**
@@ -60,7 +61,8 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		return response()->json([], 'nothing');
+		$category = SubCategory::findOrFail($id);
+		return response()->json($category);
 	}
 
 	/**
