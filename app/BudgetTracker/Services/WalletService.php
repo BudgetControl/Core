@@ -118,12 +118,18 @@ class WalletService
             $previusAccount = $this->oldEntry->getAccount()->id;
             $account = $this->entry->getAccount()->id;
 
-            if ($previusAccount != $account) {
-                $this->update(
-                    $this->oldEntry->getAmount() * -1,
-                    $previusAccount
-                );
+            if($this->oldEntry->getConfirmed() === true) {
+                if($this->oldEntry->getPlanned() === false) {
+                    if ($previusAccount != $account) {
+                        $this->update(
+                            $this->oldEntry->getAmount() * -1,
+                            $previusAccount
+                        );
+                    }
+                }
             }
+
+            
         }
         $this->revert = false;
     }
