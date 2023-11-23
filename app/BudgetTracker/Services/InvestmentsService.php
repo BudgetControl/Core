@@ -60,7 +60,6 @@ class InvestmentsService extends EntryService
             if (!empty($this->uuid)) {
                 $entry->setUuid($this->uuid);
                 $entryDb = Entry::findFromUuid($this->uuid);
-                AccountsService::updateBalance($entryDb->amount *-1,$entryDb->account_id);
                 $entryModel = $entryDb;
             }
 
@@ -81,12 +80,15 @@ class InvestmentsService extends EntryService
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
             }
+            
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Investments)
+            );
+            $walletService->sum();
+
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
-            
-            $walletService = new WalletService($entryModel);
-            $walletService->sum();
 
         } catch (\Exception $e) {
             $error = uniqid();

@@ -31,7 +31,8 @@ class LabelsFactory extends Factory
         return [
             'uuid' => uniqid(),
             'name' => fake()->text(5),
-            'color' => '#000999',
+            'color' => random_color(),
+            'archive' => 0,
             'user_id' => 1
         ];
     }

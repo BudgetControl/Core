@@ -100,7 +100,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 6000,
+            "balance" => 5000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -119,7 +119,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 7000,
+            "balance" => 6000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -142,7 +142,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 6000,
+            "balance" => 5000,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -164,7 +164,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 6070,
+            "balance" => 5070,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -185,7 +185,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 5300,
+            "balance" => 4300,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);

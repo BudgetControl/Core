@@ -2,18 +2,27 @@
 
 namespace App\BudgetTracker\Services;
 
+use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
+use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Interfaces\EntryInterface;
-use Illuminate\Database\Eloquent\Model;
+use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Models\Entry as Model;
 
 class WalletService
 {
 
-    private Model $entry;
+    private EntryInterface $entry;
+    private ?EntryInterface $oldEntry = null;
+    private bool $revert = false;
 
-    public function __construct(Model $entry)
+    public function __construct(EntryInterface $entry)
     {
         $this->entry = $entry;
+        $entryDB = Model::where('uuid', $entry->getUuid())->first();
+        if (!is_null($entryDB)) {
+            $this->oldEntry = EntryService::create($entryDB->toArray(), EntryType::from($entryDB->type));
+        }
     }
 
     /**
@@ -23,18 +32,21 @@ class WalletService
      */
     public function sum(): void
     {
-        $entry = $this->entry;
-        
-        $amount = $entry->amount;
-        $isPlanned = $entry->planned;
-        $isConfirmed = $entry->confirmed;
-        $account = $entry->account_id;
+        //first check if is confirmed
+        if ($this->checkConfirmed() === true) {
+            // now check if is planned
+            if ($this->checkPlanned() === false) {
+                $entry = $this->entry;
 
-        //update balance
-        if ($isPlanned == false && $isConfirmed == true) {
-            AccountsService::updateBalance($amount, $account);
-            Log::debug("Update balance " . $amount . " , " . $account);
+                $amount = $entry->getAmount();
+                $account = $entry->getAccount()->id;
+
+                //update balance
+                $this->update($amount, $account);
+                Log::debug("Update balance " . $amount . " , " . $account);
+            }
         }
+        $this->revert();
     }
 
     /**
@@ -44,18 +56,94 @@ class WalletService
      */
     public function subtract(): void
     {
-        $entry = $this->entry;
-        
-        $amount = $entry->amount;
-        $isPlanned = $entry->planned;
-        $isConfirmed = $entry->confirmed;
-        $account = $entry->account_id;
+        //first check if is confirmed
+        if ($this->checkConfirmed() === true) {
+            // now check if is planned
+            if ($this->checkPlanned() === false) {
+                $entry = $this->entry;
 
-        //update balance
-        $amount = $amount * -1;
-        if ($isPlanned == false && $isConfirmed == true) {
-            AccountsService::updateBalance($amount, $account);
-            Log::debug("subtract balance " . $amount . " , " . $account);
+                $amount = $entry->getAmount();
+                $account = $entry->getAccount()->id;
+
+                //update balance
+                $amount = $amount * -1;
+                $this->update($amount, $account);
+                Log::debug("subtract balance " . $amount . " , " . $account);
+            }
         }
+
+        $this->revert();
+    }
+
+    /**
+     * chek if entry is planned type
+     */
+    private function checkPlanned(): bool
+    {
+        // check only new entry
+        if (is_null($this->oldEntry)) {
+            return $this->entry->getPlanned();
+        }
+
+        if ($this->oldEntry->getPlanned() === false) {
+            $this->revert = true;
+        }
+
+        return $this->entry->getPlanned();
+    }
+
+    /**
+     * chek if entry is confirmet type
+     */
+    private function checkConfirmed(): bool
+    {
+        // check only new entry
+        if (is_null($this->oldEntry)) {
+            return $this->entry->getConfirmed();
+        }
+
+        if ($this->oldEntry->getConfirmed() === true) {
+            $this->revert = true;
+        }
+
+        return $this->entry->getConfirmed();
+    }
+
+    /**
+     * is account changed
+     */
+    private function isAccountChanged()
+    {
+        if (!is_null($this->oldEntry)) {
+            $previusAccount = $this->oldEntry->getAccount()->id;
+            $account = $this->entry->getAccount()->id;
+
+            if ($previusAccount != $account) {
+                $this->update(
+                    $this->oldEntry->getAmount() * -1,
+                    $previusAccount
+                );
+            }
+        }
+        $this->revert = false;
+    }
+
+    /**
+     * revert to wallet
+     */
+    private function revert()
+    {
+        $this->isAccountChanged();
+        if ($this->revert === true) {
+            AccountsService::updateBalance($this->oldEntry->getAmount() * -1, $this->oldEntry->getAccount()->id);
+        }
+    }
+
+    /**
+     * 
+     */
+    protected function update(float $amount, int $account)
+    {
+        AccountsService::updateBalance($amount, $account);
     }
 }

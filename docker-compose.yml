@@ -15,7 +15,7 @@ services:
       volumes:
         - mysql_persistent:/var/lib/mysql
       networks:
-        - budgetcontrol_network
+        - services_budgetcontrol_network
     bemodule:
       container_name: budgetcontrol-services
       build:
@@ -28,7 +28,7 @@ services:
         - database
         - cache
       networks:
-        - budgetcontrol_network
+        - services_budgetcontrol_network
       restart: unless-stopped
     cache:
       container_name: budgetcontrol-redis
@@ -40,7 +40,7 @@ services:
         - '6379:6379'
       command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
       networks:
-        - budgetcontrol_network
+        - services_budgetcontrol_network
     nginx:
       container_name: budgetcontrol-proxy
       image: nginx:stable-alpine
@@ -52,7 +52,7 @@ services:
         - ./bin/certbot/conf:/etc/letsencrypt
         - ./bin/certbot/www:/var/www/certbot
       networks:
-        - budgetcontrol_network
+        - services_budgetcontrol_network
     certbot:
       image: certbot/certbot
       container_name: budgetcontrol-certbot
@@ -61,12 +61,12 @@ services:
       - ./bin/certbot/www:/var/www/certbot
       entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
       networks:
-        - budgetcontrol_network
+        - services_budgetcontrol_network
 
 volumes:
   mysql_persistent:
   bc_cache:
 
 networks:
-  budgetcontrol_network:
-    driver: bridge
+  services_budgetcontrol_network:
+    external: true

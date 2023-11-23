@@ -120,7 +120,7 @@ class AccountsService
         if ($id === null) {
             $accounts = $entry->get();
         } else {
-            $accounts = $entry->firstOrFail($id);
+            $accounts = $entry->where("id = $id")->firstOrFail();
         }
 
         return $accounts;

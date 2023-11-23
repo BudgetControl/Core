@@ -40,19 +40,7 @@ class ExpensesService extends EntryService
 
             Log::debug("save expenses -- " . json_encode($data));
 
-            $entry = new Expenses(
-                $data['amount'],
-                Currency::findOrFail($data['currency_id']),
-                $data['note'],
-                new DateTime($data['date_time']),
-                $data['waranty'],
-                $data['confirmed'],
-                SubCategory::findOrFail($data['category_id']),
-                Account::findOrFail($data['account_id']),
-                PaymentsTypes::findOrFail($data['payment_type']),
-                new \stdClass(),
-                $data['label']
-            );
+            $entry = EntryService::create($data, EntryType::Expenses);
 
             $entryModel = new ExpensesModel();
             if (!empty($this->uuid)) {
@@ -78,12 +66,15 @@ class ExpensesService extends EntryService
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
             }
+            
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Expenses)
+            );
+            $walletService->sum();
+            
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
-            
-            $walletService = new WalletService($entryModel);
-            $walletService->sum();
 
         } catch (\Exception $e) {
             $error = uniqid();

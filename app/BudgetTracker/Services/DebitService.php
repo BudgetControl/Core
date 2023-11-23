@@ -78,10 +78,13 @@ class DebitService extends EntryService
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->payee_id = $entry->getPayee()->id;
             $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
-            $entryModel->save();
             
-            $walletService = new WalletService($entryModel);
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Debit)
+            );
             $walletService->sum();
+            
+            $entryModel->save();
 
     
     }
