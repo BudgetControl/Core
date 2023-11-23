@@ -56,10 +56,8 @@ class UserService
     static public function getCacheUserID(): int
     {
 
-        if(env("APP_DISABLE_AUTH",false) === true) {
             Log::info("Start session DEBUG MODE");
             return 1;
-        }
         
         $session = session()->getId();
 
