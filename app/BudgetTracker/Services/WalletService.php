@@ -13,13 +13,16 @@ class WalletService
 {
 
     private EntryInterface $entry;
-    private ?EntryInterface $oldEntry;
+    private ?EntryInterface $oldEntry = null;
+    private bool $revert = false;
 
     public function __construct(EntryInterface $entry)
     {
         $this->entry = $entry;
         $entryDB = Model::where('uuid', $entry->getUuid())->first();
-        $this->oldEntry = EntryService::create($entryDB, EntryType::from($entryDB->type));
+        if (!is_null($entryDB)) {
+            $this->oldEntry = EntryService::create($entryDB->toArray(), EntryType::from($entryDB->type));
+        }
     }
 
     /**
@@ -39,10 +42,11 @@ class WalletService
                 $account = $entry->getAccount()->id;
 
                 //update balance
-                AccountsService::updateBalance($amount, $account);
+                $this->update($amount, $account);
                 Log::debug("Update balance " . $amount . " , " . $account);
             }
         }
+        $this->revert();
     }
 
     /**
@@ -63,10 +67,12 @@ class WalletService
 
                 //update balance
                 $amount = $amount * -1;
-                AccountsService::updateBalance($amount, $account);
+                $this->update($amount, $account);
                 Log::debug("subtract balance " . $amount . " , " . $account);
             }
         }
+
+        $this->revert();
     }
 
     /**
@@ -80,7 +86,7 @@ class WalletService
         }
 
         if ($this->oldEntry->getPlanned() === false) {
-            AccountsService::updateBalance($this->oldEntry->getAmount() * -1, $this->oldEntry->getAccount()->id);
+            $this->revert = true;
         }
 
         return $this->entry->getPlanned();
@@ -97,9 +103,47 @@ class WalletService
         }
 
         if ($this->oldEntry->getConfirmed() === true) {
-            AccountsService::updateBalance($this->oldEntry->getAmount() * -1, $this->oldEntry->getAccount()->id);
+            $this->revert = true;
         }
 
         return $this->entry->getConfirmed();
+    }
+
+    /**
+     * is account changed
+     */
+    private function isAccountChanged()
+    {
+        if (!is_null($this->oldEntry)) {
+            $previusAccount = $this->oldEntry->getAccount()->id;
+            $account = $this->entry->getAccount()->id;
+
+            if ($previusAccount != $account) {
+                $this->update(
+                    $this->oldEntry->getAmount() * -1,
+                    $previusAccount
+                );
+            }
+        }
+        $this->revert = false;
+    }
+
+    /**
+     * revert to wallet
+     */
+    private function revert()
+    {
+        $this->isAccountChanged();
+        if ($this->revert === true) {
+            AccountsService::updateBalance($this->oldEntry->getAmount() * -1, $this->oldEntry->getAccount()->id);
+        }
+    }
+
+    /**
+     * 
+     */
+    protected function update(float $amount, int $account)
+    {
+        AccountsService::updateBalance($amount, $account);
     }
 }

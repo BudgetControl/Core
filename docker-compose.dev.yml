@@ -3,7 +3,7 @@ version: '2.2'
 services:
     database:
       ports:
-        - 3306:3306
+        - 3366:3306
     mailhog:
       container_name: mailhog-service
       image: mailhog/mailhog:latest
@@ -15,3 +15,5 @@ services:
       build:
         context: .
         dockerfile: Dockerfile.dev
+      ports:
+        - 3000:80

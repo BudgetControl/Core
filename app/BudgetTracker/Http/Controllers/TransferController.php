@@ -109,7 +109,8 @@ class TransferController extends EntryController
 	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		$entry = Entry::where('uuid',$id)->firstOrFail();
-		$entryTransfer = Entry::where('id',$entry->transfer_id)->firstOrFail();
+		$entryTransfer = Entry::where('uuid',$entry->transfer_relation)->firstOrFail();
+
 		try {
 			Transfer::destroy($entry->id);
 			Transfer::destroy($entryTransfer->id);

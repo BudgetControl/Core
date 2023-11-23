@@ -167,15 +167,7 @@ class EntryService
    */
   public function revertAccountWallet(): void
   {
-    if (!empty($this->uuid)) {
-      $entryQuery = EntryModel::findFromUuid($this->uuid);
-      $entryQuery->amount = $entryQuery->amount * -1;
-
-      $walletService = new WalletService(
-        EntryService::create($entryQuery->toArray(),EntryType::from($entryQuery->type))
-      );
-      $walletService->subtract();
-    }
+    
   }
 
   /**
@@ -219,20 +211,27 @@ class EntryService
    */
   public static function create(array $data, EntryType $type): Entry
   {
-    return new Entry(
+    $entry = new Entry(
       $data['amount'],
       $type,
       Currency::findOrFail($data['currency_id']),
       $data['note'],
       new DateTime($data['date_time']),
       $data['waranty'],
-      $data['transfer'],
+      empty($data['transfer']) ? false : $data['transfer'],
       $data['confirmed'],
       SubCategory::findOrFail($data['category_id']),
       Account::findOrFail($data['account_id']),
       PaymentsTypes::findOrFail($data['payment_type']),
       new \stdClass(),
-      $data['label']
+      empty($data['label']) ? [] : $data['label']
     );
+
+    if(!empty($data['uuid'])) {
+      $entry->setUuid($data['uuid']);
+    }
+    
+    return $entry;
+
   }
 }

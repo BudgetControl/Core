@@ -68,5 +68,5 @@ volumes:
   bc_cache:
 
 networks:
-  services_services_budgetcontrol_network:
+  services_budgetcontrol_network:
     external: true

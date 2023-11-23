@@ -26,7 +26,7 @@ class JwtAuthenticate
         $headers = $request->headers;
         $XACCESSTOKEN = $headers->get('X-ACCESS-TOKEN');
 
-        if(env("APP_DISABLE_AUTH",false) === false) {
+        if(env("APP_DISABLE_AUTH",false) == "false") {
             if(empty($XACCESSTOKEN)) {
                 Log::debug("token: ".json_decode($headers));
                 abort(response()->json(['error' => 'no access token'], 401));

@@ -40,19 +40,7 @@ class ExpensesService extends EntryService
 
             Log::debug("save expenses -- " . json_encode($data));
 
-            $entry = new Expenses(
-                $data['amount'],
-                Currency::findOrFail($data['currency_id']),
-                $data['note'],
-                new DateTime($data['date_time']),
-                $data['waranty'],
-                $data['confirmed'],
-                SubCategory::findOrFail($data['category_id']),
-                Account::findOrFail($data['account_id']),
-                PaymentsTypes::findOrFail($data['payment_type']),
-                new \stdClass(),
-                $data['label']
-            );
+            $entry = EntryService::create($data, EntryType::Expenses);
 
             $entryModel = new ExpensesModel();
             if (!empty($this->uuid)) {
