@@ -15,6 +15,14 @@ class AccountSeed extends Seeder
     {
 
         Account::factory(1)->create([
+            'user_id' => 0,
+            'installement' => 0,
+            'type' => 'Cash',
+            'balance' => 0,
+            'uuid' => '64b59d6nob752'
+        ]);
+
+        Account::factory(1)->create([
             'user_id' => 1,
             'installement' => 1,
             'type' => 'Bank',

@@ -14,6 +14,8 @@ class Account extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const DEFAULT = '64b59d6nob752';
+
     protected  $fillable = [
         'sorting'
     ];
