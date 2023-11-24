@@ -2,12 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Enums\PlanningType;
-use App\BudgetTracker\Models\Payee;
-use App\BudgetTracker\Models\PlannedEntries;
-use DateTime;
-use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use App\BudgetTracker\Models\Account;
@@ -66,12 +60,12 @@ class DeleteDataTest extends TestCase
         //first we nee to get a new token
         $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
         $token = $response['token']['plainTextToken'];
-        return ['X-ACCESS-TOKEN' => $token];  
+        return ['X-ACCESS-TOKEN' => $token];
     }
 
     private function isDeleted(string $id,string $table = 'entries'):bool
     {
-        $row = DB::table($table)->where('uuid',$id)->withTrashed()->get()->count();
+        $row = DB::table($table)->where('uuid',$id)->whereNotNull('deleted_at')->get()->count();
         return $row !== 0;
     }
 

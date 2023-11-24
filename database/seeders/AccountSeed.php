@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\BudgetTracker\Enums\AccountType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use \App\BudgetTracker\Models\Account;
@@ -13,14 +14,19 @@ class AccountSeed extends Seeder
      */
     public function run(): void
     {
+        if(env("APP_ENV","DEV") == 'PROD') {
+            $lang = env("LANG", "it");
+            $path = __DIR__ . '/../sql/account.json';
+            $data = (array) json_decode(file_get_contents($path));
 
-        Account::factory(1)->create([
-            'user_id' => 0,
-            'installement' => 0,
-            'type' => 'Cash',
-            'balance' => 0,
-            'uuid' => '64b59d6nob752'
-        ]);
+            foreach ($data[$lang] as $key => $value) {
+                $db = new Account();
+                $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
+                $db->name = $value->name;
+                $db->type = $value->type;
+                $db->save();
+            }
+        }
 
         Account::factory(1)->create([
             'user_id' => 1,
