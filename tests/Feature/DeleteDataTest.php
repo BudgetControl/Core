@@ -71,7 +71,7 @@ class DeleteDataTest extends TestCase
 
     private function isDeleted(string $id,string $table = 'entries'):bool
     {
-        $row = DB::table($table)->where('uuid',$id)->whereNotNull('deleted_at')->get()->count();
+        $row = DB::table($table)->where('uuid',$id)->withTrashed()->get()->count();
         return $row !== 0;
     }
 
