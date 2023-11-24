@@ -5,12 +5,14 @@ namespace App\BudgetTracker\Http\Controllers;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\AccountsService;
 use Exception;
 use Illuminate\Http\Response;
 
-class AccountController extends Controller implements ControllerResourcesInterface
+class AccountController extends Controller
 {
 	//
 	/**
@@ -18,10 +20,16 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
-		$account = new AccountsService();
-		$account = $account->all();
+		$account = Account::User();
+		if($request->query("trashed",0) == 1) {
+			$account->withTrashed();
+		}
+
+		$account = $account->get();
+
+		
 		return response()->json(new ResponseService($account->toArray()));
 	}
 
@@ -95,6 +103,14 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
-		return response('nothing');
+		$toDestroy = [];
+		Account::destroy($id);
+		$entries = Entry::where("account_id", $id)->get();
+		foreach($entries as $entry) {
+			$toDestroy[] = $entry->id;
+		}
+		Entry::destroy($toDestroy);
+
+		return response('all data deleted');
 	}
 }
