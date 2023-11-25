@@ -45,9 +45,7 @@ class BarChartService extends ChartDataService
             $data = $this->incoming($date['start'], $date['end']);
 
             if (!empty($data)) {
-                $wallet = new Wallet();
-                $wallet->sum($data);
-                $bar = new BarChartBar($wallet->getBalance(), $date['start']->format('Y-m-d'));
+                $bar = new BarChartBar($data['total'], $date['start']->format('Y-m-d'));
                 $chart->addBar($bar);
             }
         }
@@ -66,15 +64,13 @@ class BarChartService extends ChartDataService
     public function incomingByCategory(): BarChart
     {
         $chart = new BarChart();
-        $categories = SubCategory::all();
+        $categories = SubCategory::where("exclude_from_stats",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
                 $data = $this->incomingCategory($date['start'], $date['end'], $category->id);
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
-                    $bar = new BarChartBar($wallet->getBalance(), $category->name);
+                    $bar = new BarChartBar($data['total'], $category->name);
                     $chart->addBar($bar);
                 }
             }
@@ -109,9 +105,7 @@ class BarChartService extends ChartDataService
                 }
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
-                    $bar = new BarChartBar($wallet->getBalance(), $type);
+                    $bar = new BarChartBar($data['total'], $type);
                     $chart->addBar($bar);
                 }
             }
@@ -131,16 +125,14 @@ class BarChartService extends ChartDataService
     public function incomingByLabel(): BarChart
     {
         $chart = new BarChart();
-        $labels = Labels::user()->get();
+        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
                 $data = $this->incomingLabel($date['start'], $date['end'], $label->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
-                    $bar = new BarChartBar($wallet->getBalance(), $label->name);
+                    $bar = new BarChartBar($data['total'], $label->name);
                     $chart->addBar($bar);
                 }
             }
@@ -165,9 +157,7 @@ class BarChartService extends ChartDataService
             $data = $this->expenses($date['start'], $date['end']);
 
             if (!empty($data)) {
-                $wallet = new Wallet();
-                $wallet->sum($data);
-                $bar = new BarChartBar($wallet->getBalance(), $date['start']->format('Y-m-d'));
+                $bar = new BarChartBar($data['total'], $date['start']->format('Y-m-d'));
                 $chart->addBar($bar);
             }
         }
@@ -186,16 +176,14 @@ class BarChartService extends ChartDataService
     public function expensesByCategory(): BarChart
     {
         $chart = new BarChart();
-        $categories = SubCategory::all();
+        $categories = SubCategory::where("exclude_from_stats",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
                 $data = $this->expensesCategory($date['start'], $date['end'], $category->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
-                    $bar = new BarChartBar($wallet->getBalance(), $category->name);
+                    $bar = new BarChartBar($data['total'], $category->name);
                     $chart->addBar($bar);
                 }
             }
@@ -215,16 +203,14 @@ class BarChartService extends ChartDataService
     public function expensesByLabel(): BarChart
     {
         $chart = new BarChart();
-        $labels = Labels::user()->get();
+        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
                 $data = $this->expensesLabel($date['start'], $date['end'], $label->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
-                    $bar = new BarChartBar($wallet->getBalance(), $label->name);
+                    $bar = new BarChartBar($data['total'], $label->name);
                     $chart->addBar($bar);
                 }
             }

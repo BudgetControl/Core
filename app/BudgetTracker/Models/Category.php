@@ -26,6 +26,7 @@ class Category extends Model
     {
       return self::leftJoin("sub_categories",'sub_categories.category_id','=','categories.id')
       ->where('categories.type',$group)
+      ->where('sub_categories.exclude_from_stats',0)
       ->get();
     }
 }
