@@ -11,10 +11,8 @@ use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Investments;
-use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Transfer;
 use App\User\Services\UserService;
-use App\Helpers\MathHelper;
 use DateTime;
 use Exception;
 
@@ -112,6 +110,66 @@ class StatsService
      * 
      * @return array
      */
+    public function entryByCategory(array $categoryID, bool $planning): array
+    {
+        $entry = Entry::user()->stats();
+        $entry->where('entries.date_time', '<=', $this->endDate)
+        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categoryID);
+
+        $entryOld = Entry::user()->stats();
+        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
+        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categoryID);
+
+        if ($planning === true) {
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
+        } else {
+            $entry->where('planned',0);
+            $entryOld->where('planned',0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function entryByType(array $type, bool $planning): array
+    {
+        $entry = Entry::user()->stats();
+        $entry->where('entries.date_time', '<=', $this->endDate)
+        ->where('entries.date_time', '>=', $this->startDate)->whereIn('type', $type);
+
+        $entryOld = Entry::user()->stats();
+        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
+        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('type', $type);
+
+        if ($planning === true) {
+            $entry->whereIn('planned',[0,1]);
+            $entryOld->whereIn('planned',[0,1]);
+        } else {
+            $entry->where('planned',0);
+            $entryOld->where('planned',0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
     public function investments(bool $planning): array
     {
         $categories = $this->getCategoryId(EntryType::Investments->value);
@@ -162,6 +220,42 @@ class StatsService
         } else {
             $entry->where('planned',0);
             $entryOld->where('planned',0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+
+    }
+
+     /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function entryByLabel(array $labelsID, bool $planning): array
+    {
+        $entry = Entry::user()->stats();
+        $entry->where('entries.date_time', '<=', $this->endDate)
+        ->where('entries.date_time', '>=', $this->startDate)
+        ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
+        ->leftJoin('labels', "labels.id","=","entry_labels.labels_id")
+        ->whereIn("labels.id",$labelsID);
+
+        $entryOld = Entry::user()->stats();
+        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
+        ->where('entries.date_time', '>=', $this->startDatePassed)
+        ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
+        ->leftJoin('labels', "labels.id","=","entry_labels.labels_id")
+        ->whereIn("labels.id",$labelsID);
+
+        if ($planning === true) {
+            $entry->whereIn('entries.planned',[0,1]);
+            $entryOld->whereIn('entries.planned',[0,1]);
+        } else {
+            $entry->where('entries.planned',0);
+            $entryOld->where('entries.planned',0);
         }
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
