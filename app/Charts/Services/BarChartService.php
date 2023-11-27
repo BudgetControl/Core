@@ -2,14 +2,15 @@
 
 namespace App\Charts\Services;
 
-use App\BudgetTracker\Entity\Wallet;
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Models\Labels;
-use App\BudgetTracker\Models\SubCategory;
-use App\Charts\Entity\BarChart\BarChart;
-use App\Charts\Entity\BarChart\BarChartBar;
-use App\Charts\Services\ChartDataService;
 use DateTime;
+use App\BudgetTracker\Entity\Wallet;
+use App\BudgetTracker\Models\Labels;
+use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Category;
+use App\Charts\Entity\BarChart\BarChart;
+use App\BudgetTracker\Models\SubCategory;
+use App\Charts\Services\ChartDataService;
+use App\Charts\Entity\BarChart\BarChartBar;
 
 class BarChartService extends ChartDataService
 {
@@ -64,7 +65,7 @@ class BarChartService extends ChartDataService
     public function incomingByCategory(): BarChart
     {
         $chart = new BarChart();
-        $categories = SubCategory::where("exclude_from_stats",0)->orderBy("name")->get();
+        $categories =  Category::getCateroyGroup("incoming");
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
@@ -176,7 +177,7 @@ class BarChartService extends ChartDataService
     public function expensesByCategory(): BarChart
     {
         $chart = new BarChart();
-        $categories = SubCategory::where("exclude_from_stats",0)->orderBy("name")->get();
+        $categories =  Category::getCateroyGroup("expenses");
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
