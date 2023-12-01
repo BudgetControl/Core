@@ -50,4 +50,8 @@ Route::get('entry/account/{id}', function (string $id) {
 Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import')->middleware('auth.jwt');
 
 /** make accounts api */
-Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');
+Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save')->middleware('auth.jwt');
+
+// #### USERS SETTINGS
+Route::post("/user/currency", 'App\User\Controllers\UserSettingController@setDefaultCurrency')->middleware('auth.jwt');
+Route::get("/user/settings", 'App\User\Controllers\UserSettingController@index')->middleware('auth.jwt');
