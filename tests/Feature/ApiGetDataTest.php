@@ -104,6 +104,29 @@ class ApiGetDataTest extends TestCase
         ]
     ];
 
+    const CURRENCY = [
+        "data" => [
+            [
+                "id",
+                "date_time",
+                "uuid",
+                "name",
+                "label",
+                "icon",
+                "exchange_rate"
+            ]
+        ]
+    ];
+
+    const SETTINGS = [
+        "id",
+        "user_id",
+        "currency_id",
+        "payment_type_id",
+        "created_at",
+        "updated_at"
+    ];
+
     const INCOMING_ID = '64b54cc566d77_test';
     const EXPENSES_ID = '64b54cc5677e0_test';
     const DEBIT_ID = '64b54cc568334_test';
@@ -234,6 +257,25 @@ class ApiGetDataTest extends TestCase
             $this->assertTrue($assert);
         }
     }
+
+    public function test_get_currency()
+    {
+        $response = $this->get('/api/currencies', $this->getAuthTokenHeader());
+        
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::CURRENCY);
+
+    }
+
+    public function test_user_setting()
+    {
+        $response = $this->get('/api/user/settings', $this->getAuthTokenHeader());
+        
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::SETTINGS);
+
+    }
+
 
     private function getAuthTokenHeader()
     {
