@@ -114,6 +114,7 @@ class WalletService
      */
     private function isAccountChanged()
     {
+
         if (!is_null($this->oldEntry)) {
             $previusAccount = $this->oldEntry->getAccount()->id;
             $account = $this->entry->getAccount()->id;
@@ -125,13 +126,13 @@ class WalletService
                             $this->oldEntry->getAmount() * -1,
                             $previusAccount
                         );
+                        $this->revert = false;
                     }
                 }
             }
 
             
         }
-        $this->revert = false;
     }
 
     /**
