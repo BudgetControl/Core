@@ -72,7 +72,6 @@ class WalletService
             }
         }
 
-        $this->revert();
     }
 
     /**
