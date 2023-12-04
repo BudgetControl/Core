@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "benmajor/exchange-rates-api": "^4.2",
         "doctrine/dbal": "^3.6",
         "firebase/php-jwt": "*",
         "guzzlehttp/guzzle": "^7.2",

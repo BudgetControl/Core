@@ -4,7 +4,6 @@ namespace App\User\Controllers;
 
 use App\BudgetTracker\Services\AccountsService;
 use App\User\Exceptions\AuthException;
-use App\User\Middleware\JsonResponse;
 use App\User\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +16,8 @@ use App\Mailer\Services\MailService;
 use App\Mailer\Entities\AuthMail;
 use App\Mailer\Exceptions\MailExeption;
 use App\Mailer\Entities\RecoveryPasswordMail;
+use App\User\Models\UserSettings;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Log\Logger;
 
 class AuthController extends Controller
 {
@@ -188,6 +187,14 @@ class AuthController extends Controller
                     "currency" => 'EUR',
                     "exclude_from_stats" => 0
                 ]);
+
+                //set default settings
+                $setting = new UserSettings();
+                $setting->currency_id = 1;
+                $setting->user_id = $user->id;
+                $setting->payment_type_id = 1;
+                $setting->save();
+                
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
                 Log::error($e);

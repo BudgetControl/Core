@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf67b0b88b1ad9ed4bc9e9ea7bab451b",
+    "content-hash": "2cee0829539ecb4737f4b560af6b09dd",
     "packages": [
+        {
+            "name": "benmajor/exchange-rates-api",
+            "version": "4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/benmajor/ExchangeRatesAPI.git",
+                "reference": "e545948617379d8dcb41e4a3e1d1529cdbb72ec8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/benmajor/ExchangeRatesAPI/zipball/e545948617379d8dcb41e4a3e1d1529cdbb72ec8",
+                "reference": "e545948617379d8dcb41e4a3e1d1529cdbb72ec8",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3 || ^7.0",
+                "php": ">= 7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BenMajor\\ExchangeRatesAPI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Major",
+                    "email": "ben.major88@gmail.com"
+                }
+            ],
+            "description": "An unofficial SDK for the ExchangeRatesAPI. (https://exchangeratesapi.io/)",
+            "support": {
+                "issues": "https://github.com/benmajor/ExchangeRatesAPI/issues",
+                "source": "https://github.com/benmajor/ExchangeRatesAPI/tree/4.2.0"
+            },
+            "time": "2023-10-01T19:46:34+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.11.0",
