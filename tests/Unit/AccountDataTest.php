@@ -15,12 +15,12 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
 
         $user = new BankAccount($name,$currency,$color,$balance,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
     }
@@ -30,14 +30,14 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
         $installement = false;
 
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,$installement,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -49,13 +49,13 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
 
         $user = new CreditCardAccount($name,$currency,$color,$balance,$date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -67,7 +67,7 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834321';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
         $installement = true;
         $installementValue = 100;
@@ -75,7 +75,7 @@ class AccountDataTest extends TestCase
         $user = new CreditCardRevolvingAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,true);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
@@ -88,13 +88,13 @@ class AccountDataTest extends TestCase
         $name = 'john_doe';
         $color = '#92834312';
         $balance = 1024.00;
-        $currency = '1';
+        $currency = 'USD';
         $date = new \DateTime();
 
         $user = new SavingAccount($name,$currency,$color, $balance, $date,0);
 
         $this->assertEquals($name, $user->getName());
-        $this->assertEquals(1, $user->getCurrency());
+        $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());

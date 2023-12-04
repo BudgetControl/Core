@@ -8,6 +8,8 @@ use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Transfer;
 use App\BudgetTracker\Http\Trait\Paginate;
+use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\WalletService;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use App\BudgetTracker\Services\ResponseService;
@@ -107,12 +109,18 @@ class TransferController extends EntryController
 	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		$entry = Entry::where('uuid',$id)->firstOrFail();
-		$entryTransfer = Entry::where('id',$entry->transfer_id)->firstOrFail();
+		$entryTransfer = Entry::where('uuid',$entry->transfer_relation)->firstOrFail();
+
 		try {
 			Transfer::destroy($entry->id);
 			Transfer::destroy($entryTransfer->id);
-			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
-			AccountsService::updateBalance($entryTransfer->amount * -1,$entryTransfer->account_id);
+
+			$walletService = new WalletService(EntryService::create($entry->toArray(), EntryType::Transfer));
+			$walletService->subtract();
+			
+			$walletService = new WalletService(EntryService::create($entryTransfer->toArray(), EntryType::Transfer));
+			$walletService->subtract();
+
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());

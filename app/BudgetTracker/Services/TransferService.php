@@ -34,7 +34,7 @@ class TransferService extends EntryService
     private function prepare(array $data): Transfer
     {
         $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
-        $uuid = null;
+        $account = $data['account_id'] == 0 ? Account::where("uuid", Account::DEFAULT)->firstOrFail() : Account::findOrFail($data['account_id']);
 
         $entry = new Transfer(
             $data['amount'],
@@ -43,7 +43,7 @@ class TransferService extends EntryService
             new DateTime($data['date_time']),
             $data['waranty'],
             $data['confirmed'],
-            Account::findOrFail($data['account_id']),
+            $account,
             PaymentsTypes::findOrFail($data['payment_type']),
             new \stdClass(),
             $data['label'],
@@ -65,6 +65,7 @@ class TransferService extends EntryService
      */
     private function prepareInverted(array $data): Transfer
     {
+        $account = $data['transfer_id'] == 0 ? Account::where("uuid", Account::DEFAULT)->firstOrFail() : Account::findOrFail($data['transfer_id']);
 
         $entry = new Transfer(
             $data['amount'] * -1,
@@ -73,7 +74,7 @@ class TransferService extends EntryService
             new DateTime($data['date_time']),
             $data['waranty'],
             $data['confirmed'],
-            Account::findOrFail($data['transfer_id']),
+            $account,
             PaymentsTypes::findOrFail($data['payment_type']),
             new \stdClass(),
             $data['label'],
@@ -119,6 +120,7 @@ class TransferService extends EntryService
     {   
 
         $entryModel = new TransferModel();
+
         $findEntry = TransferModel::findFromUuid($entry->getUuid(),$userId);
         if (!empty($findEntry)) {
             $entryModel = $findEntry;
@@ -138,9 +140,14 @@ class TransferService extends EntryService
         $entryModel->transfer_relation = $entry->getTransfer_relation();
         $entryModel->transfer_id = $entry->getTransfer_id();
         $entryModel->user_id = $userId;
+
+        $walletService = new WalletService(
+            EntryService::create($entryModel->toArray(), EntryType::Transfer)
+        );
+        $walletService->sum();
+
         $entryModel->save();
 
-        $this->updateBalance($entry);
         $this->attachLabels($entry->getLabels(),$entryModel);
 
     }

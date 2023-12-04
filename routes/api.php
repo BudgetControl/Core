@@ -1,10 +1,12 @@
 <?php
 
-use App\Mailer\Services\MailService;
-use Illuminate\Support\Facades\Route;
-use App\User\Controllers\AuthController;
-use App\Mailer\Services\Registration;
 use Illuminate\Http\Request;
+use App\Mailer\Services\MailService;
+use App\Mailer\Services\Registration;
+use Illuminate\Support\Facades\Route;
+use App\BudgetTracker\Models\Currency;
+use App\User\Controllers\AuthController;
+use App\Exchange\Services\ExchangeService;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,14 @@ Route::apiResource('labels', \App\BudgetTracker\Http\Controllers\LabelController
 Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyController::class);
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
+// CUSTOM API
+
+Route::put('sorting-account/{id}', function(Request $request, int $id) {
+    $controller = new \App\BudgetTracker\Http\Controllers\AccountController();
+    return $controller->sorting($id,$request->sorting);
+
+})->middleware('auth.jwt');
+
 
 Route::get('entry/account/{id}', function (string $id) {
     return \App\BudgetTracker\Http\Controllers\EntryController::getEntriesFromAccount((int) $id);
@@ -40,13 +50,8 @@ Route::get('entry/account/{id}', function (string $id) {
 Route::post('entries/import', '\App\BudgetTracker\Http\Controllers\ImportController@import')->middleware('auth.jwt');
 
 /** make accounts api */
-Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save');
+Route::put('accounts/update-value', '\App\BudgetTracker\Http\Controllers\ImportController@save')->middleware('auth.jwt');
 
-Route::get('test', function() {
-    $test = new Registration(
-        [
-            'username' => 1, 'email' => 2, 'link' => 3
-        ]
-    );
-    $test->send('marco.defelice890@gmail.com');
-});
+// #### USERS SETTINGS
+Route::post("/user/currency", 'App\User\Controllers\UserSettingController@setDefaultCurrency')->middleware('auth.jwt');
+Route::get("/user/settings", 'App\User\Controllers\UserSettingController@index')->middleware('auth.jwt');

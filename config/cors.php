@@ -17,18 +17,18 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie', 'auth/*', 'search/*'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => [],
     
-    'allowed_origins' => [env('CORS_DOMAIN')], //This line means allow origin
+    'allowed_origins' => [],
     
     'allowed_origins_patterns' => [],
     
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [],
     
     'exposed_headers' => [],
     
     'max_age' => 0,
     
-    'supports_credentials' => false, 
+    'supports_credentials' => false,
     
     ];

@@ -2,22 +2,23 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\User\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Models\ActionJobConfiguration;
-use App\BudgetTracker\Models\SubCategory;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\Labels;
+use App\User\Controllers\Controller;
+use App\BudgetTracker\Models\Category;
+use App\BudgetTracker\Models\SubCategory;
 
 
 class CategoryService 
 {   
     private $categories;
     private $labels;
+    private $id;
 
-    public function __construct()
+    public function __construct(int $id = 0)
     {
-        $this->categories = ActionJobConfiguration::where("action","category")->get();
-        $this->labels = ActionJobConfiguration::where("action","label")->get();
+        $this->id = $id;
     }
 
     /**
@@ -67,4 +68,37 @@ class CategoryService
         }
         return implode("|",$labels);
     }
+
+    /**
+     * get all categories
+     */
+    public function all()
+    {
+         $userId = UserService::getCacheUserID();
+         return Category::with(['subCategory' => function($q) use ($userId) {
+			// Query the name field in status table
+			$q->whereIn('user_id', [$userId,0]); // '=' is optional
+		}])->orderBy('name')->get();
+    }
+
+    /**
+     * save category
+     */
+    public function save(Request $request): void
+    {
+        if(!empty($this->id)) {
+            $category = SubCategory::findOrFail($this->id);
+        } else {
+            $category = new SubCategory();
+        }
+        
+        $category->name = $request->name;
+        $category->exclude_from_stats = $request->exclude_stats;
+        $category->category_id = $request->parent_category;
+        $category->custom = 1;
+        $category->user_id = UserService::getCacheUserID();
+        $category->save();
+
+    }
+
 }

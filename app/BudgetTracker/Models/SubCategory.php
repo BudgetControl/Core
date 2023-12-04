@@ -4,6 +4,8 @@ namespace App\BudgetTracker\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\User\Services\UserService;
+use Illuminate\Database\Eloquent\Builder;
 
 class SubCategory extends Model
 {
@@ -15,6 +17,18 @@ class SubCategory extends Model
       "deleted_at"
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        
+        $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
+        $this->attributes['uuid'] = uniqid();
+
+        foreach($attributes as $k => $v) {
+            $this->$k = $v;
+        }
+    }
+
     public function category() {
        return $this->belongsTo(Category::class);
     }
@@ -24,6 +38,14 @@ class SubCategory extends Model
      */
     public function entry() {
        return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * scope user
+     */
+    public function scopeUser(Builder $query): void
+    {
+        $query->whereIn('sub_categories.user_id',[UserService::getCacheUserID(),0]);
     }
     
 }

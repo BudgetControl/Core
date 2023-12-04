@@ -33,7 +33,7 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite app/BudgetTracker/Mailer
         LANG: it
-      run: vendor/bin/phpunit 
+      run: vendor/bin/phpunit --testsuit Mailer
     services:
       mysql:
         image: mysql:latest

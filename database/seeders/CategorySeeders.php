@@ -33,6 +33,7 @@ class CategorySeeders extends Seeder
             $dbSubCat->uuid = $value->uuid;
             $dbSubCat->name = $value->name;
             $dbSubCat->category_id = $db->id;
+            $dbSubCat->exclude_from_stats = (empty($value->exclude_from_stats)) ? 0 : $value->exclude_from_stats;
             $dbSubCat->save();
           }
 

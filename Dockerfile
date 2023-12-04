@@ -21,6 +21,14 @@ WORKDIR /var/www/workdir
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ###########################################
+# apache conf
+###########################################
+
+COPY bin/apache/prod.budgetcontrol.cloud.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
+RUN a2ensite budgetcontrol.cloud.conf
+RUN a2enmod rewrite
+
+###########################################
 # xDebug
 ###########################################
 

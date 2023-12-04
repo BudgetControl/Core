@@ -407,6 +407,11 @@
         {
           "uuid": "635bd34d25f01",
           "name": "altro"
+        },
+        {
+          "uuid": "6560a071d8822",
+          "name": "trasferimento",
+          "exclude_from_stats": 1
         }
       ]
     }

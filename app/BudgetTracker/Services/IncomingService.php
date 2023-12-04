@@ -79,10 +79,15 @@ class IncomingService extends EntryService
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
             }
+            
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Incoming)
+            );
+            $walletService->sum();
+            
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
-            $this->updateBalance($entry);
 
         } catch (\Exception $e) {
             $error = uniqid();

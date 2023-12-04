@@ -70,3 +70,8 @@ Route::delete('/delete',function(Request $request) {
     $auth = new ProfileController();
     return $auth->delete($request);
 });
+
+Route::delete('/data/delete',function(Request $request) {
+    $auth = new ProfileController();
+    return $auth->delete($request);
+});

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\BudgetTracker\Jobs\ActivatePlannedEntries;
 use App\BudgetTracker\Jobs\InsertPlannedEntry;
 use App\BudgetTracker\Jobs\CreditCartPlannedRecursiveEntry;
-
+use App\Exchange\Job\ExchangeRateJob;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,8 +17,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new ActivatePlannedEntries())->hourly();
-        $schedule->job(new InsertPlannedEntry())->hourly();
-        $schedule->job(new CreditCartPlannedRecursiveEntry())->monthly();
+        $schedule->job(new InsertPlannedEntry())->daily();
+        $schedule->job(new ExchangeRateJob())->daily();
+        // $schedule->job(new CreditCartPlannedRecursiveEntry())->monthly();
     }
 
     /**

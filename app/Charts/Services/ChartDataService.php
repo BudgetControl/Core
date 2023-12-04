@@ -5,6 +5,7 @@ namespace App\Charts\Services;
 use DateTime;
 use App\BudgetTracker\Models\Debit;
 use Doctrine\DBAL\Driver\Exception;
+use App\Stats\Services\StatsService;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Expenses;
@@ -25,10 +26,8 @@ class ChartDataService
 
     public function incoming(DateTime $start, DateTime $end): array
     {
-        return Incoming::user()->stats()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->incoming(false);
     }
 
     /**
@@ -42,12 +41,8 @@ class ChartDataService
 
     public function incomingCategory(DateTime $start, DateTime $end, int $categoryId): array
     {
-        return Incoming::user()->stats()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->where('category_id', $categoryId)
-            ->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->entryByCategory([$categoryId],false);
     }
 
     /**
@@ -61,14 +56,8 @@ class ChartDataService
 
     public function incomingLabel(DateTime $start, DateTime $end, int $labelId): array
     {
-        return Incoming::user()->stats()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Incoming->value))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->whereAs('labels', function ($query) use ($labelId) {
-                $query->where('label', $labelId);
-            })
-            ->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->entryByLabel([$labelId],false);
     }
 
     /**
@@ -81,10 +70,8 @@ class ChartDataService
 
     public function expenses(DateTime $start, DateTime $end): array
     {
-        return Expenses::user()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Expenses->value))->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->expenses(false);
     }
 
     /**
@@ -98,12 +85,8 @@ class ChartDataService
 
     public function expensesCategory(DateTime $start, DateTime $end, int $categoryId): array
     {
-        return Expenses::user()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Expenses->value))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->where('category_id', $categoryId)
-            ->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->entryByCategory([$categoryId],false);
     }
 
     /**
@@ -117,14 +100,8 @@ class ChartDataService
 
     public function expensesLabel(DateTime $start, DateTime $end, int $labelId): array
     {
-        return Expenses::user()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('category_id', $this->getCategoryId(EntryType::Expenses->value))
-            ->where('planned', 0)->where('confirmed', 1)
-            ->whereHas('label', function ($query) use ($labelId) {
-                $query->where('labels_id', $labelId);
-            })
-            ->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->entryByLabel([$labelId],false);
     }
 
     /**
@@ -138,11 +115,8 @@ class ChartDataService
 
     public function types(DateTime $start, DateTime $end, array $types): array
     {
-        return Incoming::user()->stats()->where('entries.date_time', '>=', $this->startDate($start))
-            ->where('entries.date_time', '<=', $this->endDate($end))->whereIn('type', $types)
-            ->where('planned', 0)->where('confirmed', 1)
-            ->get()
-            ->toArray();
+        $stats = new StatsService($this->startDate($start),$this->endDate($end));
+        return $stats->entryByType([$types],false);
     }
 
     /**
@@ -159,23 +133,5 @@ class ChartDataService
     private function endDate(DateTime $date): string
     {
         return $date->format('Y-m-d');
-    }
-
-    /**
-     *  retrive only category id
-     */
-    private function getCategoryId(string $type): array
-    {
-        $results = [];
-        $categories = Category::getCateroyGroup($type);
-        foreach($categories as $cat) {
-            $results[] = $cat->id;
-        }
-
-        if(empty($results)) {
-            throw new Exception("Ops no category foud with type ( $type )", 500);
-        }
-
-        return $results;
     }
 }

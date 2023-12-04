@@ -2,8 +2,8 @@
 
 namespace App\BudgetTracker\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -26,6 +26,7 @@ class Category extends Model
     {
       return self::leftJoin("sub_categories",'sub_categories.category_id','=','categories.id')
       ->where('categories.type',$group)
+      ->where('sub_categories.exclude_from_stats',0)
       ->get();
     }
 }

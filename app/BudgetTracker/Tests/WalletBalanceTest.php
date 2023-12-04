@@ -2,6 +2,8 @@
 
 namespace App\BudgetTracker\Tests;
 
+use App\BudgetTracker\Entity\Accounts\Account;
+use App\BudgetTracker\Enums\AccountType;
 use Tests\TestCase;
 use \DateTime;
 
@@ -88,7 +90,7 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_planned_balance_data(): void
     {
-        $payload = $this->makeRequest(500,new DateTime("+2 day"));
+        $payload = $this->makeRequest(50,new DateTime("+2 day"));
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_test",
@@ -129,7 +131,7 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_confirmed_balance_data(): void
     {
-        $payload = $this->makeRequest(700,new DateTime("-2 day"));
+        $payload = $this->makeRequest(7000,new DateTime("-2 day"));
         $payload['confirmed'] = false;
 
         $response = $this->putJson(
@@ -151,7 +153,7 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_confirmed_balance_v2_data(): void
     {
-        $payload = $this->makeRequest(700,new DateTime("-2 day"));
+        $payload = $this->makeRequest(70,new DateTime("-2 day"));
         $payload['confirmed'] = true;
 
         $response = $this->putJson(
@@ -162,7 +164,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4700,
+            "balance" => 4070,
             "id" => 1
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -229,6 +231,7 @@ class WalletBalanceTest extends TestCase
      */
     private function makeRequest(float $amount, DateTime $dateTime): array
     {
+
         $request = '{ 
             "amount": '.$amount.',
             "note" : "test",
@@ -236,7 +239,7 @@ class WalletBalanceTest extends TestCase
             "account_id" : 1,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
+            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'",
             "label": [],
             "user_id": 1,
             "waranty": 1,

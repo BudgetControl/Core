@@ -47,27 +47,13 @@ class EntryService
 
       Log::debug("save entry -- " . json_encode($data));
 
-      $entry = new Entry(
-        $data['amount'],
-        $type,
-        Currency::findOrFail($data['currency_id']),
-        $data['note'],
-        new DateTime($data['date_time']),
-        $data['waranty'],
-        $data['transfer'],
-        $data['confirmed'],
-        SubCategory::findOrFail($data['category_id']),
-        Account::findOrFail($data['account_id']),
-        PaymentsTypes::findOrFail($data['payment_type']),
-        new \stdClass(),
-        $data['label']
-      );
+      $entry = self::create($data, $type);
 
       $entryModel = new EntryModel();
       if (!empty($this->uuid)) {
-          $entry->setUuid($this->uuid);
-          $entryQuery = EntryModel::findFromUuid($this->uuid);
-          $entryModel = $entryQuery;
+        $entry->setUuid($this->uuid);
+        $entryQuery = EntryModel::findFromUuid($this->uuid);
+        $entryModel = $entryQuery;
       }
 
       $entryModel->uuid = $entry->getUuid();
@@ -83,16 +69,23 @@ class EntryService
       $entryModel->confirmed = $entry->getConfirmed();
       $entryModel->type = $entry->getType();
       $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+
+      $walletService = new WalletService(
+        EntryService::create($entryModel->toArray(), $entry->getType())
+      );
+
       //TODO: fixme
-      if(!is_null($payee)) {
+      if (!is_null($payee)) {
         $entryModel->payee_id = $payee->id;
       }
-      $entryModel->save();
 
       $this->attachLabels($entry->getLabels(), $entryModel);
-      $this->updateBalance($entry);
-
+      $walletService->sum();
+      
+      $entryModel->save();
+      
     } catch (\Exception $e) {
+
       $errorCode = uniqid();
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
       throw new \Exception("Ops an errro occurred " . $errorCode);
@@ -116,7 +109,7 @@ class EntryService
     if ($id === null) {
       $entry = $entry->get();
     } else {
-      $entry = $entry->where('uuid',$id)->get();
+      $entry = $entry->where('uuid', $id)->get();
     }
 
     if (!empty($entry)) {
@@ -172,14 +165,9 @@ class EntryService
   /**
    * revert account wallet if update
    */
-  public function revertAccountWallet(EntryType $type): void
+  public function revertAccountWallet(): void
   {
-      if (!empty($this->uuid)) {
-          $entryQuery = EntryModel::findFromUuid($this->uuid);
-          $entryQuery->amount = $entryQuery->amount *-1;
-          $entryDb = EntryModel::buildEntity($entryQuery->toArray(),$type);
-          $this->updateBalance($entryDb);
-      }
+    
   }
 
   /**
@@ -219,22 +207,31 @@ class EntryService
   }
 
   /**
-   * update balance
-   * @param EntryInterface $entry
-   * 
-   * @return void
+   * create entity
    */
-  protected function updateBalance(EntryInterface $entry): void
+  public static function create(array $data, EntryType $type): Entry
   {
-      $amount = $entry->getAmount();
-      $isPlanned = $entry->getPlanned();
-      $isConfirmed = $entry->getConfirmed();
-      $account = $entry->getAccount();
+    $entry = new Entry(
+      $data['amount'],
+      $type,
+      Currency::findOrFail($data['currency_id']),
+      $data['note'],
+      new DateTime($data['date_time']),
+      $data['waranty'],
+      empty($data['transfer']) ? false : $data['transfer'],
+      $data['confirmed'],
+      SubCategory::findOrFail($data['category_id']),
+      Account::findOrFail($data['account_id']),
+      PaymentsTypes::findOrFail($data['payment_type']),
+      new \stdClass(),
+      empty($data['label']) ? [] : $data['label']
+    );
 
-      //update balance
-      if($isPlanned == false && $isConfirmed == true) {
-        AccountsService::updateBalance($amount,$account->id);
-        Log::debug("Update balance ".$amount." , ".$account->id);
-      }
+    if(!empty($data['uuid'])) {
+      $entry->setUuid($data['uuid']);
+    }
+    
+    return $entry;
+
   }
 }

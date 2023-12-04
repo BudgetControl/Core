@@ -15,6 +15,7 @@ use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
 use App\BudgetTracker\Entity\Accounts\InvestmentAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardRevolvingAccount;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Summary of SaveEntryService
@@ -48,6 +49,10 @@ class AccountsService
 
             Log::debug("save Account -- " . json_encode($data));
 
+            if(empty($data['exclude_from_stats'])) {
+                $data['exclude_from_stats'] = false;
+            }
+
             $this->makeObject($data);
             $account = $this->account->toArray();
             $entry = new Account();
@@ -59,14 +64,14 @@ class AccountsService
             $entry->type = $account['type'];
             $entry->color = $account['color'];
             $entry->balance = $account['balance'];
-            $entry->installement = $account['installement'];
-            $entry->installementValue = $account['installementValue'];
             $entry->currency = $account['currency'];
             $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
             $entry->date = empty(@$account['date']) ? null : $account['date'];
-            if(!empty(@$data['sorting'])) {
-                $entry->sorting = $data['sorting'];
+
+            if(!empty($account['installement'])) {
+                $entry->installement = $account['installement'];
+                $entry->installementValue = $account['installementValue'];
             }
 
             $entry->save();
@@ -79,13 +84,36 @@ class AccountsService
     }
 
     /**
+     * save sorting data
+     * @param int $accountID id
+     * @param int $sorting
+     * 
+     * @return void
+     */
+    public function sorting(int $sorting): void
+    {
+        $accounts = Account::where("sorting", '>=', $sorting)->get();
+        $sort = $sorting;
+        foreach($accounts as $acocunt) {
+            $sort++;
+            $acocunt->update([
+                'sorting' => $sort
+            ]);
+        }
+
+        Account::findOrFail($this->id)->update([
+            'sorting' => $sorting
+        ]);
+    }
+
+    /**
      * read a resource
      * @param int $id of resource
      * 
-     * @return AccountInterface with a resource
+     * @return Model with a resource
      * @throws \Exception
      */
-    public function read(int $id = null): Collection
+    public function read(int $id = null ): Model
     {
 
         $entry = Account::user();
@@ -93,7 +121,7 @@ class AccountsService
         if ($id === null) {
             $accounts = $entry->get();
         } else {
-            $accounts = $entry->firstOrFail($id);
+            $accounts = $entry->where("id", $id)->firstOrFail();
         }
 
         return $accounts;

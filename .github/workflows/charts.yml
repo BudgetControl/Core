@@ -33,7 +33,7 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite app/BudgetTracker/Charts
         LANG: it
-      run: vendor/bin/phpunit 
+      run: vendor/bin/phpunit --testsuit Charts
     services:
       mysql:
         image: mysql:latest

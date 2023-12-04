@@ -2,15 +2,16 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Http\Controllers\Controller;
-use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Payee;
-use App\BudgetTracker\Services\AccountsService;
-use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\Builder;
+use App\BudgetTracker\Http\Trait\Paginate;
+use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\WalletService;
+use App\BudgetTracker\Services\AccountsService;
+use App\BudgetTracker\Http\Controllers\Controller;
 
 
 class EntryController extends Controller
@@ -109,8 +110,14 @@ class EntryController extends Controller
 	{
 		try {
 			$entry = Entry::where('uuid',$id)->firstOrFail();
+			
+			$walletService = new WalletService(
+				EntryService::create($entry->toArray(), EntryType::from($entry->type))
+			);
+			$walletService->subtract();
+
 			Entry::destroy($entry->id);
-			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
+			
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
