@@ -24,8 +24,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # apache conf
 ###########################################
 
-COPY bin/apache/dev-api.budgetcontrol.cloud.conf /etc/apache2/sites-available/dev-api.budgetcontrol.cloud.conf
-RUN a2ensite dev-api.budgetcontrol.cloud.conf
+COPY bin/apache/prod.budgetcontrol.cloud.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
+RUN a2ensite budgetcontrol.cloud.conf
 RUN a2enmod rewrite
 
 ###########################################
