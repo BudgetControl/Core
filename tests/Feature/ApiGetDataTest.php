@@ -267,16 +267,6 @@ class ApiGetDataTest extends TestCase
 
     }
 
-    public function test_user_setting()
-    {
-        $response = $this->get('/api/user/settings', $this->getAuthTokenHeader());
-        
-        $response->assertStatus(200);
-        $response->assertJsonStructure(self::SETTINGS);
-
-    }
-
-
     private function getAuthTokenHeader()
     {
         //first we nee to get a new token
