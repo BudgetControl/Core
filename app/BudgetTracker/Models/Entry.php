@@ -7,7 +7,6 @@ use App\BudgetTracker\Entity\Entries\Entry as EntryObject;
 use Illuminate\Database\Eloquent\Model;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\User\Services\UserService;
 use DateTime;
 
@@ -27,7 +26,7 @@ class Entry extends Model
         'created_at'  => 'date:Y-m-d',
         'updated_at'  => 'date:Y-m-d',
         'deletad_at'  => 'date:Y-m-d',
-        'date_time' =>  'date:Y-m-d H:i:s'
+        'date_time' =>  'date:Y-m-d H:i:s',
     ];
 
     public function __construct(array $attributes = [])
@@ -124,6 +123,7 @@ class Entry extends Model
     public function scopeWithRelations($query): void
     {
         $query->with('label')->with('subCategory.category')->with('account')->with("payee")->orderBy('date_time','desc')
+        ->with('currency')
         ->where('user_id',UserService::getCacheUserID());
     }
 

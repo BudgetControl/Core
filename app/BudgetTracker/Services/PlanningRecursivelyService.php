@@ -82,7 +82,7 @@ class PlanningRecursivelyService extends EntryService
     {
         Log::debug("read planning recursively  -- $id");
 
-        $entries = PlannedEntries::user()->with('account')->with("subCategory.category")->where("deleted_at", null);
+        $entries = PlannedEntries::withRelations()->where("deleted_at", null);
 
         if ($id !== null) {
             $entries->where('uuid', $id);
