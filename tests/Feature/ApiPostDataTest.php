@@ -16,10 +16,7 @@ require_once 'app/User/Tests/AuthTest.php';
 class ApiPostDataTest extends TestCase
 {
 
-    private $headers = '';
-
     const ACCOUNT_ID = '64b59d645b752_test';
-
 
     /**
      * A basic feature test example.
@@ -216,6 +213,48 @@ class ApiPostDataTest extends TestCase
            'confirmed' => 1
        ]);
    }
+
+    /**
+    * A basic feature test example.
+    */
+    public function test_model_data(): void
+    {
+ 
+        $request = $this->makeRequest(1000, new DateTime());
+        $request->category_id = 60;
+        $request->name = "test";
+ 
+        $response = $this->postJson('/api/model',(array) $request,$this->getAuthTokenHeader());
+        $response->assertStatus(200);
+ 
+        $this->assertDatabaseHas(Models::class,[
+            'amount' => 1000,
+            'type' => EntryType::Incoming->value,
+            'category_id' => 60,
+            'account_id' => 1,
+            'name' => 'test'
+        ]);
+    }
+
+    /**
+    * A basic feature test example.
+    */
+    public function test_update_model_data(): void
+    {
+ 
+        $request = $this->makeRequest(500, new DateTime());
+        $request->category_id = 60;
+ 
+        $response = $this->putJson('/api/model/65719bc11c897',(array) $request,$this->getAuthTokenHeader());
+        $response->assertStatus(200);
+ 
+        $this->assertDatabaseHas(Models::class,[
+            'amount' => 500,
+            'type' => EntryType::Incoming->value,
+            'category_id' => 60,
+            'account_id' => 1,
+        ]);
+    }
 
     /**
      * build model request

@@ -60,6 +60,12 @@ class Kernel extends HttpKernel
         'auth' => [
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        
+        'mailer' => [
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\User\Middleware\JwtAuthenticate::class,
         ]
     ];
 

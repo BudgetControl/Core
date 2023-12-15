@@ -3,94 +3,132 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+
 require_once 'app/User/Tests/AuthTest.php';
 
 class ApiGetDataTest extends TestCase
 {
     const ENTRIES = [
+        "uuid",
+        "amount",
+        "note",
+        "type",
+        "waranty",
+        "transfer",
+        "confirmed",
+        "planned",
+        "category_id",
+        "model_id",
+        "account_id",
+        "transfer_id",
+        "currency_id",
+        "payment_type",
+        "payee_id",
+        "geolocation",
+        "label",
+        "sub_category" => [
+            "id",
+            "date_time",
             "uuid",
-            "amount",
-            "note",
-            "type",
-            "waranty",
-            "transfer",
-            "confirmed",
-            "planned",
+            "name",
             "category_id",
-            "model_id",
-            "account_id",
-            "transfer_id",
-            "currency_id",
-            "payment_type",
-            "payee_id",
-            "geolocation",
-            "label",
-            "sub_category" => [
+            "category" => [
                 "id",
                 "date_time",
                 "uuid",
                 "name",
-                "category_id",
-                "category" => [
-                    "id",
-                    "date_time",
-                    "uuid",
-                    "name",
-                    "icon"
-                ]
-            ],
-            "account" => [
-                "id",
-                "uuid",
-                "name",
-                "color"
-            ],
-            "geolocation"
+                "icon"
+            ]
+        ],
+        "account" => [
+            "id",
+            "uuid",
+            "name",
+            "color"
+        ],
+        "geolocation"
     ];
 
     const ENTRY = ["data" => self::ENTRIES];
 
     const PLANNING = [
-            "uuid",
-            "type",
+        "uuid",
+        "type",
+        "date_time",
+        "amount",
+        "note",
+        "waranty",
+        "transfer",
+        "confirmed",
+        "sub_category" => [
+            "id",
             "date_time",
-            "amount",
-            "note",
-            "waranty",
-            "transfer",
-            "confirmed",
-            "sub_category" => [
+            "uuid",
+            "name",
+            "category_id",
+            "category" => [
                 "id",
                 "date_time",
                 "uuid",
                 "name",
-                "category_id",
-                "category" => [
-                    "id",
-                    "date_time",
-                    "uuid",
-                    "name",
-                    "icon"
-                ]
-            ],
-            "account" => [
+                "icon"
+            ]
+        ],
+        "account" => [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "color",
+            "user_id",
+            "date",
+            "type",
+            "installement",
+            "installementValue",
+            "currency",
+            "balance"
+        ],
+        "currency_id",
+        "payment_type",
+        "planning",
+        "end_date_time"
+    ];
+
+    const MODEL = [
+        "uuid",
+        "type",
+        "amount",
+        "note",
+        "sub_category" => [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "category_id",
+            "category" => [
                 "id",
                 "date_time",
                 "uuid",
                 "name",
-                "color",
-                "user_id",
-                "date",
-                "type",
-                "installement",
-                "installementValue",
-                "currency",
-                "balance"
-            ],
-            "currency_id",
-            "payment_type",
-            "planning",
-            "end_date_time"
+                "icon"
+            ]
+        ],
+        "account" => [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "color",
+            "user_id",
+            "date",
+            "type",
+            "installement",
+            "installementValue",
+            "currency",
+            "balance"
+        ],
+        "currency_id",
+        "payment_type",
     ];
 
     const PAYEE = [
@@ -228,9 +266,9 @@ class ApiGetDataTest extends TestCase
     public function test_filter_account_entry()
     {
         $response = $this->get('/api/entry?filter[account]=10&page=0', $this->getAuthTokenHeader());
-        
+
         $response->assertStatus(200);
-        foreach($response['data'] as $data) {
+        foreach ($response['data'] as $data) {
             $assert = $data['account_id'] === 10;
             $this->assertTrue($assert);
         }
@@ -239,9 +277,9 @@ class ApiGetDataTest extends TestCase
     public function test_filter_account_category_entry()
     {
         $response = $this->get('/api/entry?filter[account]=10&filter[category]=5&page=0', $this->getAuthTokenHeader());
-        
+
         $response->assertStatus(200);
-        foreach($response['data'] as $data) {
+        foreach ($response['data'] as $data) {
             $assert = $data['category_id'] === 5 && $data['account_id'] === 10;
             $this->assertTrue($assert);
         }
@@ -250,9 +288,9 @@ class ApiGetDataTest extends TestCase
     public function test_filter_type_entry()
     {
         $response = $this->get('/api/entry?filter[type]=incoming&page=0', $this->getAuthTokenHeader());
-        
+
         $response->assertStatus(200);
-        foreach($response['data'] as $data) {
+        foreach ($response['data'] as $data) {
             $assert = $data['type'] === 'incoming';
             $this->assertTrue($assert);
         }
@@ -261,10 +299,17 @@ class ApiGetDataTest extends TestCase
     public function test_get_currency()
     {
         $response = $this->get('/api/currencies', $this->getAuthTokenHeader());
-        
+
         $response->assertStatus(200);
         $response->assertJsonStructure(self::CURRENCY);
+    }
 
+    public function test_get_model()
+    {
+        $response = $this->get('/api/model', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::MODEL);
     }
 
     private function getAuthTokenHeader()

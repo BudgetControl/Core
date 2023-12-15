@@ -74,11 +74,12 @@ class ModelController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
+		Models::where('uuid',$id)->delete();
 		return response('nothing');
 	}
 }
