@@ -16,10 +16,7 @@ require_once 'app/User/Tests/AuthTest.php';
 class ApiPostDataTest extends TestCase
 {
 
-    private $headers = '';
-
     const ACCOUNT_ID = '64b59d645b752_test';
-
 
     /**
      * A basic feature test example.
@@ -218,6 +215,51 @@ class ApiPostDataTest extends TestCase
    }
 
     /**
+    * A basic feature test example.
+    */
+    public function test_model_data(): void
+    {
+ 
+        $request = $this->makeRequest(1000, new DateTime());
+        $request->category_id = 60;
+        $request->name = "test";
+        $request->type = "incoming";
+ 
+        $response = $this->postJson('/api/model',(array) $request,$this->getAuthTokenHeader());
+        $response->assertStatus(200);
+ 
+        $this->assertDatabaseHas('models',[
+            'amount' => 1000,
+            'type' => EntryType::Incoming->value,
+            'category_id' => 60,
+            'account_id' => 1,
+            'name' => 'test'
+        ]);
+    }
+
+    /**
+    * A basic feature test example.
+    */
+    public function test_update_model_data(): void
+    {
+ 
+        $request = $this->makeRequest(500, new DateTime());
+        $request->category_id = 60;
+        $request->type = "incoming";
+        $request->name = "test";
+        
+        $response = $this->putJson('/api/model/65719bc11c897',(array) $request,$this->getAuthTokenHeader());
+        $response->assertStatus(200);
+ 
+        $this->assertDatabaseHas('models',[
+            'amount' => 500,
+            'type' => EntryType::Incoming->value,
+            'category_id' => 60,
+            'account_id' => 1,
+        ]);
+    }
+
+    /**
      * build model request
      * @param float $amount
      * @param DateTime $dateTime
@@ -226,19 +268,18 @@ class ApiPostDataTest extends TestCase
      */
     private function makeRequest(float $amount, DateTime $dateTime): object
     {
-        $request = '{ 
+        $request = '{
             "amount": '.$amount.',
             "note" : "test",
             "category_id":12,
             "account_id" : 1,
             "currency_id": 1,
             "payment_type" : 1,
-            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
+            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'",
             "label": [],
             "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1
+            "confirmed": 1
         }';
 
         return json_decode($request);

@@ -18,9 +18,7 @@ services:
         - services_budgetcontrol_network
     bemodule:
       container_name: budgetcontrol-services
-      build:
-        context: .
-        dockerfile: Dockerfile
+      image: budgetcontrol-services:${APP_ENV}_${APP_VERSION}
       volumes:
         - ./:/var/www/workdir
         - ../logapp:/app/storage/logs
@@ -69,4 +67,5 @@ volumes:
 
 networks:
   services_budgetcontrol_network:
-    external: true
+    external: false
+    name: services_budgetcontrol_network

@@ -240,8 +240,7 @@ class Entry implements EntryInterface
     /**
      * Get the value of labels
      */
-    public function 
-    getLabels(): array
+    public function getLabels(): array
     {
         return $this->labels;
     }

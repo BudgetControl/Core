@@ -69,8 +69,8 @@ class SearchTest extends TestCase
         $payload = [
             "account" => null,
             "category" => null,
-            "type" => ["expenses"],
-            "tags" => [11],
+            "type" => ["expenses","incoming"],
+            "tags" => [1],
             "text" => null,
             "planned" => null
         ];
@@ -87,7 +87,7 @@ class SearchTest extends TestCase
         $foundLabel = false;
         foreach ($response['data']as $data) {
             foreach ($data['label'] as $label) {
-                if ($label['id'] == 11) {
+                if ($label['id'] == 1) {
                     $foundLabel = true;
                 }
             }

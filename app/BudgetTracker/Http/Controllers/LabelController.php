@@ -17,8 +17,9 @@ class LabelController extends Controller
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(int $archive = 0): \Illuminate\Http\JsonResponse
+	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
+		$archive = $request->query('archive',0);
 		$data = LabelService::select();
 		$labels = $data->archived($archive)->order('name')->get();
 

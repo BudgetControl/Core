@@ -126,7 +126,7 @@ class EntryService
    * 
    * @return void
    */
-  public function attachLabels(array $labels, \Illuminate\Database\Eloquent\Model $model)
+  public static function attachLabels(array $labels, \Illuminate\Database\Eloquent\Model $model)
   {
     Log::debug("Labels ## " . json_encode($labels));
     if (!empty($labels)) {

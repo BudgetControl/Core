@@ -83,4 +83,21 @@ class PlannedEntries extends Model
         return $this->belongsTo(PaymentsTypes::class);
     }
 
+     /**
+     * The users that belong to the role.
+     */
+    public function label()
+    {
+        return $this->belongsToMany(Labels::class, 'planned_entry_labels','planned_entry_id');
+    }
+
+    /**
+     * with relations
+     */
+    public function scopeWithRelations($query): void
+    {
+      $query->with('label')->with('subCategory.category')->with('account')->with('currency')
+        ->where('user_id', UserService::getCacheUserID());
+    }
+
 }

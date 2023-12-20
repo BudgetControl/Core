@@ -38,7 +38,7 @@ class IncomingSeed extends Seeder
             ]
         );
 
-        $labels = Labels::factory(10)->create([
+        $labels = Labels::factory(1)->create([
             'user_id' => 1
         ]);
 
