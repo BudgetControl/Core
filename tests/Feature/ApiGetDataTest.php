@@ -95,40 +95,42 @@ class ApiGetDataTest extends TestCase
     ];
 
     const MODEL = [
-        "uuid",
-        "type",
-        "amount",
-        "note",
-        "sub_category" => [
-            "id",
-            "date_time",
+        [
             "uuid",
-            "name",
-            "category_id",
-            "category" => [
+            "type",
+            "amount",
+            "note",
+            "sub_category" => [
                 "id",
                 "date_time",
                 "uuid",
                 "name",
-                "icon"
-            ]
-        ],
-        "account" => [
-            "id",
-            "date_time",
-            "uuid",
-            "name",
-            "color",
-            "user_id",
-            "date",
-            "type",
-            "installement",
-            "installementValue",
-            "currency",
-            "balance"
-        ],
-        "currency_id",
-        "payment_type",
+                "category_id",
+                "category" => [
+                    "id",
+                    "date_time",
+                    "uuid",
+                    "name",
+                    "icon"
+                ]
+            ],
+            "account" => [
+                "id",
+                "date_time",
+                "uuid",
+                "name",
+                "color",
+                "user_id",
+                "date",
+                "type",
+                "installement",
+                "installementValue",
+                "currency",
+                "balance"
+            ],
+            "currency_id",
+            "payment_type",
+        ]
     ];
 
     const PAYEE = [

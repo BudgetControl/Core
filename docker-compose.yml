@@ -67,4 +67,5 @@ volumes:
 
 networks:
   services_budgetcontrol_network:
-    external: true
+    external: false
+    name: services_budgetcontrol_network
