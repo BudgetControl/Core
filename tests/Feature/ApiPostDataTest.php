@@ -228,7 +228,7 @@ class ApiPostDataTest extends TestCase
         $response = $this->postJson('/api/model',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
  
-        $this->assertDatabaseHas(Models::class,[
+        $this->assertDatabaseHas('models',[
             'amount' => 1000,
             'type' => EntryType::Incoming->value,
             'category_id' => 60,
@@ -246,11 +246,12 @@ class ApiPostDataTest extends TestCase
         $request = $this->makeRequest(500, new DateTime());
         $request->category_id = 60;
         $request->type = "incoming";
+        $request->name = "test";
         
         $response = $this->putJson('/api/model/65719bc11c897',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
  
-        $this->assertDatabaseHas(Models::class,[
+        $this->assertDatabaseHas('models',[
             'amount' => 500,
             'type' => EntryType::Incoming->value,
             'category_id' => 60,
