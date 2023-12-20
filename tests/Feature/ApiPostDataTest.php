@@ -223,6 +223,7 @@ class ApiPostDataTest extends TestCase
         $request = $this->makeRequest(1000, new DateTime());
         $request->category_id = 60;
         $request->name = "test";
+        $request->type = "incoming";
  
         $response = $this->postJson('/api/model',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
@@ -244,7 +245,8 @@ class ApiPostDataTest extends TestCase
  
         $request = $this->makeRequest(500, new DateTime());
         $request->category_id = 60;
- 
+        $request->type = "incoming";
+        
         $response = $this->putJson('/api/model/65719bc11c897',(array) $request,$this->getAuthTokenHeader());
         $response->assertStatus(200);
  
