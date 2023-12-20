@@ -87,7 +87,7 @@ class SearchTest extends TestCase
         $foundLabel = false;
         foreach ($response['data']as $data) {
             foreach ($data['label'] as $label) {
-                if ($label['id'] == 11) {
+                if ($label['id'] == 1) {
                     $foundLabel = true;
                 }
             }

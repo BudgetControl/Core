@@ -97,7 +97,6 @@ class ApiGetDataTest extends TestCase
     const MODEL = [
         [
             "uuid",
-            "type",
             "amount",
             "note",
             "sub_category" => [
