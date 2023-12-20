@@ -23,7 +23,6 @@ class ModelService {
 		$model->uuid = uniqid();
 		$model->amount = $data['amount'];
 		$model->note = $data['note'];
-		$model->type = $data['type'];
 		$model->category_id = $data['category'];
 		$model->account_id = $data['account'];
 		$model->currency_id = $data['currency'];
