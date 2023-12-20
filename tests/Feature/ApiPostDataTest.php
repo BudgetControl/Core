@@ -277,7 +277,6 @@ class ApiPostDataTest extends TestCase
             "user_id": 1,
             "waranty": 1,
             "confirmed": 1,
-            "user_id": 1
         }';
 
         return json_decode($request);
