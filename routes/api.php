@@ -34,6 +34,10 @@ Route::apiResource('labels', \App\BudgetTracker\Http\Controllers\LabelController
 Route::apiResource('currencies', \App\BudgetTracker\Http\Controllers\CurrencyController::class);
 Route::apiResource('model', \App\BudgetTracker\Http\Controllers\ModelController::class);
 Route::apiResource('paymentstype', \App\BudgetTracker\Http\Controllers\PaymentTypeController::class);
+
+// RESTORE API
+Route::get('account-restore/{id}', "\App\BudgetTracker\Http\Controllers\AccountController@restore")->middleware('auth.jwt');
+
 // CUSTOM API
 
 Route::put('sorting-account/{id}', function(Request $request, int $id) {

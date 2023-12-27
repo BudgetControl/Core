@@ -121,7 +121,7 @@ class AccountsService
         if ($id === null) {
             $accounts = $entry->get();
         } else {
-            $accounts = $entry->where("id", $id)->firstOrFail();
+            $accounts = $entry->where("id", $id)->withTrashed()->firstOrFail();
         }
 
         return $accounts;
