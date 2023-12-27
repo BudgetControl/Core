@@ -49,6 +49,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('api')
                 ->prefix('search')
                 ->group(base_path('app/Search/Routes/api.php'));
+
+            Route::middleware('budget')
+                ->prefix('api/budget')
+                ->group(base_path('app/BudgetManager/Routes/Api.php'));
         });
     }
 
@@ -74,6 +78,10 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('search', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('budget', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }

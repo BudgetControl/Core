@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Services;
 
+use App\BudgetManager\Services\BudgetMamangerService;
 use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Log;
@@ -12,9 +13,9 @@ use App\BudgetTracker\Models\Entry as Model;
 class WalletService
 {
 
-    private EntryInterface $entry;
-    private ?EntryInterface $oldEntry = null;
-    private bool $revert = false;
+    protected EntryInterface $entry;
+    protected ?EntryInterface $oldEntry = null;
+    protected bool $revert = false;
 
     public function __construct(EntryInterface $entry)
     {
@@ -77,7 +78,7 @@ class WalletService
     /**
      * chek if entry is planned type
      */
-    private function checkPlanned(): bool
+    protected function checkPlanned(): bool
     {
         // check only new entry
         if (is_null($this->oldEntry)) {
@@ -94,7 +95,7 @@ class WalletService
     /**
      * chek if entry is confirmet type
      */
-    private function checkConfirmed(): bool
+    protected function checkConfirmed(): bool
     {
         // check only new entry
         if (is_null($this->oldEntry)) {
@@ -111,7 +112,7 @@ class WalletService
     /**
      * is account changed
      */
-    private function isAccountChanged()
+    protected function isAccountChanged()
     {
 
         if (!is_null($this->oldEntry)) {
@@ -137,7 +138,7 @@ class WalletService
     /**
      * revert to wallet
      */
-    private function revert()
+    protected function revert()
     {
         $this->isAccountChanged();
         if ($this->revert === true) {

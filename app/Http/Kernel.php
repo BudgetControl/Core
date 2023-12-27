@@ -66,7 +66,12 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\User\Middleware\JwtAuthenticate::class,
-        ]
+        ],
+        
+        'budget' => [
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
     ];
 
     /**
