@@ -101,10 +101,15 @@ class AuthController extends Controller
         ])) {
 
             try {
+
+                $expiredToken = new \DateTime();
+                $expiredToken->modify('+ 7 days');
+
                 $token = PersonalAccessToken::where('tokenable_id', Auth::id())
                     ->where('name', 'access_token')->where('expires_at', '>', date('Y-m-d H:i:s', time()))->first();
-                $token->expires_at = date('Y-m-d H:i:s', strtotime(date('Y-m-d', strtotime('+7 days'))));
+                $token->expires_at = $expiredToken->format('Y-m-d H:i:s');
                 $token->save();
+
             } catch (Exception $e) {
                 Log::error("Can not refresh a token " . $e->getMessage());
             }
