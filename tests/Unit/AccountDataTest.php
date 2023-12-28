@@ -69,17 +69,15 @@ class AccountDataTest extends TestCase
         $balance = 1024.00;
         $currency = 'USD';
         $date = new \DateTime();
-        $installement = true;
         $installementValue = 100;
 
-        $user = new CreditCardRevolvingAccount($name,$currency,$color,$balance,$date,$installement,$installementValue,true);
+        $user = new CreditCardRevolvingAccount($name,$currency,$color,$balance,$date,$installementValue,true);
 
         $this->assertEquals($name, $user->getName());
         $this->assertEquals('USD', $user->getCurrency());
         $this->assertEquals($color, $user->getColor());
         $this->assertEquals($balance, $user->getBalance());
         $this->assertEquals($date->format('Y-m-d H:i:s'), $user->getDate());
-        $this->assertEquals($installement, true);
         $this->assertEquals($installementValue, $user->getInstallementValue());
     }
 

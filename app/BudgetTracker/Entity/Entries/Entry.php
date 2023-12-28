@@ -35,7 +35,7 @@ class Entry implements EntryInterface
          float $amount,
          EntryType $type,
          Currency $currency,
-         string $note,
+         ?string $note,
          DateTime $date_time,
          bool $waranty,
          bool $transfer,
@@ -57,7 +57,7 @@ class Entry implements EntryInterface
         $this->paymentType = $paymentType;
         $this->geolocation = $geolocation;
         $this->labels = $labels;
-        $this->note = $note;
+        $this->note = is_null($note) ? "" : $note;
         $this->type = $type;
         $this->uuid = uniqid();
 

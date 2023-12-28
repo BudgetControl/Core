@@ -121,7 +121,7 @@ class AccountsService
         if ($id === null) {
             $accounts = $entry->get();
         } else {
-            $accounts = $entry->where("id", $id)->firstOrFail();
+            $accounts = $entry->where("id", $id)->withTrashed()->firstOrFail();
         }
 
         return $accounts;
@@ -146,7 +146,7 @@ class AccountsService
                 $this->account = new CreditCardAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['exclude_from_stats']);
                 break;
             case 'Credit Card Revolving':
-                $this->account = new CreditCardRevolvingAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installement'], $data['installementValue'],$data['exclude_from_stats']);
+                $this->account = new CreditCardRevolvingAccount($data['name'], $data['currency'], $data['color'], $data['balance'], $this->makeTime($data['date']), $data['installementValue'],$data['exclude_from_stats']);
                 break;
             case 'Bank':
                 $this->account = new BankAccount($data['name'], $data['currency'], $data['color'], $data['balance'],$data['exclude_from_stats']);

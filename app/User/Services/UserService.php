@@ -2,10 +2,13 @@
 
 namespace App\User\Services;
 
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\PaymentsTypes;
 use App\User\Models\User;
-use App\User\Models\PersonalAccessToken;
-use Illuminate\Support\Facades\Cache;
+use App\User\Models\UserSettings;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use App\User\Models\PersonalAccessToken;
 
 class UserService
 {
@@ -69,5 +72,24 @@ class UserService
         }
 
         return Cache::get($session);
+    }
+
+    /**
+     * retrive setting informations
+     */
+    public static function getSettings()
+    {
+        $setting = UserSettings::where("user_id",UserService::getCacheUserID())->first();
+        $userProfile = User::find($setting->id);
+        $currency = Currency::find($setting->currency_id);
+        $paymentType = PaymentsTypes::find($setting->payment_type_id);
+
+        return [
+            'settings' => $setting,
+            'user_profile' => $userProfile,
+            'currency' => $currency,
+            'paymentType' => $paymentType
+        ];
+
     }
 }

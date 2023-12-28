@@ -22,7 +22,7 @@ class Transfer extends Entry
         
         $this->attributes['type'] = EntryType::Transfer->value;
         $this->attributes['transfer'] = 1;
-        $this->attributes['category_id'] = 75;
+        $this->attributes['category_id'] = 76;
         
     }
 

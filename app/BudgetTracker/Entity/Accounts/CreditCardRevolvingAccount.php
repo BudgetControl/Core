@@ -13,7 +13,7 @@ use DateTime;
 
 final class CreditCardRevolvingAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $installement, float $installementValue = 0, bool $exclude_from_stats)
+    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, float $installementValue = 0, bool $exclude_from_stats)
     {
 
         $this->name = $name;
@@ -26,7 +26,7 @@ final class CreditCardRevolvingAccount extends Account {
         $this->excludeFromStats = $exclude_from_stats;
         $this->date = $date->format('Y-m-d H:i:s');
 
-        if($installement === true) {
+        if($this->installement === true) {
             $this->installementValidate();
         }
         
@@ -54,7 +54,6 @@ final class CreditCardRevolvingAccount extends Account {
     private function installementValidate(): void
     {
         $rules = [
-            'installement' => ['required','boolean'],
             'installementValue' => ['required','numeric'],
         ];
 
