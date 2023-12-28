@@ -15,9 +15,12 @@ class Mail extends Mailable implements MailInterface
     private array $data;
 
     protected $dataValidation = [
-        'name', 'email', 'link'
+        'name', 'email'
     ];
 
+    /**
+     * @param array <user_name,email,message> $data
+     */
     public function __construct(array $data)
     {
         View::addLocation(__DIR__."/../Views");
