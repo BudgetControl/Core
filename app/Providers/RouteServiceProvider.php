@@ -43,6 +43,10 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('auth')
                 ->group(base_path('app/User/routes/auth.php'));
 
+            Route::middleware('mailer')
+                ->prefix('api/mailer')
+                ->group(base_path('app/Mailer/Routes/api.php'));
+
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
 
@@ -70,6 +74,10 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('auth', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('mailer', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 

@@ -24,19 +24,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # apache conf
 ###########################################
 
-COPY bin/apache/prod.budgetcontrol.cloud.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
+COPY bin/apache/prod-api.budgetcontrol.cloud.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
 RUN a2ensite budgetcontrol.cloud.conf
 RUN a2enmod rewrite
-
-###########################################
-# xDebug
-###########################################
-
-ARG XDEBUG_MODE=develop,debug
-
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
-COPY bin/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ###########################################
 

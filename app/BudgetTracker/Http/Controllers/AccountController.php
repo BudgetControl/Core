@@ -96,6 +96,23 @@ class AccountController extends Controller
 	}
 
 	/**
+	 * restore deleted account
+	 *
+	 * @param int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function restore(int $id): \Illuminate\Http\Response
+	{
+		Account::withTrashed()->find($id)->restore();
+		$entries = Entry::withTrashed()->where("account_id", $id)->get();
+		foreach($entries as $entry) {
+			$entry->restore();
+		}
+
+		return response('all data restored');
+	}
+
+	/**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param int $id

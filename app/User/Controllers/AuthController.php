@@ -2,21 +2,22 @@
 
 namespace App\User\Controllers;
 
-use App\BudgetTracker\Services\AccountsService;
-use App\User\Exceptions\AuthException;
-use App\User\Services\AuthService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\User\Models\User;
-use Illuminate\Support\Facades\Log;
-use App\Traits\Encryptable;
 use Exception;
-use Illuminate\Validation\ValidationException;
-use App\Mailer\Services\MailService;
+use App\User\Models\User;
+use App\Traits\Encryptable;
+use Illuminate\Http\Request;
 use App\Mailer\Entities\AuthMail;
-use App\Mailer\Exceptions\MailExeption;
-use App\Mailer\Entities\RecoveryPasswordMail;
 use App\User\Models\UserSettings;
+use App\User\Services\AuthService;
+use Illuminate\Support\Facades\Log;
+use App\Mailer\Services\MailService;
+use Illuminate\Support\Facades\Auth;
+use App\User\Exceptions\AuthException;
+use App\Mailer\Exceptions\MailExeption;
+use App\User\Models\PersonalAccessToken;
+use App\Mailer\Entities\RecoveryPasswordMail;
+use Illuminate\Validation\ValidationException;
+use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AuthController extends Controller
@@ -54,7 +55,7 @@ class AuthController extends Controller
 
             $user = Auth::user();
             //first check if user have confirmed the email
-            if(is_null($user->email_verified_at)) {
+            if (is_null($user->email_verified_at)) {
                 throw new AuthException("User email is not verified");
             };
 
@@ -66,7 +67,6 @@ class AuthController extends Controller
             }
 
             $user->useToken();
-
         } catch (\Exception $e) {
             Log::critical("could_not_create_token " . $e->getMessage());
             return response()->json(['error' => 'could_not_create_token'], 500);
@@ -99,6 +99,23 @@ class AuthController extends Controller
             'email' => self::encrypt(['email' => $request->email]),
             'password' => $request->password
         ])) {
+
+            try {
+
+                $expiredToken = new \DateTime();
+                $expiredToken->modify('+ 7 days');
+
+                $token = PersonalAccessToken::where('tokenable_id', Auth::id())
+                    ->where('name', 'access_token')->where('expires_at', '>', date('Y-m-d H:i:s', time()))->first();
+                if($token) {
+                    $token->expires_at = $expiredToken->format('Y-m-d H:i:s');
+                    $token->save();
+                }
+
+            } catch (Exception $e) {
+                Log::error("Can not refresh a token " . $e->getMessage());
+            }
+
             return $this->authenticate($request);
         } else {
             return response()->json(['error' => 'Invalid credentials'], 401);
@@ -111,10 +128,10 @@ class AuthController extends Controller
             $user = User::where('email', self::encrypt(['email' => $request->email]))->firstOrFail();
             $service = new AuthService();
             $service->user = $user;
-    
+
             $userData = $user->toArray();
-            $userData['link'] = env("APP_URL").self::URL_PSW_RESET.$service->token($user);
-        } catch (ModelNotFoundException $e){
+            $userData['link'] = env("APP_URL") . self::URL_PSW_RESET . $service->token($user);
+        } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
 
@@ -125,13 +142,12 @@ class AuthController extends Controller
                     "Recovery password",
                     $userData
                 )
-                );
-            
+            );
+
             $mailer->send($user->email);
-    
+
             return response()->json(['success' => 'Sended recovery'], 200);
-            
-        } catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -146,7 +162,7 @@ class AuthController extends Controller
         }
 
 
-        if(empty($user)) {
+        if (empty($user)) {
             return response()->json(['error' => 'Token is not valid'], 401);
         }
 
@@ -171,7 +187,7 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:8',
             ]);
-    
+
             $user = $service->signUp($request->toArray());
 
             try {
@@ -194,7 +210,6 @@ class AuthController extends Controller
                 $setting->user_id = $user->id;
                 $setting->payment_type_id = 1;
                 $setting->save();
-                
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
                 Log::error($e);
@@ -204,16 +219,12 @@ class AuthController extends Controller
             }
 
             $this->sendMail($user);
-    
-            return response()->json(["succedd" => "Registration successfully"]);
 
-        } catch(ValidationException $e) {
+            return response()->json(["succedd" => "Registration successfully"]);
+        } catch (ValidationException $e) {
 
             return response()->json(['error' => $e->getMessage()], 500);
-
         }
-
-        
     }
 
     /**
@@ -238,20 +249,19 @@ class AuthController extends Controller
         $data = [
             'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => env("APP_URL").self::URL_SIGNUP_CONFIRM.$token
+            'confirm_link' => env("APP_URL") . self::URL_SIGNUP_CONFIRM . $token
         ];
 
         try {
             $mailer = new MailService(new AuthMail(
-                'Welcome to '.env("APP_NAME"),
+                'Welcome to ' . env("APP_NAME"),
                 $data
             ));
-    
+
             $mailer->send($user->email);
         } catch (MailExeption $e) {
-            Log::emergency("Unable to send email :".$e->getMessage());
-        }   
-       
+            Log::emergency("Unable to send email :" . $e->getMessage());
+        }
     }
 
     public function confirm(string $token)
@@ -268,11 +278,10 @@ class AuthController extends Controller
     public function sendVerifyEmail(Request $request): \Illuminate\Http\JsonResponse
     {
         $email = self::encrypt(['email' => $request->email]);
-        $user = User::where("email",$email)->firstOrFail();
+        $user = User::where("email", $email)->firstOrFail();
 
         $this->sendMail($user);
 
         return response()->json(["success" => "email sended"]);
-
     }
 }

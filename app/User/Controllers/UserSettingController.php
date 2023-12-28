@@ -10,8 +10,9 @@ use Http\Discovery\Exception\NotFoundException;
 class UserSettingController {
 
     public function index() {
+        
+        $setting = UserService::getSettings();
 
-        $setting = UserSettings::where("user_id",UserService::getCacheUserID())->first();
         if(!$setting) {
             throw new NotFoundException("User not found", 404);
         }

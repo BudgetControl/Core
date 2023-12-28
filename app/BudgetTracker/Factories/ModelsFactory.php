@@ -31,14 +31,11 @@ class ModelsFactory extends Factory
     {
         $amount = fake()->numberBetween(1,50);
 
-        $date = DateTime::dateTimeBetween(Date('2021-01-01'));
-        
         return [
             'uuid' => uniqid(),
             'amount' => $amount,
             'note' => fake()->text(80),
             'type' => EntryType::Incoming->value,
-            'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
             'account_id' => 1,
             'currency_id' => 1,
