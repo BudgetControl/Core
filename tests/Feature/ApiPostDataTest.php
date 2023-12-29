@@ -221,7 +221,7 @@ class ApiPostDataTest extends TestCase
     {
  
         $request = $this->makeRequest(1000, new DateTime());
-        $request->category_id = 60;
+        $request->category = 60;
         $request->name = "test";
         $request->type = "incoming";
  
@@ -244,7 +244,7 @@ class ApiPostDataTest extends TestCase
     {
  
         $request = $this->makeRequest(500, new DateTime());
-        $request->category_id = 60;
+        $request->category = 60;
         $request->type = "incoming";
         $request->name = "test";
         
