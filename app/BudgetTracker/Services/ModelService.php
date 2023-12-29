@@ -24,9 +24,9 @@ class ModelService {
 		$model->amount = $data['amount'];
 		$model->note = $data['note'];
 		$model->type = $data['type'];
-		$model->category_id = $data['category'];
-		$model->account_id = $data['account'];
-		$model->currency_id = $data['currency'];
+		$model->category_id = $data['category_id'];
+		$model->account_id = $data['account_id'];
+		$model->currency_id = $data['currency_id'];
 		$model->payment_type = $data['payment_type'];
 		$model->user_id = UserService::getCacheUserID();
 		$model->name = $data['name'];
