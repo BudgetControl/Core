@@ -22,6 +22,9 @@
     <testsuite name="Auth">
       <directory suffix="Test.php">./app/User/Tests</directory>
     </testsuite>
+    <testsuite name="Budget">
+      <directory suffix="Test.php">./app/Budget/Tests</directory>
+    </testsuite>
     <!-- <testsuite name="Mailer">
       <directory suffix="Test.php">./app/Mailer/Tests</directory>
     </testsuite> -->
