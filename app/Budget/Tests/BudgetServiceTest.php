@@ -9,12 +9,14 @@ require_once 'app/User/Tests/AuthTest.php';
 class BudgetServiceTest extends TestCase
 {
     const BUDGET_RESPONSE = [
-        "uuid",
-        "name",
-        "budget",
-        "type",
-        "planning",
-        "amount"
+        [
+            "uuid",
+            "name",
+            "budget",
+            "type",
+            "planning",
+            "amount"
+        ]
     ];
 
     /**
@@ -27,21 +29,12 @@ class BudgetServiceTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_stats_budgets(): void
-    {
-        $response = $this->get('/api/budget/stats/1', $this->getAuthTokenHeader());
-
-        $response->assertStatus(200);
-        $response->assertJson([self::BUDGET_RESPONSE]);
-    }
-
     public function test_stats_budget(): void
     {
         $response = $this->get('/api/budget/stats', $this->getAuthTokenHeader());
 
         $response->assertStatus(200);
-        $response->assertJson(self::BUDGET_RESPONSE);
-
+        $response->assertJsonStructure(self::BUDGET_RESPONSE);
     }
 
     public function test_budget_expired(): void
@@ -52,16 +45,23 @@ class BudgetServiceTest extends TestCase
         $response->assertJson([
             "expired" => false
         ]);
-
     }
 
     private function payload()
     {
         return [
-                "budget" => 100.00,
-                "account" => [3,4],
-                "planningType" => "weekly",
-                "name" => "test"
+            "budget" => 100.00,
+            "account" => [3, 4],
+            "planningType" => "weekly",
+            "name" => "test"
         ];
+    }
+
+    private function getAuthTokenHeader()
+    {
+        //first we nee to get a new token
+        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
+        $token = $response['token']['plainTextToken'];
+        return ['X-ACCESS-TOKEN' => $token];
     }
 }

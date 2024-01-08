@@ -41,6 +41,11 @@ class BudgetMamangerService
         $result = [];
 
         $budget = Budget::User()->where('id',$budgetId)->first();
+
+        if(is_null($budget)) {
+            throw new Exception("No budget found", 404);
+        }
+
         $config = json_decode($budget->configuration);
         $entries = $this->getEntires($config);
         $balance = new Wallet();

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
                 \Database\Seeders\PayeesSeed::class,
                 \Database\Seeders\UserSeed::class,
                 \Database\Seeders\ModelsSeed::class,
+                \Database\Seeders\BudgetSeed::class,
             ]
         );
     }
