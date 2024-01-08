@@ -56,7 +56,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('budget')
                 ->prefix('api/budget')
-                ->group(base_path('app/BudgetManager/Routes/Api.php'));
+                ->group(base_path('app/Budget/Routes/Api.php'));
         });
     }
 

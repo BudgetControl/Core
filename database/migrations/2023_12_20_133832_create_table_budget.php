@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid')->unique();
             $table->float('budget')->nullable(false);
             $table->float('amount')->nullable(false)->default(0);
             $table->json('configuration')->nullable(false);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetManager\Domain\Entity;
+namespace App\Budget\Domain\Entity;
 
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
@@ -18,6 +18,7 @@ class BudgetConfigurator
     private PlanningType $planningType;
     private array $category;
     private array $label;
+    private string $name;
 
     public function __construct(float $balance, PlanningType $planningType)
     {
@@ -25,6 +26,7 @@ class BudgetConfigurator
         $this->category = [];
         $this->label = [];
         $this->type = [];
+        $this->name = '';
         $this->balance = $balance;
         $this->planningType = $planningType;
     }
@@ -142,6 +144,30 @@ class BudgetConfigurator
     public function setLabel(Labels $label): self
     {
         $this->label[] = $label->id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

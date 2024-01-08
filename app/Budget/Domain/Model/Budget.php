@@ -1,5 +1,5 @@
 <?php
-namespace App\BudgetManager\Domain\Model;
+namespace App\Budget\Domain\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

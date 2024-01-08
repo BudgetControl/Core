@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BudgetManager\Domain\Entity;
+namespace App\Budget\Domain\Entity;
 
 use App\BudgetTracker\Entity\Wallet;
 

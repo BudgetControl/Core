@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BudgetManager\Services;
+namespace App\Budget\Services;
 
-use App\BudgetManager\Domain\Entity\BudgetConfigurator;
+use App\Budget\Domain\Entity\BudgetConfigurator;
 use Illuminate\Database\Eloquent\Builder;
-use App\BudgetManager\Domain\Model\Budget;
+use App\Budget\Domain\Model\Budget;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
@@ -20,34 +20,7 @@ class BudgetMamangerService
 
     public function save(array $data): void
     {
-        $configuration = new BudgetConfigurator(
-            $data['budget'],
-            PlanningType::from($data['planningType'])
-        );
-
-        if (!empty($data['account'])) {
-            foreach ($data['account'] as $account) {
-                $configuration->setAccount(Account::find($account));
-            }
-        }
-
-        if (!empty($data['type'])) {
-            foreach ($data['type'] as $type) {
-                $configuration->setType(EntryType::from($type));
-            }
-        }
-
-        if (!empty($data['category'])) {
-            foreach ($data['category'] as $category) {
-                $configuration->setAccount(SubCategory::find($category));
-            }
-        }
-
-        if (!empty($data['label'])) {
-            foreach ($data['label'] as $label) {
-                $configuration->setAccount(Labels::find($label));
-            }
-        }
+        $configuration = $this->configuration($data);
 
         if (!empty($data['id'])) {
             $budget = Budget::find($data['id']);
@@ -74,6 +47,7 @@ class BudgetMamangerService
         }
 
         $result = [
+            'uuid' => $budget->uuid,
             'name' => $budget->name,
             'budget' => $budget->budget,
             'type' => $config->type,
@@ -98,6 +72,7 @@ class BudgetMamangerService
             }
 
             $result[] = [
+                'uuid' => $budget->uuid,
                 'name' => $budget->name,
                 'budget' => $budget->budget,
                 'type' => $config->type,
@@ -136,6 +111,49 @@ class BudgetMamangerService
             $entries = $entries->get();
 
             return $entries;
+    }
+
+    /**
+     * makeconfiguration
+     */
+    public function configuration(array $data): BudgetConfigurator
+    {
+        $configuration = new BudgetConfigurator(
+            $data['budget'],
+            PlanningType::from($data['planningType'])
+        );
+
+        if (!empty($data['account'])) {
+            foreach ($data['account'] as $account) {
+                $configuration->setAccount(Account::find($account));
+            }
+        }
+
+        if (!empty($data['type'])) {
+            foreach ($data['type'] as $type) {
+                $configuration->setType(EntryType::from($type));
+            }
+        }
+
+        if (!empty($data['category'])) {
+            foreach ($data['category'] as $category) {
+                $configuration->setCategory(SubCategory::find($category));
+            }
+        }
+
+        if (!empty($data['label'])) {
+            foreach ($data['label'] as $label) {
+                $configuration->setLabel(Labels::find($label));
+            }
+        }
+
+        if (!empty($data['name'])) {
+            foreach ($data['name'] as $name) {
+                $configuration->setName($name);
+            }
+        }
+
+        return $configuration;
     }
 
 }

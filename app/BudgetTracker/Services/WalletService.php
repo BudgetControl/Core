@@ -2,7 +2,7 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetManager\Services\BudgetMamangerService;
+use App\Budget\Services\BudgetMamangerService;
 use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Log;

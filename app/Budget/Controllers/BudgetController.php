@@ -1,9 +1,9 @@
 <?php
-namespace App\BudgetManager\Controllers;
+namespace App\Budget\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use App\BudgetManager\Domain\Model\Budget;
-use App\BudgetManager\Services\BudgetMamangerService;
+use App\Budget\Domain\Model\Budget;
+use App\Budget\Services\BudgetMamangerService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
