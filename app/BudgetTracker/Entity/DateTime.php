@@ -14,9 +14,9 @@ final class DateTime {
         $this->startDate = date($this->format, $dateTime['start_date']);
     }
 
-    public static function week()
+    public static function week(?int $now = null)
     {
-        $now = time();
+        $now = is_null($now) ? time() : $now;
         $firstDayWeek = strtotime('monday', $now);
         $lastDayWeek = strtotime('next sunday', $firstDayWeek);
 
@@ -26,9 +26,9 @@ final class DateTime {
         ]);
     }
 
-    public static function month()
+    public static function month(?int $now = null)
     {
-        $now = time();
+        $now = is_null($now) ? time() : $now;
         $firstDayMonth = strtotime('first day of this month', $now);
         $lastDayMonth = strtotime('last day of this month', $firstDayMonth);
 
@@ -38,9 +38,9 @@ final class DateTime {
         ]);
     }
 
-    public static function year()
+    public static function year(?int $now = null)
     {
-        $now = time();
+        $now = is_null($now) ? time() : $now;
         $firstDayYear = strtotime('first day of January', $now);
         $lastDayYear = strtotime('last day of December', $firstDayYear);
 
