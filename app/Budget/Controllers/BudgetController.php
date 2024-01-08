@@ -56,4 +56,13 @@ class BudgetController {
 
         return response()->json($budget);
     }
+
+    public function expired(int $id): JsonResponse
+    {
+        $service = new BudgetMamangerService();
+        $expired = $service->isExpired($id);
+        return response()->json([
+            "expired" => $expired
+        ]);
+    }
 }

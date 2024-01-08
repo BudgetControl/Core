@@ -5,6 +5,7 @@ namespace App\Budget\Services;
 use App\Budget\Domain\Entity\BudgetConfigurator;
 use Illuminate\Database\Eloquent\Builder;
 use App\Budget\Domain\Model\Budget;
+use App\BudgetTracker\Entity\DateTime;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
@@ -14,6 +15,7 @@ use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Labels;
 use App\BudgetTracker\Models\SubCategory;
 use App\User\Services\UserService;
+use Exception;
 
 class BudgetMamangerService
 {
@@ -38,7 +40,7 @@ class BudgetMamangerService
     {
         $result = [];
 
-        $budget = Budget::User()->where('id',$budgetId)->get();
+        $budget = Budget::User()->where('id',$budgetId)->first();
         $config = json_decode($budget->configuration);
         $entries = $this->getEntires($config);
         $balance = new Wallet();
@@ -51,7 +53,7 @@ class BudgetMamangerService
             'name' => $budget->name,
             'budget' => $budget->budget,
             'type' => $config->type,
-            'planning' => $config->planning,
+            'planning' => $config->planning_type,
             'amount' => $balance->getBalance()
         ];
         
@@ -108,9 +110,31 @@ class BudgetMamangerService
                 });
             }
 
+            //set date to find a entries
+            $dateTime = $this->getDate($config->planning_type);
+            $entries->where('date_time', '>=', $dateTime->startDate);
+            $entries->where('date_time', '<=', $dateTime->endDate);
+
             $entries = $entries->get();
 
             return $entries;
+    }
+
+    private function getDate(string $type): DateTime
+    {
+        switch($type) {
+            case PlanningType::Week->value :
+                return DateTime::week();
+                break;
+            case PlanningType::Month->value :
+                return DateTime::month();
+                break;
+            case PlanningType::Year->value :
+                return DateTime::year();
+                break;
+        }
+
+        throw new Exception("No planning is specified", 500);
     }
 
     /**
@@ -148,12 +172,20 @@ class BudgetMamangerService
         }
 
         if (!empty($data['name'])) {
-            foreach ($data['name'] as $name) {
-                $configuration->setName($name);
-            }
+            $configuration->setName($data['name']);
         }
 
         return $configuration;
+    }
+
+    public function isExpired(int $id): bool
+    {
+        $entries = $this->retriveBudgetAmount($id);
+        if($entries['amount'] >= $entries['budget']) {
+            return true;
+        }
+
+        return false;
     }
 
 }

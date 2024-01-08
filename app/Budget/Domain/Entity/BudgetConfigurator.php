@@ -39,6 +39,8 @@ class BudgetConfigurator
 
         $data['account'] = $this->account;
 
+        $data['type'] = $this->type;
+
         $data['category'] = $this->category;
 
         $data['label'] = $this->label;

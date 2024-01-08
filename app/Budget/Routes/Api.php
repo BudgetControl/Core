@@ -21,6 +21,7 @@ Route::put('/update/{id}', 'App\Budget\Controllers\BudgetController@update');
 Route::delete('/', 'App\Budget\Controllers\BudgetController@delete');
 Route::get('/stats', 'App\Budget\Controllers\BudgetController@stats');
 Route::get('/stats/{id}', 'App\Budget\Controllers\BudgetController@stats');
+Route::get('/expired/{id}', 'App\Budget\Controllers\BudgetController@expired');
 
 
 

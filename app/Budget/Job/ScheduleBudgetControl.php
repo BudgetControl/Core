@@ -44,6 +44,8 @@ class ScheduleBudgetControl implements ShouldQueue
             $budget = $field['budget'];
             $amount = $field['amount'];
 
+            //recupero e sommo
+
             if($amount > $budget) {
                 $this->alert($field);
             }
