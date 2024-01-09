@@ -64,7 +64,7 @@ class BudgetMamangerService
             'budget' => $budget->budget,
             'config' => $config,
             'amount' => $amount,
-            'percentage' => percentage($amount, $budget->budget),
+            'percentage' => percentage($budget->budget,$amount),
             'difference' => $budget->budget - $amount
         ];
         
@@ -95,7 +95,7 @@ class BudgetMamangerService
                 'budget' => $budget->budget,
                 'config' => $config,
                 'amount' => $amount,
-                'percentage' => percentage($amount, $budget->budget),
+                'percentage' => percentage($budget->budget,$amount),
                 'difference' => $budget->budget - $amount
             ];
         }
