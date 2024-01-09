@@ -46,7 +46,8 @@ class IncomingSeed extends Seeder
             'user_id' => 1,
             'uuid' => '64b54cc566d77_test',
             'account_id' => 1,
-            'amount' => 1000
+            'amount' => 1000,
+            'date_time' => '2023-12-30'
         ]);
 
         Incoming::all()->each(function ($incoming) use ($labels) {
