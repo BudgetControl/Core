@@ -29,7 +29,7 @@ class PlannedEntriesFactory extends Factory
     public function definition(): array
     {
         $amount = fake()->numberBetween(1,50);
-        $date = DateTime::dateTimeBetween(Date('2021-01-01'));
+        $date = DateTime::dateTimeBetween('-1 years','+1 years');
 
         return [
             'uuid' => uniqid(),

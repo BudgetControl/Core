@@ -52,7 +52,7 @@ class BudgetServiceTest extends TestCase
     private function payload()
     {
         return [
-            "budget" => 100.00,
+            "amount" => 100.00,
             "account" => [3, 4],
             "period" => "weekly",
             "name" => "test"
