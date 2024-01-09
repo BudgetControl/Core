@@ -7,4 +7,6 @@ enum PlanningType : string {
     case Week = 'weekly';
     case Year = 'yearly';
     case Day = 'daily';
+    case OneShot = 'one_shot';
+
 }

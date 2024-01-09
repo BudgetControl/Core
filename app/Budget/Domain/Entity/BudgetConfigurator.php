@@ -15,7 +15,7 @@ class BudgetConfigurator
     private array $account;
     private readonly float $balance;
     private array $type;
-    private PlanningType $planningType;
+    private string $planningType;
     private array $category;
     private array $label;
     private string $name;
@@ -23,7 +23,7 @@ class BudgetConfigurator
     private string|null $startDate;
     private string|null $endDate;
 
-    public function __construct(float $balance, PlanningType $planningType)
+    public function __construct(float $balance, string $planningType)
     {
         $this->account = [];
         $this->category = [];
@@ -40,7 +40,7 @@ class BudgetConfigurator
     public function toJson(): string
     {
         $data = [];
-        $data['period'] = $this->planningType->value;
+        $data['period'] = $this->planningType;
 
         $data['account'] = $this->account;
         $data['name'] = $this->name;
@@ -109,9 +109,9 @@ class BudgetConfigurator
     /**
      * Get the value of planningType
      *
-     * @return PlanningType
+     * @return string
      */
-    public function getPlanningType(): PlanningType
+    public function getPlanningType(): string
     {
         return $this->planningType;
     }

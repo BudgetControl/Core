@@ -154,7 +154,7 @@ class BudgetMamangerService
     {
         $configuration = new BudgetConfigurator(
             $data['amount'],
-            PlanningType::from($data['period'])
+            PlanningType::from($data['period'])->value
         );
 
         if (!empty($data['account'])) {
