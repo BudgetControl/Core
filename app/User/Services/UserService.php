@@ -63,6 +63,7 @@ class UserService
             Log::info("Start session DEBUG MODE");
             return 1;
         }
+        return 1;
 
         $session = session()->getId();
 
