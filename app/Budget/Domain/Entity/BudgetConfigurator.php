@@ -40,10 +40,10 @@ class BudgetConfigurator
     public function toJson(): string
     {
         $data = [];
-        $data['balance'] = $this->balance;
         $data['period'] = $this->planningType->value;
 
         $data['account'] = $this->account;
+        $data['name'] = $this->name;
 
         $data['type'] = $this->type;
 

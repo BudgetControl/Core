@@ -54,7 +54,7 @@ class BudgetServiceTest extends TestCase
         return [
             "budget" => 100.00,
             "account" => [3, 4],
-            "planningType" => "weekly",
+            "period" => "weekly",
             "name" => "test"
         ];
     }

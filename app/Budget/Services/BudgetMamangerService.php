@@ -30,7 +30,7 @@ class BudgetMamangerService
             $budget = new Budget();
         }
 
-        $budget->budget = $data['budget'];
+        $budget->budget = $data['amount'];
         $budget->configuration = $configuration->toJson();
         $budget->user_id = UserService::getCacheUserID();
         $budget->save();
@@ -153,7 +153,7 @@ class BudgetMamangerService
     public function configuration(array $data): BudgetConfigurator
     {
         $configuration = new BudgetConfigurator(
-            $data['budget'],
+            $data['amount'],
             PlanningType::from($data['period'])
         );
 
