@@ -83,9 +83,7 @@ class BudgetMamangerService
 
     private function buildResponse($budget, $config, $amount)
     {
-            if($amount < 0) {
-                $amount = $amount * -1;
-            }
+            $amount = $amount * -1;
 
             $percentage = percentage($budget->budget,$amount);
 
@@ -94,6 +92,11 @@ class BudgetMamangerService
                 $difference = $amount;
                 $percentage = $percentage * -1;
                 $percentage = 100 + $percentage;
+            }
+
+            if($amount < 0 ) {
+                $percentage = 0;
+                $difference = $amount;
             }
 
             $result = [
