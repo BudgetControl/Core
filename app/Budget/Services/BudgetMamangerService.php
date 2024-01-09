@@ -91,7 +91,7 @@ class BudgetMamangerService
 
             $difference = $budget->budget - $amount;
             if($difference < 0) {
-                $difference = 0;
+                $difference = $amount;
                 $percentage = $percentage * -1;
                 $percentage = 100 + $percentage;
             }
@@ -137,7 +137,7 @@ class BudgetMamangerService
             $entries->where('date_time', '>=', $dateTime->startDate);
             $entries->where('date_time', '<=', $dateTime->endDate);
 
-            // $entries->where('planned',0);
+            $entries->where('planned',0);
 
             $entries = $entries->get();
 
