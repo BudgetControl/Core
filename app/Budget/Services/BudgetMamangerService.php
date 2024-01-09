@@ -54,19 +54,8 @@ class BudgetMamangerService
         }
 
         $amount = $balance->getBalance();
-        if($amount < 0) {
-            $amount = $amount * -1;
-        }
-
-        $result = [
-            'id' => $budget->id,
-            'uuid' => $budget->uuid,
-            'budget' => $budget->budget,
-            'config' => $config,
-            'amount' => $amount,
-            'percentage' => percentage($budget->budget,$amount),
-            'difference' => $budget->budget - $amount
-        ];
+        $amount = $balance->getBalance();
+        $result = $this->buildResponse($budget,$config, $amount);
         
         return $result;
     }
@@ -85,23 +74,39 @@ class BudgetMamangerService
             }
 
             $amount = $balance->getBalance();
+            $result[] = $this->buildResponse($budget,$config, $amount);
+        }
+
+        return $result;
+
+    }
+
+    private function buildResponse($budget, $config, $amount)
+    {
             if($amount < 0) {
                 $amount = $amount * -1;
             }
 
-            $result[] = [
+            $percentage = percentage($budget->budget,$amount);
+
+            $difference = $budget->budget - $amount;
+            if($difference < 0) {
+                $difference = 0;
+                $percentage = $percentage * -1;
+                $percentage = 100 + $percentage;
+            }
+
+            $result = [
                 'id' => $budget->id,
                 'uuid' => $budget->uuid,
                 'budget' => $budget->budget,
                 'config' => $config,
                 'amount' => $amount,
-                'percentage' => percentage($budget->budget,$amount),
-                'difference' => $budget->budget - $amount
+                'percentage' => $percentage,
+                'difference' => $difference
             ];
-        }
-        
-        return $result;
 
+            return $result;
     }
 
     private function getEntires($config)
@@ -131,6 +136,8 @@ class BudgetMamangerService
             $dateTime = $this->getDate($config->period, $config->start_date, $config->end_date);
             $entries->where('date_time', '>=', $dateTime->startDate);
             $entries->where('date_time', '<=', $dateTime->endDate);
+
+            // $entries->where('planned',0);
 
             $entries = $entries->get();
 
