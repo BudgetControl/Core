@@ -53,14 +53,19 @@ class BudgetMamangerService
             $balance->deposit($entry->amount);
         }
 
+        $amount = $balance->getBalance();
+        if($amount < 0) {
+            $amount = $amount * -1;
+        }
+
         $result = [
             'id' => $budget->id,
             'uuid' => $budget->uuid,
             'budget' => $budget->budget,
             'config' => $config,
-            'amount' => $balance->getBalance(),
-            'percentage' => percentage($balance->getBalance(), $budget->budget),
-            'difference' => $budget->budget - $balance->getBalance()
+            'amount' => $amount,
+            'percentage' => percentage($amount, $budget->budget),
+            'difference' => $budget->budget - $amount
         ];
         
         return $result;
@@ -79,14 +84,19 @@ class BudgetMamangerService
                 $balance->deposit($entry->amount);
             }
 
+            $amount = $balance->getBalance();
+            if($amount < 0) {
+                $amount = $amount * -1;
+            }
+
             $result[] = [
                 'id' => $budget->id,
                 'uuid' => $budget->uuid,
                 'budget' => $budget->budget,
                 'config' => $config,
-                'amount' => $balance->getBalance(),
-                'percentage' => percentage($balance->getBalance(), $budget->budget),
-                'difference' => $budget->budget - $balance->getBalance()
+                'amount' => $amount,
+                'percentage' => percentage($amount, $budget->budget),
+                'difference' => $budget->budget - $amount
             ];
         }
         
