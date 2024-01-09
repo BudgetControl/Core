@@ -19,6 +19,9 @@ class BudgetConfigurator
     private array $category;
     private array $label;
     private string $name;
+    private string $note;
+    private string|null $startDate;
+    private string|null $endDate;
 
     public function __construct(float $balance, PlanningType $planningType)
     {
@@ -29,13 +32,16 @@ class BudgetConfigurator
         $this->name = '';
         $this->balance = $balance;
         $this->planningType = $planningType;
+        $this->note = '';
+        $this->startDate = null;
+        $this->endDate = null;
     }
 
     public function toJson(): string
     {
         $data = [];
         $data['balance'] = $this->balance;
-        $data['planning_type'] = $this->planningType->value;
+        $data['period'] = $this->planningType->value;
 
         $data['account'] = $this->account;
 
@@ -44,6 +50,11 @@ class BudgetConfigurator
         $data['category'] = $this->category;
 
         $data['label'] = $this->label;
+
+        $data['note'] = $this->note;
+        $data['start_date'] = $this->startDate;
+        $data['end_date'] = $this->endDate;
+
 
         /** @var EntryType $type */
         foreach ($this->type as $type) {
@@ -170,6 +181,78 @@ class BudgetConfigurator
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of note
+     *
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
+    }
+
+    /**
+     * Set the value of note
+     *
+     * @param string $note
+     *
+     * @return self
+     */
+    public function setNote(string $note): self
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of startDate
+     *
+     * @return string
+     */
+    public function getStartDate(): string
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * Set the value of startDate
+     *
+     * @param string $startDate
+     *
+     * @return self
+     */
+    public function setStartDate(string $startDate): self
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of endDate
+     *
+     * @return string
+     */
+    public function getEndDate(): string
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * Set the value of endDate
+     *
+     * @param string $endDate
+     *
+     * @return self
+     */
+    public function setEndDate(string $endDate): self
+    {
+        $this->endDate = $endDate;
 
         return $this;
     }

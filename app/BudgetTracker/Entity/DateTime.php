@@ -50,6 +50,14 @@ final class DateTime {
         ]);
     }
 
+    public static function custom(string $start, string $end)
+    {
+        return new DateTime([
+            "start_date" => strtotime($start),
+            "end_date" => strtotime($end)
+        ]);
+    }
+
 
     /**
      * Set the value of format

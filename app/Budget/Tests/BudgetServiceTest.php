@@ -13,9 +13,11 @@ class BudgetServiceTest extends TestCase
             "uuid",
             "name",
             "budget",
-            "type",
-            "planning",
-            "amount"
+            "config",
+            "amount",
+            "percentage",
+            "difference",
+            "id"
         ]
     ];
 

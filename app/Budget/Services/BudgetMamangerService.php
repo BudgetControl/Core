@@ -54,12 +54,13 @@ class BudgetMamangerService
         }
 
         $result = [
+            'id' => $budget->id,
             'uuid' => $budget->uuid,
-            'name' => $budget->name,
             'budget' => $budget->budget,
-            'type' => $config->type,
-            'planning' => $config->planning_type,
-            'amount' => $balance->getBalance()
+            'config' => $config,
+            'amount' => $balance->getBalance(),
+            'percentage' => percentage($balance->getBalance(), $budget->budget),
+            'difference' => $budget->budget - $balance->getBalance()
         ];
         
         return $result;
@@ -79,12 +80,13 @@ class BudgetMamangerService
             }
 
             $result[] = [
+                'id' => $budget->id,
                 'uuid' => $budget->uuid,
-                'name' => $budget->name,
                 'budget' => $budget->budget,
-                'type' => $config->type,
-                'planning' => $config->planning_type,
-                'amount' => $balance->getBalance()
+                'config' => $config,
+                'amount' => $balance->getBalance(),
+                'percentage' => percentage($balance->getBalance(), $budget->budget),
+                'difference' => $budget->budget - $balance->getBalance()
             ];
         }
         
@@ -116,7 +118,7 @@ class BudgetMamangerService
             }
 
             //set date to find a entries
-            $dateTime = $this->getDate($config->planning_type);
+            $dateTime = $this->getDate($config->period, $config->start_date, $config->end_date);
             $entries->where('date_time', '>=', $dateTime->startDate);
             $entries->where('date_time', '<=', $dateTime->endDate);
 
@@ -125,7 +127,7 @@ class BudgetMamangerService
             return $entries;
     }
 
-    private function getDate(string $type): DateTime
+    private function getDate(string $type, ?string $start = '', ?string $end = ''): DateTime
     {
         switch($type) {
             case PlanningType::Week->value :
@@ -136,6 +138,9 @@ class BudgetMamangerService
                 break;
             case PlanningType::Year->value :
                 return DateTime::year();
+                break;
+            default:
+                return DateTime::custom($start, $end);
                 break;
         }
 
@@ -149,7 +154,7 @@ class BudgetMamangerService
     {
         $configuration = new BudgetConfigurator(
             $data['budget'],
-            PlanningType::from($data['planningType'])
+            PlanningType::from($data['period'])
         );
 
         if (!empty($data['account'])) {
@@ -178,6 +183,18 @@ class BudgetMamangerService
 
         if (!empty($data['name'])) {
             $configuration->setName($data['name']);
+        }
+
+        if (!empty($data['note'])) {
+            $configuration->setNote($data['note']);
+        }
+
+        if (!empty($data['start_date'])) {
+            $configuration->setStartDate($data['start_date']);
+        }
+
+        if (!empty($data['end_date'])) {
+            $configuration->setEndDate($data['end_date']);
         }
 
         return $configuration;

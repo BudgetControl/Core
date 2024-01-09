@@ -31,7 +31,7 @@ class BudgetFactory extends Factory
         return [
             'uuid' => uniqid(),
             'budget' => 1000,
-            'configuration' => '{"type": ["incoming"], "label": [], "account": [3, 4], "balance": 1000, "category": [], "planning_type": "yearly"}',
+            'configuration' => '{"type": ["incoming"], "label": [], "account": [3, 4], "balance": 1000, "category": [], "planning_type": "yearly", "name" => "test"}',
             'user_id' => 1,
         ];
     }
