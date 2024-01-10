@@ -89,6 +89,10 @@ class ScheduleBudgetControl implements ShouldQueue
 
     private function isValid(Budget $budget): bool
     {
+        if($budget->notification == false) {
+            return false;
+        }
+
         $config = json_decode($budget->configuration);
         if(!is_null($config->end_date)) {
             if(date("Y-m-d", time()) > $config->end_date) {

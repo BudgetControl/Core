@@ -11,13 +11,13 @@ class BudgetServiceTest extends TestCase
     const BUDGET_RESPONSE = [
         [
             "uuid",
-            "name",
             "budget",
             "config",
             "amount",
             "percentage",
             "difference",
-            "id"
+            "id",
+            "notification"
         ]
     ];
 
@@ -45,7 +45,7 @@ class BudgetServiceTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            "expired" => false
+            "expired" => true
         ]);
     }
 
@@ -55,7 +55,8 @@ class BudgetServiceTest extends TestCase
             "amount" => 100.00,
             "account" => [3, 4],
             "period" => "weekly",
-            "name" => "test"
+            "name" => "test",
+            "notification" => 1
         ];
     }
 
