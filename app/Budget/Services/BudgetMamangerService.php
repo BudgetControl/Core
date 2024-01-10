@@ -31,6 +31,7 @@ class BudgetMamangerService
         }
 
         $budget->budget = $data['amount'];
+        $budget->notification = $data['notification'];
         $budget->configuration = $configuration->toJson();
         $budget->user_id = UserService::getCacheUserID();
         $budget->save();
@@ -105,7 +106,8 @@ class BudgetMamangerService
                 'config' => $config,
                 'amount' => $amount,
                 'percentage' => $percentage,
-                'difference' => $difference
+                'difference' => $difference,
+                'notification' => $budget->notification
             ];
 
             return $result;
