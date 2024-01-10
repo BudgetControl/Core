@@ -55,7 +55,8 @@ class BudgetServiceTest extends TestCase
             "amount" => 100.00,
             "account" => [3, 4],
             "period" => "weekly",
-            "name" => "test"
+            "name" => "test",
+            "notification" => 1
         ];
     }
 
