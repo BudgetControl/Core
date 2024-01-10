@@ -54,7 +54,6 @@ class BudgetMamangerService
         }
 
         $amount = $balance->getBalance();
-        $amount = $balance->getBalance();
         $result = $this->buildResponse($budget,$config, $amount);
         
         return $result;
@@ -223,7 +222,17 @@ class BudgetMamangerService
     public function isExpired(int $id): bool
     {
         $entries = $this->retriveBudgetAmount($id);
-        if($entries['amount'] >= $entries['budget']) {
+        if($entries['percentage'] >= 100) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isAlmostExpired(int $id): bool
+    {
+        $entries = $this->retriveBudgetAmount($id);
+        if($entries['percentage'] >= 80 && $entries['percentage'] <= 99) {
             return true;
         }
 

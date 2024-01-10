@@ -7,13 +7,13 @@ use App\Mailer\Entities\Mail;
 final class BudgetMail extends Mail implements MailInterface
 {
     protected $dataValidation = [
-        'name', 'budget_name', 'amount', 'budget'
+        'user_name', 'budget_name', 'percentage', 'difference'
     ];
     
-    public function __construct(array $data)
+    public function __construct(array $data, string $view = 'budget')
     {
-        $this->view = "budget";
-        $this->subject = "The ".$data['budget']." budget has been exceeded";
+        $this->view = $view;
+        $this->subject = "The ".$data['budget_name']." budget has been exceeded";
 
         parent::__construct($data);
     }
