@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Budget\Job\ScheduleBudgetControl;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\BudgetTracker\Jobs\ActivatePlannedEntries;
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ActivatePlannedEntries())->hourly();
         $schedule->job(new InsertPlannedEntry())->daily();
         $schedule->job(new ExchangeRateJob())->daily();
+        $schedule->job(new ScheduleBudgetControl())->dailyAt("06:00");
     }
 
     /**
