@@ -29,9 +29,9 @@ class BudgetController {
         return response('success');
     }
 
-    public function update(Request $request): Response
+    public function update(Request $request, int $id): Response
     {
-        $service = new BudgetMamangerService();
+        $service = new BudgetMamangerService($id);
         $service->save($request->toArray());
 
         return response('success');

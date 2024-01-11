@@ -9,7 +9,6 @@ use App\BudgetTracker\Entity\DateTime;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Enums\PlanningType;
-use App\BudgetTracker\Interfaces\EntryInterface;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Labels;
@@ -19,13 +18,19 @@ use Exception;
 
 class BudgetMamangerService
 {
+    private int $id;
+
+    public function __construct(int $id = 0)
+    {
+        $this->id = $id;
+    }
 
     public function save(array $data): void
     {
         $configuration = $this->configuration($data);
 
-        if (!empty($data['id'])) {
-            $budget = Budget::find($data['id']);
+        if (!empty($this->id)) {
+            $budget = Budget::find($this->id);
         } else {
             $budget = new Budget();
         }
