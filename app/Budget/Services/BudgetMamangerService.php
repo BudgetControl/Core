@@ -94,15 +94,15 @@ class BudgetMamangerService
 
             $difference = $budget->budget - $amount;
             if($difference < 0) {
-                $difference = $amount;
                 $percentage = $percentage * -1;
                 $percentage = 100 + $percentage;
             }
 
             if($amount < 0 ) {
                 $percentage = 0;
-                $difference = $amount;
             }
+
+            $difference = $amount;
 
             $result = [
                 'id' => $budget->id,

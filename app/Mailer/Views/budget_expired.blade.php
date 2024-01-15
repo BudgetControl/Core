@@ -31,7 +31,7 @@
 
                     <p><b>Budget Name:</b> {{$budget_name}}</p>
                     <p><b>Excess:</b> {{$percentage}}%</p>
-                    <p><b>Remaining:</b> {{$difference}}</p>
+                    <p><b>Expenses:</b> {{$difference}}</p>
                     
                     <div class="progress-bar" id="budgetProgressBar">
                         <div class="progress" id="progress"></div>
