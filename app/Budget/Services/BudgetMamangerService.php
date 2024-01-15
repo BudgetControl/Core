@@ -91,6 +91,9 @@ class BudgetMamangerService
             $amount = $amount * -1;
 
             $percentage = percentage($budget->budget,$amount);
+            if($percentage > 0) {
+                $percentage = 100 - $percentage;
+            }
 
             $difference = $budget->budget - $amount;
             if($difference < 0) {
