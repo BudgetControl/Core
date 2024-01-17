@@ -16,7 +16,7 @@ class WalletService
     public function __construct(EntryInterface $entry)
     {
         $this->entry = $entry;
-        $entryDB = ModelsEntry::where('uuid', $entry->getId())->first();
+        $entryDB = ModelsEntry::where('id', $entry->getId())->first();
         if (!is_null($entryDB)) {
             $this->oldEntry = $entryDB;
         }
