@@ -61,6 +61,7 @@ class Entry implements EntryInterface
         $this->note = is_null($note) ? "" : $note;
         $this->type = $type;
         $this->uuid = uniqid();
+        $this->id = 0;
 
     }
 
