@@ -105,6 +105,10 @@ class BudgetMamangerService
                 $percentage = 0;
             }
 
+            if($percentage > 100 ) {
+                $percentage = 100;
+            }
+
             $difference = $amount;
 
             $result = [
