@@ -53,14 +53,14 @@ if (!function_exists('color')) {
  * @return int
  */
 if (!function_exists('percentage')) {
-    function percentage(float $first, float $second): int
+    function percentage(float $first, float $second): float
     {
         try {
             $difference = abs($first - $second);
             $segno = ($first > $second) ? 1 : -1;
             $percentage = ($difference / $first) * 100 * $segno;
 
-            return $percentage;
+            return round($percentage,2);
         } catch (\DivisionByZeroError) {
 
             return 0;
