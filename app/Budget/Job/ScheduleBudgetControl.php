@@ -32,7 +32,6 @@ class ScheduleBudgetControl implements ShouldQueue
     {
         Log::info("Control of exceeded budgets");
         $this->getBudget();
-        return 1;
     }
 
     /**

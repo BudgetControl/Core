@@ -95,4 +95,9 @@ interface EntryInterface {
      */
     public function getUuid(): string;
 
+    /**
+     * unique hash
+     */
+    public function getId(): int;
+
 }

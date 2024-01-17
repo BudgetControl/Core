@@ -16,6 +16,7 @@ use stdClass;
 class Entry implements EntryInterface
 {
 
+    protected int $id;
     protected string $uuid;
     protected float $amount;
     protected Currency $currency;
@@ -284,5 +285,29 @@ class Entry implements EntryInterface
     public function getType(): EntryType
     {
         return $this->type;
+    }
+
+    /**
+     * Get the value of id
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @param int $id
+     *
+     * @return self
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

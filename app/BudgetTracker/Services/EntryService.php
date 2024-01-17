@@ -229,6 +229,7 @@ class EntryService
 
     if(!empty($data['uuid'])) {
       $entry->setUuid($data['uuid']);
+      $entry->setId($data['id']);
     }
     
     return $entry;
