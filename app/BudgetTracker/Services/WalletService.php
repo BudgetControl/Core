@@ -98,7 +98,7 @@ class WalletService
             return $this->entry->getConfirmed();
         }
 
-        if ($this->oldEntry->confirmed == false) {
+        if ($this->oldEntry->confirmed == true) {
             $this->revert = true;
         }
 
