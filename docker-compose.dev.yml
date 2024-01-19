@@ -5,7 +5,7 @@ services:
       ports:
         - 3366:3306
     mailhog:
-      container_name: mailhog-service
+      container_name: budgetcontrol-mailhog
       image: mailhog/mailhog:latest
       restart: always
       ports:
