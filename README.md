@@ -10,19 +10,24 @@ href="https://github.com/budgetcontrol/services/issues?q=is%3Aopen+is%3Aissue" t
 ## Requirment
 php version >= 8.2
 
-###Installations
-* Clone the repository on your computer with the command git clone https://github.com/REPOSITORY-NAME.git.
-* Enter the repository directory with the command cd REPOSITORY-NAME.
+### Installations
+* Clone the repository on your computer with the command git clone git@github.com:BudgetControl/Core.git.
+* Enter the repository directory with the command cd Core.
+* checkout on the last stable version branch for dev environment
 * Copy file .env.example on .env 
 * Creation of the dockerfile container
-   docker-compose up -d
+   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 * Wait composer install into docker container are finished
+* Restart apache
+   docker exec budgetcontrol-core service apache2 restart
 * Generate cache file
-   docker exec budgetcontrol-services php artisan config:cache
+   docker exec budgetcontrol-core php artisan config:cache
 * Make migrations
-   docker exec budgetcontrol-services php artisan migrate --seed
+   docker exec budgetcontrol-core php artisan migrate --seed
 * Enjoy
-   insert utl http://localhost:3333/ ( api/incoming )
+   insert url http://localhost:3000/ ( api/incoming )
+
+"budgetcontrol-proxy" is not mandatory for dev installation
    
 ### Usage
 * Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
