@@ -11,7 +11,7 @@ class BudgetController {
 
     public function index(): JsonResponse
     {
-        $budgets = Budget::User()->get();
+        $budgets = Budget::get();
         return response()->json($budgets);
     }
 

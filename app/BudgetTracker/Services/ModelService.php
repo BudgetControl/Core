@@ -28,7 +28,6 @@ class ModelService {
 		$model->account_id = $data['account_id'];
 		$model->currency_id = $data['currency_id'];
 		$model->payment_type = $data['payment_type'];
-		$model->user_id = UserService::getCacheUserID();
 		$model->name = $data['name'];
         $model->save();
 

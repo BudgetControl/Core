@@ -40,7 +40,6 @@ class ModelsFactory extends Factory
             'account_id' => 1,
             'currency_id' => 1,
             'payment_type' => 1,
-            'user_id' => 1,
             'name' => fake()->text(10)
         ];
     }

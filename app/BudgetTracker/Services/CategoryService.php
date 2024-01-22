@@ -74,11 +74,7 @@ class CategoryService
      */
     public function all()
     {
-         $userId = UserService::getCacheUserID();
-         return Category::with(['subCategory' => function($q) use ($userId) {
-			// Query the name field in status table
-			$q->whereIn('user_id', [$userId,0]); // '=' is optional
-		}])->orderBy('name')->get();
+         return Category::with('subCategory')->orderBy('name')->get();
     }
 
     /**
@@ -96,7 +92,6 @@ class CategoryService
         $category->exclude_from_stats = $request->exclude_stats;
         $category->category_id = $request->parent_category;
         $category->custom = 1;
-        $category->user_id = UserService::getCacheUserID();
         $category->save();
 
     }

@@ -43,7 +43,6 @@ class DebitFactory extends Factory
             'payment_type' => 1,
             'confirmed' => 1,
             'payee_id' => 1,
-            'user_id' => 1
 
         ];
     }

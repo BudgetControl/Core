@@ -24,7 +24,6 @@ class UserSeed extends Seeder
         $setting = new UserSettings();
         $setting->currency_id = 1;
         $setting->payment_type_id = 1;
-        $setting->user_id = 1;
         $setting->save();
     }
 }

@@ -3,13 +3,12 @@
 namespace App\User\Services;
 
 use App\User\Exceptions\AuthException;
-use App\User\Models\PersonalAccessToken;
 use App\User\Models\User;
-use DateInterval;
-use DateTime;
-use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 
 class AuthService
 {
@@ -23,9 +22,11 @@ class AuthService
     public function signUp(array $request)
     {
         $user = new User();
+        $user->uuid = uniqid();
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->password = bcrypt($request['password']);
+        $user->database_name = uniqid('budgetV2_');
         $user->save();
 
         $this->user = $user;
@@ -35,7 +36,7 @@ class AuthService
 
     public function token(): string
     {
-        $key = (string) $this->user->email->email.$this->user->password.$this->user->name.microtime();
+        $key = (string) $this->user->email->email . $this->user->password . $this->user->name . microtime();
         return self::generateToken($key);
     }
 
@@ -45,7 +46,7 @@ class AuthService
     public function confirm(string $key): bool
     {
         $user = $this->retriveToken($key);
-        if(empty($user)) {
+        if (empty($user)) {
             return false;
         }
 
@@ -65,7 +66,7 @@ class AuthService
     {
         $expireLink = date("Y-m-d H:i:s", strtotime('+3 hours'));
         $link = sha1($pattern);
-        Cache::set($link,$this->user,strtotime($expireLink));
+        Cache::set($link, $this->user, strtotime($expireLink));
 
         return $link;
     }
@@ -74,7 +75,7 @@ class AuthService
     {
         $user = Cache::get($key);
 
-        if(empty($user)) {
+        if (empty($user)) {
             throw new AuthException("Token is not valid");
         }
 
@@ -83,5 +84,74 @@ class AuthService
         return $user;
     }
 
+    /**
+     * create new databases
+     */
+    public function createDatabse(string $name)
+    {
+        Log::info("CREATE DATABASE $name");
+        DB::statement('CREATE DATABASE ' . $name);
+    }
 
+    /**
+     * drop databases if somthings wront
+     */
+    public function dropDatabse(string $name)
+    {
+        Log::info("DROP DATABASE $name");
+        DB::statement('DROP DATABASE ' . $name);
+    }
+
+    /**
+     * create first account
+     */
+    public function createAccountEntry()
+    {
+        $uuid = uniqid();
+        $dateTIme = date("Y-m-d H:i:s", time());
+        Log::info("Create new Account entry");
+        DB::statement('
+            INSERT INTO accounts
+            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats)
+            VALUES
+            ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0)
+        ');
+    }
+
+    /**
+     * create first account
+     */
+    public function setUpDefaultSettings()
+    {
+        Log::info("Set up default settings");
+        DB::statement('
+            INSERT INTO user_settings
+            (setting,data)
+            VALUES
+            ("app_configuration","{\"currency_id\":1,\"payment_type_id\":1}")
+        ');
+    }
+
+    /**
+     * make migrations
+     */
+    public function migrate(string $dbName)
+    {
+        Config::set(['database.connections.mysql.database' => $dbName]);
+        DB::purge('mysql');
+        DB::reconnect('mysql');
+        Log::info("Start migration od DB $dbName");
+        // Esegui la migrazione o altri comandi desiderati
+        Artisan::call(
+            'migrate',
+            [
+                '--path' => 'database/migrations/users',
+                '--force' => true
+            ]
+        );
+
+        Artisan::call('db:seed', [
+            '--class' => '\Database\Seeders\AppConfigurationsSeeder'
+        ]);
+    }
 }

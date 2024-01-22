@@ -19,6 +19,8 @@ use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthController extends Controller
 {
@@ -53,7 +55,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
 
-            $user = Auth::user();
+            $user = Auth::all();
             //first check if user have confirmed the email
             if (is_null($user->email_verified_at)) {
                 throw new AuthException("User email is not verified");
@@ -192,37 +194,24 @@ class AuthController extends Controller
 
             try {
                 //create first free account
-                $serviceAccount = new AccountsService();
-                $serviceAccount->save([
-                    "user_id" => $user->id,
-                    "name" => "Cash",
-                    "color" => "#F9A60214",
-                    "type" => "Cash",
-                    "balance" => 0,
-                    "installementValue" => 0,
-                    "currency" => 'EUR',
-                    "exclude_from_stats" => 0
-                ]);
+                $service->createDatabse($user->database_name);
+                $service->migrate($user->database_name);
+                $service->createAccountEntry();
+                $service->setUpDefaultSettings();
 
-                //set default settings
-                $setting = new UserSettings();
-                $setting->currency_id = 1;
-                $setting->user_id = $user->id;
-                $setting->payment_type_id = 1;
-                $setting->save();
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
                 Log::error($e);
-                throw new AuthException("Unable to create new account on signup, user wil be deleted");
-
+                DB::purge('mysql');
+                DB::reconnect('mysql');
                 $user->delete();
+                throw new AuthException("Unable to create new account on signup, user wil be deleted");
             }
 
             $this->sendMail($user);
-
             return response()->json(["succedd" => "Registration successfully"]);
-        } catch (ValidationException $e) {
 
+        } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

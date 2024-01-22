@@ -33,7 +33,6 @@ class TransferService extends EntryService
      */
     private function prepare(array $data): Transfer
     {
-        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
         $account = $data['account_id'] == 0 ? Account::where("uuid", Account::DEFAULT)->firstOrFail() : Account::findOrFail($data['account_id']);
 
         $entry = new Transfer(
@@ -51,7 +50,6 @@ class TransferService extends EntryService
         );
 
         if(!empty($this->uuid)) {
-            $transfer = TransferModel::findFromUuid($this->uuid,$user_id);
             if(!empty($transfer)) {
                 $entry->setUuid($this->uuid);
             }
@@ -103,7 +101,6 @@ class TransferService extends EntryService
      */
     public function save(array $data, EntryType|null $type = null, Payee|null $payee = null): void
     {
-        $user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
         $transfer = $this->prepare($data);
         $transferInverted = $this->prepareInverted($data);
@@ -111,17 +108,17 @@ class TransferService extends EntryService
         $transfer->setTransfer_relation($transferInverted->getUuid());
         $transferInverted->setTransfer_relation($transfer->getUuid());
 
-        $this->commitSave($transfer,$user_id);
-        $this->commitSave($transferInverted,$user_id);
+        $this->commitSave($transfer);
+        $this->commitSave($transferInverted);
 
     }
 
-    private function commitSave(Transfer $entry, int $userId): void
+    private function commitSave(Transfer $entry): void
     {   
 
         $entryModel = new TransferModel();
 
-        $findEntry = TransferModel::findFromUuid($entry->getUuid(),$userId);
+        $findEntry = TransferModel::findFromUuid($entry->getUuid());
         if (!empty($findEntry)) {
             $entryModel = $findEntry;
         }
@@ -139,7 +136,6 @@ class TransferService extends EntryService
         $entryModel->confirmed = $entry->getConfirmed();
         $entryModel->transfer_relation = $entry->getTransfer_relation();
         $entryModel->transfer_id = $entry->getTransfer_id();
-        $entryModel->user_id = $userId;
 
         $walletService = new WalletService(
             EntryService::create($entryModel->toArray(), EntryType::Transfer)
@@ -164,7 +160,7 @@ class TransferService extends EntryService
         Log::debug("read entry -- $id");
         $result = new \stdClass();
 
-        $entry = TransferModel::withRelations()->user()->where('type', EntryType::Transfer->value);
+        $entry = TransferModel::withRelations()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
             $result = $entry->get();

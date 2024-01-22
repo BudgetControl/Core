@@ -80,7 +80,6 @@ class ApiGetDataTest extends TestCase
             "uuid",
             "name",
             "color",
-            "user_id",
             "date",
             "type",
             "installement",
@@ -119,7 +118,6 @@ class ApiGetDataTest extends TestCase
                 "uuid",
                 "name",
                 "color",
-                "user_id",
                 "date",
                 "type",
                 "installement",
@@ -138,7 +136,6 @@ class ApiGetDataTest extends TestCase
             "entry",
             "id",
             "name",
-            "user_id",
             "uuid"
         ]
     ];
@@ -159,7 +156,6 @@ class ApiGetDataTest extends TestCase
 
     const SETTINGS = [
         "id",
-        "user_id",
         "currency_id",
         "payment_type_id",
         "created_at",

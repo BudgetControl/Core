@@ -163,10 +163,8 @@ class UpdateEntryTest extends TestCase
             "payment_type" : 1,
             "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
             "confirmed": 1,
-            "user_id": 1
         }';
 
         return (array) json_decode($request,true);

@@ -44,7 +44,7 @@ class DebitService extends EntryService
                 'name' => $data['payee_id']
             ]);
 
-            $payee = Payee::user()->where('name', $data['payee_id'])->firstOrFail();
+            $payee = Payee::where('name', $data['payee_id'])->firstOrFail();
 
             $entry = new Debit(
                 $data['amount'],
@@ -77,7 +77,6 @@ class DebitService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->payee_id = $entry->getPayee()->id;
-            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             
             $walletService = new WalletService(
                 EntryService::create($entryModel->toArray(), EntryType::Debit)
@@ -101,7 +100,7 @@ class DebitService extends EntryService
         Log::debug("read debit -- $id");
         $result = new \stdClass();
 
-        $entryModel = DebitModel::withRelations()->user()->where('type', EntryType::Debit->value);
+        $entryModel = DebitModel::withRelations()->where('type', EntryType::Debit->value);
 
         if ($id === null) {
             $result = $entryModel->get();

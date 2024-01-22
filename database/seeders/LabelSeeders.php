@@ -25,7 +25,6 @@ class LabelSeeders extends Seeder
         $db->uuid = uniqid();
         $db->name = strtolower($value);
         $db->color = 'colors';
-        $db->user_id = 1;
         $db->save();
       }
     }

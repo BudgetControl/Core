@@ -43,7 +43,7 @@ class LabelService implements BudgetTrackerService
     public static function find(int $id): self
     {   
         return new LabelService(
-            Labels::User()->where('id',$id)
+            Labels::where('id',$id)
         );
     }
 
@@ -90,7 +90,6 @@ class LabelService implements BudgetTrackerService
         $label->name = $data->getName();
         $label->color = $data->getColor();
         $label->archive = $data->getArchive();
-        $label->user_id = UserService::getCacheUserID();
 
         $label->save();
     }
@@ -108,7 +107,6 @@ class LabelService implements BudgetTrackerService
         $label->name = $data->getName();
         $label->color = $data->getColor();
         $label->archive = $data->getArchive();
-        $label->user_id = UserService::getCacheUserID();
         $label->uuid = $data->getUniqid();
 
         $label->save();

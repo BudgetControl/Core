@@ -74,7 +74,6 @@ class IncomingService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->type = EntryType::Incoming->value;
-            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             //TODO: fixme
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
@@ -108,7 +107,7 @@ class IncomingService extends EntryService
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
 
-        $entry = IncomingModel::withRelations()->user()->where('type', EntryType::Incoming->value);
+        $entry = IncomingModel::withRelations()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
             $result = $entry->get();

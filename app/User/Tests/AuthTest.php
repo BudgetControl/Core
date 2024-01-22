@@ -43,9 +43,6 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas("accounts",[
-            "user_id" => 2 
-        ]);
     }
 
     /**

@@ -16,7 +16,7 @@ class CategorySeeders extends Seeder
      */
     public function run()
     {
-        $lang = env("LANG","it");
+        $lang = "it"; //env("LANG","it");
         $path = __DIR__.'/../sql/categories.json';
         $data = (array) json_decode(file_get_contents($path));
         foreach ($data[$lang] as $key => $cat) {

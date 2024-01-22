@@ -34,7 +34,6 @@ class PayeeService
             if ($entry->count() === 0) {
                 $entry = new Payee();
                 $entry->name = $data['name'];
-                $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
                 $entry->save();
             }
