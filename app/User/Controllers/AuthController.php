@@ -55,7 +55,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
 
-            $user = Auth::all();
+            $user = Auth::user();
             //first check if user have confirmed the email
             if (is_null($user->email_verified_at)) {
                 throw new AuthException("User email is not verified");

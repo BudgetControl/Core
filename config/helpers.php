@@ -162,6 +162,8 @@ if (!function_exists('user_ip')) {
             $ipaddress = getenv('HTTP_FORWARDED');
         else if (getenv('REMOTE_ADDR'))
             $ipaddress = getenv('REMOTE_ADDR');
+        else if (getenv("APP_ENV") == "testing")
+            $ipaddress = "127.0.0.1_testing";
         else
             throw new Exception("Could not determinate user ip address");
 

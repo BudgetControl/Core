@@ -118,7 +118,7 @@ class AccountsService
         $entry = Account::all();
 
         if ($id === null) {
-            $accounts = $entry->get();
+            $accounts = $entry::all();
         } else {
             $accounts = $entry->where("id", $id)->withTrashed()->firstOrFail();
         }
