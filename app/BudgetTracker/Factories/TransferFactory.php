@@ -36,7 +36,7 @@ class TransferFactory extends Factory
             'type' => EntryType::Transfer->value,
             'transfer' => 1,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'transfer_id' => 2,
             'currency_id' => 1,
             'date_time' => date('Y-m-d H:i:s',time()),

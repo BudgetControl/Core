@@ -40,7 +40,7 @@ class ExpensesSeed extends Seeder
 
         Expenses::factory(1)->create([
             'uuid' => '64b54cc5677e0_test',
-            'account_id' => 1,
+            'account_id' => 4,
             'amount' => -1000
         ]);
 

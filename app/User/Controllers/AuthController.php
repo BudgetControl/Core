@@ -210,6 +210,11 @@ class AuthController extends Controller
             }
 
             $this->sendMail($user);
+
+            if(env("APP_ENV") == "testing") {
+                $service->dropDatabse($user->database_name);
+            }
+
             return response()->json(["succedd" => "Registration successfully"]);
 
         } catch (ValidationException $e) {

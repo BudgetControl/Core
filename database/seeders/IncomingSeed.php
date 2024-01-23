@@ -37,7 +37,7 @@ class IncomingSeed extends Seeder
 
         Incoming::factory(1)->create([
             'uuid' => '64b54cc566d77_test',
-            'account_id' => 1,
+            'account_id' => 4,
             'amount' => 1000,
             'date_time' => '2023-12-30'
         ]);

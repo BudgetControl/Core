@@ -17,7 +17,7 @@ class DebitSeed extends Seeder
 
         Debit::factory(1)->create([
             'uuid' => '64b54cc568334_test',
-            'account_id' => 1,
+            'account_id' => 4,
             'amount' => -1000
         ]);
     }

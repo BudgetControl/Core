@@ -89,6 +89,10 @@ class AuthService
      */
     public function createDatabse(string $name)
     {
+        if(env("APP_ENV") == "testing") {
+            $name = "budgetV2_test";
+        }
+
         Log::info("CREATE DATABASE $name");
         DB::statement('CREATE DATABASE ' . $name);
     }
@@ -98,6 +102,10 @@ class AuthService
      */
     public function dropDatabse(string $name)
     {
+        if(env("APP_ENV") == "testing") {
+            $name = "budgetV2_test";
+        }
+
         Log::info("DROP DATABASE $name");
         DB::statement('DROP DATABASE ' . $name);
     }
@@ -137,10 +145,15 @@ class AuthService
      */
     public function migrate(string $dbName)
     {
+
+        if(env("APP_ENV") == "testing") {
+            $dbName = "budgetV2_test";
+        }
+
         Config::set(['database.connections.mysql.database' => $dbName]);
         DB::purge('mysql');
         DB::reconnect('mysql');
-        Log::info("Start migration od DB $dbName");
+        Log::info("Start migration of DB $dbName");
         // Esegui la migrazione o altri comandi desiderati
         Artisan::call(
             'migrate',
