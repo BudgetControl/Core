@@ -16,7 +16,7 @@ class LabelSeeders extends Seeder
      */
     public function run()
     {
-      $lang = env("LANG","it");
+      $lang = "it"; //env("LANG","it");
       $path = __DIR__.'/../sql/label.json';
       $data = (array) json_decode(file_get_contents($path));
 
