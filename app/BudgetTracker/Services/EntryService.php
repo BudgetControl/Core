@@ -68,7 +68,6 @@ class EntryService
       $entryModel->waranty = $entry->getWaranty();
       $entryModel->confirmed = $entry->getConfirmed();
       $entryModel->type = $entry->getType();
-      $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
       $walletService = new WalletService(
         EntryService::create($entryModel->toArray(), $entry->getType())
@@ -104,7 +103,7 @@ class EntryService
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = EntryModel::withRelations()->user()->orderBy('date_time', 'desc');
+    $entry = EntryModel::withRelations()->orderBy('date_time', 'desc');
 
     if ($id === null) {
       $entry = $entry->get();
@@ -144,7 +143,6 @@ class EntryService
             $label->uuid = uniqid();
             $label->name = strtolower($value);
             $label->color = color();
-            $label->user_id = empty($model->user_id) ? UserService::getCacheUserID() : $model->user_id;
             Log::debug("created new label " . $label->name);
             $label->save();
           }

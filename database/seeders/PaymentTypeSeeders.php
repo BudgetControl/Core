@@ -15,7 +15,7 @@ class PaymentTypeSeeders extends Seeder
      */
     public function run()
     {
-      $lang = env("LANG","it");
+      $lang = "it"; //env("LANG","it");
       $path = __DIR__.'/../sql/payment_type.json';
       $data = (array) json_decode(file_get_contents($path));
 
@@ -23,7 +23,6 @@ class PaymentTypeSeeders extends Seeder
         $db = new PaymentsTypes();
         $db->uuid = uniqid();
         $db->name = strtolower($value);
-        $db->user_id = 1;
         $db->save();
       }
     }

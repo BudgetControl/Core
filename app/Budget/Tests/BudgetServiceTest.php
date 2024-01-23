@@ -45,7 +45,7 @@ class BudgetServiceTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            "expired" => true
+            "expired" => false
         ]);
     }
 

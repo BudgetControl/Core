@@ -40,13 +40,12 @@ class IncomingFactory extends Factory
             'type' => EntryType::Incoming->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
             'date_time' => $date->format('Y-m-d H:i:s'),
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 0,
-            'user_id' => 1
         ];
     }
 }

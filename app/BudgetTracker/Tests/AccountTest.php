@@ -30,7 +30,6 @@ class AccountTest extends TestCase
                 "uuid",
                 "name",
                 "color",
-                "user_id"
             ]
         ],
         "message",
@@ -124,7 +123,6 @@ class AccountTest extends TestCase
         $this->assertDatabaseHas(Account::class, [
             'name' => "test",
             'type' => AccountType::Bank->value,
-            'user_id' => 1,
             'balance' => 1024
         ]);
     }
@@ -142,10 +140,8 @@ class AccountTest extends TestCase
             "payment_type" : 1,
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1
+            "confirmed": 1
         }';
         $request = json_decode($request);
 
@@ -183,10 +179,8 @@ class AccountTest extends TestCase
             "payment_type" : 1,
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1,
+            "confirmed": 1
             "payee": "pippo"
         }';
         $request = json_decode($request);
@@ -212,10 +206,8 @@ class AccountTest extends TestCase
             "payment_type" : 1,
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1
+            "confirmed": 1
         }';
         $request = json_decode($request);
 
@@ -241,10 +233,8 @@ class AccountTest extends TestCase
             "payment_type" : 1,
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1
+            "confirmed": 1
         }';
         $request = json_decode($request);
         $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
@@ -297,10 +287,8 @@ class AccountTest extends TestCase
             "payment_type" : 1,
             "date_time": "2023-09-28 10:10:10", 
             "label": [],
-            "user_id": 1,
             "waranty": 1,
-            "confirmed": 1,
-            "user_id": 1
+            "confirmed": 1
         }';
         $request = json_decode($request);
         $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());

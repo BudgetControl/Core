@@ -45,13 +45,4 @@ class Budget extends Model
         return BudgetFactory::new($attributes);
     }
 
-    /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('budgets.user_id',UserService::getCacheUserID());
-    }
-
-
 }

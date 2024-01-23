@@ -1,8 +1,8 @@
-name: Laravel
+name: Core Test
 
 on:
-  push:
-    branches: ["feature/charts/*", "bugfix/charts/*" ]
+  pull_request:
+    branches: ["master", "stable/*" ]
 
 jobs:
   laravel-tests:
@@ -13,7 +13,7 @@ jobs:
         php-version: '8.2'
     - uses: actions/checkout@v3
     - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.testing', '.env');"
+      run: php -r "file_exists('.env') || copy('.env.github', '.env');"
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
@@ -27,21 +27,19 @@ jobs:
     - name: Directory Storage Permissions
       run: chmod -R 777 storage
     - name: Make migration
-      run: php artisan migrate
+      run: php artisan migrate:fresh --path database/migrations --path database/migrations/users
+    - name: Run seed
+      run: php artisan db:seed
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite app/BudgetTracker/Charts
-        LANG: it
-      run: vendor/bin/phpunit --testsuit Charts
+      run: php artisan test
     services:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: rootpasswordmaster
           MYSQL_USER: test
           MYSQL_PASSWORD: roottest
-          MYSQL_DATABASE: budget_testing
+          MYSQL_DATABASE: budgetV2_phpunit
           MYSQL_HOST: 127.0.0.1
         ports:
           - 3306:3306

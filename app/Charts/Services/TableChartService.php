@@ -66,7 +66,7 @@ class TableChartService extends ChartDataService
     public function incomingByLabel(): TableChart
     {
         $chart = new TableChart();
-        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
+        $labels = Labels::where("archive",0)->orderBy("name")->get();
         ksort($this->dateTime);
 
         foreach ($this->dateTime as $date) {
@@ -122,7 +122,7 @@ class TableChartService extends ChartDataService
     public function expensesByLabel(): TableChart
     {
         $chart = new TableChart();
-        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
+        $labels = Labels::where("archive",0)->orderBy("name")->get();
         ksort($this->dateTime);
 
         foreach ($this->dateTime as $date) {

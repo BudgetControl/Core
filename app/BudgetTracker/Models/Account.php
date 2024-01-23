@@ -61,15 +61,7 @@ class Account extends Model
      * */
     public static function findFromUuid(string $uuid): Account
     {
-        return Account::where('uuid',$uuid)->where('user_id',UserService::getCacheUserID())->firstOrFail();
-    }
-
-    /**
-     * scope user
-     */
-    public function scopeUser(Builder $query): void
-    {
-        $query->where('accounts.user_id',UserService::getCacheUserID());
+        return Account::where('uuid',$uuid)->firstOrFail();
     }
 
     /**

@@ -38,7 +38,7 @@ class PlannedEntriesFactory extends Factory
             'type' => EntryType::Incoming->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
             'date_time' => $date->format('Y-m-d H:i:s'),
             'end_date_time' => null,
@@ -46,7 +46,6 @@ class PlannedEntriesFactory extends Factory
             'confirmed' => 1,
             'planned' => 1,
             'planning' => 'daily',
-            'user_id' => 1
         ];
     }
 }

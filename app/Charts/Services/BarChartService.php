@@ -126,7 +126,7 @@ class BarChartService extends ChartDataService
     public function incomingByLabel(): BarChart
     {
         $chart = new BarChart();
-        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
+        $labels = Labels::where("archive",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
@@ -204,7 +204,7 @@ class BarChartService extends ChartDataService
     public function expensesByLabel(): BarChart
     {
         $chart = new BarChart();
-        $labels = Labels::user()->where("archive",0)->orderBy("name")->get();
+        $labels = Labels::where("archive",0)->orderBy("name")->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {

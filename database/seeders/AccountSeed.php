@@ -14,22 +14,19 @@ class AccountSeed extends Seeder
      */
     public function run(): void
     {
-        if(env("APP_ENV","DEV") == 'PROD') {
-            $lang = env("LANG", "it");
-            $path = __DIR__ . '/../sql/account.json';
-            $data = (array) json_decode(file_get_contents($path));
+        $lang = "it"; //env("LANG", "it");
+        $path = __DIR__ . '/../sql/account.json';
+        $data = (array) json_decode(file_get_contents($path));
 
-            foreach ($data[$lang] as $key => $value) {
-                $db = new Account();
-                $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
-                $db->name = $value->name;
-                $db->type = $value->type;
-                $db->save();
-            }
+        foreach ($data[$lang] as $key => $value) {
+            $db = new Account();
+            $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
+            $db->name = $value->name;
+            $db->type = $value->type;
+            $db->save();
         }
 
         Account::factory(1)->create([
-            'user_id' => 1,
             'installement' => 1,
             'type' => 'Bank',
             'balance' => 5000.00,
@@ -37,11 +34,9 @@ class AccountSeed extends Seeder
         ]);
 
         Account::factory(8)->create([
-            'user_id' => 1,
         ]);
 
         Account::factory(1)->create([
-            'user_id' => 1,
             'installement' => 1,
             'installementValue' => 200,
             'type' => 'Credit Card',
@@ -50,7 +45,6 @@ class AccountSeed extends Seeder
         ]);
 
         Account::factory(1)->create([
-            'user_id' => 1,
             'installement' => 1,
             'type' => 'Bank',
             'balance' => 1000.00,

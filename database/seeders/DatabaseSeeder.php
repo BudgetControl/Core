@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(
             [
+                \Database\Seeders\UserSeed::class,
                 \Database\Seeders\IncomingSeed::class,
                 \Database\Seeders\ExpensesSeed::class,
                 \Database\Seeders\DebitSeed::class,
@@ -24,9 +25,9 @@ class DatabaseSeeder extends Seeder
                 \Database\Seeders\AccountSeed::class,
                 \Database\Seeders\PlannedEntriesSeed::class,
                 \Database\Seeders\PayeesSeed::class,
-                \Database\Seeders\UserSeed::class,
                 \Database\Seeders\ModelsSeed::class,
                 \Database\Seeders\BudgetSeed::class,
+                \Database\Seeders\UserSettingsSeed::class,
             ]
         );
     }

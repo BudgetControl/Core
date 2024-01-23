@@ -38,7 +38,6 @@ class BudgetMamangerService
         $budget->budget = $data['amount'];
         $budget->notification = $data['notification'];
         $budget->configuration = $configuration->toJson();
-        $budget->user_id = UserService::getCacheUserID();
         $budget->save();
     }
 
@@ -46,7 +45,7 @@ class BudgetMamangerService
     {
         $result = [];
 
-        $budget = Budget::User()->where('id',$budgetId)->first();
+        $budget = Budget::where('id',$budgetId)->first();
 
         if(is_null($budget)) {
             throw new Exception("No budget found", 404);
@@ -69,7 +68,7 @@ class BudgetMamangerService
     {
         $result = [];
 
-        $configurations = Budget::User()->get();
+        $configurations = Budget::get();
         foreach($configurations as $budget) {
             $config = json_decode($budget->configuration);
             $entries = $this->getEntires($config);
@@ -127,7 +126,7 @@ class BudgetMamangerService
 
     private function getEntires($config)
     {
-            $entries = Entry::User();
+            $entries = Entry::orderBy("id");
 
             if(!empty($config->account)) {
                 $entries->whereIn('account_id',(array) $config->account);

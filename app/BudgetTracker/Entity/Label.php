@@ -15,7 +15,6 @@ final class Label implements BudgetTracker
     private string $name;
     private string $color;
     private int $archive;
-    private int $userId;
     private string $uniqid;
 
     public function __construct(string $name, string $color, int $archive)
@@ -23,7 +22,6 @@ final class Label implements BudgetTracker
         $this->name = $name;
         $this->color = $color;
         $this->archive = $archive;
-        $this->userId = UserService::getCacheUserID();
         $this->uniqid = uniqid();
 
         $this->validate();
@@ -76,21 +74,10 @@ final class Label implements BudgetTracker
         $rules = [
             'name' => ['required', 'string'],
             'color' => ['required', new AccountColorValidation()],
-            'userId' => ['required', 'integer'],
             'archive' => ['required', 'bool'],
         ];
 
         Validator::validate($this->toArray(), $rules);
-    }
-
-    /**
-     * Get the value of userId
-     *
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
     }
 
     /**
@@ -109,7 +96,6 @@ final class Label implements BudgetTracker
             'name' => $this->name,
             'color' => $this->color,
             'archive' => $this->archive,
-            'userId' => $this->userId
         ];
     }
 

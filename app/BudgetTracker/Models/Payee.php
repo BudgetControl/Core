@@ -63,11 +63,4 @@ class Payee extends Model
         return $this->hasMany(Entry::class);
     }
 
-    /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('user_id',UserService::getCacheUserID());
-    }
 }

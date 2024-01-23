@@ -37,10 +37,9 @@ class ModelsFactory extends Factory
             'note' => fake()->text(80),
             'type' => EntryType::Incoming->value,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
             'payment_type' => 1,
-            'user_id' => 1,
             'name' => fake()->text(10)
         ];
     }

@@ -61,7 +61,6 @@ class ExpensesService extends EntryService
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
             $entryModel->type = EntryType::Expenses->value;
-            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             //TODO: fixme
             if(!is_null($payee)) {
                 $entryModel->payee_id = $payee->id;
@@ -95,7 +94,7 @@ class ExpensesService extends EntryService
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
 
-        $entry = ExpensesModel::withRelations()->user()->where('type', EntryType::Expenses->value);
+        $entry = ExpensesModel::withRelations()->where('type', EntryType::Expenses->value);
 
         if ($id === null) {
             $result = $entry->get();

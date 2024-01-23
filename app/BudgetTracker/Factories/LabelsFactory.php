@@ -33,7 +33,6 @@ class LabelsFactory extends Factory
             'name' => fake()->text(5),
             'color' => random_color(),
             'archive' => 0,
-            'user_id' => 1
         ];
     }
 }

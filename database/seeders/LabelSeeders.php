@@ -16,7 +16,7 @@ class LabelSeeders extends Seeder
      */
     public function run()
     {
-      $lang = env("LANG","it");
+      $lang = "it"; //env("LANG","it");
       $path = __DIR__.'/../sql/label.json';
       $data = (array) json_decode(file_get_contents($path));
 
@@ -25,7 +25,6 @@ class LabelSeeders extends Seeder
         $db->uuid = uniqid();
         $db->name = strtolower($value);
         $db->color = 'colors';
-        $db->user_id = 1;
         $db->save();
       }
     }

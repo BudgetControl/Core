@@ -66,31 +66,31 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('stats', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('chart', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('mailer', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('search', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('budget', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

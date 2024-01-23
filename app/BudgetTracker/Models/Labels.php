@@ -22,7 +22,6 @@ class Labels extends Model
         "created_at",
         "updated_at",
         "deleted_at",
-        "user_id"
     ];
 
     public function __construct(array $attributes = [])
@@ -57,13 +56,5 @@ class Labels extends Model
     public function models()
     {
         return $this->belongsToMany(Models::class, 'model_labels');
-    }
-
-    /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('user_id', UserService::getCacheUserID());
     }
 }

@@ -83,19 +83,10 @@ class Models extends Model
   }
 
   /**
-   * scope user
-   */
-  public function scopeUser($query): void
-  {
-    $query->where('user_id', UserService::getCacheUserID());
-  }
-
-  /**
    * with relations
    */
   public function scopeWithRelations($query): void
   {
-    $query->with('label')->with('subCategory.category')->with('account')->with('currency')
-      ->where('user_id', UserService::getCacheUserID());
+    $query->with('label')->with('subCategory.category')->with('account')->with('currency');
   }
 }

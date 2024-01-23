@@ -16,11 +16,13 @@ class DeleteDataTest extends TestCase
      *  DELETE ENTRY
      */
     public function test_delete_incoming() {
+        $this->initBalance();
+
         $response = $this->deleteJson('/api/incoming/'.ApiGetDataTest::INCOMING_ID,[],$this->getAuthTokenHeader());
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::INCOMING_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,4000));
+        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,4500));
     }
 
     /**
@@ -31,7 +33,7 @@ class DeleteDataTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::EXPENSES_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6000));
+        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,5500));
     }
 
     /**
@@ -42,7 +44,7 @@ class DeleteDataTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::DEBIT_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6000));
+        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6500));
     }
 
     /**
@@ -53,6 +55,9 @@ class DeleteDataTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::PLANNING_RECURSIVELY,'planned_entries'));
+
+        //restore deleted entry
+        $this->restore();
     }
 
     private function getAuthTokenHeader()
@@ -75,5 +80,27 @@ class DeleteDataTest extends TestCase
         $balance = $account->balance;
 
         return $balance === $mustHave;
+    }
+
+    private function initBalance()
+    {
+        $account = Account::where('uuid',self::ACCOUNT_ID)->firstOrFail();
+        $account->balance = 5000;
+        $account->save();
+    }
+
+    private function restore()
+    {
+        DB::table('entries')->where('uuid', ApiGetDataTest::INCOMING_ID)->update([
+            "deleted_at" => null
+        ]);
+
+        DB::table('entries')->where('uuid', ApiGetDataTest::EXPENSES_ID)->update([
+            "deleted_at" => null
+        ]);
+
+        DB::table('entries')->where('uuid', ApiGetDataTest::DEBIT_ID)->update([
+            "deleted_at" => null
+        ]);
     }
 }

@@ -52,14 +52,14 @@ class ProfileController extends Controller
         $userID = $user->id;
 
         $user->delete();
-        UserSettings::where("user_id", $userID)->delete();
-        Account::where("user_id", $userID)->delete();
-        SubCategory::where("user_id", $userID)->delete();
-        Entry::where("user_id", $userID)->delete();
-        Labels::where("user_id", $userID)->delete();
-        Models::where("user_id", $userID)->delete();
-        Payee::where("user_id", $userID)->delete();
-        PlannedEntries::where("user_id", $userID)->delete();
+        UserSettings::get()->delete();
+        Account::get()->delete();
+        SubCategory::get()->delete();
+        Entry::get()->delete();
+        Labels::get()->delete();
+        Models::get()->delete();
+        Payee::get()->delete();
+        PlannedEntries::get()->delete();
 
 
         return response()->json("User and all data deleted");
@@ -73,13 +73,13 @@ class ProfileController extends Controller
 
         $userID = $user->id;
 
-        Account::where("user_id", $userID)->delete();
-        SubCategory::where("user_id", $userID)->delete();
-        Entry::where("user_id", $userID)->delete();
-        Labels::where("user_id", $userID)->delete();
-        Models::where("user_id", $userID)->delete();
-        Payee::where("user_id", $userID)->delete();
-        PlannedEntries::where("user_id", $userID)->delete();
+        Account::get()->delete();
+        SubCategory::get()->delete();
+        Entry::get()->delete();
+        Labels::get()->delete();
+        Models::get()->delete();
+        Payee::get()->delete();
+        PlannedEntries::get()->delete();
 
         return response()->json("User and all data deleted");
     }
