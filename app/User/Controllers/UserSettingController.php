@@ -33,7 +33,7 @@ class UserSettingController {
         }
 
         $config = json_decode($setting->data);
-        $config['currency_id'] = $request->currency;
+        $config->currency_id = $request->currency;
 
         $setting->data = json_encode($config);
         $setting->save();

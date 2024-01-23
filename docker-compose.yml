@@ -9,8 +9,8 @@ services:
         - .env
       environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
+        MYSQL_USER: ${MYSQL_USERNAME}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
       volumes:
         - mysql_persistent:/var/lib/mysql
