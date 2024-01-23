@@ -80,15 +80,13 @@ class StatsService
      */
     public function incoming(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Incoming->value);
-
         $entry = Incoming::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Incoming->value);
 
         $entryOld = Incoming::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Incoming->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -144,11 +142,11 @@ class StatsService
     {
         $entry = Entry::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('type', $type);
+        ->where('entries.date_time', '>=', $this->startDate)->where('type', $type);
 
         $entryOld = Entry::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('type', $type);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', $type);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -172,15 +170,13 @@ class StatsService
      */
     public function investments(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Investments->value);
-
         $entry = Investments::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Investments->value);
 
         $entryOld = Investments::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Investments->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -204,15 +200,13 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Expenses->value);
-
         $entry = Expenses::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Expenses->value);
 
         $entryOld = Expenses::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Expenses->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
