@@ -14,7 +14,7 @@ class AccountSeed extends Seeder
      */
     public function run(): void
     {
-        $lang = env("LANG", "it");
+        $lang = "it"; //env("LANG", "it");
         $path = __DIR__ . '/../sql/account.json';
         $data = (array) json_decode(file_get_contents($path));
 
