@@ -44,14 +44,6 @@ class PlannedEntries extends Model
     }
 
     /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('user_id',UserService::getCacheUserID());
-    }
-
-    /**
      * Get the category
      */
     public function subCategory()
@@ -96,8 +88,7 @@ class PlannedEntries extends Model
      */
     public function scopeWithRelations($query): void
     {
-      $query->with('label')->with('subCategory.category')->with('account')->with('currency')
-        ->where('user_id', UserService::getCacheUserID());
+      $query->with('label')->with('subCategory.category')->with('account')->with('currency');
     }
 
 }

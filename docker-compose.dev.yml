@@ -5,12 +5,14 @@ services:
       ports:
         - 3366:3306
     mailhog:
-      container_name: mailhog-service
+      container_name: budgetcontrol-mailhog
       image: mailhog/mailhog:latest
       restart: always
       ports:
         - 1025:1025
         - 8025:8025
+      networks:
+        - budgetcontrol_network
     bemodule:
       build:
         context: .

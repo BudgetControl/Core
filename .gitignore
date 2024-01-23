@@ -10,7 +10,8 @@ storage/framework/
 /bootstrap/cache
 .env
 .env
-.env.backup
+.env.bk
+.env.testing
 .env.production
 .phpunit.result.cache
 Homestead.json

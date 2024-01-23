@@ -2,26 +2,23 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Entity\Entries\Entry as EntriesEntry;
-use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Interfaces\EntryInterface;
-use App\BudgetTracker\Entity\Entries\Entry;
-use App\BudgetTracker\Models\Entry as Model;
+use App\BudgetTracker\Models\Entry as ModelsEntry;
 
 class WalletService
 {
 
-    private EntryInterface $entry;
-    private ?EntryInterface $oldEntry = null;
-    private bool $revert = false;
+    protected EntryInterface $entry;
+    protected ?ModelsEntry $oldEntry = null;
+    protected bool $revert = false;
 
     public function __construct(EntryInterface $entry)
     {
         $this->entry = $entry;
-        $entryDB = Model::where('uuid', $entry->getUuid())->first();
+        $entryDB = ModelsEntry::where('id', $entry->getId())->first();
         if (!is_null($entryDB)) {
-            $this->oldEntry = EntryService::create($entryDB->toArray(), EntryType::from($entryDB->type));
+            $this->oldEntry = $entryDB;
         }
     }
 
@@ -77,14 +74,14 @@ class WalletService
     /**
      * chek if entry is planned type
      */
-    private function checkPlanned(): bool
+    protected function checkPlanned(): bool
     {
         // check only new entry
         if (is_null($this->oldEntry)) {
             return $this->entry->getPlanned();
         }
 
-        if ($this->oldEntry->getPlanned() === false) {
+        if ($this->oldEntry->planned == true) {
             $this->revert = true;
         }
 
@@ -94,14 +91,14 @@ class WalletService
     /**
      * chek if entry is confirmet type
      */
-    private function checkConfirmed(): bool
+    protected function checkConfirmed(): bool
     {
         // check only new entry
         if (is_null($this->oldEntry)) {
             return $this->entry->getConfirmed();
         }
 
-        if ($this->oldEntry->getConfirmed() === true) {
+        if ($this->oldEntry->confirmed == false) {
             $this->revert = true;
         }
 
@@ -111,18 +108,18 @@ class WalletService
     /**
      * is account changed
      */
-    private function isAccountChanged()
+    protected function isAccountChanged()
     {
 
         if (!is_null($this->oldEntry)) {
-            $previusAccount = $this->oldEntry->getAccount()->id;
+            $previusAccount = $this->oldEntry->account_id;
             $account = $this->entry->getAccount()->id;
 
-            if($this->oldEntry->getConfirmed() === true) {
-                if($this->oldEntry->getPlanned() === false) {
+            if($this->oldEntry->confirmed == true) {
+                if($this->oldEntry->planned == false) {
                     if ($previusAccount != $account) {
                         $this->update(
-                            $this->oldEntry->getAmount() * -1,
+                            $this->oldEntry->amount * -1,
                             $previusAccount
                         );
                         $this->revert = false;
@@ -137,11 +134,11 @@ class WalletService
     /**
      * revert to wallet
      */
-    private function revert()
+    protected function revert()
     {
         $this->isAccountChanged();
         if ($this->revert === true) {
-            AccountsService::updateBalance($this->oldEntry->getAmount() * -1, $this->oldEntry->getAccount()->id);
+            AccountsService::updateBalance($this->oldEntry->amount * -1, $this->oldEntry->account_id);
         }
     }
 

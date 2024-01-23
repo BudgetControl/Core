@@ -39,22 +39,25 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \App\User\Middleware\JwtAuthenticate::class,
+            \App\Http\Middleware\SwitchDatabase::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\User\Middleware\JwtAuthenticate::class,
         ],
 
         'stats' => [
+            \App\User\Middleware\JwtAuthenticate::class,
+            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\User\Middleware\JwtAuthenticate::class,
         ],
 
         'chart' => [
+            \App\User\Middleware\JwtAuthenticate::class,
+            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':chart',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\User\Middleware\JwtAuthenticate::class,
         ],
         
         'auth' => [
@@ -63,10 +66,17 @@ class Kernel extends HttpKernel
         ],
         
         'mailer' => [
+            \App\User\Middleware\JwtAuthenticate::class,
+            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\User\Middleware\JwtAuthenticate::class,
-        ]
+        ],
+        
+        'budget' => [
+            \App\Http\Middleware\SwitchDatabase::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
     ];
 
     /**
@@ -88,6 +98,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.jwt' => \App\User\Middleware\JwtAuthenticate::class,
+        'switch.database' => \App\Http\Middleware\SwitchDatabase::class,
 
     ];
 }

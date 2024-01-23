@@ -8,80 +8,49 @@ use App\User\Models\User;
 use App\User\Models\UserSettings;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use App\User\Models\PersonalAccessToken;
 
 class UserService
 {
-    private readonly string $token;
-
-    public function __construct(string $token)
-    {
-        $this->token = $token;
-    }
 
     /**
      * retrive user
      */
-
-    public function get(): User
+    public static function get(): User
     {
-        $token = $this->token;
-        $tokenCache = PersonalAccessToken::findToken($token);
-        $user = User::find($tokenCache->tokenable_id);
-        $this->userIDfromToken($token);
-
-        return $user;
-    }
-    /**
-     * get ID user from access token
-     * @param string $token
-     * 
-     */
-    static public function userIDfromToken(string $token)
-    {
-        $session = session()->getId();
-
-        if (Cache::has($session)) {
-            Log::info("Current session $session");
-            return Cache::get($session);
-        }
-
-        $data = PersonalAccessToken::where('token', $token)->firstOrFail();
-        Cache::put($session, $data->tokenable_id);
+        return Cache::get(user_ip());
     }
 
     /**
-     * get user id from cache
-     * 
-     * @return int
-     * @throws Exception
+     * getCacheUserID
      */
-    static public function getCacheUserID(): int
+    public static function getCacheUserID(): int
     {
+        $user = Cache::get(user_ip());
+        return $user->id;
+    }
 
-        if (env("APP_DISABLE_AUTH", false) === true) {
-            Log::info("Start session DEBUG MODE");
-            return 1;
-        }
-
-        $session = session()->getId();
-
-        if (!Cache::has($session)) {
-            throw new \Exception("Unable find a user ID from cache with IP $session");
-        }
-
-        return Cache::get($session);
+    /**
+     * set user obj on cache
+     * @param User $user
+     * 
+     */
+    static public function setUserCache(User $user)
+    {
+        Cache::put(user_ip(), $user);
     }
 
     /**
      * retrive setting informations
      */
     public static function getSettings()
-    {
-        $setting = UserSettings::where("user_id",UserService::getCacheUserID())->first();
-        $userProfile = User::find($setting->id);
-        $currency = Currency::find($setting->currency_id);
-        $paymentType = PaymentsTypes::find($setting->payment_type_id);
+    {   
+        $user = Cache::get(user_ip());
+
+        $setting = UserSettings::where("setting","app_configuration")->first();
+        $userProfile = $user;
+        $app_setting = json_decode($setting->data);
+        $currency = Currency::find($app_setting->currency_id);
+        $paymentType = PaymentsTypes::find($app_setting->payment_type_id);
 
         return [
             'settings' => $setting,

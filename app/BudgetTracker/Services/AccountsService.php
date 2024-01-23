@@ -65,7 +65,6 @@ class AccountsService
             $entry->color = $account['color'];
             $entry->balance = $account['balance'];
             $entry->currency = $account['currency'];
-            $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
             $entry->date = empty(@$account['date']) ? null : $account['date'];
 
@@ -116,10 +115,10 @@ class AccountsService
     public function read(int $id = null ): Model
     {
 
-        $entry = Account::user();
+        $entry = Account::all();
 
         if ($id === null) {
-            $accounts = $entry->get();
+            $accounts = $entry::all();
         } else {
             $accounts = $entry->where("id", $id)->withTrashed()->firstOrFail();
         }

@@ -189,7 +189,7 @@ class SearchTest extends TestCase
     public function test_search_from_account_data(): void
     {
         $payload = [
-            "account" => [1],
+            "account" => [4],
             "category" => null,
             "type" => ["expenses"],
             "tags" => [],
@@ -208,7 +208,7 @@ class SearchTest extends TestCase
 
         $found = true;
         foreach ($response['data']as $data) {
-            if ($data['account_id'] != 1) {
+            if ($data['account_id'] != 4) {
                 $found = false;
             }
         }
@@ -253,7 +253,7 @@ class SearchTest extends TestCase
             "category" => null,
             "type" => null,
             "tags" => [],
-            "text" => 'test',
+            "text" => 'it is a test simple',
             "planned" => null
         ];
 

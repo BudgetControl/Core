@@ -37,13 +37,12 @@ class DebitFactory extends Factory
             'type' => EntryType::Debit->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
             'date_time' => date('Y-m-d H:i:s',time()),
             'payment_type' => 1,
             'confirmed' => 1,
             'payee_id' => 1,
-            'user_id' => 1
 
         ];
     }

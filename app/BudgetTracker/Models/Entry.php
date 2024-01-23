@@ -123,8 +123,7 @@ class Entry extends Model
     public function scopeWithRelations($query): void
     {
         $query->with('label')->with('subCategory.category')->with('account')->with("payee")->orderBy('date_time','desc')
-        ->with('currency')
-        ->where('user_id',UserService::getCacheUserID());
+        ->with('currency');
     }
 
     /**
@@ -136,14 +135,6 @@ class Entry extends Model
     public static function findFromUuid(string $uuid)
     {
         return Entry::where('uuid',$uuid)->with('label')->first();
-    }
-
-    /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('entries.user_id',UserService::getCacheUserID());
     }
 
     /**

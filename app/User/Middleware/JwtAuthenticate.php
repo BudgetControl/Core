@@ -2,11 +2,9 @@
 
 namespace App\User\Middleware;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Http\Request;
 use App\User\Models\PersonalAccessToken;
-use Illuminate\Support\Facades\Auth;
 use App\User\Services\UserService;
+use App\User\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class JwtAuthenticate
@@ -37,7 +35,7 @@ class JwtAuthenticate
                 abort(response()->json(['error' => 'not authorized'], 401));
             }
     
-            UserService::userIDfromToken($XACCESSTOKEN);
+            UserService::setUserCache(User::find($token->tokenable_id));
         }
 
         return $next($request);

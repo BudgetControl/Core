@@ -40,12 +40,5 @@ class SubCategory extends Model
        return $this->hasMany(Entry::class);
     }
 
-    /**
-     * scope user
-     */
-    public function scopeUser(Builder $query): void
-    {
-        $query->whereIn('sub_categories.user_id',[UserService::getCacheUserID(),0]);
-    }
     
 }

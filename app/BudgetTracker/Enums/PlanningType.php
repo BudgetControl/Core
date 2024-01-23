@@ -4,7 +4,9 @@ namespace App\BudgetTracker\Enums;
 
 enum PlanningType : string {
     case Month = 'monthly';
-    case Year = 'weekly';
-    case Week = 'yearly';
+    case Week = 'weekly';
+    case Year = 'yearly';
     case Day = 'daily';
+    case OneShot = 'one_shot';
+
 }

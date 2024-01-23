@@ -80,15 +80,13 @@ class StatsService
      */
     public function incoming(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Incoming->value);
-
-        $entry = Incoming::user()->stats();
+        $entry = Incoming::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Incoming->value);
 
-        $entryOld = Incoming::user()->stats();
+        $entryOld = Incoming::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Incoming->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -112,11 +110,11 @@ class StatsService
      */
     public function entryByCategory(array $categoryID, bool $planning): array
     {
-        $entry = Entry::user()->stats();
+        $entry = Entry::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
         ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categoryID);
 
-        $entryOld = Entry::user()->stats();
+        $entryOld = Entry::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
         ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categoryID);
 
@@ -142,13 +140,13 @@ class StatsService
      */
     public function entryByType(array $type, bool $planning): array
     {
-        $entry = Entry::user()->stats();
+        $entry = Entry::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('type', $type);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', $type);
 
-        $entryOld = Entry::user()->stats();
+        $entryOld = Entry::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('type', $type);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', $type);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -172,15 +170,13 @@ class StatsService
      */
     public function investments(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Investments->value);
-
-        $entry = Investments::user()->stats();
+        $entry = Investments::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Investments->value);
 
-        $entryOld = Investments::user()->stats();
+        $entryOld = Investments::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Investments->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -204,15 +200,13 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        $categories = $this->getCategoryId(EntryType::Expenses->value);
-
-        $entry = Expenses::user()->stats();
+        $entry = Expenses::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Expenses->value);
 
-        $entryOld = Expenses::user()->stats();
+        $entryOld = Expenses::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categories);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Expenses->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -236,14 +230,14 @@ class StatsService
      */
     public function entryByLabel(array $labelsID, bool $planning): array
     {
-        $entry = Entry::user()->stats();
+        $entry = Entry::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
         ->where('entries.date_time', '>=', $this->startDate)
         ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
         ->leftJoin('labels', "labels.id","=","entry_labels.labels_id")
         ->whereIn("labels.id",$labelsID);
 
-        $entryOld = Entry::user()->stats();
+        $entryOld = Entry::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
         ->where('entries.date_time', '>=', $this->startDatePassed)
         ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
@@ -272,13 +266,13 @@ class StatsService
      */
     public function transfer(bool $planning): array
     {
-        $entry = Transfer::user()->stats();
+        $entry = Transfer::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type',EntryType::Transfer->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Transfer->value);
 
-        $entryOld = Transfer::user()->stats();
+        $entryOld = Transfer::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Transfer->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
@@ -294,13 +288,13 @@ class StatsService
      */
     public function debit(): array
     {
-        $entry = Debit::user()->stats();
+        $entry = Debit::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type',EntryType::Debit->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Debit->value);
 
-        $entryOld = Debit::user()->stats();
+        $entryOld = Debit::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Debit->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
@@ -317,7 +311,7 @@ class StatsService
     {
         $wallet = new Wallet(0);
 
-        $accounts = Account::user()->stats()->where('installement',0)->get();
+        $accounts = Account::stats()->where('installement',0)->get();
         foreach($accounts as $account) {
             $wallet->deposit($account->balance);
         }
@@ -353,7 +347,6 @@ class StatsService
             ->where('entries.date_time', '>=', $dateTimeFirst)
             ->where('accounts.installement', 0)
             ->where('accounts.exclude_from_stats', 0)
-            ->where('accounts.user_id',UserService::getCacheUserID())
             ->get('entries.amount');
 
         return $entry;
@@ -361,7 +354,7 @@ class StatsService
 
     private function getInstallementValue(): array
     {
-        $values = Account::user()->stats()->where('installement', 1)->get();
+        $values = Account::stats()->where('installement', 1)->get();
         $data = [];
         foreach($values as $value) {
             $balance = $value->balance * -1;
@@ -407,7 +400,7 @@ class StatsService
     {
         $wallet = new Wallet(0);
 
-        $accounts = Account::user()->stats()->get();
+        $accounts = Account::stats()->get();
         foreach($accounts as $account) {
             $wallet->deposit($account->balance);
         }

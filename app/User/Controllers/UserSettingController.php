@@ -27,12 +27,15 @@ class UserSettingController {
             throw new NotFoundException("Currency not found", 404);
         }
 
-        $setting = UserSettings::where("user_id",UserService::getCacheUserID())->first();
+        $setting = UserSettings::where("setting","app_configuration")->first();
         if(!$setting) {
             throw new NotFoundException("User not found", 404);
         }
 
-        $setting->currency_id = $request->currency;
+        $config = json_decode($setting->data);
+        $config->currency_id = $request->currency;
+
+        $setting->data = json_encode($config);
         $setting->save();
 
         return response()->json(["succedd" => "Updated currency"]);

@@ -9,16 +9,16 @@ services:
         - .env
       environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
+        MYSQL_USER: ${MYSQL_USERNAME}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         MYSQL_DATABASE: ${DB_DATABASE}
       volumes:
         - mysql_persistent:/var/lib/mysql
       networks:
-        - services_budgetcontrol_network
+        - budgetcontrol_network
     bemodule:
-      container_name: budgetcontrol-services
-      image: budgetcontrol-services:${APP_ENV}_${APP_VERSION}
+      container_name: budgetcontrol-core
+      image: budgetcontrol-core:${APP_ENV}_${APP_VERSION}
       volumes:
         - ./:/var/www/workdir
         - ../logapp:/app/storage/logs
@@ -26,7 +26,7 @@ services:
         - database
         - cache
       networks:
-        - services_budgetcontrol_network
+        - budgetcontrol_network
       restart: unless-stopped
     cache:
       container_name: budgetcontrol-redis
@@ -38,7 +38,7 @@ services:
         - '6379:6379'
       command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
       networks:
-        - services_budgetcontrol_network
+        - budgetcontrol_network
     nginx:
       container_name: budgetcontrol-proxy
       image: nginx:stable-alpine
@@ -50,7 +50,7 @@ services:
         - ./bin/certbot/conf:/etc/letsencrypt
         - ./bin/certbot/www:/var/www/certbot
       networks:
-        - services_budgetcontrol_network
+        - budgetcontrol_network
     certbot:
       image: certbot/certbot
       container_name: budgetcontrol-certbot
@@ -59,13 +59,13 @@ services:
       - ./bin/certbot/www:/var/www/certbot
       entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
       networks:
-        - services_budgetcontrol_network
+        - budgetcontrol_network
 
 volumes:
   mysql_persistent:
   bc_cache:
 
 networks:
-  services_budgetcontrol_network:
+  budgetcontrol_network:
     external: false
-    name: services_budgetcontrol_network
+    name: budgetcontrol_network

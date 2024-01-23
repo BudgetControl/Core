@@ -93,7 +93,7 @@ class LineChartService extends ChartDataService
     public function incomingByLabel(): LineChart
     {
         $chart = new LineChart();
-        $labels = Labels::user()->where("archive",0)->get();
+        $labels = Labels::where("archive",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
@@ -174,7 +174,7 @@ class LineChartService extends ChartDataService
     public function expensesByLabel(): LineChart
     {
         $chart = new LineChart();
-        $labels = Labels::user()->where("archive",0)->get();
+        $labels = Labels::where("archive",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
