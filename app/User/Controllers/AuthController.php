@@ -28,7 +28,7 @@ class AuthController extends Controller
 {
     use Encryptable;
 
-    const URL_PSW_RESET = '/auth/reset-password/';
+    const URL_PSW_RESET = '/app/auth/reset-password/';
     const URL_SIGNUP_CONFIRM = '/app/auth/confirm/';
 
     /**
@@ -46,7 +46,7 @@ class AuthController extends Controller
             'user' => $request->user,
             'email' => $request->email,
             'password' => $request->password,
-            'domain' => env('APP_URL')
+            'domain' => env("APP_URL", $_SERVER['HTTP_ORIGIN'])
         ];
 
         try {
@@ -134,7 +134,7 @@ class AuthController extends Controller
             $service->user = $user;
 
             $userData = $user->toArray();
-            $userData['link'] = env("APP_URL") . self::URL_PSW_RESET . $service->token($user);
+            $userData['link'] = env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_PSW_RESET . $service->token($user);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
