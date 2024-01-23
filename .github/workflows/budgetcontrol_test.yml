@@ -1,8 +1,8 @@
-name: Laravel
+name: Core Test
 
 on:
  push:
-    branches: ["feature/budget-tracker/*", "bugfix/budget-tracker/*" ]
+  branches: ["master", "stable/*" ]
 
 jobs:
   laravel-tests:
@@ -27,13 +27,15 @@ jobs:
     - name: Directory Storage Permissions
       run: chmod -R 777 storage
     - name: Make migration
-      run: php artisan migrate
+      run: php artisan migrate:fresh --path database/migrations --path database/migrations/users
+    - name: Run seed
+      run: php artisan db:seed
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite app/BudgetTracker/Tests
         LANG: it
-      run: vendor/bin/phpunit --testsuit Feature
+      run: php artisan test
     services:
       mysql:
         image: mysql:latest
