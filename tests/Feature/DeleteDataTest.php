@@ -28,6 +28,20 @@ class DeleteDataTest extends TestCase
     /**
      *  DELETE ENTRY
      */
+    public function test_delete_planned_entry() {
+        $response = $this->deleteJson('/api/planning-recursively/'.ApiGetDataTest::PLANNING_RECURSIVELY,[],$this->getAuthTokenHeader());
+        $response->assertStatus(200);
+
+        $this->assertTrue($this->isDeleted(ApiGetDataTest::PLANNING_RECURSIVELY,'planned_entries'));
+
+        //restore deleted entry
+        $this->restore();
+    }
+
+
+    /**
+     *  DELETE ENTRY
+     */
     public function test_delete_expenses() {
         $response = $this->deleteJson('/api/expenses/'.ApiGetDataTest::EXPENSES_ID,[],$this->getAuthTokenHeader());
         $response->assertStatus(200);
@@ -45,19 +59,6 @@ class DeleteDataTest extends TestCase
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::DEBIT_ID));
         $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6500));
-    }
-
-    /**
-     *  DELETE ENTRY
-     */
-    public function test_delete_planned_entry() {
-        $response = $this->deleteJson('/api/planning-recursively/'.ApiGetDataTest::PLANNING_RECURSIVELY,[],$this->getAuthTokenHeader());
-        $response->assertStatus(200);
-
-        $this->assertTrue($this->isDeleted(ApiGetDataTest::PLANNING_RECURSIVELY,'planned_entries'));
-
-        //restore deleted entry
-        $this->restore();
     }
 
     private function getAuthTokenHeader()

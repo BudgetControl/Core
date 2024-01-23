@@ -82,11 +82,11 @@ class StatsService
     {
         $entry = Incoming::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Incoming->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Incoming->value);
 
         $entryOld = Incoming::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Incoming->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Incoming->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -142,11 +142,11 @@ class StatsService
     {
         $entry = Entry::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type', $type);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', $type);
 
         $entryOld = Entry::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', $type);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', $type);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -172,11 +172,11 @@ class StatsService
     {
         $entry = Investments::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Investments->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Investments->value);
 
         $entryOld = Investments::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Investments->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Investments->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -202,11 +202,11 @@ class StatsService
     {
         $entry = Expenses::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type', EntryType::Expenses->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Expenses->value);
 
         $entryOld = Expenses::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type', EntryType::Expenses->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Expenses->value);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -268,11 +268,11 @@ class StatsService
     {
         $entry = Transfer::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type',EntryType::Transfer->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Transfer->value);
 
         $entryOld = Transfer::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Transfer->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
@@ -290,11 +290,11 @@ class StatsService
     {
         $entry = Debit::stats();
         $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('type',EntryType::Debit->value);
+        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Debit->value);
 
         $entryOld = Debit::stats();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
+        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Debit->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 

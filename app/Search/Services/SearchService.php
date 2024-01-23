@@ -2,6 +2,7 @@
 
 namespace Search\Services;
 
+use App\BudgetTracker\Entity\DateTime as EntityDateTime;
 use App\BudgetTracker\Enums\EntryType;
 use DateTime;
 use Exception;
@@ -68,8 +69,19 @@ class SearchService
             }
         }
 
+        if(!empty($filter['year'])) {
+            $dateTime = EntityDateTime::year(strtotime($filter['year']."-01-01"));
+        }
+
+        if(!empty($filter['month'])) {
+            $dateTime = EntityDateTime::month(strtotime(date("Y")."-".$filter['month']."-01"));
+        }
+
         if(!empty($filter['month']) || !empty($filter['year'])) {
-            $repository->dateTimeBetween($this->dateTime, $this->lastDayTime);
+            $startDate = new DateTime($dateTime->startDate);
+            $endDate = new DateTime($dateTime->endDate);
+
+            $repository->dateTimeBetween($startDate,$endDate);
         }
 
         $result = $repository->get(self::COLUMN);

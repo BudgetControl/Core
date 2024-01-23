@@ -31,7 +31,7 @@ jobs:
     - name: Run seed
       run: php artisan db:seed
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      run: php artisan test
+      run: vendor/bin/phpunit
     services:
       mysql:
         image: mysql:latest

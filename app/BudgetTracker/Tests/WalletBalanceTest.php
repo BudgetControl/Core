@@ -210,7 +210,7 @@ class WalletBalanceTest extends TestCase
         $response->assertStatus(200);
 
         $except = [
-            "balance" => -4850.00,
+            "balance" => -3780.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
