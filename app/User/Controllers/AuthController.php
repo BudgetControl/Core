@@ -9,18 +9,19 @@ use Illuminate\Http\Request;
 use App\Mailer\Entities\AuthMail;
 use App\User\Models\UserSettings;
 use App\User\Services\AuthService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Mailer\Services\MailService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\User\Exceptions\AuthException;
 use App\Mailer\Exceptions\MailExeption;
+use Illuminate\Database\QueryException;
 use App\User\Models\PersonalAccessToken;
 use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
@@ -28,7 +29,7 @@ class AuthController extends Controller
     use Encryptable;
 
     const URL_PSW_RESET = '/auth/reset-password/';
-    const URL_SIGNUP_CONFIRM = '/auth/confirm/';
+    const URL_SIGNUP_CONFIRM = '/app/auth/confirm/';
 
     /**
      * make authentication for API user
@@ -259,6 +260,8 @@ class AuthController extends Controller
             ));
 
             $mailer->send($user->email);
+            Cache::put($token,$user,3600);
+
         } catch (MailExeption $e) {
             Log::emergency("Unable to send email :" . $e->getMessage());
         }
