@@ -34,7 +34,7 @@
     <env name="APP_ENV" value="testing"/>
     <env name="BCRYPT_ROUNDS" value="4"/>
     <env name="CACHE_DRIVER" value="array"/>
-    <env name="DB_CONNECTION" value="mysql_phpunit"/>
+    <env name="DB_CONNECTION" value="mysql"/>
     <env name="DB_DATABASE" value="budgetV2_phpunit"/>
     <env name="DB_USERNAME" value="root"/>
     <env name="DB_PASSWORD" value="rootpasswordmaster"/>

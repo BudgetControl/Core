@@ -36,10 +36,10 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: rootpasswordmaster
           MYSQL_USER: test
           MYSQL_PASSWORD: roottest
-          MYSQL_DATABASE: budget_testing
+          MYSQL_DATABASE: budgetV2_phpunit
           MYSQL_HOST: 127.0.0.1
         ports:
           - 3306:3306
