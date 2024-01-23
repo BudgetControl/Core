@@ -19,6 +19,7 @@ use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 
@@ -190,7 +191,11 @@ class AuthController extends Controller
                 'password' => 'required|min:8',
             ]);
 
-            $user = $service->signUp($request->toArray());
+            try {
+                $user = $service->signUp($request->toArray());
+            } catch (QueryException $e) {
+                return response()->json(["error" => "User with these email already exist"],400);
+            }
 
             try {
                 //create first free account
@@ -215,7 +220,7 @@ class AuthController extends Controller
                 $service->dropDatabse($user->database_name);
             }
 
-            return response()->json(["succedd" => "Registration successfully"]);
+            return response()->json(["sucess" => "Registration successfully"]);
 
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -244,12 +249,12 @@ class AuthController extends Controller
         $data = [
             'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => env("APP_URL") . self::URL_SIGNUP_CONFIRM . $token
+            'confirm_link' => env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_SIGNUP_CONFIRM . $token
         ];
 
         try {
             $mailer = new MailService(new AuthMail(
-                'Welcome to ' . env("APP_NAME"),
+                'Welcome to ' . env("APP_NAME", "Budget Control"),
                 $data
             ));
 
