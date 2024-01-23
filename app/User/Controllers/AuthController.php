@@ -205,6 +205,7 @@ class AuthController extends Controller
                 DB::purge('mysql');
                 DB::reconnect('mysql');
                 $user->delete();
+                $service->dropDatabse($user->database_name);
                 throw new AuthException("Unable to create new account on signup, user wil be deleted");
             }
 

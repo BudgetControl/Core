@@ -13,10 +13,10 @@ use App\BudgetTracker\Services\BudgetTrackerService;
 
 class LabelService implements BudgetTrackerService
 {
-    private Builder|Model $label;
+    private Builder|Model|Collection $label;
 
     
-    private function __construct(Builder|Model $label)
+    private function __construct(Builder|Model|Collection $label)
     {
         $this->label = $label;
     }
@@ -56,7 +56,7 @@ class LabelService implements BudgetTrackerService
     public static function select(): self
     {
         return new LabelService(
-            Labels::User()
+            Labels::all()
         );
     }
 

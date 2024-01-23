@@ -14,18 +14,16 @@ class AccountSeed extends Seeder
      */
     public function run(): void
     {
-        if(env("APP_ENV","DEV") == 'PROD') {
-            $lang = env("LANG", "it");
-            $path = __DIR__ . '/../sql/account.json';
-            $data = (array) json_decode(file_get_contents($path));
+        $lang = env("LANG", "it");
+        $path = __DIR__ . '/../sql/account.json';
+        $data = (array) json_decode(file_get_contents($path));
 
-            foreach ($data[$lang] as $key => $value) {
-                $db = new Account();
-                $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
-                $db->name = $value->name;
-                $db->type = $value->type;
-                $db->save();
-            }
+        foreach ($data[$lang] as $key => $value) {
+            $db = new Account();
+            $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
+            $db->name = $value->name;
+            $db->type = $value->type;
+            $db->save();
         }
 
         Account::factory(1)->create([

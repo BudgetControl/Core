@@ -141,7 +141,7 @@ class AccountTest extends TestCase
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
         }';
         $request = json_decode($request);
 
@@ -180,7 +180,7 @@ class AccountTest extends TestCase
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
             "payee": "pippo"
         }';
         $request = json_decode($request);
@@ -207,7 +207,7 @@ class AccountTest extends TestCase
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
         }';
         $request = json_decode($request);
 
@@ -234,7 +234,7 @@ class AccountTest extends TestCase
             "date_time": "' . $dateTime->format('Y-m-d H:i:s') . '", 
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
         }';
         $request = json_decode($request);
         $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
@@ -288,7 +288,7 @@ class AccountTest extends TestCase
             "date_time": "2023-09-28 10:10:10", 
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
         }';
         $request = json_decode($request);
         $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());

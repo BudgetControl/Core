@@ -126,7 +126,7 @@ class BudgetMamangerService
 
     private function getEntires($config)
     {
-            $entries = Entry::User();
+            $entries = Entry::orderBy("id");
 
             if(!empty($config->account)) {
                 $entries->whereIn('account_id',(array) $config->account);

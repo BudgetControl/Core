@@ -21,6 +21,197 @@ class ApiPostDataTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_update_transfer_data(): void
+    {
+        $payload = $this->makeTransferRequest(500,new DateTime());
+
+        $response = $this->putJson(
+            "api/transfer/64b54d02cdcfd_test",
+            $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas("entries",[
+            "amount" => -500,
+            "uuid" => "64b54d02cdcfd_test",
+            "type" => "transfer",
+            "planned" => 0,
+            "transfer_id" => 2,
+            "account_id" => 4
+        ]);
+
+        $this->assertDatabaseHas("entries",[
+            "amount" => 500,
+            "uuid" => "64b54d02cdcft_test",
+            "type" => "transfer",
+            "planned" => 0,
+            "transfer_id" => 4,
+            "account_id" => 2
+        ]);
+
+    }
+
+    /**
+     * build model request
+     * @param float $amount
+     * @param DateTime $dateTime
+     * 
+     * @return array
+     */
+    private function makeTransferRequest(float $amount, DateTime $dateTime): array
+    {
+        $request = '{ 
+            "amount": '.$amount.',
+            "note" : "test",
+            "category_id":12,
+            "account_id" : 4,
+            "currency_id": 1,
+            "payment_type" : 1,
+            "date_time": "'.$dateTime->format('Y-m-d H:i:s').'", 
+            "label": [],
+            "waranty": 1,
+            "confirmed": 1,
+            "transfer_id":2,
+            "transfer_relation":"64b54d02cdcft_test"
+        }';
+
+        return (array) json_decode($request,true);
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_update_expenses_data(): void
+    {
+        $payload = $this->makeRequest(-500,new DateTime());
+
+        $response = $this->putJson(
+            "api/expenses/64b54cc566d77_test",
+            (array) $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+        $except = [
+            "amount" => -500,
+            "uuid" => "64b54cc566d77_test",
+            "type" => "expenses",
+            "planned" => 0
+        ];
+
+        $this->assertDatabaseHas("entries",$except);
+
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_update_incoming_data(): void
+    {
+        $payload = $this->makeRequest(500,new DateTime());
+
+        $response = $this->putJson(
+            "api/incoming/64b54cc566d77_test",
+            (array) $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+        $except = [
+            "amount" => 500,
+            "uuid" => "64b54cc566d77_test",
+            "type" => "incoming",
+            "planned" => 0
+        ];
+
+        $this->assertDatabaseHas("entries",$except);
+
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_update_planned_data(): void
+    {
+        $payload = $this->makeRequest(500,new DateTime("+1 month"));
+
+        $response = $this->putJson(
+            "api/incoming/64b54cc566d77_test",
+            (array) $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+        $except = [
+            "amount" => 500,
+            "uuid" => "64b54cc566d77_test",
+            "type" => "incoming",
+            "planned" => 1
+        ];
+
+        $this->assertDatabaseHas("entries",$except);
+
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_update_confirmed_data(): void
+    {
+        $payload = $this->makeRequest(500,new DateTime());
+        $payload->confirmed = false;
+
+        $response = $this->putJson(
+            "api/incoming/64b54cc566d77_test",
+            (array) $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+        $except = [
+            "amount" => 500,
+            "uuid" => "64b54cc566d77_test",
+            "type" => "incoming",
+            "confirmed" => 0,
+            "planned" => 0
+        ];
+
+        $this->assertDatabaseHas("entries",$except);
+
+    }
+
+    /**
+     * A basic feature test example.
+     */
+    public function test_update_note_data(): void
+    {
+        $payload = $this->makeRequest(500,new DateTime());
+        $payload->note = "test note";
+
+        $response = $this->putJson(
+            "api/incoming/64b54cc566d77_test",
+            (array) $payload,
+            $this->getAuthTokenHeader()
+        );
+
+        $response->assertStatus(200);
+        $except = [
+            "amount" => 500,
+            "uuid" => "64b54cc566d77_test",
+            "type" => "incoming",
+            "note" => "test note",
+            "planned" => 0
+        ];
+
+        $this->assertDatabaseHas("entries",$except);
+
+    }
+
+    /**
+     * A basic feature test example.
+     */
     public function test_incoming_data(): void
     {
 
@@ -33,7 +224,7 @@ class ApiPostDataTest extends TestCase
             'amount' => 100.90,
             'type' => EntryType::Incoming->value,
             'category_id' => 12,
-            'account_id' => 1,
+            'account_id' => 4,
             'planned' => 0,
             'transfer' => 0,
             'confirmed' => 1
@@ -54,7 +245,7 @@ class ApiPostDataTest extends TestCase
             'amount' => 100.90,
             'type' => EntryType::Incoming->value,
             'category_id' => 12,
-            'account_id' => 1,
+            'account_id' => 4,
             'planned' => 1,
             'transfer' => 0,
             'confirmed' => 1
@@ -77,7 +268,7 @@ class ApiPostDataTest extends TestCase
             'amount' => 100.90,
             'type' => EntryType::Incoming->value,
             'category_id' => 12,
-            'account_id' => 1,
+            'account_id' => 4,
             'confirmed' => 1,
             'planning' => PlanningType::Day->value
         ]);
@@ -97,7 +288,7 @@ class ApiPostDataTest extends TestCase
             'amount' => -100.90,
             'type' => EntryType::Expenses->value,
             'category_id' => 12,
-            'account_id' => 1,
+            'account_id' => 4,
             'planned' => 0,
             'transfer' => 0,
             'confirmed' => 1
@@ -118,7 +309,7 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -1024.90,
             'type' => EntryType::Transfer->value,
-            'account_id' => 1,
+            'account_id' => 4,
             'transfer_id' => 2,
             'planned' => 0,
             'transfer' => 1,
@@ -130,7 +321,7 @@ class ApiPostDataTest extends TestCase
             'type' => EntryType::Transfer->value,
             'category_id' => 75,
             'account_id' => 2,
-            'transfer_id' => 1,
+            'transfer_id' => 4,
             'planned' => 0,
             'transfer' => 1,
             'confirmed' => 1
@@ -151,7 +342,7 @@ class ApiPostDataTest extends TestCase
         $this->assertDatabaseHas(Entry::class,[
             'amount' => -200.90,
             'type' => EntryType::Debit->value,
-            'account_id' => 1,
+            'account_id' => 4,
             'payee_id' => 1,
             'planned' => 0,
             'transfer' => 0,
@@ -179,7 +370,7 @@ class ApiPostDataTest extends TestCase
             'amount' => -200.90,
             'type' => EntryType::Debit->value,
             'category_id' => 55,
-            'account_id' => 1,
+            'account_id' => 4,
             'payee_id' => 11,
             'planned' => 0,
             'transfer' => 0,
@@ -207,7 +398,7 @@ class ApiPostDataTest extends TestCase
            'amount' => -1000,
            'type' => EntryType::Investments->value,
            'category_id' => 60,
-           'account_id' => 1,
+           'account_id' => 4,
            'planned' => 0,
            'transfer' => 0,
            'confirmed' => 1
@@ -232,7 +423,7 @@ class ApiPostDataTest extends TestCase
             'amount' => 1000,
             'type' => EntryType::Incoming->value,
             'category_id' => 60,
-            'account_id' => 1,
+            'account_id' => 4,
             'name' => 'test'
         ]);
     }
@@ -255,7 +446,7 @@ class ApiPostDataTest extends TestCase
             'amount' => 500,
             'type' => EntryType::Incoming->value,
             'category_id' => 60,
-            'account_id' => 1,
+            'account_id' => 4,
         ]);
     }
 
@@ -272,7 +463,7 @@ class ApiPostDataTest extends TestCase
             "amount": '.$amount.',
             "note" : "test",
             "category_id":12,
-            "account_id" : 1,
+            "account_id" : 4,
             "currency_id": 1,
             "payment_type" : 1,
             "date_time": "'.$dateTime->format('Y-m-d H:i:s').'",

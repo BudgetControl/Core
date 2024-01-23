@@ -50,9 +50,7 @@ class TransferService extends EntryService
         );
 
         if(!empty($this->uuid)) {
-            if(!empty($transfer)) {
-                $entry->setUuid($this->uuid);
-            }
+            $entry->setUuid($this->uuid);
         }
 
         return $entry;

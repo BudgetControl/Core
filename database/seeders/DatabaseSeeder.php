@@ -11,12 +11,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (env("APP_ENV") == "testing") {
-            $this->call(
-                [
-                    \Database\Seeders\UserSeed::class,
-                ]
-            );
-        }
+        $this->call(
+            [
+                \Database\Seeders\UserSeed::class,
+                \Database\Seeders\IncomingSeed::class,
+                \Database\Seeders\ExpensesSeed::class,
+                \Database\Seeders\DebitSeed::class,
+                \Database\Seeders\TransferSeed::class,
+                \Database\Seeders\CategorySeeders::class,
+                \Database\Seeders\CurrencySeeders::class,
+                \Database\Seeders\PaymentTypeSeeders::class,
+                \Database\Seeders\LabelSeeders::class,
+                \Database\Seeders\AccountSeed::class,
+                \Database\Seeders\PlannedEntriesSeed::class,
+                \Database\Seeders\PayeesSeed::class,
+                \Database\Seeders\ModelsSeed::class,
+                \Database\Seeders\BudgetSeed::class,
+                \Database\Seeders\UserSettingsSeed::class,
+            ]
+        );
     }
 }

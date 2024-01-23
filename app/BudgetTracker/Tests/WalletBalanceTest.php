@@ -236,13 +236,13 @@ class WalletBalanceTest extends TestCase
             "amount": '.$amount.',
             "note" : "test",
             "category_id":12,
-            "account_id" : 1,
+            "account_id" : 4,
             "currency_id": 1,
             "payment_type" : 1,
             "date_time": "'.$dateTime->format('Y-m-d H:i:s').'",
             "label": [],
             "waranty": 1,
-            "confirmed": 1,
+            "confirmed": 1
         }';
 
         return (array) json_decode($request,true);
