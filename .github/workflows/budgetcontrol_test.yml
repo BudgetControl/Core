@@ -20,6 +20,7 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
         LANG: it
+        APP_ENV: testing
     - name: Create Database
       run: |
         mkdir -p database
