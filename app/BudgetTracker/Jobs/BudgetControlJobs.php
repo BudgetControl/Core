@@ -31,7 +31,7 @@ abstract class BudgetControlJobs
 
     }
 
-    protected function switchDatabase(array $dbName)
+    protected function switchDatabase(string $dbName)
     {
         $database_name = $dbName;
         try {
