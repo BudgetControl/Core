@@ -5,17 +5,12 @@ namespace App\BudgetTracker\Jobs;
 use App\User\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
-use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\Log;
-use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\BudgetTracker\Services\EntryService;
-use Doctrine\DBAL\Query\QueryException;
-use Throwable;
+use Illuminate\Database\QueryException;
 
 abstract class BudgetControlJobs
 {
@@ -30,6 +25,7 @@ abstract class BudgetControlJobs
             $this->switchDatabase($database);
             $this->job();
         }
+        $this->reconnect();
 
     }
 
@@ -52,5 +48,12 @@ abstract class BudgetControlJobs
     {
         $usersDatabase = User::all('database_name');
         return $usersDatabase->toArray();
+    }
+
+    private function reconnect()
+    {
+        Config::set(['database.connections.mysql.database' => env("DB_DATABASE","budgetV2")]);
+        DB::purge('mysql');
+        DB::reconnect('mysql');
     }
 }
