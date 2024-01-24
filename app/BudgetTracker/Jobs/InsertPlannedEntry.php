@@ -16,9 +16,8 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 
-class InsertPlannedEntry implements ShouldQueue
+class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     const TIME = [
         'daily', 'weekly', 'monthly', 'yearly'
@@ -39,7 +38,7 @@ class InsertPlannedEntry implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function job(): void
     {
         Log::info("Check for planned entries");
         foreach (self::TIME as $time) {
