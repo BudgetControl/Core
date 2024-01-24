@@ -3,6 +3,7 @@
 namespace App\BudgetTracker\Jobs;
 
 use App\User\Models\User;
+use App\User\Services\UserService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -21,8 +22,9 @@ abstract class BudgetControlJobs
     public function handle()
     {
         $databases = $this->getUserDatabase();
-        foreach($databases as $database) {
-            $this->switchDatabase($database);
+        foreach($databases as $user) {
+            UserService::setUserCache($user);
+            $this->switchDatabase($user->database_name);
             $this->job();
         }
         $this->reconnect();
@@ -31,7 +33,7 @@ abstract class BudgetControlJobs
 
     protected function switchDatabase(array $dbName)
     {
-        $database_name = $dbName['database_name'];
+        $database_name = $dbName;
         try {
             Config::set(['database.connections.mysql.database' => $database_name]);
             DB::purge('mysql');
@@ -44,10 +46,10 @@ abstract class BudgetControlJobs
 
     }
 
-    protected function getUserDatabase(): array
+    protected function getUserDatabase(): \Illuminate\Database\Eloquent\Collection
     {
-        $usersDatabase = User::all('database_name');
-        return $usersDatabase->toArray();
+        $usersDatabase = User::all();
+        return $usersDatabase;
     }
 
     private function reconnect()
