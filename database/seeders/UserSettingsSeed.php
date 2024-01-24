@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\User\Models\User;
+use Illuminate\Database\Seeder;
 use App\User\Models\UserSettings;
+use App\User\Models\Entity\SettingValues;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSettingsSeed extends Seeder
 {
@@ -15,8 +16,8 @@ class UserSettingsSeed extends Seeder
     public function run(): void
     {
         $setting = new UserSettings();
-        $setting->setting = "app_configurations";
-        $setting->data = '{"payment_type_id":1,"currendy_id":1}';
+        $setting->setting =  SettingValues::Configurations->value;
+        $setting->data = '{"payment_type_id":1,"currency_id":1}';
         $setting->save();
     }
 }

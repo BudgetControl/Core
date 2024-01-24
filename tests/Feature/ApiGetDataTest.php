@@ -154,12 +154,61 @@ class ApiGetDataTest extends TestCase
         ]
     ];
 
+    const ACCOUNT = [
+        [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "color",
+            "exclude_from_stats",
+            "deleted_at",
+            "date",
+            "type",
+            "installement",
+            "installementValue",
+            "currency",
+            "balance",
+            "sorting"
+        ]
+    ];
+
     const SETTINGS = [
-        "id",
-        "currency_id",
-        "payment_type_id",
-        "created_at",
-        "updated_at"
+        "settings" =>  [
+            "id",
+            "created_at",
+            "updated_at",
+            "setting",
+            "data"
+        ],
+        "user_profile" => [
+            "id",
+            "name",
+            "email",
+            "email_verified_at",
+            "password",
+            "remember_token",
+            "created_at",
+            "updated_at",
+            "deleted_at",
+            "database_name",
+            "uuid"
+        ],
+        "currency" => [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "label",
+            "icon",
+            "exchange_rate"
+        ],
+        "paymentType" => [
+            "id",
+            "date_time",
+            "uuid",
+            "name"
+        ]
     ];
 
     const INCOMING_ID = '64b54cc566d77_test';
@@ -307,6 +356,38 @@ class ApiGetDataTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::MODEL);
+    }
+
+    public function test_get_wallets()
+    {
+        $response = $this->get('/api/accounts/', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::ACCOUNT);
+    }
+
+    public function test_get_wallet()
+    {
+        $response = $this->get('/api/accounts/1', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::ACCOUNT[0]);
+    }
+
+    public function test_get_trashed_wallet()
+    {
+        $response = $this->get('/api/accounts/?trashed=1', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::ACCOUNT);
+    }
+
+    public function test_get_user_settings()
+    {
+        $response = $this->get('/api/user/settings', $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(self::SETTINGS);
     }
 
     private function getAuthTokenHeader()

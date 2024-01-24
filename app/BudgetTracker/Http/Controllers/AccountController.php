@@ -30,7 +30,7 @@ class AccountController extends Controller
 		$account = $account->get();
 
 		
-		return response()->json(new ResponseService($account->toArray()));
+		return response()->json($account->toArray());
 	}
 
 	/**
@@ -63,7 +63,7 @@ class AccountController extends Controller
 		$account = new AccountsService($accountId);
 		$account->sorting($sorting);
 
-		return response('all data stored'); 	
+		return response('all data stored');
 	}
 
 	/**

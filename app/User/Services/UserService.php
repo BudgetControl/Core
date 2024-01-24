@@ -2,12 +2,13 @@
 
 namespace App\User\Services;
 
-use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\PaymentsTypes;
 use App\User\Models\User;
 use App\User\Models\UserSettings;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\BudgetTracker\Models\Currency;
+use App\User\Models\Entity\SettingValues;
+use App\BudgetTracker\Models\PaymentsTypes;
 
 class UserService
 {
@@ -46,7 +47,7 @@ class UserService
     {   
         $user = Cache::get(user_ip());
 
-        $setting = UserSettings::where("setting","app_configuration")->first();
+        $setting = UserSettings::where("setting", SettingValues::Configurations->value)->first();
         $userProfile = $user;
         $app_setting = json_decode($setting->data);
         $currency = Currency::find($app_setting->currency_id);

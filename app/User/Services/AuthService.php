@@ -3,6 +3,7 @@
 namespace App\User\Services;
 
 use App\User\Exceptions\AuthException;
+use App\User\Models\Entity\SettingValues;
 use App\User\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -90,7 +91,7 @@ class AuthService
     public function createDatabse(string $name)
     {
         if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_test";
+            $name = "budgetV2_phpunit";
         }
 
         Log::info("CREATE DATABASE $name");
@@ -103,7 +104,7 @@ class AuthService
     public function dropDatabse(string $name)
     {
         if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_test";
+            $name = "budgetV2_phpunit";
         }
 
         Log::info("DROP DATABASE $name");
@@ -132,11 +133,12 @@ class AuthService
     public function setUpDefaultSettings()
     {
         Log::info("Set up default settings");
+        $configurations = SettingValues::Configurations->value;
         DB::statement('
             INSERT INTO user_settings
             (setting,data)
             VALUES
-            ("app_configuration","{\"currency_id\":1,\"payment_type_id\":1}")
+            ("'.$configurations.'",{"currency_id":1,"payment_type_id":1})
         ');
     }
 
@@ -147,7 +149,7 @@ class AuthService
     {
 
         if(env("APP_ENV") == "testing") {
-            $dbName = "budgetV2_test";
+            $dbName = "budgetV2_phpunit";
         }
 
         Config::set(['database.connections.mysql.database' => $dbName]);

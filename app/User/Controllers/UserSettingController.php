@@ -4,6 +4,7 @@ namespace App\User\Controllers;
 use App\User\Models\UserSettings;
 use App\User\Services\UserService;
 use App\BudgetTracker\Models\Currency;
+use App\User\Models\Entity\SettingValues;
 use Illuminate\Http\Request;
 use Http\Discovery\Exception\NotFoundException;
 
@@ -27,7 +28,7 @@ class UserSettingController {
             throw new NotFoundException("Currency not found", 404);
         }
 
-        $setting = UserSettings::where("setting","app_configuration")->first();
+        $setting = UserSettings::where("setting",SettingValues::Configurations->value)->first();
         if(!$setting) {
             throw new NotFoundException("User not found", 404);
         }

@@ -115,12 +115,10 @@ class AccountsService
     public function read(int $id = null ): Model
     {
 
-        $entry = Account::all();
-
         if ($id === null) {
-            $accounts = $entry::all();
+            $accounts = Account::all();
         } else {
-            $accounts = $entry->where("id", $id)->withTrashed()->firstOrFail();
+            $accounts = Account::where("id", $id)->withTrashed()->firstOrFail();
         }
 
         return $accounts;
