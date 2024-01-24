@@ -81,7 +81,7 @@ class WalletService
             return $this->entry->getPlanned();
         }
 
-        if ($this->oldEntry->planned == true) {
+        if ($this->oldEntry->planned == false && $this->entry->getPlanned() == true) {
             $this->revert = true;
         }
 
@@ -98,7 +98,7 @@ class WalletService
             return $this->entry->getConfirmed();
         }
 
-        if ($this->oldEntry->confirmed == false) {
+        if ($this->oldEntry->confirmed == true && $this->entry->getConfirmed() == false) {
             $this->revert = true;
         }
 
