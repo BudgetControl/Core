@@ -4,7 +4,6 @@ namespace App\Budget\Job;
 use App\Budget\Domain\Model\Budget;
 use App\Budget\Services\BudgetMamangerService;
 use App\Budget\Services\BudgetNotificationService;
-use App\BudgetTracker\Jobs\BudgetControlJobs;
 use App\User\Services\UserService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -14,8 +13,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
+class ScheduleBudgetControl implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -28,7 +28,7 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function job(): void
+    public function handle(): void
     {
         Log::info("Control of exceeded budgets");
         $this->getBudget();
@@ -65,6 +65,7 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
     private function alertExpired(array $budget)
     {
         $to = $budget['user_email'];
+        Log::debug("budgetExpired for $to");
         BudgetNotificationService::budgetExpired($budget,$to)->send();
     }
 

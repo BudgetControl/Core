@@ -18,7 +18,7 @@ class MailService
 
     public function send(mixed $to): void
     {
-        Log::debug("Sending email ");
+        Log::debug("Sending email $to");
         Mail::to($to)->send($this->mailer->build());
     }
 
