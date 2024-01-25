@@ -22,7 +22,7 @@ class AccountController extends Controller
 	 */
 	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
-		$account = Account::orderBy("id");
+		$account = Account::User()->orderBy("name");
 		if($request->query("trashed",0) == 1) {
 			$account->withTrashed();
 		}

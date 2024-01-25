@@ -69,7 +69,7 @@ class Account extends BaseModel
      */
     public function scopeStats(Builder $query): void
     {
-        $query->where('exclude_from_stats',0);
+        $query->User()->where('exclude_from_stats',0);
     }
 
     public function scopeSorting(Builder $query): void

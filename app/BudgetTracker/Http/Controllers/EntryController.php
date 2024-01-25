@@ -38,7 +38,7 @@ class EntryController extends Controller
 		$date->modify('last day of this month');
 
 		$this->entry = Entry::User()->withRelations()
-			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
+			->where('date_time', '<=', $date->format('Y-m-d H:i:s'));
 
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
