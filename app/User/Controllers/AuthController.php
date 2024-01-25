@@ -9,25 +9,27 @@ use Illuminate\Http\Request;
 use App\Mailer\Entities\AuthMail;
 use App\User\Models\UserSettings;
 use App\User\Services\AuthService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Mailer\Services\MailService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\User\Exceptions\AuthException;
 use App\Mailer\Exceptions\MailExeption;
+use Illuminate\Database\QueryException;
 use App\User\Models\PersonalAccessToken;
 use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
 {
     use Encryptable;
 
-    const URL_PSW_RESET = '/auth/reset-password/';
-    const URL_SIGNUP_CONFIRM = '/auth/confirm/';
+    const URL_PSW_RESET = '/app/auth/reset-password/';
+    const URL_SIGNUP_CONFIRM = '/app/auth/confirm/';
 
     /**
      * make authentication for API user
@@ -44,7 +46,7 @@ class AuthController extends Controller
             'user' => $request->user,
             'email' => $request->email,
             'password' => $request->password,
-            'domain' => env('APP_URL')
+            'domain' => env("APP_URL", $_SERVER['HTTP_ORIGIN'])
         ];
 
         try {
@@ -132,7 +134,7 @@ class AuthController extends Controller
             $service->user = $user;
 
             $userData = $user->toArray();
-            $userData['link'] = env("APP_URL") . self::URL_PSW_RESET . $service->token($user);
+            $userData['link'] = env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_PSW_RESET . $service->token($user);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
@@ -190,7 +192,11 @@ class AuthController extends Controller
                 'password' => 'required|min:8',
             ]);
 
-            $user = $service->signUp($request->toArray());
+            try {
+                $user = $service->signUp($request->toArray());
+            } catch (QueryException $e) {
+                return response()->json(["error" => "User with these email already exist"],400);
+            }
 
             try {
                 //create first free account
@@ -215,7 +221,7 @@ class AuthController extends Controller
                 $service->dropDatabse($user->database_name);
             }
 
-            return response()->json(["succedd" => "Registration successfully"]);
+            return response()->json(["sucess" => "Registration successfully"]);
 
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -244,16 +250,18 @@ class AuthController extends Controller
         $data = [
             'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => env("APP_URL") . self::URL_SIGNUP_CONFIRM . $token
+            'confirm_link' => env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_SIGNUP_CONFIRM . $token
         ];
 
         try {
             $mailer = new MailService(new AuthMail(
-                'Welcome to ' . env("APP_NAME"),
+                'Welcome to ' . env("APP_NAME", "Budget Control"),
                 $data
             ));
 
             $mailer->send($user->email);
+            Cache::put($token,$user,3600);
+
         } catch (MailExeption $e) {
             Log::emergency("Unable to send email :" . $e->getMessage());
         }
