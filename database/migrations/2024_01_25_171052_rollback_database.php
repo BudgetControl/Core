@@ -43,6 +43,9 @@ return new class extends Migration
             $table->integer('user_id');
         });
         Schema::table('users', function (Blueprint $table) {
+            $table->string('uuid');
+        });
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('database_name');
         });
     }
