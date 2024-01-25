@@ -27,7 +27,6 @@ class AuthService
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->password = bcrypt($request['password']);
-        $user->database_name = uniqid('budgetV2_');
         $user->save();
 
         $this->user = $user;
@@ -86,32 +85,6 @@ class AuthService
     }
 
     /**
-     * create new databases
-     */
-    public function createDatabse(string $name)
-    {
-        if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_phpunit";
-        }
-
-        Log::info("CREATE DATABASE $name");
-        DB::statement('CREATE DATABASE ' . $name);
-    }
-
-    /**
-     * drop databases if somthings wront
-     */
-    public function dropDatabse(string $name)
-    {
-        if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_phpunit";
-        }
-
-        Log::info("DROP DATABASE $name");
-        DB::statement('DROP DATABASE ' . $name);
-    }
-
-    /**
      * create first account
      */
     public function createAccountEntry()
@@ -140,33 +113,5 @@ class AuthService
             VALUES
             ("'.$configurations.'",{"currency_id":1,"payment_type_id":1})
         ');
-    }
-
-    /**
-     * make migrations
-     */
-    public function migrate(string $dbName)
-    {
-
-        if(env("APP_ENV") == "testing") {
-            $dbName = "budgetV2_phpunit";
-        }
-
-        Config::set(['database.connections.mysql.database' => $dbName]);
-        DB::purge('mysql');
-        DB::reconnect('mysql');
-        Log::info("Start migration of DB $dbName");
-        // Esegui la migrazione o altri comandi desiderati
-        Artisan::call(
-            'migrate',
-            [
-                '--path' => 'database/migrations/users',
-                '--force' => true
-            ]
-        );
-
-        Artisan::call('db:seed', [
-            '--class' => '\Database\Seeders\AppConfigurationsSeeder'
-        ]);
     }
 }

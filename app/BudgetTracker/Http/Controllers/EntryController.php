@@ -37,7 +37,7 @@ class EntryController extends Controller
 		$date = new \DateTime();
 		$date->modify('last day of this month');
 
-		$this->entry = Entry::withRelations()
+		$this->entry = Entry::User()->withRelations()
 			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
 
 		if(!empty($filter->query('filter'))) {
@@ -83,7 +83,7 @@ class EntryController extends Controller
 	 */
 	static public function getEntriesFromAccount(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Entry::withRelations()->where("account_id", $id)->get();
+		$incoming = Entry::User()->withRelations()->where("account_id", $id)->get();
 		return response()->json($incoming);
 	}
 

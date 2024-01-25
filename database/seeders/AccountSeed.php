@@ -23,6 +23,7 @@ class AccountSeed extends Seeder
             $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
             $db->name = $value->name;
             $db->type = $value->type;
+            $db->user_id = 1;
             $db->save();
         }
 

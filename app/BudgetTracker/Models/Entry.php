@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User\Services\UserService;
 use DateTime;
 
-class Entry extends Model
+class Entry extends BaseModel
 {
     use SoftDeletes;
 

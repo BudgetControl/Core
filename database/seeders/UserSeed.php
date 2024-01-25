@@ -20,7 +20,7 @@ class UserSeed extends Seeder
         $user->password = bcrypt("password");
         $user->email = "foo@email.it";
         $user->email_verified_at = date("Y-m-d H:i:s");
-        $user->database_name = "budgetV2_phpunit";
+        $user->user_id = 1;
         $user->save();
     }
 }

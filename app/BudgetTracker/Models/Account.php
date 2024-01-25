@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 
-class Account extends Model
+class Account extends BaseModel
 {
     use HasFactory, SoftDeletes;
 

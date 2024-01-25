@@ -46,7 +46,7 @@ class AuthController extends Controller
             'user' => $request->user,
             'email' => $request->email,
             'password' => $request->password,
-            'domain' => env("APP_URL", $_SERVER['HTTP_ORIGIN'])
+            'domain' => env("APP_URL", "https://www.budgetcontrol.cloud")
         ];
 
         try {
@@ -134,7 +134,7 @@ class AuthController extends Controller
             $service->user = $user;
 
             $userData = $user->toArray();
-            $userData['link'] = env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_PSW_RESET . $service->token($user);
+            $userData['link'] = env("APP_URL", "https://www.budgetcontrol.cloud") . self::URL_PSW_RESET . $service->token($user);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'User email not foud, please sign up :-)'], 401);
         }
@@ -200,27 +200,17 @@ class AuthController extends Controller
 
             try {
                 //create first free account
-                $service->createDatabse($user->database_name);
-                $service->migrate($user->database_name);
                 $service->createAccountEntry();
                 $service->setUpDefaultSettings();
 
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");
                 Log::error($e);
-                DB::purge('mysql');
-                DB::reconnect('mysql');
                 $user->delete();
-                $service->dropDatabse($user->database_name);
                 throw new AuthException("Unable to create new account on signup, user wil be deleted");
             }
 
             $this->sendMail($user);
-
-            if(env("APP_ENV") == "testing") {
-                $service->dropDatabse($user->database_name);
-            }
-
             return response()->json(["sucess" => "Registration successfully"]);
 
         } catch (ValidationException $e) {
@@ -250,7 +240,7 @@ class AuthController extends Controller
         $data = [
             'name' => $user->name,
             'email' => $user->email->email,
-            'confirm_link' => env("APP_URL", $_SERVER['HTTP_ORIGIN']) . self::URL_SIGNUP_CONFIRM . $token
+            'confirm_link' => env("APP_URL", "https://www.budgetcontrol.cloud") . self::URL_SIGNUP_CONFIRM . $token
         ];
 
         try {

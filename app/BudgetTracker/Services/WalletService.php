@@ -83,7 +83,7 @@ class WalletService
             return $this->entry->getPlanned();
         }
 
-        if ($this->oldEntry->planned == false && $this->entry->getPlanned() == true) {
+        if ($this->oldEntry->planned == false) {
             Log::debug($this->entry->getId()." old entry was planned REVERT");
             $this->revert = true;
         }
@@ -101,7 +101,7 @@ class WalletService
             return $this->entry->getConfirmed();
         }
 
-        if ($this->oldEntry->confirmed == true && $this->entry->getConfirmed() == false) {
+        if ($this->oldEntry->confirmed == true) {
             Log::debug($this->entry->getId()." old entry was not confirmed REVERT");
             $this->revert = true;
         }

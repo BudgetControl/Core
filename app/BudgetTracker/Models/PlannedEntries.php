@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\User\Services\UserService;
 
-class PlannedEntries extends Model
+class PlannedEntries extends BaseModel
 {
     use HasFactory,SoftDeletes;
 
@@ -26,6 +26,8 @@ class PlannedEntries extends Model
 
     public function __construct(array $attributes = [])
     {
+        parent::__construct();
+        
         $this->attributes['uuid'] = uniqid();
         $this->attributes['confirmed'] = 1;
         $this->attributes['planned'] = 1;

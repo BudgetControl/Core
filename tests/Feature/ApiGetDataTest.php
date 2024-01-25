@@ -191,7 +191,6 @@ class ApiGetDataTest extends TestCase
             "created_at",
             "updated_at",
             "deleted_at",
-            "database_name",
             "uuid"
         ],
         "currency" => [
