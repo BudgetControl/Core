@@ -41,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('auth')
                 ->prefix('auth')
-                ->group(base_path('app/User/routes/auth.php'));
+                ->group(base_path('app/Auth/Routes/route.php'));
 
             Route::middleware('mailer')
                 ->prefix('api/mailer')

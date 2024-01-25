@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Services;
+namespace App\Auth\Service;
 
 use App\User\Exceptions\AuthException;
 use App\User\Models\Entity\SettingValues;
@@ -13,49 +13,7 @@ use Illuminate\Support\Facades\Config;
 
 class AuthService
 {
-    public ?User $user;
 
-    public function __construct(User|null $user = null)
-    {
-        $this->user = $user;
-    }
-
-    public function signUp(array $request)
-    {
-        $user = new User();
-        $user->uuid = uniqid();
-        $user->name = $request['name'];
-        $user->email = $request['email'];
-        $user->password = bcrypt($request['password']);
-        $user->database_name = uniqid('budgetV2_');
-        $user->save();
-
-        $this->user = $user;
-
-        return $user;
-    }
-
-    public function token(): string
-    {
-        $key = (string) $this->user->email->email . $this->user->password . $this->user->name . microtime();
-        return self::generateToken($key);
-    }
-
-    /**
-     * confirm user
-     */
-    public function confirm(string $key): bool
-    {
-        $user = $this->retriveToken($key);
-        if (empty($user)) {
-            return false;
-        }
-
-        $user->email_verified_at = date('Y-m-d H:i:s');
-        $user->save();
-
-        return true;
-    }
 
     /**
      * generate new personal token
@@ -67,7 +25,7 @@ class AuthService
     {
         $expireLink = date("Y-m-d H:i:s", strtotime('+3 hours'));
         $link = sha1($pattern);
-        Cache::set($link, $this->user, strtotime($expireLink));
+        // Cache::set($link, $this->user, strtotime($expireLink));
 
         return $link;
     }
@@ -88,7 +46,7 @@ class AuthService
     /**
      * create new databases
      */
-    public function createDatabse(string $name)
+    public static function createDatabse(string $name)
     {
         if(env("APP_ENV") == "testing") {
             $name = "budgetV2_phpunit";
@@ -101,7 +59,7 @@ class AuthService
     /**
      * drop databases if somthings wront
      */
-    public  function dropDatabse(string $name)
+    public static function dropDatabse(string $name)
     {
         if(env("APP_ENV") == "testing") {
             $name = "budgetV2_phpunit";

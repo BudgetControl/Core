@@ -18,13 +18,19 @@ use App\User\Models\PersonalAccessToken;
 use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
+use Ellaisys\Cognito\Auth\AuthenticatesUsers;
+use Ellaisys\Cognito\Auth\RefreshToken;
+use Ellaisys\Cognito\Auth\RegistersUsers;
+use Ellaisys\Cognito\Auth\ResetsPasswords;
+use Ellaisys\Cognito\Auth\SendsPasswordResetEmails;
+use Ellaisys\Cognito\Auth\VerifiesEmails;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
 {
-    use Encryptable;
+    use Encryptable, RegistersUsers, AuthenticatesUsers, ResetsPasswords,SendsPasswordResetEmails,VerifiesEmails,RefreshToken;
 
     const URL_PSW_RESET = '/auth/reset-password/';
     const URL_SIGNUP_CONFIRM = '/auth/confirm/';
@@ -184,13 +190,23 @@ class AuthController extends Controller
     {
         $service = new AuthService();
         try {
-            $request->validate([
+            
+            $validator = $request->validate([
                 'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:8',
+                'email' => 'required|email|max:64|unique:users',
+                'password' => 'sometimes|confirmed|min:6|max:64',
             ]);
 
-            $user = $service->signUp($request->toArray());
+            //Create credentials object
+            $collection = collect($request->all());
+            $data = $collection->only('name', 'email', 'password'); //passing 'password' is optional.
+
+            //Register User in cognito
+            if ($cognitoRegistered=$this->createCognitoUser($data)) {
+
+                //If successful, create the user in local db
+                $user = User::create($collection->only('name', 'email'));
+            } 
 
             try {
                 //create first free account
@@ -204,6 +220,7 @@ class AuthController extends Controller
                 Log::error($e);
                 DB::purge('mysql');
                 DB::reconnect('mysql');
+                //TODO: delete user if wrong
                 $user->delete();
                 $service->dropDatabse($user->database_name);
                 throw new AuthException("Unable to create new account on signup, user wil be deleted");
