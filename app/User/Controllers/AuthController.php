@@ -195,6 +195,7 @@ class AuthController extends Controller
             try {
                 $user = $service->signUp($request->toArray());
             } catch (QueryException $e) {
+                Log::error($e->getMessage());
                 return response()->json(["error" => "User with these email already exist"],400);
             }
 
