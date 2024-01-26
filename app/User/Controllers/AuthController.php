@@ -21,6 +21,7 @@ use App\User\Models\PersonalAccessToken;
 use App\Mailer\Entities\RecoveryPasswordMail;
 use Illuminate\Validation\ValidationException;
 use App\BudgetTracker\Services\AccountsService;
+use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -227,6 +228,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        UserService::clearUserCache();
         return response()->json(['message' => 'Logged out'], 200);
     }
 
