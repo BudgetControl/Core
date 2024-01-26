@@ -23,6 +23,8 @@ class EntryController extends Controller
 
 	const FILTER = ['account','category','type','label'];
 
+	protected Builder $builder;
+
 	//
 	/**
 	 * Display a listing of the resource.
@@ -33,7 +35,8 @@ class EntryController extends Controller
 	{
 		$page = $filter->query('page');
 
-		$this->builder = Entry::User()->withRelations();
+		$this->builder = $this->getEntry();
+
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
@@ -125,23 +128,39 @@ class EntryController extends Controller
 		}
 
 		if(!empty($filter['account'])) {
-			$this->entry->where('account_id', $filter['account']);
+			$this->builder->where('account_id', $filter['account']);
 		}
 
 		if(!empty($filter['category'])) {
-			$this->entry->where('category_id', $filter['category']);
+			$this->builder->where('category_id', $filter['category']);
 		}
 
 		if(!empty($filter['type'])) {
-			$this->entry->where('type', $filter['type']);
+			$this->builder->where('type', $filter['type']);
 		}
 
 		if(!empty($filter['label'])) {
 			$tags = (array) $filter['label'];
-			$this->entry->whereHas('label', function (Builder $q) use ($tags) {
+			$this->builder->whereHas('label', function (Builder $q) use ($tags) {
 				$q->whereIn('labels.id', $tags);
 			});
 		}
 
+	}
+
+	/**
+	 * retrive all data
+	 */
+	protected function getEntry(?EntryType $type = null): Builder
+	{
+		$builder = Entry::User()->withRelations()
+		->where("date_time", "<=", DateTime::month()->endDate)
+		->orderBy("date_time","desc");
+
+		if(!is_null($type)) {
+			$builder->where("type", $type->value);
+		}
+
+		return $builder;
 	}
 }

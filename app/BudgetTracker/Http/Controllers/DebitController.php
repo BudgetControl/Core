@@ -28,21 +28,11 @@ class DebitController extends EntryController
 	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
 		$page = $filter->query('page');
-		$service = new DebitService();
-		$incoming = $service->read();
-		$response = $incoming->toArray();
+		
+		$this->builder = $this->getEntry(EntryType::Debit);
 
-		if(!is_null($page)) {
-			$this->setEl(30);
-			$this->setData($response);
-			if($page >= 0) {
-				$response = $this->paginate($page);
-			}
-		}
-
-
-
-		return response()->json($response);
+		$this->setEl(30, $page);
+		return response()->json($this->paginate($page));
 	}
 
 	/**
