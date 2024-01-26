@@ -39,7 +39,17 @@ class IncomingSeed extends Seeder
             'uuid' => '64b54cc566d77_test',
             'account_id' => 4,
             'amount' => 1000,
+            'planned' => 0,
             'date_time' => '2023-12-30'
+        ]);
+
+        Incoming::factory(1)->create([
+            'uuid' => '64b54cc566d77_balancetest',
+            'account_id' => 5,
+            'amount' => 1000,
+            'planned' => 0,
+            'date_time' => '2023-12-30',
+            'confirmed' => 1
         ]);
 
         Incoming::all()->each(function ($incoming) use ($labels) {
