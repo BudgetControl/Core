@@ -40,7 +40,6 @@ class Kernel extends HttpKernel
 
         'api' => [
             \App\User\Middleware\JwtAuthenticate::class,
-            \App\Http\Middleware\SwitchDatabase::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -48,14 +47,12 @@ class Kernel extends HttpKernel
 
         'stats' => [
             \App\User\Middleware\JwtAuthenticate::class,
-            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'chart' => [
             \App\User\Middleware\JwtAuthenticate::class,
-            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':chart',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -67,13 +64,11 @@ class Kernel extends HttpKernel
         
         'mailer' => [
             \App\User\Middleware\JwtAuthenticate::class,
-            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         
         'budget' => [
-            \App\Http\Middleware\SwitchDatabase::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],

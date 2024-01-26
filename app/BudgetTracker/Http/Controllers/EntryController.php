@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Entity\DateTime;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Payee;
@@ -22,7 +23,7 @@ class EntryController extends Controller
 
 	const FILTER = ['account','category','type','label'];
 
-	private $entry;
+	protected Builder $builder;
 
 	//
 	/**
@@ -34,27 +35,14 @@ class EntryController extends Controller
 	{
 		$page = $filter->query('page');
 
-		$date = new \DateTime();
-		$date->modify('last day of this month');
-
-		$this->entry = Entry::withRelations()
-			->where('date_Time', '<=', $date->format('Y-m-d H:i:s'));
+		$this->builder = $this->getEntry();
 
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
-		
-		$this->entry = $this->entry->get();
-		$response = $this->entry->toArray();
 
-		$this->setEl(30);
-		$this->setData($response);
-
-		if($page >= 0) {
-			$response = $this->paginate($page);
-		}
-
-		return response()->json($response);
+		$this->setEl(30, $page);
+		return response()->json($this->paginate($page));
 	}
 
 	/**
@@ -83,7 +71,7 @@ class EntryController extends Controller
 	 */
 	static public function getEntriesFromAccount(int $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = Entry::withRelations()->where("account_id", $id)->get();
+		$incoming = Entry::User()->withRelations()->where("account_id", $id)->get();
 		return response()->json($incoming);
 	}
 
@@ -140,23 +128,39 @@ class EntryController extends Controller
 		}
 
 		if(!empty($filter['account'])) {
-			$this->entry->where('account_id', $filter['account']);
+			$this->builder->where('account_id', $filter['account']);
 		}
 
 		if(!empty($filter['category'])) {
-			$this->entry->where('category_id', $filter['category']);
+			$this->builder->where('category_id', $filter['category']);
 		}
 
 		if(!empty($filter['type'])) {
-			$this->entry->where('type', $filter['type']);
+			$this->builder->where('type', $filter['type']);
 		}
 
 		if(!empty($filter['label'])) {
 			$tags = (array) $filter['label'];
-			$this->entry->whereHas('label', function (Builder $q) use ($tags) {
+			$this->builder->whereHas('label', function (Builder $q) use ($tags) {
 				$q->whereIn('labels.id', $tags);
 			});
 		}
 
+	}
+
+	/**
+	 * retrive all data
+	 */
+	protected function getEntry(?EntryType $type = null): Builder
+	{
+		$builder = Entry::User()->withRelations()
+		->where("date_time", "<=", DateTime::month()->endDate)
+		->orderBy("date_time","desc");
+
+		if(!is_null($type)) {
+			$builder->where("type", $type->value);
+		}
+
+		return $builder;
 	}
 }

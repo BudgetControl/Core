@@ -107,7 +107,7 @@ class IncomingService extends EntryService
         Log::debug("read incoming -- $id");
         $result = new \stdClass();
 
-        $entry = IncomingModel::withRelations()->where('type', EntryType::Incoming->value);
+        $entry = IncomingModel::User()->withRelations()->where('type', EntryType::Incoming->value);
 
         if ($id === null) {
             $result = $entry->get();

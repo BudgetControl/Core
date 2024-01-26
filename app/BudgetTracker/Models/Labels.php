@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Labels extends Model
+class Labels extends BaseModel
 {
     use HasFactory,SoftDeletes;
 

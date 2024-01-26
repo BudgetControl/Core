@@ -108,7 +108,7 @@ class InvestmentsService extends EntryService
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
 
-        $entry = ModelsInvestments::withRelations()->where('type', EntryType::Investments->value);
+        $entry = ModelsInvestments::User()->withRelations()->where('type', EntryType::Investments->value);
 
         if ($id === null) {
             $result = $entry->get();

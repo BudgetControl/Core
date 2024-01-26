@@ -3,13 +3,14 @@ namespace App\BudgetTracker\Http\Trait;
 
 use Illuminate\Pagination\Paginator;
 use App\BudgetTracker\Exceptions\PaginateException;
-
+use Illuminate\Database\Eloquent\Builder;
 
 trait Paginate {
 
     /** int $el element of data */
     private int $el;
-    private array $itemsData;
+    private $itemsData;
+    protected Builder $builder;
 
     /**
      * 
@@ -32,7 +33,7 @@ trait Paginate {
 
     protected function paginator(int $page): Paginator
     {
-        $items = array_slice($this->itemsData, $this->el * $page);
+        $items = $this->builder->get();
 		$paginator = new Paginator($items, $this->el, $page);
 
 		return $paginator;
@@ -55,9 +56,10 @@ trait Paginate {
      *
      * @return self
      */
-    public function setEl(int $el): self
+    public function setEl(int $el, int $currentPage): self
     {
         $this->el = $el;
+        $this->builder = $this->builder->skip($el * $currentPage)->take($el);
 
         return $this;
     }
@@ -75,11 +77,11 @@ trait Paginate {
     /**
      * Set the value of data
      *
-     * @param array $data
+     * @param  $data
      *
      * @return self
      */
-    public function setData(array $data): self
+    public function setData( $data): self
     {
         $this->itemsData = $data;
 

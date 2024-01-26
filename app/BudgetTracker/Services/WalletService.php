@@ -31,16 +31,18 @@ class WalletService
     {
         //first check if is confirmed
         if ($this->checkConfirmed() === true) {
+            Log::debug($this->entry->getId()." - is confirmed");
             // now check if is planned
             if ($this->checkPlanned() === false) {
+                Log::debug($this->entry->getId()." - is planned");
                 $entry = $this->entry;
 
                 $amount = $entry->getAmount();
                 $account = $entry->getAccount()->id;
 
                 //update balance
+                Log::debug($this->entry->getId()." - update with ".$amount." on $account");
                 $this->update($amount, $account);
-                Log::debug("Update balance " . $amount . " , " . $account);
             }
         }
         $this->revert();
@@ -81,7 +83,8 @@ class WalletService
             return $this->entry->getPlanned();
         }
 
-        if ($this->oldEntry->planned == false && $this->entry->getPlanned() == true) {
+        if ($this->oldEntry->planned == false) {
+            Log::debug($this->entry->getId()." old entry was planned REVERT");
             $this->revert = true;
         }
 
@@ -98,7 +101,8 @@ class WalletService
             return $this->entry->getConfirmed();
         }
 
-        if ($this->oldEntry->confirmed == true && $this->entry->getConfirmed() == false) {
+        if ($this->oldEntry->confirmed == true) {
+            Log::debug($this->entry->getId()." old entry was not confirmed REVERT");
             $this->revert = true;
         }
 
@@ -138,6 +142,7 @@ class WalletService
     {
         $this->isAccountChanged();
         if ($this->revert === true) {
+            Log::debug($this->entry->getId()." REVERTING");
             AccountsService::updateBalance($this->oldEntry->amount * -1, $this->oldEntry->account_id);
         }
     }

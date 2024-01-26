@@ -116,7 +116,7 @@ class AccountsService
     {
 
         if ($id === null) {
-            $accounts = Account::all();
+            $accounts = Account::User()->get();
         } else {
             $accounts = Account::where("id", $id)->withTrashed()->firstOrFail();
         }

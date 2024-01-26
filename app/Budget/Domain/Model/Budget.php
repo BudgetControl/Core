@@ -2,13 +2,14 @@
 namespace App\Budget\Domain\Model;
 
 use App\Budget\Domain\Factories\BudgetFactory;
+use App\BudgetTracker\Models\BaseModel;
 use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class Budget extends Model
+class Budget extends BaseModel
 {
     use HasFactory, SoftDeletes;
 

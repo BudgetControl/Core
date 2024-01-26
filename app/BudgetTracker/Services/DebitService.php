@@ -100,7 +100,7 @@ class DebitService extends EntryService
         Log::debug("read debit -- $id");
         $result = new \stdClass();
 
-        $entryModel = DebitModel::withRelations()->where('type', EntryType::Debit->value);
+        $entryModel = DebitModel::User()->withRelations()->where('type', EntryType::Debit->value);
 
         if ($id === null) {
             $result = $entryModel->get();

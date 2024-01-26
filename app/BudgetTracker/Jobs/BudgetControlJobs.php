@@ -21,41 +21,6 @@ abstract class BudgetControlJobs
 
     public function handle()
     {
-        $databases = $this->getUserDatabase();
-        foreach($databases as $user) {
-            UserService::setUserCache($user);
-            $this->switchDatabase($user->database_name);
-            $this->job();
-        }
-        $this->reconnect();
-
-    }
-
-    protected function switchDatabase(string $dbName)
-    {
-        $database_name = $dbName;
-        try {
-            Config::set(['database.connections.mysql.database' => $database_name]);
-            DB::purge('mysql');
-            DB::reconnect('mysql');
-        } catch(QueryException $e) {
-            Log::error("No database found ".$database_name);
-            Log::debug($e->getMessage());
-        }
-        
-
-    }
-
-    protected function getUserDatabase(): \Illuminate\Database\Eloquent\Collection
-    {
-        $usersDatabase = User::all();
-        return $usersDatabase;
-    }
-
-    private function reconnect()
-    {
-        Config::set(['database.connections.mysql.database' => env("DB_DATABASE","budgetV2")]);
-        DB::purge('mysql');
-        DB::reconnect('mysql');
+        $this->job();
     }
 }

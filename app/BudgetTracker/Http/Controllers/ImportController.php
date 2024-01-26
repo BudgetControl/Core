@@ -127,7 +127,7 @@ class ImportController extends Controller
 		$callback = function () use ($csvHeaders) {
 			$file = fopen('php://output', 'w');
 			fputcsv($file, $csvHeaders, ";");
-			$accounts = Account::all();
+			$accounts = Account::User()->get();
 			foreach ($accounts as $account) {
 				$csv = [
 					"currency" => 'eur',
