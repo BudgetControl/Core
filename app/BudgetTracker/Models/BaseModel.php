@@ -25,10 +25,6 @@ abstract class BaseModel extends Model {
         // Definisci un query scope per aggiungere la condizione "where user_id = x"
         public function scopeUser($query)
         {
-            $id = UserService::getCacheUserID();
-            if(empty($id)) {
-                throw new Exception("User ID not found!!", 500);
-            }
             return $query->where('user_id', UserService::getCacheUserID());
         }
 

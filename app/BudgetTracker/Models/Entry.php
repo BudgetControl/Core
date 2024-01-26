@@ -176,4 +176,10 @@ class Entry extends BaseModel
         return $this->toArray() === $entry->toArray();
     }
 
+    // Definisci un query scope per aggiungere la condizione "where user_id = x"
+    public function scopeUser($query)
+    {
+        return $query->where('entries.user_id', UserService::getCacheUserID());
+    }
+
 }

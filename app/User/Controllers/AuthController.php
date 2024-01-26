@@ -201,8 +201,8 @@ class AuthController extends Controller
 
             try {
                 //create first free account
-                $service->createAccountEntry();
-                $service->setUpDefaultSettings();
+                $service->createAccountEntry($user->id);
+                $service->setUpDefaultSettings($user->id);
 
             } catch (Exception $e) {
                 Log::error("Unable to create new account on signup, user wil be deleted");

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use App\BudgetTracker\Models\Currency;
 use App\User\Models\Entity\SettingValues;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\User\Exceptions\AuthException;
 
 class UserService
 {
@@ -27,6 +28,10 @@ class UserService
     public static function getCacheUserID(): int
     {
         $user = Cache::get(user_ip());
+
+        if(empty($user->id)) {
+            throw new AuthException("User ID not found!!", 500);
+        }
         return $user->id;
     }
 
@@ -38,6 +43,14 @@ class UserService
     static public function setUserCache(User $user)
     {
         Cache::put(user_ip(), $user);
+    }
+
+    /**
+     * clar user cache
+     */
+    static public function clearUserCache()
+    {
+        Cache::delete(user_ip());
     }
 
     /**

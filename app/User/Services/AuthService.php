@@ -87,31 +87,31 @@ class AuthService
     /**
      * create first account
      */
-    public function createAccountEntry()
+    public function createAccountEntry(int $userId)
     {
         $uuid = uniqid();
         $dateTIme = date("Y-m-d H:i:s", time());
         Log::info("Create new Account entry");
         DB::statement('
             INSERT INTO accounts
-            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats)
+            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats,user_id)
             VALUES
-            ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0)
+            ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0,'.$userId.')
         ');
     }
 
     /**
      * create first account
      */
-    public function setUpDefaultSettings()
+    public function setUpDefaultSettings(int $userId)
     {
         Log::info("Set up default settings");
         $configurations = SettingValues::Configurations->value;
         DB::statement('
             INSERT INTO user_settings
-            (setting,data)
+            (setting,data,user_id)
             VALUES
-            ("'.$configurations.'",{"currency_id":1,"payment_type_id":1})
+            ("'.$configurations.'","{\"currency_id\":1,\"payment_type_id\":1}",'.$userId.')
         ');
     }
 }

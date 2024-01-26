@@ -20,8 +20,8 @@ class LabelController extends Controller
 	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
 		$archive = $request->query('archive',0);
-		$data = LabelService::select();
-		$labels = $data->archived($archive)->order('name')->get();
+		$data = Labels::User();
+		$labels = $data->where('archive',$archive)->orderBy('name')->get();
 
 		return response()->json($labels->toArray());
 	}
@@ -73,7 +73,7 @@ class LabelController extends Controller
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		$labels = LabelService::find($id)->get();
+		$labels = Labels::find($id)->get();
 		return response()->json($labels->toArray());
 	}
 
