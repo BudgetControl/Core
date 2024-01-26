@@ -158,7 +158,7 @@ class TransferService extends EntryService
         Log::debug("read entry -- $id");
         $result = new \stdClass();
 
-        $entry = TransferModel::withRelations()->where('type', EntryType::Transfer->value);
+        $entry = TransferModel::User()->withRelations()->where('type', EntryType::Transfer->value);
 
         if ($id === null) {
             $result = $entry->get();

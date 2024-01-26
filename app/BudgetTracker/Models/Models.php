@@ -9,7 +9,7 @@ use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class Models extends Model
+class Models extends BaseModel
 {
   use HasFactory, SoftDeletes;
 

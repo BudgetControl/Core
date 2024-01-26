@@ -65,6 +65,7 @@ class ScheduleBudgetControl implements ShouldQueue
     private function alertExpired(array $budget)
     {
         $to = $budget['user_email'];
+        Log::debug("budgetExpired for $to");
         BudgetNotificationService::budgetExpired($budget,$to)->send();
     }
 

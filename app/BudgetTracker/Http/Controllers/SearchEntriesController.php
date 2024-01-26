@@ -25,7 +25,7 @@ class SearchEntriesController extends Controller
 	{	
 
 		try {
-			$entry = Entry::withRelations();
+			$entry = Entry::User()->withRelations();
 
 			if (!empty($request->account)) {
 				$entry->whereIn('account_id', $request->account);

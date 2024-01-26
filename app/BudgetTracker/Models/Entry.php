@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User\Services\UserService;
 use DateTime;
 
-class Entry extends Model
+class Entry extends BaseModel
 {
     use SoftDeletes;
 
@@ -174,6 +174,12 @@ class Entry extends Model
     public function equal(Entry $entry): bool
     {
         return $this->toArray() === $entry->toArray();
+    }
+
+    // Definisci un query scope per aggiungere la condizione "where user_id = x"
+    public function scopeUser($query)
+    {
+        return $query->where('entries.user_id', UserService::getCacheUserID());
     }
 
 }

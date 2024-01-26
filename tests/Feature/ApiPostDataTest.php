@@ -450,6 +450,13 @@ class ApiPostDataTest extends TestCase
         ]);
     }
 
+    public function test_update_user_settings_currency()
+    {
+        $response = $this->post('/api/user/currency', ["currency" => 5], $this->getAuthTokenHeader());
+
+        $response->assertStatus(200);
+    }
+
     /**
      * build model request
      * @param float $amount

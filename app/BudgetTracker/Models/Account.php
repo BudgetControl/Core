@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\User\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 
-class Account extends Model
+class Account extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
@@ -69,7 +69,7 @@ class Account extends Model
      */
     public function scopeStats(Builder $query): void
     {
-        $query->where('exclude_from_stats',0);
+        $query->User()->where('exclude_from_stats',0);
     }
 
     public function scopeSorting(Builder $query): void

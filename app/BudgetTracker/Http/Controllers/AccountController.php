@@ -22,7 +22,7 @@ class AccountController extends Controller
 	 */
 	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
-		$account = Account::orderBy("id");
+		$account = Account::User()->orderBy("name");
 		if($request->query("trashed",0) == 1) {
 			$account->withTrashed();
 		}
@@ -30,7 +30,7 @@ class AccountController extends Controller
 		$account = $account->get();
 
 		
-		return response()->json(new ResponseService($account->toArray()));
+		return response()->json($account->toArray());
 	}
 
 	/**
@@ -63,7 +63,7 @@ class AccountController extends Controller
 		$account = new AccountsService($accountId);
 		$account->sorting($sorting);
 
-		return response('all data stored'); 	
+		return response('all data stored');
 	}
 
 	/**

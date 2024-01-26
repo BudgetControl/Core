@@ -165,7 +165,7 @@ if (!function_exists('user_ip')) {
         else if (getenv("APP_ENV") == "testing")
             $ipaddress = "127.0.0.1_testing";
         else
-            throw new Exception("Could not determinate user ip address");
+            $ipaddress = "nan";
 
         if ($crypted === true) {
             $ipaddress =  sha1($ipaddress);

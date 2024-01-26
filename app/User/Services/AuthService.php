@@ -3,6 +3,7 @@
 namespace App\User\Services;
 
 use App\User\Exceptions\AuthException;
+use App\User\Models\Entity\SettingValues;
 use App\User\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,6 @@ class AuthService
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->password = bcrypt($request['password']);
-        $user->database_name = uniqid('budgetV2_');
         $user->save();
 
         $this->user = $user;
@@ -85,86 +85,33 @@ class AuthService
     }
 
     /**
-     * create new databases
-     */
-    public function createDatabse(string $name)
-    {
-        if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_test";
-        }
-
-        Log::info("CREATE DATABASE $name");
-        DB::statement('CREATE DATABASE ' . $name);
-    }
-
-    /**
-     * drop databases if somthings wront
-     */
-    public function dropDatabse(string $name)
-    {
-        if(env("APP_ENV") == "testing") {
-            $name = "budgetV2_test";
-        }
-
-        Log::info("DROP DATABASE $name");
-        DB::statement('DROP DATABASE ' . $name);
-    }
-
-    /**
      * create first account
      */
-    public function createAccountEntry()
+    public function createAccountEntry(int $userId)
     {
         $uuid = uniqid();
         $dateTIme = date("Y-m-d H:i:s", time());
         Log::info("Create new Account entry");
         DB::statement('
             INSERT INTO accounts
-            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats)
+            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats,user_id)
             VALUES
-            ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0)
+            ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0,'.$userId.')
         ');
     }
 
     /**
      * create first account
      */
-    public function setUpDefaultSettings()
+    public function setUpDefaultSettings(int $userId)
     {
         Log::info("Set up default settings");
+        $configurations = SettingValues::Configurations->value;
         DB::statement('
             INSERT INTO user_settings
-            (setting,data)
+            (setting,data,user_id)
             VALUES
-            ("app_configuration","{\"currency_id\":1,\"payment_type_id\":1}")
+            ("'.$configurations.'","{\"currency_id\":1,\"payment_type_id\":1}",'.$userId.')
         ');
-    }
-
-    /**
-     * make migrations
-     */
-    public function migrate(string $dbName)
-    {
-
-        if(env("APP_ENV") == "testing") {
-            $dbName = "budgetV2_test";
-        }
-
-        Config::set(['database.connections.mysql.database' => $dbName]);
-        DB::purge('mysql');
-        DB::reconnect('mysql');
-        Log::info("Start migration of DB $dbName");
-        // Esegui la migrazione o altri comandi desiderati
-        Artisan::call(
-            'migrate',
-            [
-                '--path' => 'database/migrations/users',
-                '--force' => true
-            ]
-        );
-
-        Artisan::call('db:seed', [
-            '--class' => '\Database\Seeders\AppConfigurationsSeeder'
-        ]);
     }
 }

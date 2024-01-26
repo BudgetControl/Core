@@ -34,7 +34,8 @@ class AccountFactory extends Factory
             'color' => random_color(),
             'type' => 'Bank',
             'installement' => 0,
-            'currency' => 'EUR'
+            'currency' => 'EUR',
+            'user_id' => 1
         ];
     }
 }

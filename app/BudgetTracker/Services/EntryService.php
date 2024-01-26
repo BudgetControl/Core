@@ -103,7 +103,7 @@ class EntryService
     Log::debug("read entry -- $id");
     $result = new \stdClass();
 
-    $entry = EntryModel::withRelations()->orderBy('date_time', 'desc');
+    $entry = EntryModel::User()->withRelations()->orderBy('date_time', 'desc');
 
     if ($id === null) {
       $entry = $entry->get();

@@ -43,7 +43,7 @@ class PlanningRecursivelyService extends EntryService
 
             $entry = new PlannedEntries(['type' => $type, 'planning' => PlanningType::from($data['planning'])]);
             if (!empty($data['uuid'])) {
-                $entry = PlannedEntries::where('uuid', $data['uuid'])->first();
+                $entry = PlannedEntries::User()->where('uuid', $data['uuid'])->first();
             }
 
             $entryData = $this->makeObj($data);
@@ -81,7 +81,7 @@ class PlanningRecursivelyService extends EntryService
     {
         Log::debug("read planning recursively  -- $id");
 
-        $entries = PlannedEntries::withRelations()->where("deleted_at", null);
+        $entries = PlannedEntries::User()->withRelations()->where("deleted_at", null);
 
         if ($id !== null) {
             $entries->where('uuid', $id);

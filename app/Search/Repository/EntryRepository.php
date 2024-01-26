@@ -21,7 +21,7 @@ class EntryRepository {
 
     public function __construct()
     {
-        $this->query = Entry::withRelations();
+        $this->query = Entry::User()->withRelations();
     }
 
     public function get(array $column = ['*']): Collection

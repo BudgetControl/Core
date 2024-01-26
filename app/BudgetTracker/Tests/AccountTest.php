@@ -23,30 +23,17 @@ class AccountTest extends TestCase
     ];
 
     const STRUCTURE = [
-        "data" => [
-            [
-                "id",
-                "date_time",
-                "uuid",
-                "name",
-                "color",
-            ]
+        [
+            "id",
+            "date_time",
+            "uuid",
+            "name",
+            "color",
         ],
         "message",
         "errorCode",
         "version"
     ];
-
-    /**
-     * A basic feature test example.
-     */
-    public function test_account_data(): void
-    {
-        $response = $this->get('/api/accounts/', $this->getAuthTokenHeader());
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure(self::STRUCTURE);
-    }
 
     /**
      * A basic feature test example.

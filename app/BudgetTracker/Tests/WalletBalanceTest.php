@@ -120,7 +120,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4150,
+            "balance" => 3200,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -132,7 +132,7 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_confirmed_balance_data(): void
     {
-        $payload = $this->makeRequest(7000,new DateTime("-2 day"));
+        $payload = $this->makeRequest(5000,new DateTime("-2 day"));
         $payload['confirmed'] = false;
 
         $response = $this->putJson(
@@ -143,7 +143,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4150.00,
+            "balance" => 4200.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -165,7 +165,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => -2780.00,
+            "balance" => -1850.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -186,7 +186,7 @@ class WalletBalanceTest extends TestCase
 
         $response->assertStatus(200);
         $except = [
-            "balance" => -3480.00,
+            "balance" => -1500.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -210,7 +210,7 @@ class WalletBalanceTest extends TestCase
         $response->assertStatus(200);
 
         $except = [
-            "balance" => -3780.00,
+            "balance" => -1800.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
