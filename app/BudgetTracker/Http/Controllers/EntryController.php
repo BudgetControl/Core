@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Entity\DateTime;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Payee;
@@ -22,8 +23,6 @@ class EntryController extends Controller
 
 	const FILTER = ['account','category','type','label'];
 
-	private $entry;
-
 	//
 	/**
 	 * Display a listing of the resource.
@@ -34,27 +33,13 @@ class EntryController extends Controller
 	{
 		$page = $filter->query('page');
 
-		$date = new \DateTime();
-		$date->modify('last day of this month');
-
-		$this->entry = Entry::User()->withRelations()
-			->where('date_time', '<=', $date->format('Y-m-d H:i:s'));
-
+		$this->builder = Entry::User()->withRelations();
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
-		
-		$this->entry = $this->entry->get();
-		$response = $this->entry->toArray();
 
-		$this->setEl(30);
-		$this->setData($response);
-
-		if($page >= 0) {
-			$response = $this->paginate($page);
-		}
-
-		return response()->json($response);
+		$this->setEl(30, $page);
+		return response()->json($this->paginate($page));
 	}
 
 	/**
