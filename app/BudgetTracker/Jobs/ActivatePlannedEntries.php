@@ -2,12 +2,13 @@
 
 namespace App\BudgetTracker\Jobs;
 
-use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\Log;
+use App\BudgetTracker\Enums\EntryType;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\WalletService;
 
 class ActivatePlannedEntries extends BudgetControlJobs implements ShouldQueue
 {
@@ -29,18 +30,20 @@ class ActivatePlannedEntries extends BudgetControlJobs implements ShouldQueue
 
         $plannedEntry = $this->findPlannedEntries();
 
-        if($plannedEntry->count() != 0) {
-            foreach($this->findPlannedEntries() as $entry) {
+        if ($plannedEntry->count() != 0) {
+            foreach ($this->findPlannedEntries() as $entry) {
 
-                $data = $entry->toArray();
-                $data['planned'] = 0;
-                $data['updated_at'] = date('Y-m-d H:i:s', time());
-                $data['label'] = [];
-    
-                $service = new EntryService($data['uuid']);
-                $service->save($data,EntryType::from($data['type']));
-    
-                Log::info("Activated entry: ".json_encode($entry->toArray()));
+                $entry->update([
+                    'planned' => 0,
+                    'updated_at' => date('Y-m-d H:i:s', time()),
+                ]);
+
+                $walletService = new WalletService(
+                    EntryService::create($entry->toArray(), $entry->getType())
+                );
+                $walletService->sum();
+
+                Log::info("Activated entry: " . json_encode($entry->toArray()));
             }
         } else {
             Log::debug("No entry to activate found");
@@ -51,8 +54,8 @@ class ActivatePlannedEntries extends BudgetControlJobs implements ShouldQueue
      * find planned entries
      * @return \Illuminate\Database\Eloquent\Collection 
      */
-    private function findPlannedEntries() : \Illuminate\Database\Eloquent\Collection
+    private function findPlannedEntries(): \Illuminate\Database\Eloquent\Collection
     {
-        return Entry::where('planned',1)->where('date_time', '<=', date('Y-m-d H:i:s',time()))->get();
+        return Entry::where('planned', 1)->where('date_time', '<=', date('Y-m-d H:i:s', time()))->get();
     }
 }
