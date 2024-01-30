@@ -36,7 +36,7 @@ class AuthRegisterController
             $request->validate([
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:64|unique:users',
-                'password' => 'sometimes|confirmed|min:6|max:64|regex:'.self::PASSWORD_VALIDATION,
+                'password' => 'sometimes|confirmed|min:6|max:64|regex:' . self::PASSWORD_VALIDATION,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -96,7 +96,7 @@ class AuthRegisterController
         $user->save();
 
         $token = Token::create($user)->saveCache()->getToken();
-        Cache::create($token.'password')->set($request['password']);
+        Cache::create($token . 'password')->set($request['password']);
 
         return $user;
     }
@@ -151,15 +151,16 @@ class AuthRegisterController
      */
     public function confirm(string $token): bool
     {
-       $user = Cache::create($token)->get();
+        $user = Cache::create($token)->get();
         if (empty($user)) {
             return false;
         }
 
-        $password = Cache::create($token."password")->get();
-
-        CognitoClientService::init($user->email->email)->verifyUserEmail()
-        ->forceUserPassword($password);
+        $password = Cache::create($token . "password")->get();
+        if (!empty($password)) {
+            CognitoClientService::init($user->email->email)->verifyUserEmail()
+                ->forceUserPassword($password);
+        }
 
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user->save();

@@ -38,6 +38,11 @@ Route::post('/recovery',function(Request $request) {
     return $auth->recoveryPassword($request);
 });
 
+Route::post('/verify-email',function(Request $request) {
+    $auth = new AuthRegisterController();
+    return $auth->sendVerifyEmail($request);
+});
+
 Route::put('/recovery/{token}',function(Request $request, string $token) {
     $auth = new AuthUserController();
     return $auth->resetPassword($request, $token);
