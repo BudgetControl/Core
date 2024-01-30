@@ -39,17 +39,20 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'stats' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'chart' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':chart',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -60,11 +63,13 @@ class Kernel extends HttpKernel
         ],
         
         'mailer' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         
         'budget' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],

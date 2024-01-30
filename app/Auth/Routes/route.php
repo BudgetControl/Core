@@ -2,8 +2,7 @@
 
 use App\Auth\Controllers\AuthLoginController;
 use App\Auth\Controllers\AuthRegisterController;
-use App\User\Controllers\AuthController;
-use App\User\Controllers\ProfileController;
+use App\Auth\Controllers\AuthUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -34,17 +33,22 @@ Route::post('/authenticate',function(Request $request) {
 });
 
 
-// Route::post('/recovery',function(Request $request) {
-//     $auth = new AuthController();
-//     return $auth->recovery($request);
-// });
+Route::post('/recovery',function(Request $request) {
+    $auth = new AuthUserController();
+    return $auth->recoveryPassword($request);
+});
 
-// Route::put('/recovery/{token}',function(Request $request, string $token) {
-//     $auth = new AuthController();
-//     return $auth->reset($request, $token);
-// });
+Route::put('/recovery/{token}',function(Request $request, string $token) {
+    $auth = new AuthUserController();
+    return $auth->resetPassword($request, $token);
+});
 
-// Route::get('/logout',function() {
-//     $auth = new AuthController();
-//     return $auth->logout();
-// });
+Route::get('/logout',function() {
+    $auth = new AuthUserController();
+    return $auth->logout();
+});
+
+Route::get('/check',function() {
+    $auth = new AuthUserController();
+    return $auth->check();
+})->middleware("auth.cognito");

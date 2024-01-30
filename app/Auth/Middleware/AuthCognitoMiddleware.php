@@ -2,13 +2,16 @@
 
 namespace App\Auth\Middleware;
 
+use App\Auth\Controllers\AuthLoginController;
 use App\Auth\Entity\Cognito\CognitoToken;
 use App\Auth\Entity\JwtToken;
 use App\Auth\Service\CognitoClientService;
 use App\BudgetTracker\Entity\Cache;
 use App\User\Models\User;
+use App\User\Services\UserService;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class AuthCognitoMiddleware
@@ -49,6 +52,8 @@ class AuthCognitoMiddleware
                             $result = CognitoClientService::init($user->email->email)->refresh($refreshToken);
 
                             $request->headers->set('authorization',$result->getToken(CognitoToken::ACCESS)->value(),true);
+                            $this->authenticate($accessToken);
+
                             return $next($request);
 
                         } else {
@@ -69,6 +74,7 @@ class AuthCognitoMiddleware
                     ], 401);
                 }
             } else {
+                $this->authenticate($accessToken);
                 return $next($request);
             }
         } catch (\Exception $e) {
@@ -79,5 +85,11 @@ class AuthCognitoMiddleware
             ], 401);
         }
 
+    }
+
+    private function authenticate(string $accessToken)
+    {
+        $user = Cache::create($accessToken)->get();
+        UserService::setUserCache($user);
     }
 }

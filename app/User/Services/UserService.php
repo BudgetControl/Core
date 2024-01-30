@@ -20,7 +20,7 @@ class UserService
      */
     public static function get(): User
     {
-        $cacheKey = Auth::id().'user';
+        $cacheKey = session()->getId().'user';
         return Cache::create($cacheKey)->get();
     }
 
@@ -29,7 +29,7 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
-        $cacheKey = Auth::id().'user';
+        $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
 
         if(empty($id)) {
@@ -46,10 +46,13 @@ class UserService
      * @param User $user
      * 
      */
-    public static function setUserCache()
+    public static function setUserCache(?User $user = null)
     {
-        $cacheKey = Auth::id().'user';
-        $user = User::find(Auth::id());
+        $cacheKey = session()->getId().'user';
+        if(is_null($user)) {
+            $user = User::find(Auth::id());
+        }
+
         Cache::create($cacheKey)->set($user);
         Cache::create($cacheKey.'id')->set($user->id);
     }
@@ -59,7 +62,7 @@ class UserService
      */
     public static function clearUserCache()
     {
-        $cacheKey = Auth::id().'user';
+        $cacheKey = session()->getId().'user';
         Cache::create($cacheKey)->delete();
         Cache::create($cacheKey.'id')->delete();
     }
@@ -69,7 +72,7 @@ class UserService
      */
     public static function getSettings()
     {   
-        $cacheKey = Auth::id().'user';
+        $cacheKey = session()->getId().'user';
         $user =  Cache::create($cacheKey)->get();
 
         $setting = UserSettings::where("setting", SettingValues::Configurations->value)->first();

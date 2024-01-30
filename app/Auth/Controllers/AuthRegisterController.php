@@ -21,8 +21,8 @@ class AuthRegisterController
 {
     use RegistersUsers, Encryptable;
 
-    const URL_PSW_RESET = '/app/auth/reset-password/';
     const URL_SIGNUP_CONFIRM = '/app/auth/confirm/';
+    const PASSWORD_VALIDATION = '/^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*[a-z]).{8,}$/';
 
     /**
      * register
@@ -36,7 +36,7 @@ class AuthRegisterController
             $request->validate([
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:64|unique:users',
-                'password' => 'sometimes|confirmed|min:6|max:64|regex:/^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*[a-z]).{8,}$/',
+                'password' => 'sometimes|confirmed|min:6|max:64|regex:'.self::PASSWORD_VALIDATION,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->getMessage()], 400);

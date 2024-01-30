@@ -49,6 +49,7 @@ class AuthLoginController {
                 /** @var \App\Auth\Entity\Cognito\AccessToken $token */
                 $token = $result->getToken(CognitoToken::ACCESS);
                 UserService::setUserCache();
+                Cache::create($token->value())->set(User::find(Auth::id()));
 
                 return response()->json([
                     'success' => true,
@@ -67,7 +68,7 @@ class AuthLoginController {
                 "error" => $errors,
             ], $status);
 
-        } 
+        }
 
     }
 

@@ -112,4 +112,14 @@ class CognitoClientService {
         $result = $this->client->refreshToken($this->username, $token);
         return $this->saveTokens($result);
     }
+        
+    /**
+     * delete
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $this->client->deleteUser($this->username);
+    }
 }
