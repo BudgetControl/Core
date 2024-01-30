@@ -62,7 +62,7 @@ return [
         'middle_name' => null,
         'family_name' => null,
         'nickname' => null,
-        'preferred_username' => null,
+        'preferred_username' => 'name',
         'email' => 'email', //Do Not set this parameter to null
         'phone_number' => null,
         'gender' => null,
@@ -81,7 +81,7 @@ return [
     | The options available are "NONE", "BOTH", "EMAIL", "SMS"
     |
     */
-    'add_user_delivery_mediums' => env('AWS_COGNITO_ADD_USER_DELIVERY_MEDIUMS', 'BOTH'),
+    'add_user_delivery_mediums' => env('AWS_COGNITO_ADD_USER_DELIVERY_MEDIUMS', 'NONE'),
 
 
     /*

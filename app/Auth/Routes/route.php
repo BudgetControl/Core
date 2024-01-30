@@ -1,5 +1,6 @@
 <?php
 
+use App\Auth\Controllers\AuthLoginController;
 use App\Auth\Controllers\AuthRegisterController;
 use App\User\Controllers\AuthController;
 use App\User\Controllers\ProfileController;
@@ -21,3 +22,29 @@ Route::post('/register',function(Request $request) {
     $auth = new AuthRegisterController();
     return $auth->register($request);
 });
+
+Route::get('/confirm/{token}',function(string $token) {
+    $auth = new AuthRegisterController();
+    return $auth->confirm($token);
+});
+
+Route::post('/authenticate',function(Request $request) {
+    $auth = new AuthLoginController();
+    return $auth->login($request);
+});
+
+
+// Route::post('/recovery',function(Request $request) {
+//     $auth = new AuthController();
+//     return $auth->recovery($request);
+// });
+
+// Route::put('/recovery/{token}',function(Request $request, string $token) {
+//     $auth = new AuthController();
+//     return $auth->reset($request, $token);
+// });
+
+// Route::get('/logout',function() {
+//     $auth = new AuthController();
+//     return $auth->logout();
+// });

@@ -39,20 +39,17 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            \App\User\Middleware\JwtAuthenticate::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'stats' => [
-            \App\User\Middleware\JwtAuthenticate::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':stats',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'chart' => [
-            \App\User\Middleware\JwtAuthenticate::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':chart',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -63,7 +60,6 @@ class Kernel extends HttpKernel
         ],
         
         'mailer' => [
-            \App\User\Middleware\JwtAuthenticate::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':mailer',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -92,8 +88,7 @@ class Kernel extends HttpKernel
         'signed' => \App\User\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'auth.jwt' => \App\User\Middleware\JwtAuthenticate::class,
-        'switch.database' => \App\Http\Middleware\SwitchDatabase::class,
-
+        'auth.cognito' => \App\Auth\Middleware\AuthCognitoMiddleware::class
     ];
+
 }

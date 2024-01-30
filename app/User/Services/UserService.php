@@ -4,12 +4,13 @@ namespace App\User\Services;
 
 use App\User\Models\User;
 use App\User\Models\UserSettings;
+use App\BudgetTracker\Entity\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use App\BudgetTracker\Models\Currency;
+use App\User\Exceptions\UserException;
 use App\User\Models\Entity\SettingValues;
 use App\BudgetTracker\Models\PaymentsTypes;
-use App\User\Exceptions\AuthException;
 
 class UserService
 {
@@ -19,7 +20,8 @@ class UserService
      */
     public static function get(): User
     {
-        return Cache::get(user_ip());
+        $cacheKey = Auth::id().'user';
+        return Cache::create($cacheKey)->get();
     }
 
     /**
@@ -27,15 +29,16 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
-        $user = Cache::get(user_ip());
+        $cacheKey = Auth::id().'user';
+        $id = Cache::create($cacheKey.'id')->get();
 
-        if(empty($user->id)) {
-            if(env("APP_ENV", "testing") == "testing") {
+        if(empty($id)) {
+            if(config("app.env") == "testing") {
                 return 1;
             }
-            throw new AuthException("User ID not found!!", 500);
+            throw new UserException("User ID not found!!", 500);
         }
-        return $user->id;
+        return $id;
     }
 
     /**
@@ -43,17 +46,22 @@ class UserService
      * @param User $user
      * 
      */
-    static public function setUserCache(User $user)
+    public static function setUserCache()
     {
-        Cache::put(user_ip(), $user);
+        $cacheKey = Auth::id().'user';
+        $user = User::find(Auth::id());
+        Cache::create($cacheKey)->set($user);
+        Cache::create($cacheKey.'id')->set($user->id);
     }
 
     /**
      * clar user cache
      */
-    static public function clearUserCache()
+    public static function clearUserCache()
     {
-        Cache::delete(user_ip());
+        $cacheKey = Auth::id().'user';
+        Cache::create($cacheKey)->delete();
+        Cache::create($cacheKey.'id')->delete();
     }
 
     /**
@@ -61,7 +69,8 @@ class UserService
      */
     public static function getSettings()
     {   
-        $user = Cache::get(user_ip());
+        $cacheKey = Auth::id().'user';
+        $user =  Cache::create($cacheKey)->get();
 
         $setting = UserSettings::where("setting", SettingValues::Configurations->value)->first();
         $userProfile = $user;

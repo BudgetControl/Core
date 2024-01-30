@@ -1,35 +1,115 @@
 <?php
 namespace App\Auth\Service;
 
-use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
+use App\BudgetTracker\Entity\Cache;
+use App\Auth\Entity\Cognito\IdToken;
 use Ellaisys\Cognito\AwsCognitoClient;
+use App\Auth\Entity\Cognito\AccessToken;
+use App\Auth\Entity\Cognito\CognitoToken;
+use App\Auth\Entity\Cognito\RefreshToken;
+use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
+use Aws\Result;
 
 class CognitoClientService {
 
     public AwsCognitoClient $client;
+    private string $username;
 
-    private function __construct()
+    private function __construct(string $username)
     {
+        $this->username = $username;
+
         $options = [ 
             'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'key' => config('cognito.credentials.key'),
+                'secret' => config('cognito.credentials.secret'),
             ],
-            'region' => env('AWS_COGNITO_REGION'),
-            'version' => env('AWS_COGNITO_VERSION'),
+            'region' => config('cognito.region'),
+            'version' => config('cognito.version'),
         ];
 
         $this->client = new AwsCognitoClient(
             new CognitoIdentityProviderClient($options),
-            env("AWS_COGNITO_CLIENT_ID"),
-            env("AWS_COGNITO_CLIENT_SECRET"),
-            env("AWS_COGNITO_USER_POOL_ID"),
-            env("AWS_COGNITO_USER_POOL_SECRET")
+            config('cognito.app_client_id'),
+            config('cognito.app_client_secret'),
+            config('cognito.user_pool_id'),
+            config('cognito.app_client_secret_allow')
         );
     }
 
-    public static function init(): CognitoClientService
+    public static function init(string $username): CognitoClientService
     {
-        return new CognitoClientService();
+        return new CognitoClientService($username);
+    }
+
+    public function verifyUserEmail() {
+
+        $attributes = [
+                'email_verified' => 'true',
+        ];
+
+        $this->client->setUserAttributes($this->username, $attributes);
+
+        return $this;
+    }
+    
+    /**
+     * forceUserPassword
+     *
+     * @param  mixed $username
+     * @param  mixed $password
+     * @return void
+     */
+    public function forceUserPassword(string $password) : self
+    {
+        $this->client->setUserPassword($this->username,$password, true);
+
+        return $this;
+    }
+    
+    /**
+     * saveTokens
+     *
+     * @param  mixed $awsResult
+     * @return CognitoToken
+     */
+    private function saveTokens(Result $awsResult): CognitoToken
+    {
+        $idToken = $awsResult->get('AuthenticationResult')['IdToken'];
+        $accessToken = $awsResult->get('AuthenticationResult')['AccessToken'];
+        $refreshToken = $awsResult->get('AuthenticationResult')['RefreshToken'];
+
+        $tokens = new CognitoToken();
+        $tokens->setToken(IdToken::set($idToken), CognitoToken::ID);
+        $tokens->setToken(AccessToken::set($accessToken), CognitoToken::ACCESS);
+        $tokens->setToken(RefreshToken::set($refreshToken), CognitoToken::REFRESH);
+        Cache::create($accessToken.'refresh_token')->set(RefreshToken::set($refreshToken),7200);
+
+        return $tokens;
+    }
+
+    /**
+     * authLogin
+     *
+     * @param  mixed $password
+     * @return CognitoToken
+     */
+    public function authLogin(string $password): CognitoToken
+    {
+        $result = $this->client->authenticate($this->username, $password);
+        return $this->saveTokens($result);
+        
+    }
+    
+    /**
+     * refresh
+     *
+     * @param  mixed $token
+     * @return CognitoToken
+     */
+    public function refresh(string $token): CognitoToken
+    {
+        $result = $this->client->refreshToken($this->username, $token);
+        return $this->saveTokens($result);
     }
 }
