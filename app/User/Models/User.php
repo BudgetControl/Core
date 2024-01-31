@@ -17,6 +17,13 @@ class User extends Authenticatable
     public $link;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['password','updated_at'];
+
+    /**
      *  encryptable data
      */
 
