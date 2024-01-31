@@ -30,15 +30,17 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
+        
         $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
 
         if(empty($id)) {
+            $id = 0;
             if(config("app.env") == "testing") {
                 return 1;
             }
-            throw new UserException("User ID not found!!", 500);
         }
+
         return $id;
     }
 
