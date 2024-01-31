@@ -60,14 +60,13 @@ class AuthLoginController {
             }
 
         } catch (Throwable $e) {
-            $errors = "An error occuring, try later";
             Log::error($e->getMessage());
 
         }
 
         return response()->json([
             "success" => false,
-            "error" => $errors,
+            "error" => "An error occuring, try later",
         ], 401);
 
     }
