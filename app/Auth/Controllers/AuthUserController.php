@@ -114,10 +114,9 @@ class AuthUserController
         //save user information on cache
         $user = Cache::create($token)->get();
         CognitoClientService::init($user->email->email)->forceUserPassword($request->password);
-        User::find($user->id)->update([
-            'password' => $request->password,
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $user->password = $request->password;
+        $user->updated_at = date('Y-m-d H:i:s');
+        $user->save();
 
         return response()->json([
             'success' => true
