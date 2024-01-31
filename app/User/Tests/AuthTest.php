@@ -17,6 +17,12 @@ class AuthTest extends TestCase
         "rememberMe" => 'false'
     ];
 
+    public function test_fake()
+    {
+        $true = true;
+        $this->assertTrue($true);
+    }
+
     // /**
     //  * A basic feature test example.
     //  */
