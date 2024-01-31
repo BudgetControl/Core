@@ -1,5 +1,6 @@
 <?php
 
+use App\Auth\Controllers\AuthController;
 use App\Auth\Controllers\AuthLoginController;
 use App\Auth\Controllers\AuthRegisterController;
 use App\Auth\Controllers\AuthUserController;
@@ -57,3 +58,13 @@ Route::get('/check',function() {
     $auth = new AuthUserController();
     return $auth->check();
 })->middleware("auth.cognito");
+
+Route::get('/google-auth',function() {
+    $auth = new AuthController();
+    return $auth->googleAuthUrl();
+});
+
+Route::get('/google-auth/{token}',function(string $token) {
+    $auth = new AuthController();
+    return $auth->signIn($token);
+});

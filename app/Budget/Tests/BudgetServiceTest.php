@@ -26,14 +26,14 @@ class BudgetServiceTest extends TestCase
      */
     public function test_create_budget(): void
     {
-        $response = $this->post('/api/budget/create', $this->payload(), $this->getAuthTokenHeader());
+        $response = $this->post('/api/budget/create', $this->payload());
 
         $response->assertStatus(200);
     }
 
     public function test_stats_budget(): void
     {
-        $response = $this->get('/api/budget/stats', $this->getAuthTokenHeader());
+        $response = $this->get('/api/budget/stats');
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::BUDGET_RESPONSE);
@@ -41,7 +41,7 @@ class BudgetServiceTest extends TestCase
 
     public function test_budget_expired(): void
     {
-        $response = $this->get('/api/budget/expired/1', $this->getAuthTokenHeader());
+        $response = $this->get('/api/budget/expired/1');
 
         $response->assertStatus(200);
         $response->assertJson([

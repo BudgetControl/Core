@@ -27,8 +27,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/incoming",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -50,8 +49,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/expenses",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -73,8 +71,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/debit",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -95,8 +92,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -114,8 +110,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -137,8 +132,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -159,8 +153,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -180,8 +173,7 @@ class WalletBalanceTest extends TestCase
         
         $response = $this->putJson(
             "api/expenses/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -203,8 +195,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/transfer",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);

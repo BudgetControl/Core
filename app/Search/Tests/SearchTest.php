@@ -77,8 +77,7 @@ class SearchTest extends TestCase
 
         $response = $this->postJson(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -109,8 +108,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -139,8 +137,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -169,8 +166,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -199,8 +195,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -229,8 +224,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -259,8 +253,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -283,8 +276,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -316,8 +308,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -350,8 +341,7 @@ class SearchTest extends TestCase
 
         $response = $this->post(
             "/search/filter?page=0",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);

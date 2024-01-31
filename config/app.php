@@ -213,4 +213,16 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global configurations
+    |--------------------------------------------------------------------------
+    |
+    */
+    'config' => [
+        'disable_auth' => (bool) env('APP_DISABLE_AUTH', false),
+        'demo' => (bool) env('APP_DEMO', false),
+        'version' => env('APP_VERSION', 'v1'),
+    ]
+
 ];

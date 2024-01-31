@@ -2,6 +2,7 @@
 
 namespace App\User\Services;
 
+use App\Auth\Entity\Cognito\AccessToken;
 use App\User\Models\User;
 use App\User\Models\UserSettings;
 use App\BudgetTracker\Entity\Cache;
@@ -55,6 +56,28 @@ class UserService
 
         Cache::create($cacheKey)->set($user);
         Cache::create($cacheKey.'id')->set($user->id);
+    }
+
+    /**
+     * set user obj on cache
+     * @param User $user
+     * 
+     */
+    public static function setTokenCache(AccessToken $token)
+    {
+        $cacheKey = session()->getId().'access_token';
+        Cache::create($cacheKey)->set($token->value());
+    }
+
+    /**
+     * set user obj on cache
+     * @param User $user
+     * 
+     */
+    public static function getTokenCache(): string
+    {
+        $cacheKey = session()->getId().'access_token';
+        return Cache::create($cacheKey)->get();
     }
 
     /**

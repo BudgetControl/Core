@@ -256,4 +256,16 @@ return [
     |
     */
     'force_new_user_password' => env('AWS_COGNITO_FORCE_NEW_USER_PASSWORD', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Allow Google 0Auth
+    |--------------------------------------------------------------------------
+    |
+    */
+    'google' => [
+        'client_id'    => env('GOOGLE_COGNITO_CLIENT_ID'),
+        'redirect_url' => env('COGNITO_REDIRECT_URL'),
+        'auth_url'     => env('GOOGLE_COGNITO_AUTH_URL')
+    ],
 ];

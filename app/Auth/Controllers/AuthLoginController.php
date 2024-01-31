@@ -48,7 +48,9 @@ class AuthLoginController {
                 
                 /** @var \App\Auth\Entity\Cognito\AccessToken $token */
                 $token = $result->getToken(CognitoToken::ACCESS);
+                //save all informations in cache
                 UserService::setUserCache();
+                UserService::setTokenCache($token);
                 Cache::create($token->value())->set(User::find(Auth::id()));
 
                 return response()->json([

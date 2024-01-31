@@ -3,6 +3,7 @@
 namespace App\Auth\Middleware;
 
 use App\Auth\Controllers\AuthLoginController;
+use App\Auth\Entity\Cognito\AccessToken;
 use App\Auth\Entity\Cognito\CognitoToken;
 use App\Auth\Entity\JwtToken;
 use App\Auth\Service\CognitoClientService;
@@ -28,12 +29,19 @@ class AuthCognitoMiddleware
      */
     public function handle($request, \Closure $next)
     {
+        /** only fot php unit testting */
+        if($_ENV['DISABLE_AUTH'] == true) {
+            UserService::setUserCache(User::find(1));
+            return $next($request);
+        }
+
         $accessToken = str_replace('Bearer ','',$request->header('authorization'));
         $refreshToken = Cache::create($accessToken.'refresh_token')->get();
+        $accessToken = AccessToken::set($accessToken);
 
         try {
             $jwtToken = new JwtToken();
-            $decodedAccessToken = $jwtToken->decode($accessToken);
+            $decodedAccessToken = $jwtToken->decode($accessToken->value());
 
             $expirationTime = $decodedAccessToken['exp'];
             $currentTimestamp = time();
@@ -87,9 +95,11 @@ class AuthCognitoMiddleware
 
     }
 
-    private function authenticate(string $accessToken)
+    private function authenticate(AccessToken $accessToken)
     {
-        $user = Cache::create($accessToken)->get();
+        $user = Cache::create($accessToken->value())->get();
         UserService::setUserCache($user);
+        UserService::setTokenCache($accessToken);
+
     }
 }
