@@ -15,12 +15,7 @@ abstract class BaseModel extends Model {
         {
             parent::__construct($attributes);
 
-            //FIXME:
-            $id = UserService::getCacheUserID();
-            if($id === 0) {
-                $this->attributes['user_id'] = $id;
-            }
-    
+            $this->attributes['user_id'] = UserService::getCacheUserID();
             foreach($attributes as $k => $v) {
                 $this->$k = $v;
             }
