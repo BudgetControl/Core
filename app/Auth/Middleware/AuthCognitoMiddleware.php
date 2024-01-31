@@ -30,7 +30,7 @@ class AuthCognitoMiddleware
     public function handle($request, \Closure $next)
     {
         /** only fot php unit testting */
-        if($_ENV['DISABLE_AUTH'] == true) {
+        if(@$_ENV['DISABLE_AUTH'] == true) {
             UserService::setUserCache(User::find(1));
             return $next($request);
         }
