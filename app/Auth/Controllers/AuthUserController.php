@@ -16,6 +16,7 @@ use App\Auth\Controllers\AuthRegisterController;
 use App\BudgetTracker\Entity\Cache;
 use App\User\Services\UserService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthUserController
 {
@@ -114,7 +115,7 @@ class AuthUserController
         //save user information on cache
         $user = Cache::create($token)->get();
         CognitoClientService::init($user->email->email)->forceUserPassword($request->password);
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->updated_at = date('Y-m-d H:i:s');
         $user->save();
 
