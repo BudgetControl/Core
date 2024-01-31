@@ -39,7 +39,7 @@ class ActivatePlannedEntries extends BudgetControlJobs implements ShouldQueue
                 ]);
 
                 $walletService = new WalletService(
-                    EntryService::create($entry->toArray(), $entry->getType())
+                    EntryService::create($entry->toArray(), EntryType::where($entry->type))
                 );
                 $walletService->sum();
 

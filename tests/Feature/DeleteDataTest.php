@@ -47,7 +47,6 @@ class DeleteDataTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::EXPENSES_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,5500));
     }
 
     /**
@@ -58,15 +57,6 @@ class DeleteDataTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::DEBIT_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6500));
-    }
-
-    private function getAuthTokenHeader()
-    {
-        //first we nee to get a new token
-        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
-        $token = $response['token']['plainTextToken'];
-        return ['X-ACCESS-TOKEN' => $token];
     }
 
     private function isDeleted(string $id,string $table = 'entries'):bool

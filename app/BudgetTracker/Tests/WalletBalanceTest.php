@@ -92,8 +92,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_balancetest",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -111,8 +110,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_balancetest",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -134,8 +132,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_balancetest",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -156,8 +153,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->putJson(
             "api/incoming/64b54cc566d77_balancetest",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -177,8 +173,7 @@ class WalletBalanceTest extends TestCase
         
         $response = $this->putJson(
             "api/expenses/64b54cc566d77_balancetest",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -243,14 +238,6 @@ class WalletBalanceTest extends TestCase
         }';
 
         return (array) json_decode($request,true);
-    }
-
-    private function getAuthTokenHeader()
-    {
-        //first we nee to get a new token
-        $response = $this->post('/auth/authenticate', self::PAYLOAD);
-        $token = $response['token']['plainTextToken'];
-        return ['X-ACCESS-TOKEN' => $token];
     }
 
     private function initBalance()
