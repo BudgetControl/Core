@@ -9,7 +9,7 @@ class Registration extends MailService {
     public function __construct(array $data)
     {
         parent::__construct(new AuthMail(
-            "Welcome to ".env("APP_NAME", "Budget Control"),
+            "Welcome to ".config("app.name", "Budget Control"),
             $data
         ));
     }

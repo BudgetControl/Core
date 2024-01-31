@@ -40,7 +40,7 @@ class AccountTest extends TestCase
      */
     public function test_account_bank_insert(): void
     {
-        $response = $this->post('/api/accounts/', self::PAYLOAD, $this->getAuthTokenHeader());
+        $response = $this->post('/api/accounts/', self::PAYLOAD);
 
         $response->assertStatus(200);
 
@@ -61,7 +61,7 @@ class AccountTest extends TestCase
         $request['date'] = '2023-06-12';
         $request['type'] = 'Credit Card';
 
-        $response = $this->post('/api/accounts/', $request, $this->getAuthTokenHeader());
+        $response = $this->post('/api/accounts/', $request);
 
         $response->assertStatus(200);
 
@@ -82,7 +82,7 @@ class AccountTest extends TestCase
         $request['date'] = '2023-06-12';
         $request['type'] = 'Saving';
 
-        $response = $this->post('/api/accounts/', $request, $this->getAuthTokenHeader());
+        $response = $this->post('/api/accounts/', $request);
 
         $response->assertStatus(200);
 
@@ -97,13 +97,13 @@ class AccountTest extends TestCase
      */
     public function test_account_update(): void
     {
-        $response = $this->post('/api/accounts/', self::PAYLOAD, $this->getAuthTokenHeader());
+        $response = $this->post('/api/accounts/', self::PAYLOAD);
 
         $update = self::PAYLOAD;
         $update['name'] = 'test';
         $update['balance'] = '1024';
 
-        $response = $this->post('/api/accounts/', $update, $this->getAuthTokenHeader());
+        $response = $this->post('/api/accounts/', $update);
 
         $response->assertStatus(200);
 
@@ -132,7 +132,7 @@ class AccountTest extends TestCase
         }';
         $request = json_decode($request);
 
-        $this->post('/api/incoming/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/incoming/', $request);
 
         $this->assertDatabaseHas(Account::class, [
             'balance' => 1200
@@ -140,7 +140,7 @@ class AccountTest extends TestCase
 
         $request['amount'] = 100.00;
         $request['transfer_to'] = 9;
-        $this->post('/api/transfer/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/transfer/', $request);
 
         $this->assertDatabaseHas(Account::class, [
             'balance' => 1100,
@@ -172,7 +172,7 @@ class AccountTest extends TestCase
         }';
         $request = json_decode($request);
 
-        $this->post('/api/payee/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/payee/', $request);
 
         $this->assertDatabaseHas(Account::class, [
             'balance' => 500,
@@ -198,7 +198,7 @@ class AccountTest extends TestCase
         }';
         $request = json_decode($request);
 
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
 
         $this->assertDatabaseHas(Account::class, [
             'balance' => -1800,
@@ -224,14 +224,14 @@ class AccountTest extends TestCase
             "confirmed": 1
         }';
         $request = json_decode($request);
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 360,
             'id' => 9
         ]);
 
         $request['confirmed'] = 0;
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 460,
             'id' => 9
@@ -240,7 +240,7 @@ class AccountTest extends TestCase
 
         $request['confirmed'] = 1;
         $request['date_time'] = '2023-04-28 10:10:10';
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 360,
             'id' => 9
@@ -248,7 +248,7 @@ class AccountTest extends TestCase
 
         $request['confirmed'] = 1;
         $request['date_time'] = '2023-09-28 10:10:10';
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 460,
             'id' => 9
@@ -257,7 +257,7 @@ class AccountTest extends TestCase
         $request['confirmed'] = 1;
         $request['date_time'] = $dateTime->format('Y-m-d H:i:s');
         $reuqest['note'] = 'foo bar';
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 460,
             'id' => 9,
@@ -278,7 +278,7 @@ class AccountTest extends TestCase
             "confirmed": 1
         }';
         $request = json_decode($request);
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $request = json_decode($request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 460,
@@ -288,7 +288,7 @@ class AccountTest extends TestCase
 
         $request['date_time'] = "2023-05-28 10:10:10";
         $request['amount'] = -300.00;
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 160,
             'id' => 9,
@@ -296,7 +296,7 @@ class AccountTest extends TestCase
         ]);
 
         $request['amount'] = -100.00;
-        $this->post('/api/expenses/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/expenses/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 360,
             'id' => 9,
@@ -304,7 +304,7 @@ class AccountTest extends TestCase
         ]);
 
         $request['amount'] = 1000.00;
-        $this->post('/api/incoming/', $request, $this->getAuthTokenHeader());
+        $this->post('/api/incoming/', $request);
         $this->assertDatabaseHas(Account::class, [
             'balance' => 1460,
             'id' => 9,

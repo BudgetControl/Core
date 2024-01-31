@@ -22,7 +22,7 @@ class LabelTest extends TestCase
      */
     public function test_label_data(): void
     {
-        $response = $this->get('/api/labels/', $this->getAuthTokenHeader());
+        $response = $this->get('/api/labels/');
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::STRUCTURE);
@@ -33,7 +33,7 @@ class LabelTest extends TestCase
      */
     public function test_get_label_data(): void
     {
-        $response = $this->get('/api/labels/1/', $this->getAuthTokenHeader());
+        $response = $this->get('/api/labels/1/');
 
         $response->assertStatus(200);
         $response->assertJsonStructure(self::STRUCTURE);
@@ -51,7 +51,7 @@ class LabelTest extends TestCase
             "name" => 'test',
         ];
 
-        $response = $this->post('/api/labels/',$data, $this->getAuthTokenHeader());
+        $response = $this->post('/api/labels/',$data);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas("labels",[
@@ -71,7 +71,7 @@ class LabelTest extends TestCase
             "name" => 'test_update',
         ];
 
-        $response = $this->post('/api/labels/',$data, $this->getAuthTokenHeader());
+        $response = $this->post('/api/labels/',$data);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas("labels",[
@@ -92,7 +92,7 @@ class LabelTest extends TestCase
             "name" => 'test_update',
         ];
 
-        $response = $this->post('/api/labels/',$data, $this->getAuthTokenHeader());
+        $response = $this->post('/api/labels/',$data);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas("labels",[
