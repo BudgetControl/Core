@@ -52,7 +52,7 @@ Route::put('/recovery/{token}',function(Request $request, string $token) {
 Route::get('/logout',function() {
     $auth = new AuthUserController();
     return $auth->logout();
-});
+})->middleware("auth.cognito");
 
 Route::get('/check',function() {
     $auth = new AuthUserController();
