@@ -90,7 +90,7 @@ class CognitoClientService
         $tokens->setToken(IdToken::set($idToken), CognitoToken::ID);
         $tokens->setToken(AccessToken::set($accessToken), CognitoToken::ACCESS);
         $tokens->setToken(RefreshToken::set($refreshToken), CognitoToken::REFRESH);
-        Cache::create($accessToken . 'refresh_token')->set(RefreshToken::set($refreshToken), 7200);
+        Cache::create($accessToken . 'refresh_token')->set(RefreshToken::set($refreshToken), Cache::TTL_FOREVER);
 
         return $tokens;
     }

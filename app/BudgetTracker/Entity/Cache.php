@@ -16,6 +16,8 @@ final class Cache
 {
     private string $key;
 
+    const TTL_FOREVER = 1;
+
     private function __construct(string $key)
     {
         $this->key = sha1($key);
@@ -55,7 +57,11 @@ final class Cache
      */
     public function set(mixed $value, int $ttl = 3600): void
     {
-        Caching::put($this->key,$value,$ttl);
+        if($ttl === 1) {
+            Caching::forever($this->key,$value);
+        } else {
+            Caching::put($this->key,$value,$ttl);
+        }
     }
     
     public function delete()
