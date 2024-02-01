@@ -53,11 +53,13 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
     private function getPlannedEntry(string $time)
     {
         $newDate = $this->getTimeValue($time);
+        $newDate = date('Y-m-d H:i:s', $newDate);
+        $toDay = date('Y-m-d H:i:s', time()) ;
 
-        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s', $newDate))
+        $entry = PlannedEntries::where("date_time", "<=", $newDate)
             ->where("deleted_at", null)
             ->where("planning", $time)
-            ->where("end_date_time", ">=", date('Y-m-d H:i:s', time()))
+            ->where("end_date_time", ">=", $toDay)
             ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
         return $entry;
@@ -73,17 +75,12 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
 
             /** @var EntryModel $request  */
             foreach ($data as $request) {
-                $type = EntryType::from($request->type);
 
                 $entry = $request;
-
-                $service = new EntryService();
-                $entryArray = $entry->toArray();
-                $entryArray['label'] = [];
-                $entryArray['transfer'] = false;
-                $service->save($entryArray, $type);
-
-                Log::info("PLANNED INSERT:: " . json_encode($entry));
+                $entryToInsert = new EntryModel($entry->toArray());
+                $entryToInsert->transfer = 0;
+                $entryToInsert->save();
+                Log::info("PLANNED INSERT:: " . json_encode($entryToInsert));
             }
 
             $this->updatePlanningEntry($data);
