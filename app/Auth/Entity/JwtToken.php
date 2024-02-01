@@ -72,7 +72,7 @@ final class JwtToken
             }
         } catch (\Exception $e) {
             Log::critical($e->getMessage());
-            throw new AuthException("Unable to decode token");
+            throw new AuthException("Unable to decode $type token ");
         }
     }
     
