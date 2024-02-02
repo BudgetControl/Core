@@ -46,7 +46,7 @@ class AuthCognitoMiddleware
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
 
-            return $request($next);
+            return $next($request);
         } catch (\Exception $e) {
 
             try {
@@ -59,7 +59,7 @@ class AuthCognitoMiddleware
                 UserService::setUserCache($user);
                 UserService::setTokenCache($accessToken);
 
-                return $request($next);
+                return $next($request);
 
             } catch (Throwable $e) {
 
