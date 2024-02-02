@@ -56,6 +56,15 @@ class AuthLoginController {
                 $user = User::find(Auth::id());
                 Cache::create($token->value())->set($user);
 
+                //check if user has verified email
+                if(is_null($user->email_verified_at)) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'email not verified',
+                        'code' => 'EML_NaN'
+                    ],401);
+                }
+
                 $jwt = new JwtToken();
                 $access_token = $jwt->decode($token->value());
                 $user->sub = $access_token['sub'];
