@@ -2,8 +2,9 @@
 
 namespace App\BudgetTracker\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Enums\EntryType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
@@ -27,7 +28,7 @@ class TransferFactory extends Factory
      */
     public function definition(): array
     {
-        
+        $usrIdDemo =config('app.config.demo_user_id');
 
         return [
             'uuid' => uniqid(),
@@ -36,7 +37,7 @@ class TransferFactory extends Factory
             'type' => EntryType::Transfer->value,
             'transfer' => 1,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 4,
+            'account_id' => Account::where('user_id', $usrIdDemo)->get('id')[0]->id,
             'transfer_id' => 2,
             'currency_id' => 1,
             'date_time' => date('Y-m-d H:i:s',time()),

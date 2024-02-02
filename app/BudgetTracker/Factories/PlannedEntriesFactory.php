@@ -2,9 +2,10 @@
 
 namespace App\BudgetTracker\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\BudgetTracker\Enums\EntryType;
 use Faker\Provider\DateTime;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Enums\EntryType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
@@ -30,7 +31,7 @@ class PlannedEntriesFactory extends Factory
     {
         $amount = fake()->numberBetween(1,50);
         $date = DateTime::dateTimeBetween('-1 years','+1 years');
-
+        $usrIdDemo =config('app.config.demo_user_id');
         return [
             'uuid' => uniqid(),
             'amount' => $amount,
@@ -38,7 +39,7 @@ class PlannedEntriesFactory extends Factory
             'type' => EntryType::Incoming->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 4,
+            'account_id' => Account::where('user_id', $usrIdDemo)->get('id')[0]->id,
             'currency_id' => 1,
             'date_time' => $date->format('Y-m-d H:i:s'),
             'end_date_time' => null,
