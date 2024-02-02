@@ -59,7 +59,7 @@ class AuthCognitoMiddleware
                 UserService::setUserCache($user);
                 UserService::setTokenCache($accessToken);
 
-                return $next($request);
+                return $request($next);
 
             } catch (Throwable $e) {
 
