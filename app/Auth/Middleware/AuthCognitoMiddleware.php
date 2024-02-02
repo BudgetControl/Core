@@ -57,7 +57,6 @@ class AuthCognitoMiddleware
                 $request->headers->set('authorization', $result->getToken(CognitoToken::ACCESS)->value(), true);
 
                 UserService::setUserCache($user);
-                UserService::setTokenCache($accessToken);
 
                 return $next($request);
 
