@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Http\Client\Exception\HttpException;
 use App\Auth\Entity\Cognito\CognitoToken;
+use App\Auth\Entity\JwtToken;
 use App\Auth\Service\CognitoClientService;
 use App\User\Services\UserService;
 use Ellaisys\Cognito\Auth\AuthenticatesUsers;
@@ -51,7 +52,14 @@ class AuthLoginController {
                 //save all informations in cache
                 UserService::setUserCache();
                 UserService::setTokenCache($token);
-                Cache::create($token->value())->set(User::find(Auth::id()));
+
+                $user = User::find(Auth::id());
+                Cache::create($token->value())->set($user);
+
+                $jwt = new JwtToken();
+                $access_token = $jwt->decode($token->value());
+                $user->sub = $access_token['sub'];
+                $user->save();
 
                 return response()->json([
                     'success' => true,
