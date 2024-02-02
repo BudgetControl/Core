@@ -63,7 +63,7 @@ final class JwtToken
     {
         $keys = $this->pk;
         try {
-            $pk = $this->jwkToPem((array) $keys->keys[$type]);
+            $pk = $this->jwkToPem((array) $keys->keys[1]);
 
             $pay_load = JWT::decode($jwt_json, $pk);
 

@@ -36,6 +36,8 @@ class AuthCognitoMiddleware
         }
 
         $accessToken = str_replace('Bearer ','',$request->header('authorization'));
+        $accessToken = str_replace('Bearer ','',$request->header('authorization'));
+
         $refreshToken = Cache::create($accessToken.'refresh_token')->get();
         $accessToken = AccessToken::set($accessToken);
 
@@ -48,27 +50,18 @@ class AuthCognitoMiddleware
 
             if ($expirationTime < $currentTimestamp) {
                 // token expired
-
+                /** @var \App\Auth\Entity\Cognito\RefreshToken $refreshToken */
                 if ($refreshToken) {
                     try {
+                        $accessTokenString = $accessToken->value();
                         // try with refresh token
-                        $decodedRefreshToken = $jwtToken->decode($refreshToken, JwtToken::REFRESH_TOKEN);
-                        $refreshTokenExpirationTime = $decodedRefreshToken['exp'];
+                        $result = CognitoClientService::init($decodedAccessToken['sub'])->refresh($refreshToken->value());
+                        $request->headers->set('authorization',$result->getToken(CognitoToken::ACCESS)->value(),true);
+                        $this->authenticate($accessToken);
 
-                        if ($refreshTokenExpirationTime >= $currentTimestamp) {
-                            $user = Cache::create($accessToken.'user')->get();
-                            $result = CognitoClientService::init($user->email->email)->refresh($refreshToken);
+                        return $next($request);
 
-                            $request->headers->set('authorization',$result->getToken(CognitoToken::ACCESS)->value(),true);
-                            $this->authenticate($accessToken);
-
-                            return $next($request);
-
-                        } else {
-                            return response()->json([
-                                "message" => "token expired"
-                            ], 401);
-                        }
+                      
                     } catch (\Exception $e) {
                         // Gestisci le eccezioni durante la decodifica o la verifica del refresh token
                         Log::error('Error: ' . $e->getMessage());
