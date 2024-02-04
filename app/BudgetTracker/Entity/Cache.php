@@ -17,6 +17,9 @@ final class Cache
     private string $key;
 
     const TTL_FOREVER = 1;
+    const TTL_ONEDAY = 86400;
+    const TTL_ONEWEEK = 604800;
+    const TTL_ONEMONTH = 2919200;
 
     private function __construct(string $key)
     {

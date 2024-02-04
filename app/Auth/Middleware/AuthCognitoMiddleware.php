@@ -14,6 +14,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Laravel\Sanctum\NewAccessToken;
 use Throwable;
 
 class AuthCognitoMiddleware
@@ -36,7 +37,7 @@ class AuthCognitoMiddleware
             return $next($request);
         }
 
-        $accessToken = str_replace('Bearer ', '', $request->header('authorization'));
+        $accessToken = str_replace('Bearer ', '', $request->header('Authorization'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
 
         $accessToken = AccessToken::set($accessToken);
@@ -55,10 +56,15 @@ class AuthCognitoMiddleware
                 $sub = $user->sub;
                 // try with refresh token
                 $result = CognitoClientService::init($sub)->refresh($refreshToken->value());
-                $request->headers->set('authorization', $result->getToken(CognitoToken::ACCESS)->value(), true);
-                UserService::setUserCache($user);
 
-                return $next($request);
+                $newAccessToken = $result->getToken(CognitoToken::ACCESS)->value();
+                UserService::setUserCache($user);
+                Cache::create($newAccessToken)->set($user,CACHE::TTL_ONEWEEK);
+
+                $response = $next($request);
+                $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);
+
+                return $response;
 
             } catch (Throwable $e) {
 
