@@ -41,12 +41,12 @@ class AuthCognitoMiddleware
 
         $accessToken = AccessToken::set($accessToken);
         $user = Cache::create($accessToken->value())->get();
-        UserService::setUserCache($user);
 
 
         try {
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
+            UserService::setUserCache($user);
 
             return $next($request);
         } catch (\Exception $e) {
@@ -56,7 +56,7 @@ class AuthCognitoMiddleware
                 // try with refresh token
                 $result = CognitoClientService::init($sub)->refresh($refreshToken->value());
                 $request->headers->set('authorization', $result->getToken(CognitoToken::ACCESS)->value(), true);
-
+                UserService::setUserCache($user);
 
                 return $next($request);
 
