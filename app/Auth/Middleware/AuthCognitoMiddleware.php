@@ -37,13 +37,13 @@ class AuthCognitoMiddleware
             return $next($request);
         }
 
-        $accessToken = str_replace('Bearer ', '', $request->header('authorization'));
+        $accessToken = str_replace('Bearer ', '', $request->header('Authorization'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
         $accessToken = AccessToken::set($accessToken);
 
         try {
             $jwtToken = new JwtToken();
-            $jwtToken->decode($accessToken->value());
+            $jwtToken->decode("");
 
             return $next($request);
         } catch (\Exception $e) {
@@ -54,11 +54,13 @@ class AuthCognitoMiddleware
                 // try with refresh token
                 $result = CognitoClientService::init($sub)->refresh($refreshToken->value());
                 $newAccessToken = $result->getToken(CognitoToken::ACCESS)->value();
-                $request->headers->set('authorization', "Bearer ".$newAccessToken, true);
                 UserService::setUserCache($user);
                 Cache::create($newAccessToken)->set($user,CACHE::TTL_ONEWEEK);
 
-                return $next($request);
+                $response = $next($request);
+                $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);
+
+                return $response;
 
             } catch (Throwable $e) {
 

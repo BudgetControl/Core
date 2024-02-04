@@ -54,7 +54,7 @@ class AuthLoginController {
                 UserService::setTokenCache($token);
 
                 $user = User::find(Auth::id());
-                Cache::create($token->value())->set($user,7);
+                Cache::create($token->value())->set($user,CACHE::TTL_ONEWEEK);
 
                 $jwt = new JwtToken();
                 $access_token = $jwt->decode($token->value());
