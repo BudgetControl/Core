@@ -39,20 +39,24 @@ class AuthCognitoMiddleware
 
         $accessToken = str_replace('Bearer ', '', $request->header('Authorization'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
+
         $accessToken = AccessToken::set($accessToken);
+        $user = Cache::create($accessToken->value())->get();
+
 
         try {
             $jwtToken = new JwtToken();
-            $jwtToken->decode("");
+            $jwtToken->decode($accessToken->value());
+            UserService::setUserCache($user);
 
             return $next($request);
         } catch (\Exception $e) {
 
             try {
-                $user = Cache::create($accessToken->value())->get();
                 $sub = $user->sub;
                 // try with refresh token
                 $result = CognitoClientService::init($sub)->refresh($refreshToken->value());
+
                 $newAccessToken = $result->getToken(CognitoToken::ACCESS)->value();
                 UserService::setUserCache($user);
                 Cache::create($newAccessToken)->set($user,CACHE::TTL_ONEWEEK);
