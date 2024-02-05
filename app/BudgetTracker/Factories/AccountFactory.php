@@ -35,7 +35,7 @@ class AccountFactory extends Factory
             'type' => 'Bank',
             'installement' => 0,
             'currency' => 'EUR',
-            'user_id' => 1
+            'user_id' => config('app.config.demo_user_id')
         ];
     }
 }

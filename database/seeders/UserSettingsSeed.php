@@ -18,7 +18,7 @@ class UserSettingsSeed extends Seeder
         $setting = new UserSettings();
         $setting->setting =  SettingValues::Configurations->value;
         $setting->data = '{"payment_type_id":1,"currency_id":1}';
-        $setting->user_id = 1;
+        $setting->user_id = config('app.config.demo_user_id');
         $setting->save();
     }
 }

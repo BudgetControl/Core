@@ -15,6 +15,7 @@ class UserSeed extends Seeder
     public function run(): void
     {
         $user = new User();
+        $user->id = config('app.config.demo_user_id');
         $user->uuid = uniqid();
         $user->name = "foo bar";
         $user->password = bcrypt("password");
