@@ -49,7 +49,9 @@ class AuthCognitoMiddleware
             $jwtToken->decode($accessToken->value());
             UserService::setUserCache($user);
 
-            return $next($request);
+            $response = $next($request);
+            $response->headers->set('Authorization', "Bearer ".$accessToken->value(), true);
+            return $response;
         } catch (\Exception $e) {
 
             try {
