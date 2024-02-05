@@ -37,7 +37,7 @@ class AuthCognitoMiddleware
             return $next($request);
         }
 
-        $accessToken = str_replace('Bearer ', '', $request->header('Authorization'));
+        $accessToken = str_replace('Bearer ', '', $request->header('authorization'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
 
         $accessToken = AccessToken::set($accessToken);

@@ -133,9 +133,6 @@ class AuthUserController
     {
         Auth::logout();
         UserService::clearUserCache();
-        CognitoClientService::init('')->client->signOut(
-            UserService::getTokenCache()
-        );
 
         return response()->json([
             'success' => true
