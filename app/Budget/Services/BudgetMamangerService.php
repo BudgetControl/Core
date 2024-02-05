@@ -45,7 +45,7 @@ class BudgetMamangerService
     {
         $result = [];
 
-        $budget = Budget::where('id',$budgetId)->first();
+        $budget = Budget::User()->where('id',$budgetId)->first();
 
         if(is_null($budget)) {
             throw new Exception("No budget found", 404);
@@ -68,7 +68,7 @@ class BudgetMamangerService
     {
         $result = [];
 
-        $configurations = Budget::get();
+        $configurations = Budget::User()->get();
         foreach($configurations as $budget) {
             $config = json_decode($budget->configuration);
             $entries = $this->getEntires($config);
