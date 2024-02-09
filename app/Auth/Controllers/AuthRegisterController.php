@@ -143,7 +143,7 @@ class AuthRegisterController
 
         $this->sendMail($user);
 
-        return response()->json(["success" => "email sended"]);
+        return response()->json(["success" => "email sended"],200);
     }
 
     /**
@@ -166,6 +166,6 @@ class AuthRegisterController
         $user->save();
 
         //auth user with congito
-        return true;
+        return response()->json(["success" => true],201);
     }
 }
