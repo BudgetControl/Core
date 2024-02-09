@@ -16,7 +16,15 @@ class AuthController {
      */
     public function googleAuthUrl(): JsonResponse
     {
-        echo GoogleClientService::init()->url(); die;
+        $uri = GoogleClientService::init()->url();
+
+        return response()->json(
+            [
+                'success' => true,
+                'uri' => $uri
+            ],
+            301
+        );
     }
     
     /**
@@ -27,11 +35,14 @@ class AuthController {
      */
     public function signIn(string $code): JsonResponse
     {
-        $token = CognitoClientService::init('')->getToken($code);
+        $response = GoogleClientService::get_token($code);
+        $response = $response->getBody();
+        $content = json_decode($response->getContents());
 
+        //redirect to FE
         return response()->json([
             'success' => true,
-            'access_token' => $token->getToken(CognitoToken::ACCESS)->value()
+            $content
         ]);
 
     }
