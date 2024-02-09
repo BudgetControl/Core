@@ -7,9 +7,7 @@ use App\Auth\Entity\JwtToken;
 use Illuminate\Http\JsonResponse;
 use App\User\Services\UserService;
 use App\Auth\Exception\AuthException;
-use Illuminate\Http\RedirectResponse;
 use App\Auth\Entity\Cognito\AccessToken;
-use Illuminate\Support\Facades\Redirect;
 use App\Auth\Entity\Cognito\CognitoToken;
 use App\Auth\Service\ProviderClientService;
 use App\Traits\Encryptable;
@@ -23,7 +21,7 @@ class AuthController
      *
      * @return JsonResponse
      */
-    public function googleAuthUrl($provider): RedirectResponse
+    public function googleAuthUrl($provider): JsonResponse
     {
         try {
             $uri = ProviderClientService::init($provider)->url();
@@ -37,7 +35,10 @@ class AuthController
             );
         }
 
-        return Redirect::to($uri, 301);
+        return response()->json([
+            'success' => true,
+            'uri' => $uri
+        ]);
 
     }
 
