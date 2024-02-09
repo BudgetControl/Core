@@ -59,12 +59,12 @@ Route::get('/check',function() {
     return $auth->check();
 })->middleware("auth.cognito");
 
-Route::get('/google-auth',function() {
+Route::get('/authenticate/{provider}',function(string $provider) {
     $auth = new AuthController();
-    return $auth->googleAuthUrl();
+    return $auth->googleAuthUrl($provider);
 });
 
-Route::get('/google-auth/{token}',function(string $token) {
+Route::get('/token',function() {
     $auth = new AuthController();
-    return $auth->signIn($token);
+    return $auth->providerSignIn($_GET['code']);
 });

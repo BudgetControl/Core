@@ -49,13 +49,9 @@ class UserService
      * @param User $user
      * 
      */
-    public static function setUserCache(?User $user = null)
+    public static function setUserCache(User $user)
     {
         $cacheKey = session()->getId().'user';
-        if(is_null($user)) {
-            $user = User::find(Auth::id());
-        }
-
         Cache::create($cacheKey)->set($user);
         Cache::create($cacheKey.'id')->set($user->id);
     }
