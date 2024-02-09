@@ -20,12 +20,13 @@ use Illuminate\Support\Facades\Log;
 final class JwtToken
 {
     const ACCESS_TOKEN = 1;
-    const REFRESH_TOKEN = 0;
+    const ID_TOKEN = 0;
 
     private object $pk;
 
     public function __construct()
     {
+        JWT::$leeway = 60;
         $this->getPublicKey();
     }
 
@@ -63,7 +64,7 @@ final class JwtToken
     {
         $keys = $this->pk;
         try {
-            $pk = $this->jwkToPem((array) $keys->keys[1]);
+            $pk = $this->jwkToPem((array) $keys->keys[$type]);
 
             $pay_load = JWT::decode($jwt_json, $pk);
 

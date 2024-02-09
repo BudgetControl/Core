@@ -17,7 +17,7 @@ use App\User\Services\UserService;
 use Ellaisys\Cognito\Auth\AuthenticatesUsers;
 use Illuminate\Validation\ValidationException;
 
-class AuthLoginController {
+class AuthLoginController extends AuthController {
 
     use AuthenticatesUsers, Encryptable;
 
@@ -47,28 +47,18 @@ class AuthLoginController {
                 'password' => $toCollect['password']
             ], $toCollect['rememberMe']) ) {
                 
-                /** @var \App\Auth\Entity\Cognito\AccessToken $token */
-                $token = $result->getToken(CognitoToken::ACCESS);
-                //save all informations in cache
-                UserService::setUserCache();
-                UserService::setTokenCache($token);
+                /** @var AccessToken $accessToken */
+                $token = $this->authenticateUserCognito($result);
 
                 $user = User::find(Auth::id());
-                Cache::create($token->value())->set($user,CACHE::TTL_ONEWEEK);
-
                 //check if user has verified email
-                if(is_null($user->email_verified_at)) {
+                if (is_null($user->email_verified_at)) {
                     return response()->json([
                         'success' => false,
                         'error' => 'email not verified',
                         'code' => 'EML_NaN'
-                    ],401);
+                    ], 401);
                 }
-
-                $jwt = new JwtToken();
-                $access_token = $jwt->decode($token->value());
-                $user->sub = $access_token['sub'];
-                $user->save();
 
                 return response()->json([
                     'success' => true,

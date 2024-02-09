@@ -16,6 +16,16 @@ class User extends Authenticatable
 
     public $link;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->attributes['uuid'] = uniqid();
+        foreach($attributes as $k => $v) {
+            $this->$k = $v;
+        }
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -80,12 +80,8 @@ class CognitoClientService
      * @param  mixed $awsResult
      * @return CognitoToken
      */
-    private function saveTokens(Result $awsResult): CognitoToken
+    public static function saveTokens(string $idToken, string $accessToken, string $refreshToken ): CognitoToken
     {
-        $idToken = $awsResult->get('AuthenticationResult')['IdToken'];
-        $accessToken = $awsResult->get('AuthenticationResult')['AccessToken'];
-        $refreshToken = $awsResult->get('AuthenticationResult')['RefreshToken'];
-
         $tokens = new CognitoToken();
         $tokens->setToken(IdToken::set($idToken), CognitoToken::ID);
         $tokens->setToken(AccessToken::set($accessToken), CognitoToken::ACCESS);
@@ -104,7 +100,12 @@ class CognitoClientService
     public function authLogin(string $password): CognitoToken
     {
         $result = $this->client->authenticate($this->username, $password);
-        return $this->saveTokens($result);
+
+        $idToken = $result->get('AuthenticationResult')['IdToken'];
+        $accessToken = $result->get('AuthenticationResult')['AccessToken'];
+        $refreshToken = $result->get('AuthenticationResult')['RefreshToken'];
+
+        return $this->saveTokens($idToken,$accessToken,$refreshToken);
     }
 
     /**
@@ -116,7 +117,12 @@ class CognitoClientService
     public function refresh(string $token): CognitoToken
     {
         $result = $this->client->refreshToken($this->username, $token);
-        return $this->saveTokens($result);
+
+        $idToken = $result->get('AuthenticationResult')['IdToken'];
+        $accessToken = $result->get('AuthenticationResult')['AccessToken'];
+        $refreshToken = $result->get('AuthenticationResult')['RefreshToken'];
+
+        return $this->saveTokens($idToken,$accessToken,$refreshToken);
     }
 
     /**
@@ -148,7 +154,11 @@ class CognitoClientService
 
         $result = $this->clientProvider->getToken($tokenParams);
 
-        return $this->saveTokens($result);
+        $idToken = $result->get('AuthenticationResult')['IdToken'];
+        $accessToken = $result->get('AuthenticationResult')['AccessToken'];
+        $refreshToken = $result->get('AuthenticationResult')['RefreshToken'];
+
+        return $this->saveTokens($idToken,$accessToken,$refreshToken);
  
     }
 }
