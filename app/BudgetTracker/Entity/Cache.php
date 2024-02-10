@@ -24,6 +24,7 @@ final class Cache
 
     private function __construct(string $key, array $tags)
     {
+        $this->tags = $tags;
         $this->key = sha1($key);
     }
     
