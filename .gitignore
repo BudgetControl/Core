@@ -52,3 +52,8 @@ bootstrap/cache/*
 config/cors.php
 bin/certbot/*
 *.log
+
+## IMAGES
+.jpeg
+.png
+.gif

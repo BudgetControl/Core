@@ -26,6 +26,7 @@ final class JwtToken
 
     public function __construct()
     {
+	JWT::$leeway = 60;
         $this->getPublicKey();
     }
 
