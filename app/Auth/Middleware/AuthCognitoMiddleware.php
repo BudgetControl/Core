@@ -43,7 +43,6 @@ class AuthCognitoMiddleware
         $accessToken = AccessToken::set($accessToken);
         $user = Cache::create($accessToken->value())->get();
 
-
         try {
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
@@ -53,6 +52,9 @@ class AuthCognitoMiddleware
             $response->headers->set('Authorization', "Bearer ".$accessToken->value(), true);
             return $response;
         } catch (\Exception $e) {
+
+            //if token is expired delete it
+            Cache::create($accessToken->value())->delete();
 
             try {
                 $sub = $user->sub;
