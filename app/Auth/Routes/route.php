@@ -49,9 +49,10 @@ Route::put('/recovery/{token}',function(Request $request, string $token) {
     return $auth->resetPassword($request, $token);
 });
 
-Route::get('/logout',function() {
+Route::get('/logout',function(Request $request) {
     $auth = new AuthUserController();
-    return $auth->logout();
+    $accessToken = str_replace('Bearer ', '', $request->header('authorization'));
+    return $auth->logout($accessToken);
 })->middleware("auth.cognito");
 
 Route::get('/check',function() {

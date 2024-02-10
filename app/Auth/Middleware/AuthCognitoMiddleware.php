@@ -47,8 +47,8 @@ class AuthCognitoMiddleware
         try {
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
-            UserService::setUserCache($user);
 
+            UserService::setUserCache($user);
             $response = $next($request);
             $response->headers->set('Authorization', "Bearer ".$accessToken->value(), true);
             return $response;
@@ -61,7 +61,7 @@ class AuthCognitoMiddleware
 
                 $newAccessToken = $result->getToken(CognitoToken::ACCESS)->value();
                 UserService::setUserCache($user);
-                Cache::create($newAccessToken)->set($user,CACHE::TTL_ONEWEEK);
+                Cache::create($newAccessToken)->set($user,CACHE::TTL_FOREVER);
 
                 $response = $next($request);
                 $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);

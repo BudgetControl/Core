@@ -10,6 +10,7 @@ use App\Auth\Exception\AuthException;
 use App\Auth\Entity\Cognito\AccessToken;
 use App\Auth\Entity\Cognito\CognitoToken;
 use App\Auth\Service\ProviderClientService;
+use App\BudgetTracker\Entity\Cache;
 use App\Traits\Encryptable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -91,7 +92,7 @@ class AuthController
         }
 
         UserService::setUserCache($user);
-        UserService::setTokenCache($token);
+        Cache::create($token->value())->set($user, Cache::TTL_FOREVER);
 
         return $token;
     }

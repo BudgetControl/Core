@@ -84,8 +84,7 @@ class UserService
     public static function clearUserCache()
     {
         $cacheKey = session()->getId().'user';
-        Cache::create($cacheKey)->delete();
-        Cache::create($cacheKey.'id')->delete();
+        Cache::create($cacheKey)->clear();
     }
 
     /**
