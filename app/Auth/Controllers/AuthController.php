@@ -85,7 +85,7 @@ class AuthController
             //register user becouse is not founded in the database
             $user = new User();
             $user->email = $idToken['email'];
-            $user->password= $idToken['cognito:username'];
+            $user->password= sha1($idToken['cognito:username']);
             $user->sub = $idToken['sub'];
             $user->email_verified_at = date('Y-m-d H:i:s');
             $user->save();
