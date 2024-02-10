@@ -129,10 +129,10 @@ class AuthUserController
      *
      * @return void
      */
-    public function logout()
+    public function logout(string $accessToken)
     {
-        Auth::logout();
         UserService::clearUserCache();
+        Cache::create($accessToken)->delete();
 
         return response()->json([
             'success' => true

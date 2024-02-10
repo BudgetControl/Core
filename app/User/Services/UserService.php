@@ -85,7 +85,6 @@ class UserService
     {
         $cacheKey = session()->getId().'user';
         Cache::create($cacheKey)->delete();
-        Cache::create($cacheKey.'id')->delete();
     }
 
     /**
