@@ -21,7 +21,7 @@ class PayeeController extends Controller implements ControllerResourcesInterface
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $payes = Payee::with('entry')->get();
+        $payes = Payee::User()->with('entry')->get();
         return response()->json($payes);
     }
 
