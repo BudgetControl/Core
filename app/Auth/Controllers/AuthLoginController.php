@@ -3,17 +3,11 @@ namespace App\Auth\Controllers;
 
 use Throwable;
 use App\User\Models\User;
-use App\Auth\Entity\Token;
 use App\Traits\Encryptable;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Entity\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Http\Client\Exception\HttpException;
-use App\Auth\Entity\Cognito\CognitoToken;
-use App\Auth\Entity\JwtToken;
 use App\Auth\Service\CognitoClientService;
-use App\User\Services\UserService;
 use Ellaisys\Cognito\Auth\AuthenticatesUsers;
 use Illuminate\Validation\ValidationException;
 
