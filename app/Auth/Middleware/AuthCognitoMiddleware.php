@@ -47,13 +47,13 @@ class AuthCognitoMiddleware
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
 
-            UserService::setUserCache($user);
             $response = $next($request);
             $response->headers->set('Authorization', "Bearer ".$accessToken->value(), true);
             return $response;
         } catch (\Exception $e) {
 
             //if token is expired delete it
+            $user = Cache::create($accessToken->value())->get();
             Cache::create($accessToken->value())->delete();
 
             try {
@@ -74,6 +74,7 @@ class AuthCognitoMiddleware
 
                 // Gestisci le eccezioni durante la decodifica o la verifica del token di accesso
                 Log::error('Error: ' . $e->getMessage());
+                Log::debug("token ::: ".$accessToken->value());
                 return response()->json([
                     "message" => "Not authorized"
                 ], 401);
