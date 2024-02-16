@@ -84,13 +84,13 @@ class StatsService
         $entry->where('entries.date_time', '<=', $this->endDate)
         ->where('entries.date_time', '>=', $this->startDate)
         ->whereIn('entries.type', [EntryType::Incoming->value, EntryType::Debit->value])
-        ->where('amount', '>', 0);
+        ->where('entries.amount', '>', 0);
 
         $entryOld = Entry::stats()->User();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
         ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Incoming->value)
         ->whereIn('entries.type', [EntryType::Incoming->value, EntryType::Debit->value])
-        ->where('amount', '>', 0);
+        ->where('entries.amount', '>', 0);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
@@ -204,17 +204,17 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        $entry = Expenses::stats()->User();
+        $entry = Entry::stats()->User();
         $entry->where('entries.date_time', '<=', $this->endDate)
         ->where('entries.date_time', '>=', $this->startDate)
         ->whereIn('entries.type', [EntryType::Expenses->value, EntryType::Debit->value])
-        ->where('amount', '>', 0);
+        ->where('entries.amount', '>', 0);
 
-        $entryOld = Expenses::stats()->User();
+        $entryOld = Entry::stats()->User();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
         ->where('entries.date_time', '>=', $this->startDatePassed)
         ->whereIn('entries.type', [EntryType::Expenses->value, EntryType::Debit->value])
-        ->where('amount', '<', 0);
+        ->where('entries.amount', '<', 0);
 
         if ($planning === true) {
             $entry->whereIn('planned',[0,1]);
