@@ -88,7 +88,7 @@ class StatsService
 
         $entryOld = Entry::stats()->User();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Incoming->value)
+        ->where('entries.date_time', '>=', $this->startDatePassed)
         ->whereIn('entries.type', [EntryType::Incoming->value, EntryType::Debit->value])
         ->where('entries.amount', '>', 0);
 
@@ -208,7 +208,7 @@ class StatsService
         $entry->where('entries.date_time', '<=', $this->endDate)
         ->where('entries.date_time', '>=', $this->startDate)
         ->whereIn('entries.type', [EntryType::Expenses->value, EntryType::Debit->value])
-        ->where('entries.amount', '>', 0);
+        ->where('entries.amount', '<', 0);
 
         $entryOld = Entry::stats()->User();
         $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
