@@ -6,13 +6,9 @@ use App\Budget\Services\BudgetMamangerService;
 use App\Budget\Services\BudgetNotificationService;
 use App\BudgetTracker\Jobs\BudgetControlJobs;
 use App\User\Services\UserService;
-use Exception;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\User\Models\User;
 
 class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
 {
@@ -29,6 +25,10 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
 
         foreach($budgets as $budget)
         {
+            //setup user cache for scheduled job
+            $user = User::find($budget->user_id);
+            UserService::setUserCache($user);
+
             if($this->isValid($budget) === true) {
                 if($service->isExpired($budget->id)) {
                     Log::debug("Budget is expired with ID ".$budget->id);
@@ -44,7 +44,9 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
                     );
                 }
             }
+
         }
+        UserService::clearUserCache();
     }
 
     private function alertExpired(array $budget)
