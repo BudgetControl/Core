@@ -235,7 +235,7 @@ class BudgetMamangerService
     public function isExpired(int $id): bool
     {
         $entries = $this->retriveBudgetAmount($id);
-        if($entries['percentage'] >= 100) {
+        if($entries['percentage'] > 90) {
             return true;
         }
 
@@ -245,7 +245,7 @@ class BudgetMamangerService
     public function isAlmostExpired(int $id): bool
     {
         $entries = $this->retriveBudgetAmount($id);
-        if($entries['percentage'] >= 80 && $entries['percentage'] <= 99) {
+        if($entries['percentage'] >= 70 && $entries['percentage'] <= 90) {
             return true;
         }
 
