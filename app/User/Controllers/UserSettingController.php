@@ -12,7 +12,7 @@ class UserSettingController {
 
     public function index() {
         
-        $setting = UserService::get();
+        $setting = UserService::getSettings();
 
         if(!$setting) {
             throw new NotFoundException("User not found", 404);
