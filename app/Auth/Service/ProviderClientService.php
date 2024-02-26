@@ -28,7 +28,7 @@ class ProviderClientService
             'response_type' => 'code',
             'scope' => 'email profile openid aws.cognito.signin.user.admin',
             'identity_provider' => $provider,
-            'state' => uniqid(),
+            'state' => \Ramsey\Uuid\Uuid::uuid4()->toString();,
         ];
         $this->googleParams = $googleParams;
     }

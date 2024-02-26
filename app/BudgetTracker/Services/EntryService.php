@@ -85,7 +85,7 @@ class EntryService
       
     } catch (\Exception $e) {
 
-      $errorCode = uniqid();
+      $errorCode = \Ramsey\Uuid\Uuid::uuid4()->toString();;
       Log::error("$errorCode " . "Unable save new Entry on entryservice " . $e->getMessage());
       throw new \Exception("Ops an errro occurred " . $errorCode);
     }
@@ -140,7 +140,7 @@ class EntryService
 
           if (empty($label)) {
             $label = new Labels();
-            $label->uuid = uniqid();
+            $label->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
             $label->name = strtolower($value);
             $label->color = color();
             Log::debug("created new label " . $label->name);

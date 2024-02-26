@@ -20,7 +20,7 @@ class AccountSeed extends Seeder
 
         foreach ($data[$lang] as $key => $value) {
             $db = new Account();
-            $db->uuid = (empty($value->uuid)) ? uniqid() : $value->uuid;
+            $db->uuid = (empty($value->uuid)) ? \Ramsey\Uuid\Uuid::uuid4()->toString(); : $value->uuid;
             $db->name = $value->name;
             $db->type = $value->type;
             $db->user_id = 1;

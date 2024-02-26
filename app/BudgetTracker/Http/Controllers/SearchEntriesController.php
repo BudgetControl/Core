@@ -76,7 +76,7 @@ class SearchEntriesController extends Controller
 			return response()->json(new ResponseService(['elements' => $returnValue, 'total' => $total]));
 
 		} catch (\Exception $e) {
-			$id = uniqid();
+			$id = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 			Log::error($id . ' An error occurend wile find # '.$e->getMessage());
 			return response()->json(new ResponseService([],'Ops an error occurred ',$id));
 		}

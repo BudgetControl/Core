@@ -15,7 +15,7 @@ class UserSeed extends Seeder
     public function run(): void
     {
         $user = new User();
-        $user->uuid = uniqid();
+        $user->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $user->name = "foo bar";
         $user->password = bcrypt("password");
         $user->email = "foo@email.it";

@@ -22,7 +22,7 @@ final class Label implements BudgetTracker
         $this->name = $name;
         $this->color = $color;
         $this->archive = $archive;
-        $this->uniqid = uniqid();
+        $this->uniqid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 
         $this->validate();
     }
@@ -109,7 +109,7 @@ final class Label implements BudgetTracker
      *
      * @return string
      */
-    public function getUniqid(): string
+    public function get\Ramsey\Uuid\Uuid::uuid4()->toString();: string
     {
         return $this->uniqid;
     }

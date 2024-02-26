@@ -31,7 +31,7 @@ class PayeeFactory extends Factory
         $amount = fake()->numberBetween(-1,-50);
 
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString();,
             'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(5),
             'user_id' => 1

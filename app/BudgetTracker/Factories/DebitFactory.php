@@ -31,7 +31,7 @@ class DebitFactory extends Factory
         $amount = fake()->numberBetween(-1,-50);
 
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString();,
             'amount' => $amount,
             'note' => fake()->text(80),
             'type' => EntryType::Debit->value,

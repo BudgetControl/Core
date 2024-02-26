@@ -76,7 +76,7 @@ class AccountsService
             $entry->save();
             
         } catch (\Exception $e) {
-            $error = uniqid();
+            $error = \Ramsey\Uuid\Uuid::uuid4()->toString();;
             Log::error("$error " . $e->getMessage());
             throw new \Exception("Ops an errro occurred " . $error);
         }
