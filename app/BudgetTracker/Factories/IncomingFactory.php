@@ -34,7 +34,7 @@ class IncomingFactory extends Factory
         $date = DateTime::dateTimeBetween('-1 years','+1 years');
 
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'amount' => $amount,
             'note' => fake()->text(80),
             'type' => EntryType::Incoming->value,

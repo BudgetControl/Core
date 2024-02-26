@@ -89,7 +89,7 @@ class AuthRegisterController
     private function userSignUp(array $request): User
     {
         $user = new User();
-        $user->uuid = uniqid();
+        $user->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->password = bcrypt($request['password']);

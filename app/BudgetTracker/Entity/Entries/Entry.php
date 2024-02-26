@@ -60,7 +60,7 @@ class Entry implements EntryInterface
         $this->labels = $labels;
         $this->note = is_null($note) ? "" : $note;
         $this->type = $type;
-        $this->uuid = uniqid();
+        $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $this->id = 0;
 
     }
@@ -262,7 +262,7 @@ class Entry implements EntryInterface
     public function getUuid(): string
     {
         if ($this->uuid === null) {
-            $this->uuid = uniqid();
+            $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         }
         return $this->uuid;
     }

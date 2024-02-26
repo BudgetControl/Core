@@ -21,7 +21,7 @@ class PaymentTypeSeeders extends Seeder
 
       foreach ($data[$lang] as $key => $value) {
         $db = new PaymentsTypes();
-        $db->uuid = uniqid();
+        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $db->name = strtolower($value);
         $db->save();
       }

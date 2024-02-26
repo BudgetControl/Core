@@ -31,7 +31,7 @@ class Budget extends BaseModel
     {
         parent::__construct($attributes);
         
-        $this->attributes['uuid'] = uniqid();
+        $this->attributes['uuid'] = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 
         foreach($attributes as $k => $v) {
             $this->$k = $v;

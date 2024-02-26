@@ -21,7 +21,7 @@ class CurrencySeeders extends Seeder
 
       foreach ($data[$lang] as $key => $value) {
         $db = new Currency();
-        $db->uuid = uniqid();
+        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $db->name = $value->name;
         $db->icon = $value->icon;
         $db->label = $value->label;

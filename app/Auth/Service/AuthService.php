@@ -19,7 +19,7 @@ class AuthService
      */
     public static function createAccountEntry(int $userID)
     {
-        $uuid = uniqid();
+        $uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $dateTIme = date("Y-m-d H:i:s", time());
         Log::info("Create new Account entry");
         DB::statement('

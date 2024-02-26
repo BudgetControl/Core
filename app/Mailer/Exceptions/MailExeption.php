@@ -11,7 +11,7 @@ class MailExeption extends Exception
     public function render(): Response
     {
         $error = "An error occurred on Mailer services";
-        $errorCode = uniqid();
+        $errorCode = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $statusCode = empty($this->getCode()) ? 200 : $this->getCode();
         $file = $this->getFile();
 

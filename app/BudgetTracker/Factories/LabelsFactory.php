@@ -29,7 +29,7 @@ class LabelsFactory extends Factory
     {
         
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'name' => fake()->text(5),
             'color' => random_color(),
             'archive' => 0,
