@@ -30,7 +30,7 @@ class TransferFactory extends Factory
         
 
         return [
-            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString();,
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'amount' => 200,
             'note' => fake()->text(80),
             'type' => EntryType::Transfer->value,
