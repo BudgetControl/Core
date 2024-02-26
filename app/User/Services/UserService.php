@@ -90,8 +90,7 @@ class UserService
      */
     public static function getSettings()
     {   
-        $cacheKey = session()->getId().'user';
-        $user =  Cache::create($cacheKey)->get();
+        $user =  UserService::get();
 
         $setting = UserSettings::where("setting", SettingValues::Configurations->value)->first();
         $userProfile = $user;
