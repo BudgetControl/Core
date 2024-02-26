@@ -35,6 +35,7 @@ class UserService
         if(empty($id)) {
             $id = 0;
             if(config("app.env") == "testing") {
+                return 1;
             }
         }
 
