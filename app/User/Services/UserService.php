@@ -30,10 +30,8 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
-        
         $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
-
         if(empty($id)) {
             $id = 0;
             if(config("app.env") == "testing") {
@@ -92,8 +90,7 @@ class UserService
      */
     public static function getSettings()
     {   
-        $cacheKey = session()->getId().'user';
-        $user =  Cache::create($cacheKey)->get();
+        $user =  UserService::get();
 
         $setting = UserSettings::where("setting", SettingValues::Configurations->value)->first();
         $userProfile = $user;

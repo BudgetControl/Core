@@ -15,6 +15,7 @@ use App\BudgetTracker\Models\Transfer;
 use App\User\Services\UserService;
 use DateTime;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class StatsService
 {
@@ -53,7 +54,6 @@ class StatsService
         $passedDateTime = new DateTime($date);
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->startDatePassed = $passedDateTime->format('Y-m-d H:i:s');
-
     }
 
     /**
@@ -69,7 +69,6 @@ class StatsService
         $passedDateTime = new DateTime($date);
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
-
     }
 
     /**
@@ -80,30 +79,36 @@ class StatsService
      */
     public function incoming(bool $planning): array
     {
-        $entry = Entry::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)
-        ->whereIn('entries.type', [EntryType::Incoming->value, EntryType::Debit->value])
-        ->where('entries.amount', '>', 0);
-
-        $entryOld = Entry::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)
-        ->whereIn('entries.type', [EntryType::Incoming->value, EntryType::Debit->value])
-        ->where('entries.amount', '>', 0);
 
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $planned = "entries.planned in (0,1)";
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $planned = "entries.planned = 0";
         }
 
-        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+        $params = [EntryType::Incoming->value, EntryType::Debit->value, $this->startDate, $this->endDate, UserService::getCacheUserID()];
+        $paramsOld = [EntryType::Incoming->value, EntryType::Debit->value, $this->startDatePassed, $this->endDatePassed, UserService::getCacheUserID()];
+
+        $query = "
+        SELECT * FROM entries
+        LEFT JOIN accounts ON accounts.id = entries.account_id
+        WHERE accounts.exclude_from_stats = 0
+        AND entries.type IN (?, ?)
+        AND entries.amount > 0
+        AND entries.date_time BETWEEN ? AND ?
+        AND accounts.user_id = ?
+        AND $planned
+        AND accounts.user_id = 1
+        ORDER BY entries.id DESC
+    ";
+
+        $entry =  DB::select($query, $params);
+        $entryOld = DB::select($query, $paramsOld);
+
+        list($entry, $entryOld) = $this->map((array) $entry, (array) $entryOld);
+        $response = $this->buildResponse($entry, $entryOld);
 
         return $response;
-
     }
 
     /**
@@ -115,25 +120,22 @@ class StatsService
     public function entryByCategory(array $categoryID, bool $planning): array
     {
         $entry = Entry::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->whereIn('category_id', $categoryID);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->whereIn('category_id', $categoryID);
 
         $entryOld = Entry::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->whereIn('category_id', $categoryID);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->whereIn('category_id', $categoryID);
 
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $entry->whereIn('planned', [0, 1]);
+            $entryOld->whereIn('planned', [0, 1]);
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $entry->where('planned', 0);
+            $entryOld->where('planned', 0);
         }
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
         return $response;
-
     }
 
     /**
@@ -145,25 +147,22 @@ class StatsService
     public function entryByType(array $type, bool $planning): array
     {
         $entry = Entry::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', $type);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', $type);
 
         $entryOld = Entry::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', $type);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', $type);
 
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $entry->whereIn('planned', [0, 1]);
+            $entryOld->whereIn('planned', [0, 1]);
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $entry->where('planned', 0);
+            $entryOld->where('planned', 0);
         }
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
         return $response;
-
     }
 
     /**
@@ -175,25 +174,22 @@ class StatsService
     public function investments(bool $planning): array
     {
         $entry = Investments::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type', EntryType::Investments->value);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Investments->value);
 
         $entryOld = Investments::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type', EntryType::Investments->value);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Investments->value);
 
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $entry->whereIn('planned', [0, 1]);
+            $entryOld->whereIn('planned', [0, 1]);
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $entry->where('planned', 0);
+            $entryOld->where('planned', 0);
         }
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
         return $response;
-
     }
 
     /**
@@ -204,33 +200,38 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        $entry = Entry::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)
-        ->whereIn('entries.type', [EntryType::Expenses->value, EntryType::Debit->value])
-        ->where('entries.amount', '<', 0);
-
-        $entryOld = Entry::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)
-        ->whereIn('entries.type', [EntryType::Expenses->value, EntryType::Debit->value])
-        ->where('entries.amount', '<', 0);
-
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $planned = "entries.planned in (0,1)";
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $planned = "entries.planned = 0";
         }
 
-        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+        $params = [EntryType::Expenses->value, EntryType::Debit->value, $this->startDate, $this->endDate, UserService::getCacheUserID()];
+        $paramsOld = [EntryType::Expenses->value, EntryType::Debit->value, $this->startDatePassed, $this->endDatePassed, UserService::getCacheUserID()];
+
+        $query = "
+        SELECT * FROM entries
+        LEFT JOIN accounts ON accounts.id = entries.account_id
+        WHERE accounts.exclude_from_stats = 0
+        AND entries.type IN (?, ?)
+        AND entries.amount < 0
+        AND entries.date_time BETWEEN ? AND ?
+        AND accounts.user_id = ?
+        AND $planned
+        AND accounts.user_id = 1
+        ORDER BY entries.id DESC
+    ";
+
+        $entry =  DB::select($query, $params);
+        $entryOld = DB::select($query, $paramsOld);
+
+        list($entry, $entryOld) = $this->map((array) $entry, (array) $entryOld);
+        $response = $this->buildResponse($entry, $entryOld);
 
         return $response;
-
     }
 
-     /**
+    /**
      * retrive data
      * @param bool $planning
      * 
@@ -239,31 +240,28 @@ class StatsService
     public function entryByLabel(array $labelsID, bool $planning): array
     {
         $entry = Entry::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)
-        ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
-        ->leftJoin('labels', "labels.id","=","entry_labels.labels_id")
-        ->whereIn("labels.id",$labelsID);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])
+            ->leftJoin('entry_labels', "entry_labels.entry_id", "=", "entries.id")
+            ->leftJoin('labels', "labels.id", "=", "entry_labels.labels_id")
+            ->whereIn("labels.id", $labelsID);
 
         $entryOld = Entry::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)
-        ->leftJoin('entry_labels', "entry_labels.entry_id","=","entries.id")
-        ->leftJoin('labels', "labels.id","=","entry_labels.labels_id")
-        ->whereIn("labels.id",$labelsID);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])
+            ->leftJoin('entry_labels', "entry_labels.entry_id", "=", "entries.id")
+            ->leftJoin('labels', "labels.id", "=", "entry_labels.labels_id")
+            ->whereIn("labels.id", $labelsID);
 
         if ($planning === true) {
-            $entry->whereIn('entries.planned',[0,1]);
-            $entryOld->whereIn('entries.planned',[0,1]);
+            $entry->whereIn('entries.planned', [0, 1]);
+            $entryOld->whereIn('entries.planned', [0, 1]);
         } else {
-            $entry->where('entries.planned',0);
-            $entryOld->where('entries.planned',0);
+            $entry->where('entries.planned', 0);
+            $entryOld->where('entries.planned', 0);
         }
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
         return $response;
-
     }
 
     /**
@@ -275,17 +273,14 @@ class StatsService
     public function transfer(bool $planning): array
     {
         $entry = Transfer::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Transfer->value);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Transfer->value);
 
         $entryOld = Transfer::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Transfer->value);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Transfer->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
         return $response;
-
     }
 
     /**
@@ -297,12 +292,10 @@ class StatsService
     public function debit(): array
     {
         $entry = Debit::stats()->User();
-        $entry->where('entries.date_time', '<=', $this->endDate)
-        ->where('entries.date_time', '>=', $this->startDate)->where('entries.type',EntryType::Debit->value);
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Debit->value);
 
         $entryOld = Debit::stats()->User();
-        $entryOld->where('entries.date_time', '<=', $this->endDatePassed)
-        ->where('entries.date_time', '>=', $this->startDatePassed)->where('entries.type',EntryType::Debit->value);
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Debit->value);
 
         $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
@@ -319,15 +312,15 @@ class StatsService
     {
         $wallet = new Wallet(0);
 
-        $accounts = Account::stats()->User()->where('installement',0)->get();
-        foreach($accounts as $account) {
+        $accounts = Account::stats()->User()->where('installement', 0)->get();
+        foreach ($accounts as $account) {
             $wallet->deposit($account->balance);
         }
 
         if ($planning === true) {
             $plannedEntries = $this->getPlannedEntry();
             $installementValue = $this->getInstallementValue();
-            $entries = array_merge($plannedEntries->toArray(),$installementValue);
+            $entries = array_merge($plannedEntries->toArray(), $installementValue);
             $wallet->sum($entries);
         }
 
@@ -365,9 +358,9 @@ class StatsService
     {
         $values = Account::stats()->User()->where('installement', 1)->get();
         $data = [];
-        foreach($values as $value) {
+        foreach ($values as $value) {
             $balance = $value->balance * -1;
-            if($balance <= $value->installementValue) {
+            if ($balance <= $value->installementValue) {
                 $data[] = ['amount' => $value->balance];
             } else {
                 $data[] = ['amount' => $value->installementValue * -1];
@@ -410,7 +403,7 @@ class StatsService
         $wallet = new Wallet(0);
 
         $accounts = Account::stats()->User()->get();
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             $wallet->deposit($account->balance);
         }
 
@@ -449,15 +442,34 @@ class StatsService
     {
         $results = [];
         $categories = Category::getCateroyGroup($type);
-        foreach($categories as $cat) {
+        foreach ($categories as $cat) {
             $results[] = $cat->id;
         }
 
-        if(empty($results)) {
+        if (empty($results)) {
             throw new Exception("Ops no category foud with type ( $type )", 500);
         }
 
         return $results;
     }
 
+    /**
+     * generate array map
+     * @param array $entry
+     * @param array $entryOld
+     * 
+     * @return array
+     */
+    private function map( array $entry, array $entryOld): array
+    {
+        $entry = array_map(function ($entry) {
+            return (array) $entry;
+        }, $entry);
+
+        $entryOld = array_map(function ($entryOld) {
+            return (array) $entryOld;
+        }, $entryOld);
+
+        return [$entry, $entryOld];
+    }
 }

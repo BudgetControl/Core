@@ -31,10 +31,12 @@ class AuthCognitoMiddleware
      */
     public function handle($request, \Closure $next)
     {
+
+
         /** only fot php unit testting */
-        if (@$_ENV['DISABLE_AUTH'] == true) {
-            UserService::setUserCache(User::find(1));
+        if (@$_ENV['DISABLE_AUTH'] == true || config('app.config.disable_auth') === true) {
             return $next($request);
+            UserService::setUserCache(User::find(1));
         }
 
         $accessToken = str_replace('Bearer ', '', $request->header('authorization'));

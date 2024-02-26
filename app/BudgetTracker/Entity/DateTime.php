@@ -50,6 +50,14 @@ final class DateTime {
         ]);
     }
 
+    public static function current()
+    {
+        return new DateTime([
+            "start_date" => time(),
+            "end_date" => time()
+        ]);
+    }
+
     public static function custom(string $start, string $end)
     {
         return new DateTime([
