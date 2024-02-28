@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        $query = "
+        CREATE VIEW stats_expenses AS
+        SELECT
+                user_id,
+                COALESCE(SUM(amount), 0) AS total_amount
+            FROM
+                entries
+            WHERE
+                type IN ('expenses', 'debit')
+                AND amount < 0
+                AND MONTH(date_time) = MONTH(CURRENT_DATE())
+                AND YEAR(date_time) = YEAR(CURRENT_DATE())
+                AND planned = 0
+                AND confirmed = 1
+                AND exclude_from_stats = 0
+            GROUP BY
+        user_id;
+        ";
+        DB::query($query);
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('stats_expenses');
+    }
+};
