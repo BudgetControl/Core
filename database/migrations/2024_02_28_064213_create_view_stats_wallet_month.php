@@ -26,7 +26,7 @@ return new class extends Migration
             accounts AS a ON a.id = e.account_id
         WHERE
             e.deleted_at IS NULL
-            AND a.deleted IS null
+            AND a.deleted_at IS null
             AND e.confirmed = 1
             AND e.planned = 0
             AND e.exclude_from_stats = 0
@@ -35,7 +35,7 @@ return new class extends Migration
         
 		order by year, month;
         ";
-        DB::query($query);
+        DB:: statement($query);
     }
 
     /**
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stats_wallets_month');
+        DB:: statement('DROP VIEW stats_wallets_month;');
     }
 };

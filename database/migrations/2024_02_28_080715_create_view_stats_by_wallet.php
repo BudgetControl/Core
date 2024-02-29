@@ -37,7 +37,7 @@ return new class extends Migration
         
 		order by year, month;
         ";
-        DB::query($query);
+        DB:: statement($query);
     }
 
     /**
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stats_wallets_day');
+        DB:: statement('DROP VIEW stats_wallets_tag;');
     }
 };

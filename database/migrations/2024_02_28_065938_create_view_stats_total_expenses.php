@@ -30,7 +30,7 @@ return new class extends Migration
             GROUP BY
         user_id;
         ";
-        DB::query($query);
+        DB:: statement($query);
     }
 
     /**
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stats_expenses');
+        DB:: statement('DROP VIEW stats_expenses;');
     }
 };

@@ -30,7 +30,7 @@ return new class extends Migration
             GROUP BY
                 a.name;
         ";
-        DB::query($query);
+        DB:: statement($query);
     }
 
     /**
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('GetUserTotalWallet');
+        DB:: statement('DROP VIEW stats_wallets_total_amounts;');
     }
 };

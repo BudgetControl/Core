@@ -27,10 +27,11 @@ return new class extends Migration
             e.deleted_at IS NULL
             AND e.confirmed = 1
             AND e.planned = 0
+            AND e.exclude_from_stats = 0
         GROUP BY
         e.user_id, YEAR(e.date_time), a.name;
         ";
-        DB::query($query);
+        DB:: statement($query);
     }
 
     /**
@@ -38,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stats_wallets_years');
+        DB:: statement('DROP VIEW stats_wallets_years;');
     }
 };
