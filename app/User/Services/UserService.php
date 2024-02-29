@@ -32,12 +32,6 @@ class UserService
     {
         $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
-        if(empty($id)) {
-            $id = 0;
-            if(config("app.env") == "testing") {
-                return 1;
-            }
-        }
 
         return $id;
     }

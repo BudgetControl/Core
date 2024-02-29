@@ -2,6 +2,7 @@
 
 namespace App\Stats\Services;
 
+use App\BudgetTracker\Entity\DateTime as EntityDateTime;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Entity\Wallet;
@@ -12,6 +13,7 @@ use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
 use App\BudgetTracker\Models\Investments;
 use App\BudgetTracker\Models\Transfer;
+use App\Stats\Domain\Repository\StatsRepository;
 use App\User\Services\UserService;
 use DateTime;
 use Exception;
@@ -200,33 +202,20 @@ class StatsService
      */
     public function expenses(bool $planning): array
     {
-        if ($planning === true) {
-            $planned = "entries.planned in (0,1)";
-        } else {
-            $planned = "entries.planned = 0";
-        }
+        $previousMonth = EntityDateTime::previousMonth()->month;
 
-        $params = [EntryType::Expenses->value, EntryType::Debit->value, $this->startDate, $this->endDate, UserService::getCacheUserID()];
-        $paramsOld = [EntryType::Expenses->value, EntryType::Debit->value, $this->startDatePassed, $this->endDatePassed, UserService::getCacheUserID()];
+        $statsRepository = new StatsRepository();
+        $totalAmount = $statsRepository->statsExpenses(
+            date('m', time()),
+            date('Y', time()),
+        );
 
-        $query = "
-        SELECT * FROM entries
-        LEFT JOIN accounts ON accounts.id = entries.account_id
-        WHERE accounts.exclude_from_stats = 0
-        AND entries.type IN (?, ?)
-        AND entries.amount < 0
-        AND entries.date_time BETWEEN ? AND ?
-        AND accounts.user_id = ?
-        AND $planned
-        AND accounts.user_id = 1
-        ORDER BY entries.id DESC
-    ";
+        $totalAmountBefore = $statsRepository->statsExpenses(
+            $previousMonth,
+            date('Y', time()),
+        );
 
-        $entry =  DB::select($query, $params);
-        $entryOld = DB::select($query, $paramsOld);
-
-        list($entry, $entryOld) = $this->map((array) $entry, (array) $entryOld);
-        $response = $this->buildResponse($entry, $entryOld);
+        $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
 
         return $response;
     }
