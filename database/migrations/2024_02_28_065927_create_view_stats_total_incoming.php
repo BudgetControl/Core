@@ -16,7 +16,7 @@ return new class extends Migration
         CREATE VIEW stats_incoming_months AS
         SELECT
             user_id,
-            COALESCE(SUM(amount), 0) AS total_amount
+            COALESCE(SUM(amount), 0) AS amounts
         FROM
             entries
         WHERE

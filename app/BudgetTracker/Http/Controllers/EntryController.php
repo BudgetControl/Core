@@ -40,7 +40,7 @@ class EntryController extends Controller
 		$entries = $this->paginate($page);
 
 		//only first page
-		if ($page === 0) {
+		if ($page == 0) {
 			//merge the planned entry
 			$plannedEntry = Entry::User()->withRelations()->where('planned', 1)->get()->toArray();
 			$entries['data'] = array_merge($plannedEntry, $entries['data']);

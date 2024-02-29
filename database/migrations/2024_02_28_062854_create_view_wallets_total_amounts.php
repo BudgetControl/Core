@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         $query = "
-        CREATE VIEW stats_wallets_total_amounts AS
+        CREATE VIEW stats_wallets_amountss AS
             SELECT
                 a.name AS wallet,
-                SUM(e.amount) AS total_amount
+                SUM(e.amount) AS amounts
             FROM
                 entries AS e
             LEFT JOIN
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_wallets_total_amounts;');
+        DB:: statement('DROP VIEW stats_wallets_amountss;');
     }
 };

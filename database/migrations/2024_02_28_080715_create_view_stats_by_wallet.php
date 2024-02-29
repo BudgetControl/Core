@@ -19,7 +19,7 @@ return new class extends Migration
         MONTH(e.date_time) AS month,
         YEAR(e.date_time) AS year,
         l.name AS tag,
-        COALESCE(SUM(e.amount), 0) AS total_amount
+        COALESCE(SUM(e.amount), 0) AS amounts
         FROM
             entries AS e
         RIGHT JOIN

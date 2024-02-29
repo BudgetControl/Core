@@ -18,7 +18,7 @@ return new class extends Migration
         e.user_id,
         YEAR(e.date_time) AS year,
         a.name AS wallet,
-        COALESCE(SUM(e.amount), 0) AS total_amount
+        COALESCE(SUM(e.amount), 0) AS amounts
         FROM
             entries AS e
         LEFT JOIN
