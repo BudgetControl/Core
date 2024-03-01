@@ -98,7 +98,9 @@ class EntryController extends Controller
 		try {
 			$entry = Entry::where('uuid', $id)->firstOrFail();
 
-			$walletService = new WalletService($entry);
+			$walletService = new WalletService(
+				EntryService::create($entry->toArray(), EntryType::from($entry->type))
+			);
 			$walletService->subtract();
 
 			Entry::destroy($entry->id);
