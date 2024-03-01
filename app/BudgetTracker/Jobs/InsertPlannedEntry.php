@@ -76,10 +76,24 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
             /** @var EntryModel $request  */
             foreach ($data as $request) {
 
-                $entry = $request;
-                $entryToInsert = new EntryModel($entry->toArray());
+                $entry = $request->toArray();
+
+                $entryToInsert = new EntryModel(['user_id' => $entry['user_id']]);
                 $entryToInsert->transfer = 0;
+                $entryToInsert->amount = $entry['amount'];
+                $entryToInsert->account_id = $entry['account_id'];
+                $entryToInsert->category_id = $entry['category_id'];
+                $entryToInsert->type = $entry['type'];
+                $entryToInsert->waranty = 0;
+                $entryToInsert->confirmed = 1;
+                $entryToInsert->planned = 1;
+                $entryToInsert->date_time = $entry['date_time'];
+                $entryToInsert->note = $entry['note'];
+                $entryToInsert->currency_id = $entry['currency_id'];
+                $entryToInsert->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
+
                 $entryToInsert->save();
+
                 Log::info("PLANNED INSERT:: " . json_encode($entryToInsert));
             }
 
@@ -151,3 +165,4 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
         return $newDate;
     }
 }
+
