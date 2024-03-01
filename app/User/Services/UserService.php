@@ -32,6 +32,10 @@ class UserService
     {
         $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
+        //FIXME:
+        if(empty($id)) {
+            return 0;
+        }
 
         return $id;
     }
