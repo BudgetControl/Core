@@ -20,7 +20,7 @@ return new class extends Migration
         )
         BEGIN
             SELECT
-                e.user_id,
+                e.workspace_id,
                 MONTH(e.date_time) AS month,
                 YEAR(e.date_time) AS year,
                 sc.name AS category,
@@ -36,11 +36,11 @@ return new class extends Migration
                 AND e.confirmed = 1
                 AND e.planned = 0
                 AND e.exclude_from_stats = 0
-                AND e.user_id = userId
+                AND e.workspace_id = userId
                 AND MONTH(e.date_time) = inMonth
                 AND YEAR(e.date_time) = inYear
             GROUP BY
-                e.user_id, MONTH(e.date_time), YEAR(e.date_time), sc.name, sc.id
+                e.workspace_id, MONTH(e.date_time), YEAR(e.date_time), sc.name, sc.id
             ORDER BY
                 year, month;
         END;

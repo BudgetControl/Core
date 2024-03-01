@@ -18,7 +18,7 @@ trait Caching
      */
     public function saveInCache(): self
     {
-        Cache::create($this->workspace->getUuid())->set($this, $this->ttl);
+        Cache::create($this->getHash())->set($this, $this->ttl);
 
         return $this;
     }
@@ -38,8 +38,7 @@ trait Caching
      */
     public function getFromCache(): self
     {
-        $this->workspace = Cache::create($this->getHash())->get();
-        return $this->workspace;
+        return Cache::create($this->getHash())->get();
     }
 
     /**

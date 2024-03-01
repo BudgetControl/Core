@@ -15,7 +15,7 @@ return new class extends Migration
         $query = "
         CREATE VIEW stats_expenses_current_months AS
         SELECT
-        e.user_id,
+        e.workspace_id,
         MONTH(e.date_time) AS month,
         YEAR(e.date_time) AS year,
         a.name AS wallet,
@@ -33,7 +33,7 @@ return new class extends Migration
             AND e.planned = 0
             AND e.exclude_from_stats = 0
         GROUP BY
-        e.user_id, MONTH(e.date_time), YEAR(e.date_time), a.name
+        e.workspace_id, MONTH(e.date_time), YEAR(e.date_time), a.name
         
 		order by year, month;
         ";

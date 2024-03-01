@@ -15,7 +15,7 @@ return new class extends Migration
         $query = "
         CREATE VIEW stats_wallets_day AS
         SELECT
-            e.user_id,
+            e.workspace_id,
             DATE(e.date_time) AS day,
             a.name AS wallet,
             COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
@@ -31,7 +31,7 @@ return new class extends Migration
             AND e.planned = 0
             AND e.exclude_from_stats = 0
         GROUP BY
-            e.user_id, DATE(e.date_time), a.name
+            e.workspace_id, DATE(e.date_time), a.name
         ORDER BY
             day;
 

@@ -15,7 +15,7 @@ return new class extends Migration
         $query = "
         CREATE VIEW stats_incoming_current_months AS
         SELECT
-            user_id,
+            workspace_id,
             COALESCE(SUM(amount), 0) AS amount
         FROM
             entries
@@ -28,7 +28,7 @@ return new class extends Migration
             AND confirmed = 1
             AND exclude_from_stats = 0
         GROUP BY
-    user_id;
+    workspace_id;
         ";
         DB:: statement($query);
     }

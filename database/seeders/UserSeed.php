@@ -23,6 +23,6 @@ class UserSeed extends Seeder
         $user->email_verified_at = date("Y-m-d H:i:s");
         $user->save();
 
-        WorkspaceService::createNewWorkspace('test', $user->id);
+        WorkspaceService::createNewWorkspace('test', $user->id)->saveInCache()->saveInCacheFromSession();
     }
 }

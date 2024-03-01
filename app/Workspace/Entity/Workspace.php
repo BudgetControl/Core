@@ -14,15 +14,15 @@ use App\Workspace\Model\Workspace as ModelWorkspace;
 
     use Caching;
 
-    private ModelWorkspace $workspace;
-    private User $user;
-    private string $hash;
+    private readonly ModelWorkspace $workspace;
+    private readonly User $user;
+    private readonly string $hash;
 
     public function __construct(ModelWorkspace $ws, User $user)
     {
         $this->ttl = Cache::TTL_FOREVER;
         $ws->update(
-            ['updated_at' => date('Y-m-d H:i;s', time())]
+            ['updated_at' => date('Y-m-d H:i:s', time())]
         );
 
         $this->workspace = $ws;

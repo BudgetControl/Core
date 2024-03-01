@@ -35,8 +35,8 @@ class AuthCognitoMiddleware
 
         /** only for php unit testting */
         if (@$_ENV['DISABLE_AUTH'] == true || config('app.config.disable_auth') === true) {
-            $wsService = new WorkspaceService('test');
-            $wsService->getWorkspace()->saveInCache()->saveInCacheFromSession();
+            $ws = WorkspaceService::getLastWorkspace(1);
+            $ws->saveInCache()->saveInCacheFromSession();
             return $next($request);
         }
 

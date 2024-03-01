@@ -57,7 +57,7 @@ class AuthRegisterController
             try {
                 //If successful, create the user in local db
                 $user = $this->userSignUp($request->toArray());
-                WorkspaceService::createNewWorkspace("workspace_".time(), $user->id);
+                WorkspaceService::createNewWorkspace("workspace_".time(), $user->id)->saveInCache();
 
                 $this->sendMail($user);
             } catch (Throwable $e) {

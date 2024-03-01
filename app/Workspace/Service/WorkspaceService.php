@@ -36,7 +36,7 @@ class WorkspaceService
      * create workspace
      * when user create a new Workspaces he must create a Wallet and setup the default user settings
      */
-    public static function createNewWorkspace(string $name, int $userId): int
+    public static function createNewWorkspace(string $name, int $userId): Workspace
     {
         // 1) create workspace
         Log::info("Set up default workspace");
@@ -73,7 +73,9 @@ class WorkspaceService
             ("'.$configurations.'","{\"currency_id\":1,\"payment_type_id\":1}",'.$wsId.')
         ');
 
-        return $wsId;
+        return new Workspace(
+            $workspace, User::find($userId)
+        );
     }
 
     /**
@@ -89,10 +91,23 @@ class WorkspaceService
      */
     public static function getLastWorkspace(int $userID): Workspace
     {
-        $ws = ModelWorkspace::with('users')->where('users.id', $userID)->orderBy('updated_at', 'desc')->first();
+        $ws = Db::select("
+        SELECT workspaces.id as wsid FROM budgetV2.workspaces
+        inner join workspaces_users as ws on ws.workspace_id = workspaces.id
+        left join users on ws.workspace_id = users.id
+        where workspace_id = $userID
+        order by workspaces.updated_at desc;
+        ;
+        ");
+
+        if(empty($ws)) {
+            throw new WorkspaceException("No workspace found", 404);
+        }
+
+        $ws = $ws[0];
 
         return new Workspace(
-            $ws,
+            ModelWorkspace::find($ws->wsid),
             User::find($userID)
         );
     }

@@ -20,7 +20,7 @@ return new class extends Migration
         )
         BEGIN
             SELECT
-            e.user_id,
+            e.workspace_id,
             MONTH(e.date_time) AS month,
             YEAR(e.date_time) AS year,
             COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
@@ -38,11 +38,11 @@ return new class extends Migration
             AND e.confirmed = 1
             AND e.planned = 0
             AND e.exclude_from_stats = 0
-            AND e.user_id = userId
+            AND e.workspace_id = userId
             AND MONTH(e.date_time) = inMonth
             AND YEAR(e.date_time) = inYear
         GROUP BY
-            e.user_id, MONTH(e.date_time), YEAR(e.date_time)
+            e.workspace_id, MONTH(e.date_time), YEAR(e.date_time)
         ORDER BY
             year, month;
         END;

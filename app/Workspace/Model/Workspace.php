@@ -13,12 +13,16 @@ class Workspace extends Model
 
     protected $table = "workspaces";
 
+    protected $fillable = [
+        'updated_at'
+    ];
+
      /**
      * The users that belong to the role.
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'workspaces_users','user_id','workspace_id');
+        return $this->belongsToMany(User::class, 'workspaces_users','workspace_id','workspace_id');
     }
 
 
