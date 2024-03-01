@@ -13,20 +13,22 @@ return new class extends Migration
     public function up(): void
     {
         $query = "
-        CREATE PROCEDURE CalculateStatsWalletsLabel(IN userId INT)
-            BEGIN
+        CREATE PROCEDURE CalculateStatsWalletsLabel(
+            IN userId INT,
+            IN inMonth INT,
+            IN inYear INT
+        )
+        BEGIN
             SELECT
             e.user_id,
             MONTH(e.date_time) AS month,
             YEAR(e.date_time) AS year,
-            sc.name AS category,
             COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
             COALESCE(SUM(CASE WHEN e.type IN ('expenses', 'debit') AND e.amount < 0 THEN e.amount ELSE 0 END), 0) AS expenses,
-            GROUP_CONCAT(DISTINCT l.name) AS tags
+            GROUP_CONCAT(DISTINCT l.name) AS tags,
+            GROUP_CONCAT(DISTINCT l.id) AS tags_id
         FROM
             entries AS e
-        LEFT JOIN
-            sub_categories AS sc ON sc.id = e.category_id
         LEFT JOIN
             entry_labels AS el ON el.entry_id = e.id
         LEFT JOIN
@@ -37,11 +39,14 @@ return new class extends Migration
             AND e.planned = 0
             AND e.exclude_from_stats = 0
             AND e.user_id = userId
+            AND MONTH(e.date_time) = inMonth
+            AND YEAR(e.date_time) = inYear
         GROUP BY
-            e.user_id, MONTH(e.date_time), YEAR(e.date_time), sc.name
+            e.user_id, MONTH(e.date_time), YEAR(e.date_time)
         ORDER BY
             year, month;
-        END
+        END;
+        
         ";
         DB:: statement($query);
     }

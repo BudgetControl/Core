@@ -72,30 +72,91 @@ class StatsService
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
     }
-    
+
+        /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function expensesByLabel(int $tag): array
+    {
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
+
+        $statsRepository = new StatsRepository();
+        
+        $totalEntry = $statsRepository->statsMonthByLabel(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+        $totalEntryBefore = $statsRepository->statsMonthByLabel(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
+
+        $totalAmount = [];
+        foreach($totalEntry as $data) {
+            $data->tags_id = explode(',',$data->tags_id);
+            if(in_array($tag,$data->tags_id)) {
+                $data->amount = $data->expenses;
+                $totalAmount[] = $data;
+            }
+        }
+
+        $totalAmountBefore = [];
+        foreach($totalEntryBefore as $data) {
+            $data->tags_id = explode(',',$data->tags_id);
+            if(in_array($tag,$data->tags_id)) {
+                $data->amount = $data->expenses;
+                $totalAmountBefore[] = $data;
+            }
+        }
+
+        $response = $this->buildResponse($totalAmount, $totalAmountBefore);
+
+        return $response;
+    }
+
     /**
      * retrive data
      * @param bool $planning
      * 
      * @return array
      */
-    public function entryByCategory(array $categoryID, bool $planning): array
+    public function expensesByCategory(array $categoryID): array
     {
-        $entry = Entry::stats()->User();
-        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->whereIn('category_id', $categoryID);
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
 
-        $entryOld = Entry::stats()->User();
-        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->whereIn('category_id', $categoryID);
+        $statsRepository = new StatsRepository();
+        
+        $totalEntry = $statsRepository->statsMonthByCategory(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+        $totalEntryBefore = $statsRepository->statsMonthByCategory(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
 
-        if ($planning === true) {
-            $entry->whereIn('planned', [0, 1]);
-            $entryOld->whereIn('planned', [0, 1]);
-        } else {
-            $entry->where('planned', 0);
-            $entryOld->where('planned', 0);
+        $totalAmount = [];
+        foreach($totalEntry as $data) {
+            if(in_array($data->category_id, $categoryID)) {
+                $data->amount = $data->expenses;
+                $totalAmount[] = $data;
+            }
         }
 
-        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+        $totalAmountBefore = [];
+        foreach($totalEntryBefore as $data) {
+            if(in_array($data->category_id, $categoryID)) {
+                $data->amount = $data->expenses;
+                $totalAmountBefore[] = $data;
+            }
+        }
+
+        $response = $this->buildResponse($totalAmount, $totalAmountBefore);
 
         return $response;
     }
