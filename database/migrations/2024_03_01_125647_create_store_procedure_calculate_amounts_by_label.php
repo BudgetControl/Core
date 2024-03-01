@@ -13,28 +13,35 @@ return new class extends Migration
     public function up(): void
     {
         $query = "
-        CREATE VIEW stats_wallets_month AS
+        CREATE PROCEDURE CalculateStatsWalletsLabel(IN userId INT)
+            BEGIN
             SELECT
             e.user_id,
             MONTH(e.date_time) AS month,
             YEAR(e.date_time) AS year,
-            a.name AS wallet,
+            sc.name AS category,
             COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
-            COALESCE(SUM(CASE WHEN e.type IN ('expenses', 'debit') AND e.amount < 0 THEN e.amount ELSE 0 END), 0) AS expenses
+            COALESCE(SUM(CASE WHEN e.type IN ('expenses', 'debit') AND e.amount < 0 THEN e.amount ELSE 0 END), 0) AS expenses,
+            GROUP_CONCAT(DISTINCT l.name) AS tags
         FROM
             entries AS e
         LEFT JOIN
-            accounts AS a ON a.id = e.account_id
+            sub_categories AS sc ON sc.id = e.category_id
+        LEFT JOIN
+            entry_labels AS el ON el.entry_id = e.id
+        LEFT JOIN
+            labels AS l ON l.id = el.labels_id
         WHERE
             e.deleted_at IS NULL
-            AND a.deleted_at IS NULL
             AND e.confirmed = 1
             AND e.planned = 0
             AND e.exclude_from_stats = 0
+            AND e.user_id = userId
         GROUP BY
-            e.user_id, MONTH(e.date_time), YEAR(e.date_time), a.name
+            e.user_id, MONTH(e.date_time), YEAR(e.date_time), sc.name
         ORDER BY
             year, month;
+        END
         ";
         DB:: statement($query);
     }
@@ -44,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_wallets_month;');
+        DB:: statement('DROP VIEW CalculateStatsWalletsLabel;');
     }
 };

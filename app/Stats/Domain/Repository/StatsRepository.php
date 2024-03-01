@@ -19,10 +19,25 @@ class StatsRepository
     {
         $this->userId = UserService::getCacheUserID();
     }
-    
-    public function statsExpenses(?int $month = null, ?int $year = null)
+
+    public function statsMonthIncoming(?int $month = null, ?int $year = null)
     {
-        $qb = DB::table("stats_expenses_months")->where('user_id', $this->userId);
+        $qb = DB::table("stats_wallets_month")->select('incoming as amount')->where('user_id', $this->userId);
+
+        if(!is_null($month)) {
+            $qb->where('month', $month);
+        }
+
+        if(!is_null($year)) {
+            $qb->where('year', $year);
+        }
+
+        return $qb->get();
+    }
+    
+    public function statsMonthExpenses(?int $month = null, ?int $year = null)
+    {
+        $qb = DB::table("stats_wallets_month")->select('expenses as amount')->where('user_id', $this->userId);
 
         if(!is_null($month)) {
             $qb->where('month', $month);

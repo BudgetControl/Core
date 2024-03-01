@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         $query = "
-        CREATE VIEW stats_expenses_months AS
+        CREATE VIEW stats_expenses_current_months AS
         SELECT
         e.user_id,
         MONTH(e.date_time) AS month,
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_expenses_months;');
+        DB:: statement('DROP VIEW stats_expenses_current_months;');
     }
 };

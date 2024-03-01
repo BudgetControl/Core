@@ -72,47 +72,7 @@ class StatsService
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
     }
-
-    /**
-     * retrive data
-     * @param bool $planning
-     * 
-     * @return array
-     */
-    public function incoming(bool $planning): array
-    {
-
-        if ($planning === true) {
-            $planned = "entries.planned in (0,1)";
-        } else {
-            $planned = "entries.planned = 0";
-        }
-
-        $params = [EntryType::Incoming->value, EntryType::Debit->value, $this->startDate, $this->endDate, UserService::getCacheUserID()];
-        $paramsOld = [EntryType::Incoming->value, EntryType::Debit->value, $this->startDatePassed, $this->endDatePassed, UserService::getCacheUserID()];
-
-        $query = "
-        SELECT * FROM entries
-        LEFT JOIN accounts ON accounts.id = entries.account_id
-        WHERE accounts.exclude_from_stats = 0
-        AND entries.type IN (?, ?)
-        AND entries.amount > 0
-        AND entries.date_time BETWEEN ? AND ?
-        AND accounts.user_id = ?
-        AND $planned
-        AND accounts.user_id = 1
-        ORDER BY entries.id DESC
-    ";
-
-        $entry =  DB::select($query, $params);
-        $entryOld = DB::select($query, $paramsOld);
-
-        list($entry, $entryOld) = $this->map((array) $entry, (array) $entryOld);
-        $response = $this->buildResponse($entry, $entryOld);
-
-        return $response;
-    }
-
+    
     /**
      * retrive data
      * @param bool $planning
@@ -200,18 +160,45 @@ class StatsService
      * 
      * @return array
      */
+    public function incoming(): array
+    {
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
+
+        $statsRepository = new StatsRepository();
+        $totalAmount = $statsRepository->statsMonthIncoming(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+
+        $totalAmountBefore = $statsRepository->statsMonthIncoming(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
+
+        $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
+
+        return $response;
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
     public function expenses(): array
     {
         $previousDate = strtotime($this->startDatePassed);
         $currentDate = strtotime($this->startDate);
 
         $statsRepository = new StatsRepository();
-        $totalAmount = $statsRepository->statsExpenses(
+        $totalAmount = $statsRepository->statsMonthExpenses(
             date('m', $currentDate),
             date('Y', $currentDate),
         );
 
-        $totalAmountBefore = $statsRepository->statsExpenses(
+        $totalAmountBefore = $statsRepository->statsMonthExpenses(
             date('m', $previousDate),
             date('Y', $previousDate),
         );

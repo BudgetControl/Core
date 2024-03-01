@@ -13,23 +13,27 @@ return new class extends Migration
     public function up(): void
     {   
         $query = "
-        CREATE VIEW stats_wallets_years AS
+        CREATE VIEW stats_wallets_year AS
         SELECT
-        e.user_id,
-        YEAR(e.date_time) AS year,
-        a.name AS wallet,
-        COALESCE(SUM(e.amount), 0) AS amount
+            e.user_id,
+            YEAR(e.date_time) AS year,
+            a.name AS wallet,
+            COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
+            COALESCE(SUM(CASE WHEN e.type IN ('expenses', 'debit') AND e.amount < 0 THEN e.amount ELSE 0 END), 0) AS expenses
         FROM
             entries AS e
         LEFT JOIN
             accounts AS a ON a.id = e.account_id
         WHERE
             e.deleted_at IS NULL
+            AND a.deleted_at IS NULL
             AND e.confirmed = 1
             AND e.planned = 0
             AND e.exclude_from_stats = 0
         GROUP BY
-        e.user_id, YEAR(e.date_time), a.name;
+            e.user_id, YEAR(e.date_time), a.name
+        ORDER BY
+            year;
         ";
         DB:: statement($query);
     }
@@ -39,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_wallets_years;');
+        DB:: statement('DROP VIEW stats_wallets_year;');
     }
 };

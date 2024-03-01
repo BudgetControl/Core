@@ -15,26 +15,26 @@ return new class extends Migration
         $query = "
         CREATE VIEW stats_wallets_day AS
         SELECT
-        e.user_id,
-        DAY(e.date_time) AS day,
-        MONTH(e.date_time) AS month,
-        YEAR(e.date_time) AS year,
-        a.name AS wallet,
-        COALESCE(SUM(e.amount), 0) AS amount
+            e.user_id,
+            DATE(e.date_time) AS day,
+            a.name AS wallet,
+            COALESCE(SUM(CASE WHEN e.type IN ('incoming', 'debit') AND e.amount > 0 THEN e.amount ELSE 0 END), 0) AS incoming,
+            COALESCE(SUM(CASE WHEN e.type IN ('expenses', 'debit') AND e.amount < 0 THEN e.amount ELSE 0 END), 0) AS expenses
         FROM
             entries AS e
         LEFT JOIN
             accounts AS a ON a.id = e.account_id
         WHERE
             e.deleted_at IS NULL
-            AND a.deleted_at IS null
+            AND a.deleted_at IS NULL
             AND e.confirmed = 1
             AND e.planned = 0
             AND e.exclude_from_stats = 0
         GROUP BY
-        e.user_id, MONTH(e.date_time), YEAR(e.date_time), DAY(e.date_time), a.name
-        
-		order by year, month, day;
+            e.user_id, DATE(e.date_time), a.name
+        ORDER BY
+            day;
+
         ";
         DB:: statement($query);
     }

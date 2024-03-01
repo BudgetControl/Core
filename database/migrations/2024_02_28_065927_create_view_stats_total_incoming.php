@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         $query = "
-        CREATE VIEW stats_incoming_months AS
+        CREATE VIEW stats_incoming_current_months AS
         SELECT
             user_id,
             COALESCE(SUM(amount), 0) AS amount
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_incoming_months;');
+        DB:: statement('DROP VIEW stats_incoming_current_months;');
     }
 };
