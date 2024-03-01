@@ -53,6 +53,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB:: statement('DROP VIEW stats_expenses_current_months;');
+        DB:: statement('DROP PROCEDURE CalculateStatsWalletsCategory;');
     }
 };

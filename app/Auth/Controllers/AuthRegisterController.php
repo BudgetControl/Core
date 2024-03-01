@@ -15,6 +15,7 @@ use Ellaisys\Cognito\Auth\RegistersUsers;
 use App\Auth\Service\CognitoClientService;
 use App\BudgetTracker\Entity\Cache;
 use App\Traits\Encryptable;
+use App\Workspace\Service\WorkspaceService;
 use Illuminate\Validation\ValidationException;
 
 class AuthRegisterController
@@ -56,9 +57,7 @@ class AuthRegisterController
             try {
                 //If successful, create the user in local db
                 $user = $this->userSignUp($request->toArray());
-
-                AuthService::createAccountEntry($user->id);
-                AuthService::setUpDefaultSettings($user->id);
+                WorkspaceService::createNewWorkspace("workspace_".time(), $user->id);
 
                 $this->sendMail($user);
             } catch (Throwable $e) {

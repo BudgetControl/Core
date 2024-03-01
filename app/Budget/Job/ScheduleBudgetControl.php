@@ -9,6 +9,7 @@ use App\User\Services\UserService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use App\User\Models\User;
+use App\Workspace\Service\WorkspaceService;
 
 class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
 {
@@ -26,8 +27,9 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
         foreach($budgets as $budget)
         {
             //setup user cache for scheduled job
-            $user = User::find($budget->user_id);
-            UserService::setUserCache($user);
+            $wsService = WorkspaceService::get($budget->workspace_id);
+            $user = $wsService->getUser();
+            
 
             if($this->isValid($budget) === true) {
                 if($service->isExpired($budget->id)) {

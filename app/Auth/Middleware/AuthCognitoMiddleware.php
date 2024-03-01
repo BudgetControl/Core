@@ -10,6 +10,7 @@ use App\Auth\Service\CognitoClientService;
 use App\BudgetTracker\Entity\Cache;
 use App\User\Models\User;
 use App\User\Services\UserService;
+use App\Workspace\Service\WorkspaceService;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Auth;
@@ -32,23 +33,28 @@ class AuthCognitoMiddleware
     public function handle($request, \Closure $next)
     {
 
-        /** only fot php unit testting */
+        /** only for php unit testting */
         if (@$_ENV['DISABLE_AUTH'] == true || config('app.config.disable_auth') === true) {
-            UserService::setUserCache(User::find(1));
+            $wsService = new WorkspaceService('test');
+            $wsService->getWorkspace()->saveInCache()->saveInCacheFromSession();
             return $next($request);
         }
 
         $accessToken = str_replace('Bearer ', '', $request->header('authorization'));
-        $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
+        $ws = $request->header('X-WS');
 
+        $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
         $accessToken = AccessToken::set($accessToken);
-        $user = Cache::create($accessToken->value())->get();
+
+        //setup WS in cache
+        $wsService = new WorkspaceService($ws);
+        $ws = $wsService->getWorkspace();
+        $user = $ws->getUser();
 
         try {
             $jwtToken = new JwtToken();
             $jwtToken->decode($accessToken->value());
 
-            UserService::setUserCache($user);
             $response = $next($request);
             $response->headers->set('Authorization', "Bearer ".$accessToken->value(), true);
             return $response;
@@ -56,6 +62,7 @@ class AuthCognitoMiddleware
 
             //if token is expired delete it
             Cache::create($accessToken->value())->delete();
+            
 
             try {
                 $sub = $user->sub;
@@ -63,8 +70,10 @@ class AuthCognitoMiddleware
                 $result = CognitoClientService::init($sub)->refresh($refreshToken->value());
 
                 $newAccessToken = $result->getToken(CognitoToken::ACCESS)->value();
-                UserService::setUserCache($user);
                 Cache::create($newAccessToken)->set($user,CACHE::TTL_FOREVER);
+
+                $ws = WorkspaceService::getLastWorkspace($user->id);
+                $ws->saveInCache();
 
                 $response = $next($request);
                 $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);

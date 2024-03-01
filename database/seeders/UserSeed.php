@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\User\Models\User;
 use App\User\Models\UserSettings;
+use App\Workspace\Service\WorkspaceService;
 
 class UserSeed extends Seeder
 {
@@ -21,5 +22,7 @@ class UserSeed extends Seeder
         $user->email = "foo@email.it";
         $user->email_verified_at = date("Y-m-d H:i:s");
         $user->save();
+
+        WorkspaceService::createNewWorkspace('test', $user->id);
     }
 }

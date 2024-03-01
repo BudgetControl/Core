@@ -43,8 +43,8 @@ class AuthLoginController extends AuthController {
                 
                 /** @var AccessToken $accessToken */
                 $token = $this->authenticateUserCognito($result);
-
                 $user = User::find(Auth::id());
+                
                 //check if user has verified email
                 if (is_null($user->email_verified_at)) {
                     return response()->json([
