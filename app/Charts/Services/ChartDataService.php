@@ -86,7 +86,7 @@ class ChartDataService
     public function expensesCategory(DateTime $start, DateTime $end, int $categoryId): array
     {
         $stats = new StatsService($this->startDate($start),$this->endDate($end));
-        return $stats->entryByCategory([$categoryId],false);
+        return $stats->expensesByCategory([$categoryId],false);
     }
 
     /**
@@ -101,7 +101,7 @@ class ChartDataService
     public function expensesLabel(DateTime $start, DateTime $end, int $labelId): array
     {
         $stats = new StatsService($this->startDate($start),$this->endDate($end));
-        return $stats->entryByLabel([$labelId],false);
+        return $stats->expensesByLabel($labelId);
     }
 
     /**

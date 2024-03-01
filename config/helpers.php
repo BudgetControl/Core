@@ -79,6 +79,10 @@ if (!function_exists('sum')) {
     {
         $cost = (float) 0.00;
         foreach ($data as $value) {
+            if($value instanceof stdClass) {
+                $value = (array) $value;
+            }
+
             $cost += (float) $value['amount'];
         }
         return $cost;
