@@ -34,23 +34,14 @@ class EntryController extends Controller
 	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
 		$page = $filter->query('page');
-
-		$this->builder = $this->getEntry();
-		$this->setEl(30, $page);
-		$entries = $this->paginate($page);
-
-		//only first page
-		if ($page == 0) {
-			//merge the planned entry
-			$plannedEntry = Entry::User()->withRelations()->where('planned', 1)->get()->toArray();
-			$entries['data'] = array_merge($plannedEntry, $entries['data']);
-		}
-
-		if (!empty($filter->query('filter'))) {
+		
+		$this->builder = Entry::User()->withRelations();
+		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
 
-		return response()->json($entries);
+		$this->setEl(30, $page);
+		return response()->json($this->paginate($page));
 	}
 
 	/**
@@ -107,9 +98,7 @@ class EntryController extends Controller
 		try {
 			$entry = Entry::where('uuid', $id)->firstOrFail();
 
-			$walletService = new WalletService(
-				EntryService::create($entry->toArray(), EntryType::from($entry->type))
-			);
+			$walletService = new WalletService($entry);
 			$walletService->subtract();
 
 			Entry::destroy($entry->id);
