@@ -200,19 +200,20 @@ class StatsService
      * 
      * @return array
      */
-    public function expenses(bool $planning): array
+    public function expenses(): array
     {
-        $previousMonth = EntityDateTime::previousMonth()->month;
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
 
         $statsRepository = new StatsRepository();
         $totalAmount = $statsRepository->statsExpenses(
-            date('m', time()),
-            date('Y', time()),
+            date('m', $currentDate),
+            date('Y', $currentDate),
         );
 
         $totalAmountBefore = $statsRepository->statsExpenses(
-            $previousMonth,
-            date('Y', time()),
+            date('m', $previousDate),
+            date('Y', $previousDate),
         );
 
         $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
