@@ -76,8 +76,9 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
             /** @var EntryModel $request  */
             foreach ($data as $request) {
 
-                $entry = $request;
-                $entryToInsert = new EntryModel($entry->toArray());
+                $entry = $request->toArray();
+                unset($entry['end_date_time']);
+                $entryToInsert = new EntryModel($entry);
                 $entryToInsert->transfer = 0;
                 $entryToInsert->save();
                 Log::info("PLANNED INSERT:: " . json_encode($entryToInsert));
