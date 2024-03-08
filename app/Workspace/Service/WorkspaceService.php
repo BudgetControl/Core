@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\User\Models\Entity\SettingValues;
 use App\User\Models\User;
+use App\User\Services\UserService;
 use App\Workspace\Entity\Workspace;
 use App\Workspace\Exceptions\WorkspaceException;
 use App\Workspace\Model\Workspace as ModelWorkspace;
@@ -110,5 +111,22 @@ class WorkspaceService
             ModelWorkspace::find($ws->wsid),
             User::find($userID)
         );
+    }
+
+    /**
+     * get list of workspaces
+     */
+    public function getWorkspacesList()
+    {
+        $userID = UserService::getCacheUserID();
+        
+        $ws = Db::select("
+        SELECT workspaces.id as wsid FROM budgetV2.workspaces
+        inner join workspaces_users as ws on ws.workspace_id = workspaces.id
+        left join users on ws.workspace_id = users.id
+        where workspace_id = $userID
+        order by workspaces.updated_at desc;
+        ;
+        ");
     }
 }
