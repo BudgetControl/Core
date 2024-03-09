@@ -120,7 +120,7 @@ class AuthRegisterController
 
         try {
             $mailer = new MailService(new AuthMail(
-                'Welcome to ' . config("app.name"),
+                'Get started with your '.config("app.name").' account',
                 $data
             ));
 
