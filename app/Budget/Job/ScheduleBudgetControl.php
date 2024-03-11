@@ -52,6 +52,7 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
     private function alertExpired(array $budget)
     {
         $to = $budget['user_email'];
+        $budget['className'] = 'critical';
         Log::debug("budgetExpired for $to");
         BudgetNotificationService::budgetExpired($budget,$to)->send();
     }
@@ -59,6 +60,7 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
     private function alertAlmostExpired(array $budget)
     {
         $to = $budget['user_email'];
+        $budget['className'] = 'warning';
         BudgetNotificationService::budgetAlmostExpired($budget,$to)->send();
     }
 
@@ -71,7 +73,8 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
             "period" => $budget['config']->period,
             "difference" => $budget['difference'],
             "user_name" => $user['user_profile']['name'],
-            "user_email" => $user['user_profile']['email']->email
+            "user_email" => $user['user_profile']['email']->email,
+            "currency" => $budget['currency']
         ];
     }
 

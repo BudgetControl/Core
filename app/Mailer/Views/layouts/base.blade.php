@@ -29,7 +29,7 @@
 <body>
 
   <div class="logo text-center">
-    <img src="" alt="Budget Control">
+    <img src="//www.budgetcontrol.cloud/assets/images/logo.png" alt="Budget Control">
   </div>
 
   <div class="container">

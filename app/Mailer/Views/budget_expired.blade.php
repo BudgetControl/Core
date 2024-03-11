@@ -2,6 +2,16 @@
 
 @section('content')
 
+<style>
+    .bw-warning {
+        background-color: #fbbf24;
+    }
+
+    .bw-critical {
+        background-color: #c70042;
+    }
+</style>
+
 <div class="container m-10">
 
     <div class="row">
@@ -28,7 +38,7 @@
                     </div>
                 </div>
                 <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-emerald-200">
-                    <div :style="'width:' + budget.percentage + '%'" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500">
+                    <div style="width:{{ percentage }}%" class="shadow-none flex flex-col bw-{{className}} text-center whitespace-nowrap text-white justify-center bg-emerald-500 bw-70">
                     </div>
                 </div>
             </div>
@@ -44,6 +54,8 @@
         <p>The Budget Control Team</p>
 
     </div>
+
+</div>
 
 </div>
 
