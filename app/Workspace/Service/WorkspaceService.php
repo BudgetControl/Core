@@ -116,17 +116,17 @@ class WorkspaceService
     /**
      * get list of workspaces
      */
-    public function getWorkspacesList()
+    public static function getWorkspacesList(): array
     {
         $userID = UserService::getCacheUserID();
         
         $ws = Db::select("
-        SELECT workspaces.id as wsid FROM budgetV2.workspaces
-        inner join workspaces_users as ws on ws.workspace_id = workspaces.id
-        left join users on ws.workspace_id = users.id
-        where workspace_id = $userID
-        order by workspaces.updated_at desc;
-        ;
+        SELECT w.uuid, w.name, w.updated_at FROM budgetV2.workspaces as w
+        inner join workspaces_users as ws on ws.workspace_id = w.id
+        where ws.user_id = $userID and w.deleted_at is null
+        order by w.updated_at desc;
         ");
+
+        return $ws;
     }
 }

@@ -73,6 +73,12 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'workspace' => [
+            \App\Auth\Middleware\AuthCognitoMiddleware::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':budget',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
     ];
 
     /**
