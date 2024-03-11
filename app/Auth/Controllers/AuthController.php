@@ -12,6 +12,7 @@ use App\Auth\Entity\Cognito\CognitoToken;
 use App\Auth\Service\ProviderClientService;
 use App\BudgetTracker\Entity\Cache;
 use App\Traits\Encryptable;
+use App\Workspace\Service\WorkspaceService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AuthController
@@ -91,8 +92,9 @@ class AuthController
             $user->save();
         }
 
-        UserService::setUserCache($user);
-        Cache::create($token->value())->set($user, Cache::TTL_FOREVER);
+        //save workspace in cache
+        $ws = WorkspaceService::getLastWorkspace($user->id);
+        $ws->saveInCache();
 
         return $token;
     }

@@ -61,6 +61,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('user')
                 ->prefix('api/user')
                 ->group(base_path('app/User/Routes/Api.php'));
+
+            Route::middleware('workspace')
+                ->prefix('api/workspace')
+                ->group(base_path('app/Workspace/routes.php'));
         });
     }
 
@@ -98,6 +102,10 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('user', function (Request $request) {
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('workspace', function (Request $request) {
             return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
     }

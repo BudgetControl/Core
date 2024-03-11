@@ -12,6 +12,7 @@ use App\BudgetTracker\Models\Currency;
 use App\User\Exceptions\UserException;
 use App\User\Models\Entity\SettingValues;
 use App\BudgetTracker\Models\PaymentsTypes;
+use App\Workspace\Entity\Workspace;
 
 class UserService
 {
@@ -21,8 +22,9 @@ class UserService
      */
     public static function get(): User
     {
-        $cacheKey = session()->getId().'user';
-        return Cache::create($cacheKey)->get();
+        $ws = Workspace::getCacheFromSession();
+        $user = $ws->getUser();
+        return $user;
     }
 
     /**
@@ -30,26 +32,9 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
-        $cacheKey = session()->getId().'user';
-        $id = Cache::create($cacheKey.'id')->get();
-        //FIXME:
-        if(empty($id)) {
-            return 0;
-        }
-
-        return $id;
-    }
-
-    /**
-     * set user obj on cache
-     * @param User $user
-     * 
-     */
-    public static function setUserCache(User $user)
-    {
-        $cacheKey = session()->getId().'user';
-        Cache::create($cacheKey)->set($user);
-        Cache::create($cacheKey.'id')->set($user->id);
+        $ws = Workspace::getCacheFromSession();
+        $user = $ws->getUser();
+        return $user->id;
     }
 
     /**

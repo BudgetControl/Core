@@ -34,7 +34,7 @@ class PayeeFactory extends Factory
             'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(5),
-            'user_id' => 1
+            'workspace_id' => 1
         ];
     }
 }

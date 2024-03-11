@@ -23,7 +23,7 @@ class AccountSeed extends Seeder
             $db->uuid = (empty($value->uuid)) ? \Ramsey\Uuid\Uuid::uuid4()->toString() : $value->uuid;
             $db->name = $value->name;
             $db->type = $value->type;
-            $db->user_id = 1;
+            $db->workspace_id = 1;
             $db->save();
         }
 

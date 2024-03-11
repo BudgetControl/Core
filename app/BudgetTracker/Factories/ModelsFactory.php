@@ -41,7 +41,7 @@ class ModelsFactory extends Factory
             'currency_id' => 1,
             'payment_type' => 1,
             'name' => fake()->text(10),
-            'user_id' => 1
+            'workspace_id' => 1
         ];
     }
 }
