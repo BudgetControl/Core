@@ -1,1 +1,18 @@
-{"it":["contanti","conto corrente"]}
+{
+    "it": [
+        {
+            "name": "out of wallet",
+            "uuid": "64b59d6nob752",
+            "type": "Cash"
+        },
+        {
+            "name": "Conto corrente",
+            "type": "Bank"
+        },
+        {
+            "name": "Contanti",
+            "uuid": "6582bfa106e2e",
+            "type": "Cash"
+        }
+    ]
+}

@@ -6,11 +6,13 @@ use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Account;
-use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Services\ResponseService;
 use App\BudgetTracker\Services\AccountsService;
+use Exception;
+use Illuminate\Http\Response;
 
-class AccountController extends Controller implements ControllerResourcesInterface
+class AccountController extends Controller
 {
 	//
 	/**
@@ -18,11 +20,17 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $request): \Illuminate\Http\JsonResponse
 	{
-		$account = new AccountsService();
-		$account = $account->read();
-		return response()->json(new ResponseService($account->toArray()));
+		$account = Account::User()->orderBy("name");
+		if($request->query("trashed",0) == 1) {
+			$account->withTrashed();
+		}
+
+		$account = $account->get();
+
+		
+		return response()->json($account->toArray());
 	}
 
 	/**
@@ -36,7 +44,26 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 		$account = new AccountsService();
 		$account->save($request->toArray());
 
-		return response('all data stored'); 	
+		return response('all data stored');
+	}
+
+	/**
+	 * store new sorting value
+	 * @param int $accountId
+	 * @param int $sorting
+	 * 
+	 * @return Response
+	 */
+	public function sorting(int $accountId, int $sorting): Response
+	{
+		if(is_null($sorting)) {
+			throw new Exception("Sorting value muste be valid");
+		}
+
+		$account = new AccountsService($accountId);
+		$account->sorting($sorting);
+
+		return response('all data stored');
 	}
 
 	/**
@@ -57,14 +84,32 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
+	 * @param string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request): \Illuminate\Http\Response
+	public function update(Request $request, int $id): \Illuminate\Http\Response
 	{
-		$account = new AccountsService();
+		$account = new AccountsService($id);
 		$account->save($request->toArray());
 
-		return response('all data stored'); 	
+		return response('all data stored');
+	}
+
+	/**
+	 * restore deleted account
+	 *
+	 * @param int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function restore(int $id): \Illuminate\Http\Response
+	{
+		Account::withTrashed()->find($id)->restore();
+		$entries = Entry::withTrashed()->where("account_id", $id)->get();
+		foreach($entries as $entry) {
+			$entry->restore();
+		}
+
+		return response('all data restored');
 	}
 
 	/**
@@ -75,6 +120,14 @@ class AccountController extends Controller implements ControllerResourcesInterfa
 	 */
 	public function destroy(int $id): \Illuminate\Http\Response
 	{
-		return response('nothing');
+		$toDestroy = [];
+		Account::destroy($id);
+		$entries = Entry::where("account_id", $id)->get();
+		foreach($entries as $entry) {
+			$toDestroy[] = $entry->id;
+		}
+		Entry::destroy($toDestroy);
+
+		return response('all data deleted');
 	}
 }

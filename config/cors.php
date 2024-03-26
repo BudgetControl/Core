@@ -15,20 +15,24 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'auth/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'auth/*', 'search/*'],
 
     'allowed_methods' => ['*'],
     
+<<<<<<< HEAD
     'allowed_origins' => ['http://api.budgetcontrol.cloud'], //This line means allow origin
+=======
+    'allowed_origins' => ['*'],
+>>>>>>> origin/stable/version2.4
     
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['*'],
     
     'allowed_headers' => ['*'],
     
-    'exposed_headers' => [],
+    'exposed_headers' => ['*'],
     
     'max_age' => 0,
     
-    'supports_credentials' => false, 
+    'supports_credentials' => false,
     
     ];

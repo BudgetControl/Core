@@ -3,7 +3,7 @@
 namespace App\BudgetTracker\Services;
 
 use App\BudgetTracker\Models\Payee;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Config\Exception\ValidationException;
@@ -34,7 +34,6 @@ class PayeeService
             if ($entry->count() === 0) {
                 $entry = new Payee();
                 $entry->name = $data['name'];
-                $entry->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
 
                 $entry->save();
             }
@@ -50,7 +49,7 @@ class PayeeService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(int $id = null): object
     {
         Log::debug("read payee -- $id");
         $result = new \stdClass();
@@ -79,7 +78,6 @@ class PayeeService
     public static function validate(array $data): void
     {
         $rules = [
-            'id' => ['integer'],
             'date_time' => ['date', 'date_format:Y-m-d H:i:s'],
             'name' => 'string'
         ];

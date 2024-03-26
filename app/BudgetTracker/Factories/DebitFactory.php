@@ -31,13 +31,13 @@ class DebitFactory extends Factory
         $amount = fake()->numberBetween(-1,-50);
 
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'amount' => $amount,
             'note' => fake()->text(80),
             'type' => EntryType::Debit->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
             'date_time' => date('Y-m-d H:i:s',time()),
             'payment_type' => 1,

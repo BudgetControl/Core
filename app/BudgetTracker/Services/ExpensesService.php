@@ -10,8 +10,9 @@ use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\Currency;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\BudgetTracker\Entity\Entries\Expenses;
+use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Payee;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
 use DateTime;
 
 /**
@@ -19,6 +20,11 @@ use DateTime;
  */
 class ExpensesService extends EntryService
 {
+
+    public function __construct(string $uuid = "")
+    {
+        parent::__construct($uuid);
+    }
 
   /**
    * save a resource
@@ -34,26 +40,16 @@ class ExpensesService extends EntryService
 
             Log::debug("save expenses -- " . json_encode($data));
 
-            $entry = new Expenses(
-                $data['amount'],
-                Currency::findOrFail($data['currency_id']),
-                $data['note'],
-                SubCategory::findOrFail($data['category_id']),
-                Account::findOrFail($data['account_id']),
-                PaymentsTypes::findOrFail($data['payment_type']),
-                new DateTime($data['date_time']),
-                $data['label'],
-                $data['confirmed'],
-                $data['waranty'],
-            );
+            $entry = EntryService::create($data, EntryType::Expenses);
 
             $entryModel = new ExpensesModel();
-            if (!empty($data['uuid'])) {
-                $entryModel = ExpensesModel::findFromUuid($data['uuid']);
+            if (!empty($this->uuid)) {
+                $entry->setUuid($this->uuid);
+                $entryDb = Entry::findFromUuid($this->uuid);
+                $entryModel = $entryDb;
             }
 
-            $this->updateBalance($entry,$entry->getAccount()->id,$entryModel);
-
+            $entryModel->uuid = $entry->getUuid();
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
@@ -64,13 +60,23 @@ class ExpensesService extends EntryService
             $entryModel->planned = $entry->getPlanned();
             $entryModel->waranty = $entry->getWaranty();
             $entryModel->confirmed = $entry->getConfirmed();
-            $entryModel->user_id = empty($data['user_id']) ? UserService::getCacheUserID() : $data['user_id'];
+            $entryModel->type = EntryType::Expenses->value;
+            //TODO: fixme
+            if(!is_null($payee)) {
+                $entryModel->payee_id = $payee->id;
+            }
+            
+            $walletService = new WalletService(
+                EntryService::create($entryModel->toArray(), EntryType::Expenses)
+            );
+            $walletService->sum();
+            
             $entryModel->save();
 
             $this->attachLabels($entry->getLabels(), $entryModel);
 
         } catch (\Exception $e) {
-            $error = uniqid();
+            $error = \Ramsey\Uuid\Uuid::uuid4()->toString();;
             Log::error("$error " . $e->getMessage());
             throw new \Exception("Ops an errro occurred " . $error);
         }
@@ -83,22 +89,17 @@ class ExpensesService extends EntryService
      * @return object with a resource
      * @throws \Exception
      */
-    public static function read(int $id = null): object
+    public function read(string|null $id = null): object
     {
         Log::debug("read expenses -- $id");
         $result = new \stdClass();
 
-        $entry = ExpensesModel::withRelations()->user()->where('type', EntryType::Expenses->value);
+        $entry = ExpensesModel::User()->withRelations()->where('type', EntryType::Expenses->value);
 
         if ($id === null) {
-            $entry = $entry->get();
+            $result = $entry->get();
         } else {
-            $entry = $entry->find($id);
-        }
-
-        if (!empty($entry)) {
-            Log::debug("found expenses -- " . $entry->toJson());
-            $result = $entry;
+            $result = $entry->where('uuid',$id)->firstOrFail();
         }
 
         return $result;

@@ -10,6 +10,7 @@ use App\Charts\Entity\LineChart\LineChartPoint;
 use App\BudgetTracker\Enums\EntryType;
 use App\Charts\Entity\LineChart\LineChartSeries;
 use DateTime;
+use DateTimeZone;
 
 class LineChartService extends ChartDataService
 {
@@ -23,8 +24,8 @@ class LineChartService extends ChartDataService
     {
         foreach ($dateTime as $date) {
             $this->dateTime[] = [
-                'start' => new DateTime($date['start']),
-                'end' => new DateTime($date['end']),
+                'start' => new DateTime(first_day_of_month($date['start'])),
+                'end' => new DateTime(last_day_of_month($date['end'])),
             ];
         }
     }
@@ -45,10 +46,8 @@ class LineChartService extends ChartDataService
             $data = $this->incoming($date['start'], $date['end']);
 
             if (!empty($data)) {
-                $wallet = new Wallet();
-                $wallet->sum($data);
                 $serie = new LineChartSeries($date['start']->format('Y-m-d'));
-                $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                 $chart->addSeries($serie);
             }
         }
@@ -67,16 +66,14 @@ class LineChartService extends ChartDataService
     public function incomingByCategory(): LineChart
     {
         $chart = new LineChart();
-        $categories = SubCategory::all();
+        $categories = SubCategory::where("exclude_from_stats",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
                 $data = $this->incomingCategory($date['start'], $date['end'], $category->id);
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
                     $serie = new LineChartSeries($category->name);
-                    $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                    $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                     $chart->addSeries($serie);
                 }
             }
@@ -96,17 +93,15 @@ class LineChartService extends ChartDataService
     public function incomingByLabel(): LineChart
     {
         $chart = new LineChart();
-        $labels = Labels::user()->get();
+        $labels = Labels::where("archive",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
                 $data = $this->incomingLabel($date['start'], $date['end'], $label->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
                     $serie = new LineChartSeries($label->name);
-                    $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                    $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                     $chart->addSeries($serie);
                 }
             }
@@ -131,10 +126,8 @@ class LineChartService extends ChartDataService
             $data = $this->expenses($date['start'], $date['end']);
 
             if (!empty($data)) {
-                $wallet = new Wallet();
-                $wallet->sum($data);
                 $serie = new LineChartSeries($date['start']->format('Y-m-d'));
-                $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                 $chart->addSeries($serie);
             }
         }
@@ -153,17 +146,15 @@ class LineChartService extends ChartDataService
     public function expensesByCategory(): LineChart
     {
         $chart = new LineChart();
-        $categories = SubCategory::all();
+        $categories = SubCategory::where("exclude_from_stats",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($categories as $category) {
                 $data = $this->expensesCategory($date['start'], $date['end'], $category->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
                     $serie = new LineChartSeries($category->name);
-                    $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                    $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                     $chart->addSeries($serie);
                 }
             }
@@ -183,17 +174,15 @@ class LineChartService extends ChartDataService
     public function expensesByLabel(): LineChart
     {
         $chart = new LineChart();
-        $labels = Labels::user()->get();
+        $labels = Labels::where("archive",0)->get();
 
         foreach ($this->dateTime as $date) {
             foreach ($labels as $label) {
                 $data = $this->expensesLabel($date['start'], $date['end'], $label->id);
 
                 if (!empty($data)) {
-                    $wallet = new Wallet();
-                    $wallet->sum($data);
                     $serie = new LineChartSeries($label->name);
-                    $serie->addDataPoint(new LineChartPoint($wallet->getBalance(), self::Y_VALUE));
+                    $serie->addDataPoint(new LineChartPoint($data['total'], self::Y_VALUE));
                     $chart->addSeries($serie);
                 }
             }
@@ -230,13 +219,8 @@ class LineChartService extends ChartDataService
                         throw new \Exception("Type of entry is not specified");
                 }
 
-                $wallet = new Wallet();
-                if (!empty($data)) {
-                    $wallet->sum($data);
-                }
-                
                 $serie->addDataPoint(new LineChartPoint(
-                    $wallet->getBalance(), 
+                    $data['total'], 
                     self::Y_VALUE,
                     $date['start']->format('M')));
             }

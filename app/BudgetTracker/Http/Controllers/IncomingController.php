@@ -2,28 +2,35 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Http\Trait\Paginate;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Models\Incoming;
+use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Services\IncomingService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
 
-class IncomingController extends Controller implements ControllerResourcesInterface
+class IncomingController extends EntryController
 {
+	use Paginate;
 	//
 	/**
 	 * Display a listing of the resource.
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-	public function index(): \Illuminate\Http\JsonResponse
+	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
-		$incoming = IncomingService::read();
-		return response()->json(new ResponseService($incoming));
+		$page = $filter->query('page');
+		$this->builder = $this->getEntry(EntryType::Incoming);
+
+		$this->setEl(30, $page);
+		return response()->json($this->paginate($page));
 	}
 
 	/**
@@ -36,7 +43,25 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	{
 		try {
 			$service = new IncomingService();
-			$service->save($request->toArray());
+			$service->save($request->toArray(), EntryType::Incoming, Payee::find($request->payee_id));
+			return response('All data stored');
+		} catch (\Exception $e) {
+			return response($e->getMessage(), 500);
+		}
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, string $uuid): \Illuminate\Http\Response
+	{
+		try {
+			$service = new IncomingService($uuid);
+			$service->revertAccountWallet(EntryType::Incoming);
+			$service->save($request->toArray(), EntryType::Expenses, Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
@@ -46,30 +71,14 @@ class IncomingController extends Controller implements ControllerResourcesInterf
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
-		$incoming = IncomingService::read($id);
-		return response()->json(new ResponseService($incoming));
+		$service = new IncomingService();
+		$incoming = $service->read($id);
+		return response()->json($incoming);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(int $id): \Illuminate\Http\Response
-	{
-		$entry = Entry::findOrFail($id);
-		try {
-			Incoming::destroy($id);
-			AccountsService::updateBalance($entry->amount * -1,$entry->account_id);
-			return response("Resource is deleted");
-		} catch (\Exception $e) {
-			return response($e->getMessage());
-		}
-	}
 }

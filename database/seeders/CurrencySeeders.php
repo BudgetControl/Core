@@ -15,14 +15,16 @@ class CurrencySeeders extends Seeder
      */
     public function run()
     {
-      $lang = env("LANG","it");
+      $lang = "it"; //env("LANG","it");
       $path = __DIR__.'/../sql/currency.json';
       $data = (array) json_decode(file_get_contents($path));
 
       foreach ($data[$lang] as $key => $value) {
         $db = new Currency();
-        $db->uuid = uniqid();
-        $db->name = strtolower($value);
+        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
+        $db->name = $value->name;
+        $db->icon = $value->icon;
+        $db->label = $value->label;
         $db->save();
       }
     }

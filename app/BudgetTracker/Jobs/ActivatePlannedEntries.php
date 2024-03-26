@@ -3,17 +3,15 @@
 namespace App\BudgetTracker\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\Entry;
 use Illuminate\Support\Facades\Log;
+use App\BudgetTracker\Enums\EntryType;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\BudgetTracker\Services\EntryService;
+use App\BudgetTracker\Services\WalletService;
 
-class ActivatePlannedEntries implements ShouldQueue
+class ActivatePlannedEntries extends BudgetControlJobs implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -26,15 +24,29 @@ class ActivatePlannedEntries implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function job(): void
     {
-        foreach($this->findPlannedEntries() as $entry) {
-            Log::info($entry->uuid." updated planned = 0");
-            $entry->planned = 0;
-            $entry->updated_at = date('Y-m-d H:i:s', time());
-            $entry->save();
-            
-            Log::info("Activated entry: ".json_encode($entry->toArray()));
+        Log::info("Start activate planned JOB");
+
+        $plannedEntry = $this->findPlannedEntries();
+
+        if ($plannedEntry->count() != 0) {
+            foreach ($this->findPlannedEntries() as $entry) {
+
+                $entry->update([
+                    'planned' => 0,
+                    'updated_at' => date('Y-m-d H:i:s', time()),
+                ]);
+
+                $walletService = new WalletService(
+                    EntryService::create($entry->toArray(), EntryType::where($entry->type))
+                );
+                $walletService->sum();
+
+                Log::info("Activated entry: " . json_encode($entry->toArray()));
+            }
+        } else {
+            Log::debug("No entry to activate found");
         }
     }
 
@@ -42,8 +54,8 @@ class ActivatePlannedEntries implements ShouldQueue
      * find planned entries
      * @return \Illuminate\Database\Eloquent\Collection 
      */
-    private function findPlannedEntries() : \Illuminate\Database\Eloquent\Collection
-    {   
-        return Entry::where('planned',1)->where('date_time', '<=', date('Y-m-d H:i:s',time()))->get();
+    private function findPlannedEntries(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Entry::where('planned', 1)->where('date_time', '<=', date('Y-m-d H:i:s', time()))->get();
     }
 }

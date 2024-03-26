@@ -1,13 +1,17 @@
+.DS_Store
 /.phpunit.cache
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
+storage/framework/
 /vendor
 /bootstrap/cache
 .env
-.env.backup
+.env
+.env.bk
+.env.testing
 .env.production
 .phpunit.result.cache
 Homestead.json
@@ -47,3 +51,10 @@ Homestead.json
 .phpunit.result.cache
 bootstrap/cache/*
 config/cors.php
+bin/certbot/*
+*.log
+
+## IMAGES
+.jpeg
+.png
+.gif

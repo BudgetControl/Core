@@ -16,7 +16,7 @@ class CategorySeeders extends Seeder
      */
     public function run()
     {
-        $lang = env("LANG","it");
+        $lang = "it"; //env("LANG","it");
         $path = __DIR__.'/../sql/categories.json';
         $data = (array) json_decode(file_get_contents($path));
         foreach ($data[$lang] as $key => $cat) {
@@ -25,6 +25,7 @@ class CategorySeeders extends Seeder
           $db->uuid = $cat->category->uuid;
           $db->name = strtolower($cat->category->label);
           $db->icon = $cat->category->icon;
+          $db->type = $cat->category->type;
           $db->save();
           foreach ($cat->subCateogy as $key => $value) {
 
@@ -32,6 +33,7 @@ class CategorySeeders extends Seeder
             $dbSubCat->uuid = $value->uuid;
             $dbSubCat->name = $value->name;
             $dbSubCat->category_id = $db->id;
+            $dbSubCat->exclude_from_stats = (empty($value->exclude_from_stats)) ? 0 : $value->exclude_from_stats;
             $dbSubCat->save();
           }
 

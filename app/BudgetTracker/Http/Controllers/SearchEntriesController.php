@@ -2,6 +2,7 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
+use App\BudgetTracker\Entity\DateTime;
 use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BudgetTracker\Models\Entry;
@@ -23,9 +24,9 @@ class SearchEntriesController extends Controller
 	 */
 	public function find(Request $request): \Illuminate\Http\JsonResponse
 	{	
-
+		
 		try {
-			$entry = Entry::withRelations();
+			$entry = Entry::User()->withRelations();
 
 			if (!empty($request->account)) {
 				$entry->whereIn('account_id', $request->account);
@@ -48,13 +49,10 @@ class SearchEntriesController extends Controller
 	
 			if (!empty($request->month) || !empty($request->year)) {
 				$date = $this->buildFilterData($request->year,$request->month);
-				$entry->where('date_time', '>=', $date['start']);
-				$entry->where('date_time', '<=', $date['end']);
+				$entry->where('date_time', '>=', $date->startDate);
+				$entry->where('date_time', '<=', $date->endDate);
 			}
-
-
 			
-			//FIXME: doesn't works
 			if (!empty($request->tags)) {
 				$tags = $request->tags;
 				$entry->whereHas('label', function (Builder $q) use ($tags) {
@@ -78,7 +76,7 @@ class SearchEntriesController extends Controller
 			return response()->json(new ResponseService(['elements' => $returnValue, 'total' => $total]));
 
 		} catch (\Exception $e) {
-			$id = uniqid();
+			$id = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 			Log::error($id . ' An error occurend wile find # '.$e->getMessage());
 			return response()->json(new ResponseService([],'Ops an error occurred ',$id));
 		}
@@ -90,9 +88,9 @@ class SearchEntriesController extends Controller
 	 * @param string|null $year
 	 * @param string|null $month
 	 * 
-	 * @return array
+	 * @return DateTime
 	 */
-	protected function buildFilterData(string|null $year = '', string|null $month = ''): array
+	protected function buildFilterData(string|null $year = '', string|null $month = ''): DateTime
 	{
 		if(empty($year)) {
 			$year = date("Y",time());
@@ -102,54 +100,18 @@ class SearchEntriesController extends Controller
 			$month = date("m",time());
 		}
 
-		$dateTime = new \DateTime();
 		if(!empty($year) && empty($month)) {
-			$dateTime->setDate((int)$year,(int)1,1);
+			return DateTime::year(strtotime($year));
 		}
 
 		if(empty($year) && !empty($month)) {
-			$dateTime->setDate((int)$year,(int)1,1);
+			return DateTime::year(strtotime($month));
 		}
 
 		if(empty($year) && empty($month)) {
-			$dateTime->setDate((int)$year,(int)$month,1);
+			return DateTime::week();
 		}
 
-		return [
-			'start' => $this->getStartDate((int)$year,(int)$month),
-			'end' => $this->getEndDate((int)$year,(int)$month)
-		];
-
 	}
 
-	/**
-	 * make date time
-	 * @param int $year
-	 * @param int $month
-	 * 
-	 * @return string
-	 */
-	private function getStartDate(int $year, int $month): string
-	{
-		$dateTime = new \DateTime();
-		$dateTime->setDate((int)$year,(int)$month,1);
-		$dateTime->modify('first day of this month');
-		return $dateTime->format('Y-m-d H:i:s');
-	}
-
-		/**
-	 * make date time
-	 * @param int $year
-	 * @param int $month
-	 * 
-	 * @return string
-	 */
-	private function getEndDate(int $year, int $month): string
-	{
-		$dateTime = new \DateTime();
-		$dateTime->setDate((int)$year,(int)$month,1);
-		$dateTime->modify('last day of this month');
-		return $dateTime->format('Y-m-d H:i:s');
-
-	}
 }

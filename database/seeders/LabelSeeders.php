@@ -16,13 +16,13 @@ class LabelSeeders extends Seeder
      */
     public function run()
     {
-      $lang = env("LANG","it");
+      $lang = "it"; //env("LANG","it");
       $path = __DIR__.'/../sql/label.json';
       $data = (array) json_decode(file_get_contents($path));
 
       foreach ($data[$lang] as $key => $value) {
         $db = new Labels();
-        $db->uuid = uniqid();
+        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $db->name = strtolower($value);
         $db->color = 'colors';
         $db->user_id = 1;

@@ -2,17 +2,23 @@
 
 namespace App\BudgetTracker\Models;
 
+use App\BudgetTracker\Interfaces\EntryInterface;
+use App\BudgetTracker\Entity\Entries\Entry as EntryObject;
 use Illuminate\Database\Eloquent\Model;
 use App\BudgetTracker\Enums\EntryType;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Http\Services\UserService;
+use App\User\Services\UserService;
+use DateTime;
 
-class Entry extends Model
+class Entry extends BaseModel
 {
     use SoftDeletes;
 
     protected $table = 'entries';
+
+    public $fillable = [
+        'planned'
+    ];
 
     public $hidden = [
         "created_at",
@@ -24,7 +30,7 @@ class Entry extends Model
         'created_at'  => 'date:Y-m-d',
         'updated_at'  => 'date:Y-m-d',
         'deletad_at'  => 'date:Y-m-d',
-        'date_time' =>  'date:Y-m-d h:i:s'
+        'date_time' =>  'date:Y-m-d H:i:s',
     ];
 
     public function __construct(array $attributes = [])
@@ -32,7 +38,6 @@ class Entry extends Model
         parent::__construct($attributes);
         
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
-        $this->attributes['uuid'] = uniqid();
         $this->attributes['transfer'] = 0;
         $this->attributes['confirmed'] = 1;
 
@@ -121,27 +126,64 @@ class Entry extends Model
      */
     public function scopeWithRelations($query): void
     {
-        $query->with('label')->with('subCategory.category')->with('account')->orderBy('date_time','desc')
-        ->where('user_id',UserService::getCacheUserID());
+        $query->with('label')->with('subCategory.category')->with('account')->with("payee")->orderBy('date_time','desc')
+        ->with('currency');
     }
 
     /**
      *  find with specify uuid
      *  @param string $uuid
      *  
-     *  @return Entry
+     *  @return mixed
      * */
-    public static function findFromUuid(string $uuid): Entry
+    public static function findFromUuid(string $uuid)
     {
-        return Entry::where('uuid',$uuid)->where('user_id',UserService::getCacheUserID())->firstOrFail();
+        return Entry::where('uuid',$uuid)->with('label')->first();
     }
 
     /**
      * scope user
      */
-    public function scopeUser($query): void
+    public function scopeStats($query): void
     {
-        $query->where('user_id',UserService::getCacheUserID());
+        $query->leftJoin('accounts', 'accounts.id', '=', 'entries.account_id')
+        ->where("accounts.exclude_from_stats",0);
+    }
+
+    /**
+     * 
+     */
+    public static function buildEntity(array $data, EntryType $type): EntryInterface
+    {
+        return new EntryObject(
+            $data['amount'],
+            $type,
+            Currency::findOrFail($data['currency_id']),
+            $data['note'],
+            new DateTime($data['date_time']),
+            $data['waranty'],
+            $data['transfer'],
+            $data['confirmed'],
+            SubCategory::findOrFail($data['category_id']),
+            Account::findOrFail($data['account_id']),
+            PaymentsTypes::findOrFail($data['payment_type']),
+            new \stdClass(),
+            $data['label']
+          );
+    }
+
+    /**
+     * public function is equaò
+     */
+    public function equal(Entry $entry): bool
+    {
+        return $this->toArray() === $entry->toArray();
+    }
+
+    // Definisci un query scope per aggiungere la condizione "where user_id = x"
+    public function scopeUser($query)
+    {
+        return $query->where('entries.user_id', UserService::getCacheUserID());
     }
 
 }

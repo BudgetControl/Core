@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 use App\BudgetTracker\Models\Models;
 use App\BudgetTracker\Services\IncomingService;
+use App\BudgetTracker\Services\ModelService;
 use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
+use Exception;
+use Throwable;
 
-class ModelController extends Controller implements ControllerResourcesInterface
+class ModelController extends Controller
 {
 	//
 	/**
@@ -20,8 +23,8 @@ class ModelController extends Controller implements ControllerResourcesInterface
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$cat = Models::all();
-		return response()->json(new ResponseService($cat));
+		$cat = Models::User()->withRelations()->orderBy('name')->get();
+		return response()->json($cat);
 	}
 
 	/**
@@ -31,29 +34,52 @@ class ModelController extends Controller implements ControllerResourcesInterface
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
-	{
-		return response('nothing');
+	{	
+		try {
+			$service = new ModelService();
+			$service->save($request->toArray());
+			
+			return response('success');
+		} catch (Throwable $e) {
+			throw new Exception($e->getMessage(), 500);
+		}
+
+	}
+
+	public function update(Request $request, int|string $id): \Illuminate\Http\Response
+	{	
+		try {
+			$service = new ModelService($id);
+			$service->save($request->toArray());
+			
+			return response('success');
+		} catch (Throwable $e) {
+			throw new Exception($e->getMessage(), 500);
+		}
+
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function show(int $id): \Illuminate\Http\JsonResponse
+	public function show(string $id): \Illuminate\Http\JsonResponse
 	{
-		return response()->json([],'nothing');
+		$model = Models::with("label")->where("uuid",$id)->first();
+		return response()->json($model);
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(int $id): \Illuminate\Http\Response
+	public function destroy(string $id): \Illuminate\Http\Response
 	{
+		Models::where('uuid',$id)->delete();
 		return response('nothing');
 	}
 }

@@ -28,13 +28,14 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(10),
-            'color' => fake()->text(20),
+            'color' => random_color(),
             'type' => 'Bank',
             'installement' => 0,
-            'currency' => 'EUR'
+            'currency' => 'EUR',
+            'user_id' => 1
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\BudgetTracker\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\BudgetTracker\Enums\EntryType;
+use Faker\Provider\DateTime;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\BudgetTracker\Models\Incoming>
@@ -29,30 +30,22 @@ class IncomingFactory extends Factory
     public function definition(): array
     {
         $amount = fake()->numberBetween(1,50);
-        $day = fake()->numberBetween(1,28);
-        $month = fake()->numberBetween(1, date("m",time()));
-        $year = date("Y",time());
 
-        $date = "$year-$month-$day 12:20:32";
-
-        $planned = 0;
-        if(strtotime($date) > time()) {
-            $planned = 1;
-        }
+        $date = DateTime::dateTimeBetween('-1 years','+1 years');
 
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'amount' => $amount,
             'note' => fake()->text(80),
             'type' => EntryType::Incoming->value,
             'transfer' => 0,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'currency_id' => 1,
-            'date_time' => $date,
+            'date_time' => $date->format('Y-m-d H:i:s'),
             'payment_type' => 1,
             'confirmed' => 1,
-            'planned' => $planned,
+            'planned' => 0,
             'user_id' => 1
         ];
     }

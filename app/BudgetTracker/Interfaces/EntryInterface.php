@@ -12,24 +12,6 @@ use stdClass;
 
 interface EntryInterface {
 
-    public function __construct(
-        float $amount,
-        Currency $currency,
-        string $note,
-        SubCategory $category,
-        Account $account,
-        PaymentsTypes $paymentType,
-        DateTime $date_time,
-        array $labels = [],
-        bool $confirmed = true,
-        bool $waranty = false,
-        int $transfer_id = 0,
-        object $geolocation = new stdClass(),
-        bool $transfer = false,
-        Payee $payee = null,
-        EntryType $type = EntryType::Incoming,
-    );
-
     /**
      * Return value of amount
      * @return float
@@ -48,7 +30,6 @@ interface EntryInterface {
      */
     public function getCurrency(): Currency;
 
-    
     /**
      * Return value of dateTime
      * @return DateTime
@@ -109,5 +90,14 @@ interface EntryInterface {
      */
     public function getHash(): string;
 
+    /**
+     * unique hash
+     */
+    public function getUuid(): string;
+
+    /**
+     * unique hash
+     */
+    public function getId(): int;
 
 }

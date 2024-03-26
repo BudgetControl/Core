@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Log;
 
 class ImportException extends Exception
 {
-    public function render(Request $request): Response
+    public function render(): Response
     {
-        $status = 500;
         $error = "An error occurred during import service";
-        $help = "Contact the IT team to verify";
-        $errorCode = uniqid();
+        $errorCode = \Ramsey\Uuid\Uuid::uuid4()->toString();;
+        $statusCode = empty($this->getCode()) ? 200 : $this->getCode();
+        $file = $this->getFile();
 
-        Log::critical($errorCode.' '.$error);
-        return response(["error" => $error, "help" => $help, "error_code" => $errorCode], $status);
+        Log::critical($errorCode.' '.$this->getMessage());
+        return response(["error" => $error, "error_code" => $errorCode, "message" => $this->getMessage(), 'file' => $file], $statusCode);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\BudgetTracker\Jobs;
 
-use App\BudgetTracker\Entity\Entries\Entry;
-use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Models\Entry as EntryModel;
+use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Services\EntryService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,16 +11,17 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\BudgetTracker\Models\PlannedEntries;
-use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\Account;
-use App\BudgetTracker\Models\Currency;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
-class InsertPlannedEntry implements ShouldQueue
+class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    const TIME = [
+        'daily', 'weekly', 'monthly', 'yearly'
+    ];
 
     /**
      * Create a new job instance.
@@ -37,22 +38,29 @@ class InsertPlannedEntry implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {   
+    public function job(): void
+    {
         Log::info("Check for planned entries");
-        $this->insertEntry($this->getPlannedEntry());
+        foreach (self::TIME as $time) {
+            $this->insertEntry($this->getPlannedEntry($time));
+        }
     }
 
     /**
      * get planned entry from date
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    private function getPlannedEntry()
+    private function getPlannedEntry(string $time)
     {
-        $date = date("Y-m-d H:i:s",time());
-        $newDate = strtotime($date . "+1 month");
+        $newDate = $this->getTimeValue($time);
+        $newDate = date('Y-m-d H:i:s', $newDate);
+        $toDay = date('Y-m-d H:i:s', time()) ;
 
-        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d',$newDate))->get();
+        $entry = PlannedEntries::where("date_time", "<=", $newDate)
+            ->where("deleted_at", null)
+            ->where("planning", $time)
+            ->where("end_date_time", ">=", $toDay)
+            ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
         return $entry;
     }
@@ -64,28 +72,31 @@ class InsertPlannedEntry implements ShouldQueue
     private function insertEntry(\Illuminate\Database\Eloquent\Collection $data)
     {
         try {
+
+            /** @var EntryModel $request  */
             foreach ($data as $request) {
-                $entry = new Entry(
-                    $request->amount,
-                    Currency::find($request->currency_id),
-                    $request->note,
-                    SubCategory::find($request->category_id),
-                    Account::find($request->account_id),
-                    PaymentsTypes::find($request->payment_type),
-                    $request->date_time,
-                );
 
-                $service = new EntryService();
-                $entryArray = $entry->toArray();
-                $entryArray['user_id'] = $request->user_id;
-                $service->save($entryArray);
+                $entry = $request->toArray();
+                $entryToInsert = new EntryModel(['user_id' => $entry['user_id']]);
+                $entryToInsert->transfer = 0;
+                $entryToInsert->amount = $entry['amount'];
+                $entryToInsert->account_id = $entry['account_id'];
+                $entryToInsert->category_id = $entry['category_id'];
+                $entryToInsert->type = $entry['type'];
+                $entryToInsert->waranty = 0;
+                $entryToInsert->confirmed = 1;
+                $entryToInsert->planned = 1;
+                $entryToInsert->date_time = $entry['date_time'];
+                $entryToInsert->note = $entry['note'];
+                $entryToInsert->currency_id = $entry['currency_id'];
+                $entryToInsert->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
-                Log::info("PLANNED INSERT:: " . json_encode($entry));
+                $entryToInsert->save();
 
+                Log::info("PLANNED INSERT:: " . json_encode($entryToInsert));
             }
 
             $this->updatePlanningEntry($data);
-
         } catch (Exception $e) {
             Log::critical("Unable to insert new planned entry " . $e);
         }
@@ -96,28 +107,61 @@ class InsertPlannedEntry implements ShouldQueue
      * @param \Illuminate\Database\Eloquent\Collection $data
      * @return void
      */
-    private function updatePlanningEntry(\Illuminate\Database\Eloquent\Collection $data) {
-        foreach($data as $e) {
-            switch($e->planning) {
+    private function updatePlanningEntry(\Illuminate\Database\Eloquent\Collection $data)
+    {
+        foreach ($data as $e) {
+            switch ($e->planning) {
                 case "daily":
                     $increment = "+1 Day";
                     break;
-                    case "monthly":
+                case "monthly":
                     $increment = "+1 Month";
                     break;
-                    case "yearly":
+                case "weekly":
+                    $increment = "+7 Day";
+                    break;
+                case "yearly":
                     $increment = "+1 Year";
                     break;
-                    default:
+                default:
                     $increment = "+0 Day";
                     break;
             }
 
             $date = $e->date_time->modify($increment);
-            Log::info("Changed planned date ID: ".$e->id. " ".$e->date_time->format('Y-m-d H:i:s')." --> ".$date);
-            $e->updated_at = date("Y/m/d H:i:s",time());
+            Log::info("Changed planned date ID: " . $e->id . " " . $e->date_time->format('Y-m-d H:i:s') . " --> " . $date);
+            $e->updated_at = date("Y/m/d H:i:s", time());
             $e->date_time = $date->format('Y-m-d H:i:s');
             $e->save();
         }
     }
+
+    /**
+     *  get time to check
+     */
+    private function getTimeValue(string $timing): int
+    {
+        $date = date("Y-m-d H:i:s", time());
+
+        switch ($timing) {
+            case "daily":
+                $newDate = strtotime($date . "+1 day");
+                break;
+            case "monthly":
+                $newDate = strtotime($date . "+1 month");
+                break;
+            case "weekly":
+                $newDate = strtotime($date . "+7 day");
+                break;
+            case "yearly":
+                $newDate = strtotime($date . "+1 year");
+                break;
+            default:
+                $newDate = strtotime($date);
+                break;
+        }
+
+        return $newDate;
+    }
 }
+

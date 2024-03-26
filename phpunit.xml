@@ -7,14 +7,38 @@
     <testsuite name="Feature">
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
+    <testsuite name="Search">
+      <directory suffix="Test.php">./app/Search/Tests</directory>
+    </testsuite>
+    <testsuite name="BudgetTracker">
+      <directory suffix="Test.php">./app/BudgetTracker/Tests</directory>
+    </testsuite>
+    <testsuite name="Stats">
+      <directory suffix="Test.php">./app/Stats/Tests</directory>
+    </testsuite>
+    <testsuite name="Charts">
+      <directory suffix="Test.php">./app/Charts/Tests</directory>
+    </testsuite>
+    <testsuite name="Auth">
+      <directory suffix="Test.php">./app/User/Tests</directory>
+    </testsuite>
+    <testsuite name="Budget">
+      <directory suffix="Test.php">./app/Budget/Tests</directory>
+    </testsuite>
+    <!-- <testsuite name="Mailer">
+      <directory suffix="Test.php">./app/Mailer/Tests</directory>
+    </testsuite> -->
   </testsuites>
   <coverage/>
   <php>
     <env name="APP_ENV" value="testing"/>
+    <env name="DISABLE_AUTH" value="true"/>
     <env name="BCRYPT_ROUNDS" value="4"/>
     <env name="CACHE_DRIVER" value="array"/>
-    <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
-    <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+    <env name="DB_CONNECTION" value="mysql"/>
+    <env name="DB_DATABASE" value="budgetV2_phpunit"/>
+    <env name="DB_USERNAME" value="root"/>
+    <env name="DB_PASSWORD" value="rootpasswordmaster"/>
     <env name="MAIL_MAILER" value="array"/>
     <env name="QUEUE_CONNECTION" value="sync"/>
     <env name="SESSION_DRIVER" value="array"/>

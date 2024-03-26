@@ -13,21 +13,22 @@ use DateTime;
 
 final class SavingAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $amout, float $balance, DateTime $date)
+    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, $exclude_from_stats)
     {
         $this->name = $name;
         $this->type = AccountType::Saving;
         $this->currency = $currency;
         $this->color = $color;
-        $this->amount = $amout;
-        $this->date = $date->format('Y-m-d h:i:s');
+        $this->date = $date->format('Y-m-d H:i:s');
         $this->balance = $balance;
+        $this->excludeFromStats = $exclude_from_stats;
+        $this->excludeFromStats = true;
 
         $this->validate();
 
     }
 
-    private function hash(): string
+    public function hash(): string
     {
         return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->date}");
     }

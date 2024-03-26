@@ -4,7 +4,8 @@
       "category": {
         "label": "cibo-&-bevande",
         "icon": "fas fa-hamburger",
-        "uuid": "635bd33fab82e"
+        "uuid": "635bd33fab82e",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -25,7 +26,8 @@
       "category": {
         "label": "shopping",
         "icon": "fas fa-shopping-cart",
-        "uuid": "635bd34082904"
+        "uuid": "635bd34082904",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -82,7 +84,8 @@
       "category": {
         "label": "Casa",
         "icon": "fas fa-home",
-        "uuid": "635bd3424b7b8"
+        "uuid": "635bd3424b7b8",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -115,7 +118,8 @@
       "category": {
         "label": "Trasporti",
         "icon": "fas fa-subway",
-        "uuid": "635bd3436347d"
+        "uuid": "635bd3436347d",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -140,7 +144,8 @@
       "category": {
         "label": "Veicoli",
         "icon": "fas fa-car-alt",
-        "uuid": "635bd343d8220"
+        "uuid": "635bd343d8220",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -173,7 +178,8 @@
       "category": {
         "label": "Instrattenimento",
         "icon": "fas fa-cloud-sun",
-        "uuid": "635bd3458b904"
+        "uuid": "635bd3458b904",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -242,7 +248,8 @@
       "category": {
         "label": "Comunicazione PC",
         "icon": "fas fa-laptop",
-        "uuid": "635bd348b183f"
+        "uuid": "635bd348b183f",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -267,7 +274,8 @@
       "category": {
         "label": "Spese finanziarie",
         "icon": "fas fa-hand-holding-usd",
-        "uuid": "635bd3492e995"
+        "uuid": "635bd3492e995",
+        "type": "expenses"
       },
       "subCateogy": [
         {
@@ -304,7 +312,8 @@
       "category": {
         "label": "Investimenti",
         "icon": "fas fa-file-invoice-dollar",
-        "uuid": "635bd349e3b38"
+        "uuid": "635bd349e3b38",
+        "type": "investments"
       },
       "subCateogy": [
         {
@@ -333,7 +342,8 @@
       "category": {
         "label": "Introiti",
         "icon": "fas fa-euro-sign",
-        "uuid": "635bd34a79940"
+        "uuid": "635bd34a79940",
+        "type": "incoming"
       },
       "subCateogy": [
         {
@@ -390,12 +400,18 @@
       "category": {
         "label": "Altro",
         "icon": "fas fa-question",
-        "uuid": "635bd34d0dfc4"
+        "uuid": "635bd34d0dfc4",
+        "type": "expenses"
       },
       "subCateogy": [
         {
           "uuid": "635bd34d25f01",
           "name": "altro"
+        },
+        {
+          "uuid": "6560a071d8822",
+          "name": "trasferimento",
+          "exclude_from_stats": 1
         }
       ]
     }

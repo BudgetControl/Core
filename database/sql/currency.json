@@ -1,5 +1,206 @@
-{ "it" :
-  [
-  "euro","dollaro","bitcoin"
+{
+  "it": [
+    {
+      "name": "Dollaro statunitense",
+      "label": "USD",
+      "icon": "$"
+    },
+    {
+      "name": "Euro",
+      "label": "EUR",
+      "icon": "€"
+    },
+    {
+      "name": "Sterlina britannica",
+      "label": "GBP",
+      "icon": "£"
+    },
+    {
+      "name": "Yen giapponese",
+      "label": "JPY",
+      "icon": "¥"
+    },
+    {
+      "name": "Franco svizzero",
+      "label": "CHF",
+      "icon": "CHF"
+    },
+    {
+      "name": "Dollaro canadese",
+      "label": "CAD",
+      "icon": "CA$"
+    },
+    {
+      "name": "Dollaro australiano",
+      "label": "AUD",
+      "icon": "A$"
+    },
+    {
+      "name": "Dollaro neozelandese",
+      "label": "NZD",
+      "icon": "NZ$"
+    },
+    {
+      "name": "Corona svedese",
+      "label": "SEK",
+      "icon": "SEK"
+    },
+    {
+      "name": "Corona norvegese",
+      "label": "NOK",
+      "icon": "NOK"
+    },
+    {
+      "name": "Corona danese",
+      "label": "DKK",
+      "icon": "DKK"
+    },
+    {
+      "name": "Dollaro singaporeano",
+      "label": "SGD",
+      "icon": "SGD"
+    },
+    {
+      "name": "Dollaro hongkonghese",
+      "label": "HKD",
+      "icon": "HKD"
+    },
+    {
+      "name": "Yuan cinese",
+      "label": "CNY",
+      "icon": "¥"
+    },
+    {
+      "name": "Rublo russo",
+      "label": "RUB",
+      "icon": "₽"
+    },
+    {
+      "name": "Rupia indiana",
+      "label": "INR",
+      "icon": "₹"
+    },
+    {
+      "name": "Rupia indonesiana",
+      "label": "IDR",
+      "icon": "Rp"
+    },
+    {
+      "name": "Real brasiliano",
+      "label": "BRL",
+      "icon": "R$"
+    },
+    {
+      "name": "Peso messicano",
+      "label": "MXN",
+      "icon": "MXN"
+    },
+    {
+      "name": "Peso argentino",
+      "label": "ARS",
+      "icon": "$"
+    }
+  ],
+  "en" : [
+    {
+      "name": "United States Dollar",
+      "label": "USD",
+      "icon": "$"
+    },
+    {
+      "name": "Euro",
+      "label": "EUR",
+      "icon": "€"
+    },
+    {
+      "name": "British Pound Sterling",
+      "label": "GBP",
+      "icon": "£"
+    },
+    {
+      "name": "Japanese Yen",
+      "label": "JPY",
+      "icon": "¥"
+    },
+    {
+      "name": "Swiss Franc",
+      "label": "CHF",
+      "icon": "CHF"
+    },
+    {
+      "name": "Canadian Dollar",
+      "label": "CAD",
+      "icon": "CA$"
+    },
+    {
+      "name": "Australian Dollar",
+      "label": "AUD",
+      "icon": "A$"
+    },
+    {
+      "name": "New Zealand Dollar",
+      "label": "NZD",
+      "icon": "NZ$"
+    },
+    {
+      "name": "Swedish Krona",
+      "label": "SEK",
+      "icon": "SEK"
+    },
+    {
+      "name": "Norwegian Krone",
+      "label": "NOK",
+      "icon": "NOK"
+    },
+    {
+      "name": "Danish Krone",
+      "label": "DKK",
+      "icon": "DKK"
+    },
+    {
+      "name": "Singapore Dollar",
+      "label": "SGD",
+      "icon": "SGD"
+    },
+    {
+      "name": "Hong Kong Dollar",
+      "label": "HKD",
+      "icon": "HKD"
+    },
+    {
+      "name": "Chinese Yuan",
+      "label": "CNY",
+      "icon": "¥"
+    },
+    {
+      "name": "Russian Ruble",
+      "label": "RUB",
+      "icon": "₽"
+    },
+    {
+      "name": "Indian Rupee",
+      "label": "INR",
+      "icon": "₹"
+    },
+    {
+      "name": "Indonesian Rupiah",
+      "label": "IDR",
+      "icon": "Rp"
+    },
+    {
+      "name": "Brazilian Real",
+      "label": "BRL",
+      "icon": "R$"
+    },
+    {
+      "name": "Mexican Peso",
+      "label": "MXN",
+      "icon": "MXN"
+    },
+    {
+      "name": "Argentine Peso",
+      "label": "ARS",
+      "icon": "$"
+    }
   ]
 }

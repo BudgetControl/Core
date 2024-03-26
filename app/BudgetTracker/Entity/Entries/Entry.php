@@ -7,7 +7,6 @@ use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
 use App\BudgetTracker\Models\SubCategory;
 use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PaymentsTypes;
 use DateTime;
 use League\Config\Exception\ValidationException;
@@ -17,9 +16,10 @@ use stdClass;
 class Entry implements EntryInterface
 {
 
+    protected int $id;
+    protected string $uuid;
     protected float $amount;
     protected Currency $currency;
-    protected EntryType $type;
     protected string $note;
     protected DateTime $date_time;
     protected bool $waranty;
@@ -30,29 +30,26 @@ class Entry implements EntryInterface
     protected PaymentsTypes $paymentType;
     protected object $geolocation;
     protected array $labels;
-    protected Payee|null $payee = null;
+    protected EntryType $type;
 
     public function __construct(
-        float $amount,
-        Currency $currency,
-        string $note,
-        SubCategory $category,
-        Account $account,
-        PaymentsTypes $paymentType,
-        DateTime $date_time,
-        array $labels = [],
-        bool $confirmed = true,
-        bool $waranty = false,
-        int $transfer_id = 0,
-        object $geolocation = new stdClass(),
-        bool $transfer = false,
-        Payee|null $payee = null,
-        EntryType $type = EntryType::Incoming,
+         float $amount,
+         EntryType $type,
+         Currency $currency,
+         ?string $note,
+         DateTime $date_time,
+         bool $waranty,
+         bool $transfer,
+         bool $confirmed,
+         SubCategory $category,
+         Account $account,
+         PaymentsTypes $paymentType,
+         object $geolocation,
+         array $labels,
     ) {
         $this->amount = $amount;
         $this->currency = $currency;
         $this->date_time = $date_time;
-        $this->type = $type;
         $this->waranty = $waranty;
         $this->transfer = $transfer;
         $this->confirmed = $confirmed;
@@ -61,10 +58,11 @@ class Entry implements EntryInterface
         $this->paymentType = $paymentType;
         $this->geolocation = $geolocation;
         $this->labels = $labels;
-        $this->note = $note;
-        $this->payee = $payee;
+        $this->note = is_null($note) ? "" : $note;
+        $this->type = $type;
+        $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
+        $this->id = 0;
 
-        $this->validate();
     }
 
     /**
@@ -76,7 +74,6 @@ class Entry implements EntryInterface
     private function validate(): void
     {
         $rules = [
-            'date_time' => ['date', 'date_format:Y-m-d H:i:s', 'required'],
             'amount' => ['required', 'numeric'],
             'note' => 'nullable',
             'waranty' => 'boolean',
@@ -99,8 +96,7 @@ class Entry implements EntryInterface
     public function toArray(): array
     {
         return [
-            'type' => $this->type->value,
-            'date_time' => $this->date_time->format('Y-m-d h:i:s'),
+            'date_time' => $this->date_time->format('Y-m-d H:i:s'),
             'amount' => $this->amount,
             'note' => $this->note,
             'waranty' => $this->waranty,
@@ -112,7 +108,6 @@ class Entry implements EntryInterface
             'currency_id' => $this->currency->id,
             'payment_type' => $this->paymentType->id,
             'geolocation' => $this->geolocation,
-            'payee_id' => $this->payee,
             'label' => $this->labels
         ];
     }
@@ -122,7 +117,7 @@ class Entry implements EntryInterface
      * 
      * @return bool
      */
-    private function isPlanned(): bool
+    protected function isPlanned(): bool
     {
         $today = new \DateTime();
         if ($this->date_time->getTimestamp() > $today->getTimestamp()) {
@@ -132,9 +127,9 @@ class Entry implements EntryInterface
         return false;
     }
 
-    private function hash(): string
+    protected function hash(): string
     {
-        return md5("{$this->amount}{$this->note}{$this->category->name}{$this->account->name}{$this->currency->name}{$this->type->value}");
+        return md5("{$this->amount}{$this->note}{$this->category->name}{$this->account->name}{$this->currency->name}");
     }
 
     public function isEqualsTo(Entry $entry): bool
@@ -145,7 +140,7 @@ class Entry implements EntryInterface
     public function getHash(): string
     {
         $time = time();
-        return md5("{$this->amount}{$this->note}{$this->category->name}{$this->account->name}{$this->currency->name}{$this->paymentType->name}{$this->type->value}{$time}");
+        return md5("{$this->amount}{$this->note}{$this->category->name}{$this->account->name}{$this->currency->name}{$this->paymentType->name}{$time}");
     }
 
     /**
@@ -158,7 +153,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of amount
-     */ 
+     */
     public function getAmount(): float
     {
         return $this->amount;
@@ -166,23 +161,15 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of currency
-     */ 
-    public function getCurrency(): Currency 
+     */
+    public function getCurrency(): Currency
     {
         return $this->currency;
     }
 
     /**
-     * Get the value of type
-     */ 
-    public function getType(): EntryType
-    {
-        return $this->type;
-    }
-
-    /**
      * Get the value of note
-     */ 
+     */
     public function getNote(): string
     {
         return $this->note;
@@ -190,7 +177,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of date_time
-     */ 
+     */
     public function getDateTime(): DateTIme
     {
         return $this->date_time;
@@ -198,7 +185,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of waranty
-     */ 
+     */
     public function getWaranty(): bool
     {
         return $this->waranty;
@@ -206,7 +193,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of transfer
-     */ 
+     */
     public function getTransfer(): bool
     {
         return $this->transfer;
@@ -214,7 +201,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of confirmed
-     */ 
+     */
     public function getConfirmed(): bool
     {
         return $this->confirmed;
@@ -222,7 +209,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of category
-     */ 
+     */
     public function getCategory(): SubCategory
     {
         return $this->category;
@@ -230,7 +217,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of account
-     */ 
+     */
     public function getAccount(): Account
     {
         return $this->account;
@@ -238,7 +225,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of paymentType
-     */ 
+     */
     public function getPaymentType(): PaymentsTypes
     {
         return $this->paymentType;
@@ -246,7 +233,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of geolocation
-     */ 
+     */
     public function getGeolocation(): stdClass
     {
         return $this->geolocation;
@@ -254,7 +241,7 @@ class Entry implements EntryInterface
 
     /**
      * Get the value of labels
-     */ 
+     */
     public function getLabels(): array
     {
         return $this->labels;
@@ -265,14 +252,63 @@ class Entry implements EntryInterface
      */
     public function getDateFormat(): string
     {
-        return $this->date_time->format('Y-m-d h:i:s');
+        return $this->date_time->format('Y-m-d H:i:s');
+    }
+
+    
+    /**
+     * Get the value of uuid
+     */
+    public function getUuid(): string
+    {
+        if ($this->uuid === null) {
+            $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
+        }
+        return $this->uuid;
     }
 
     /**
-     * Get the value of payee
-     */ 
-    public function getPayee(): Payee
+     * Set the value of uuid
+     *
+     * @return  self
+     */
+    public function setUuid($uuid)
     {
-        return $this->payee;
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of type
+     */ 
+    public function getType(): EntryType
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get the value of id
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @param int $id
+     *
+     * @return self
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

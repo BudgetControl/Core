@@ -27,16 +27,16 @@ class TransferFactory extends Factory
      */
     public function definition(): array
     {
-        $amount = -200;
+        
 
         return [
-            'uuid' => uniqid(),
-            'amount' => $amount,
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            'amount' => 200,
             'note' => fake()->text(80),
             'type' => EntryType::Transfer->value,
             'transfer' => 1,
             'category_id' => fake()->numberBetween(1,75),
-            'account_id' => 1,
+            'account_id' => 4,
             'transfer_id' => 2,
             'currency_id' => 1,
             'date_time' => date('Y-m-d H:i:s',time()),

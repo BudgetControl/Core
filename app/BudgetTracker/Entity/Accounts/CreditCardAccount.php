@@ -13,7 +13,7 @@ use DateTime;
 
 final class CreditCardAccount extends Account {
 
-    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $installement, float $installementValue = 0)
+    public function __construct(string $name, string $currency, string $color, float $balance, DateTime $date, bool $exclude_from_stats)
     {
 
         $this->name = $name;
@@ -21,19 +21,14 @@ final class CreditCardAccount extends Account {
         $this->currency = $currency;
         $this->balance = $balance;
         $this->color = $color;
-        $this->installement = $installement;
-        $this->installementValue = $installementValue;
-        $this->date = $date->format('Y-m-d h:i:s');
+        $this->excludeFromStats = $exclude_from_stats;
+        $this->date = $date->format('Y-m-d H:i:s');
 
-        if($installement === true) {
-            $this->installementValidate();
-        }
-        
         $this->validate();
 
     }
     
-    private function hash(): string
+    public function hash(): string
     {
         return md5("{$this->name}{$this->currency}{$this->color}{$this->balance}{$this->type->value}{$this->installement}{$this->installementValue}{$this->date}");
     }

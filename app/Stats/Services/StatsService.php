@@ -2,15 +2,22 @@
 
 namespace App\Stats\Services;
 
+use App\BudgetTracker\Entity\DateTime as EntityDateTime;
 use App\BudgetTracker\Models\Incoming;
 use App\BudgetTracker\Models\Entry;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Enums\EntryType;
 use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Models\Category;
 use App\BudgetTracker\Models\Debit;
 use App\BudgetTracker\Models\Expenses;
+use App\BudgetTracker\Models\Investments;
 use App\BudgetTracker\Models\Transfer;
+use App\Stats\Domain\Repository\StatsRepository;
+use App\User\Services\UserService;
 use DateTime;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class StatsService
 {
@@ -20,8 +27,18 @@ class StatsService
     private string $startDatePassed;
     private string $endDatePassed;
 
-    public function __construct(string $startDate, string $endDate)
+    public function __construct(?string $startDate = null, ?string $endDate = null)
     {
+        if (is_null($startDate)) {
+            // Primo giorno del mese corrente
+            $startDate = date('Y-m-01');
+        }
+
+        if (is_null($endDate)) {
+            // Ultimo giorno del mese corrente
+            $endDate = date('Y-m-t');
+        }
+
         $this->setDateEnd($endDate);
         $this->setDateStart($startDate);
     }
@@ -39,7 +56,6 @@ class StatsService
         $passedDateTime = new DateTime($date);
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->startDatePassed = $passedDateTime->format('Y-m-d H:i:s');
-
     }
 
     /**
@@ -55,7 +71,51 @@ class StatsService
         $passedDateTime = new DateTime($date);
         $passedDateTime = $passedDateTime->modify('-1 month');
         $this->endDatePassed = $passedDateTime->format('Y-m-d H:i:s');
+    }
 
+        /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function expensesByLabel(int $tag): array
+    {
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
+
+        $statsRepository = new StatsRepository();
+        
+        $totalEntry = $statsRepository->statsMonthByLabel(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+        $totalEntryBefore = $statsRepository->statsMonthByLabel(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
+
+        $totalAmount = [];
+        foreach($totalEntry as $data) {
+            $data->tags_id = explode(',',$data->tags_id);
+            if(in_array($tag,$data->tags_id)) {
+                $data->amount = $data->expenses;
+                $totalAmount[] = $data;
+            }
+        }
+
+        $totalAmountBefore = [];
+        foreach($totalEntryBefore as $data) {
+            $data->tags_id = explode(',',$data->tags_id);
+            if(in_array($tag,$data->tags_id)) {
+                $data->amount = $data->expenses;
+                $totalAmountBefore[] = $data;
+            }
+        }
+
+        $response = $this->buildResponse($totalAmount, $totalAmountBefore);
+
+        return $response;
     }
 
     /**
@@ -64,26 +124,41 @@ class StatsService
      * 
      * @return array
      */
-    public function incoming(bool $planning): Array
+    public function expensesByCategory(array $categoryID): array
     {
-        $entry = Incoming::user();
-        $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Incoming->value);
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
 
-        $entryOld = Incoming::user();
-        $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Incoming->value);
+        $statsRepository = new StatsRepository();
+        
+        $totalEntry = $statsRepository->statsMonthByCategory(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+        $totalEntryBefore = $statsRepository->statsMonthByCategory(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
 
-        if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
-        } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+        $totalAmount = [];
+        foreach($totalEntry as $data) {
+            if(in_array($data->category_id, $categoryID)) {
+                $data->amount = $data->expenses;
+                $totalAmount[] = $data;
+            }
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $totalAmountBefore = [];
+        foreach($totalEntryBefore as $data) {
+            if(in_array($data->category_id, $categoryID)) {
+                $data->amount = $data->expenses;
+                $totalAmountBefore[] = $data;
+            }
+        }
 
+        $response = $this->buildResponse($totalAmount, $totalAmountBefore);
+
+        return $response;
     }
 
     /**
@@ -92,26 +167,139 @@ class StatsService
      * 
      * @return array
      */
-    public function expenses(bool $planning): array
+    public function entryByType(array $type, bool $planning): array
     {
-        $entry = Expenses::user();
-        $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Expenses->value);
+        $entry = Entry::stats()->User();
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', $type);
 
-        $entryOld = Expenses::user();
-        $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Expenses->value);
+        $entryOld = Entry::stats()->User();
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', $type);
 
         if ($planning === true) {
-            $entry->whereIn('planned',[0,1]);
-            $entryOld->whereIn('planned',[0,1]);
+            $entry->whereIn('planned', [0, 1]);
+            $entryOld->whereIn('planned', [0, 1]);
         } else {
-            $entry->where('planned',0);
-            $entryOld->where('planned',0);
+            $entry->where('planned', 0);
+            $entryOld->where('planned', 0);
         }
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
+        return $response;
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function investments(bool $planning): array
+    {
+        $entry = Investments::stats()->User();
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Investments->value);
+
+        $entryOld = Investments::stats()->User();
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Investments->value);
+
+        if ($planning === true) {
+            $entry->whereIn('planned', [0, 1]);
+            $entryOld->whereIn('planned', [0, 1]);
+        } else {
+            $entry->where('planned', 0);
+            $entryOld->where('planned', 0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function incoming(): array
+    {
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
+
+        $statsRepository = new StatsRepository();
+        $totalAmount = $statsRepository->statsMonthIncoming(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+
+        $totalAmountBefore = $statsRepository->statsMonthIncoming(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
+
+        $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
+
+        return $response;
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function expenses(): array
+    {
+        $previousDate = strtotime($this->startDatePassed);
+        $currentDate = strtotime($this->startDate);
+
+        $statsRepository = new StatsRepository();
+        $totalAmount = $statsRepository->statsMonthExpenses(
+            date('m', $currentDate),
+            date('Y', $currentDate),
+        );
+
+        $totalAmountBefore = $statsRepository->statsMonthExpenses(
+            date('m', $previousDate),
+            date('Y', $previousDate),
+        );
+
+        $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
+
+        return $response;
+    }
+
+    /**
+     * retrive data
+     * @param bool $planning
+     * 
+     * @return array
+     */
+    public function entryByLabel(array $labelsID, bool $planning): array
+    {
+        $entry = Entry::stats()->User();
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])
+            ->leftJoin('entry_labels', "entry_labels.entry_id", "=", "entries.id")
+            ->leftJoin('labels', "labels.id", "=", "entry_labels.labels_id")
+            ->whereIn("labels.id", $labelsID);
+
+        $entryOld = Entry::stats()->User();
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])
+            ->leftJoin('entry_labels', "entry_labels.entry_id", "=", "entries.id")
+            ->leftJoin('labels', "labels.id", "=", "entry_labels.labels_id")
+            ->whereIn("labels.id", $labelsID);
+
+        if ($planning === true) {
+            $entry->whereIn('entries.planned', [0, 1]);
+            $entryOld->whereIn('entries.planned', [0, 1]);
+        } else {
+            $entry->where('entries.planned', 0);
+            $entryOld->where('entries.planned', 0);
+        }
+
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
     }
 
     /**
@@ -122,16 +310,15 @@ class StatsService
      */
     public function transfer(bool $planning): array
     {
-        $entry = Transfer::user();
-        $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Transfer->value);
+        $entry = Transfer::stats()->User();
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Transfer->value);
 
-        $entryOld = Transfer::user();
-        $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Transfer->value);
+        $entryOld = Transfer::stats()->User();
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Transfer->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
 
+        return $response;
     }
 
     /**
@@ -140,17 +327,17 @@ class StatsService
      * 
      * @return array
      */
-    public function debit(bool $planning): array
+    public function debit(): array
     {
-        $entry = Debit::user();
-        $entry->where('date_time', '<=', $this->endDate)
-        ->where('date_time', '>=', $this->startDate)->where('type',EntryType::Debit->value);
+        $entry = Debit::stats()->User();
+        $entry->whereBetween('entries.date_time', [$this->startDate, $this->endDate])->where('entries.type', EntryType::Debit->value);
 
-        $entryOld = Debit::user();
-        $entryOld->where('date_time', '<=', $this->endDatePassed)
-        ->where('date_time', '>=', $this->startDatePassed)->where('type',EntryType::Debit->value);
+        $entryOld = Debit::stats()->User();
+        $entryOld->whereBetween('entries.date_time', [$this->startDatePassed, $this->endDatePassed])->where('entries.type', EntryType::Debit->value);
 
-        return ['total' => $entry->get()->toArray(),'total_passed' => $entryOld->get()->toArray()];
+        $response = $this->buildResponse($entry->get()->toArray(), $entryOld->get()->toArray());
+
+        return $response;
     }
 
     /**
@@ -163,14 +350,16 @@ class StatsService
     {
         $wallet = new Wallet(0);
 
-        $accounts = Account::user()->where('installement',0)->get();
-        foreach($accounts as $account) {
+        $accounts = Account::stats()->User()->where('installement', 0)->get();
+        foreach ($accounts as $account) {
             $wallet->deposit($account->balance);
         }
 
         if ($planning === true) {
             $plannedEntries = $this->getPlannedEntry();
-            $wallet->sum($plannedEntries->toArray());
+            $installementValue = $this->getInstallementValue();
+            $entries = array_merge($plannedEntries->toArray(), $installementValue);
+            $wallet->sum($entries);
         }
 
         return $wallet->getBalance();
@@ -196,9 +385,27 @@ class StatsService
             ->where('entries.date_time', '<=', $dateTime)
             ->where('entries.date_time', '>=', $dateTimeFirst)
             ->where('accounts.installement', 0)
+            ->where('accounts.exclude_from_stats', 0)
+            ->User()
             ->get('entries.amount');
 
         return $entry;
+    }
+
+    private function getInstallementValue(): array
+    {
+        $values = Account::stats()->User()->where('installement', 1)->get();
+        $data = [];
+        foreach ($values as $value) {
+            $balance = $value->balance * -1;
+            if ($balance <= $value->installementValue) {
+                $data[] = ['amount' => $value->balance];
+            } else {
+                $data[] = ['amount' => $value->installementValue * -1];
+            }
+        }
+
+        return $data;
     }
 
     /** 
@@ -233,12 +440,74 @@ class StatsService
     {
         $wallet = new Wallet(0);
 
-        $accounts = Account::user()->get();
-        foreach($accounts as $account) {
+        $accounts = Account::stats()->User()->get();
+        foreach ($accounts as $account) {
             $wallet->deposit($account->balance);
         }
 
         return $wallet->getBalance();
     }
 
+    /**
+     * build stats standard response
+     * @param array $data
+     * @param array $dataOld
+     * 
+     * @return array
+     */
+    private function buildResponse(array $data, array $dataOld)
+    {
+        $wallet = new Wallet();
+        $wallet->sum($data);
+
+        $walletPassed = new Wallet();
+        $walletPassed->sum($dataOld);
+
+        $firstValue = $wallet->getBalance();
+        $secondValue = $walletPassed->getBalance();
+
+        return [
+            'total' => $firstValue,
+            'total_passed' => $secondValue,
+            'percentage' => percentage($firstValue, $secondValue)
+        ];
+    }
+
+    /**
+     *  retrive only category id
+     */
+    private function getCategoryId(string $type): array
+    {
+        $results = [];
+        $categories = Category::getCateroyGroup($type);
+        foreach ($categories as $cat) {
+            $results[] = $cat->id;
+        }
+
+        if (empty($results)) {
+            throw new Exception("Ops no category foud with type ( $type )", 500);
+        }
+
+        return $results;
+    }
+
+    /**
+     * generate array map
+     * @param array $entry
+     * @param array $entryOld
+     * 
+     * @return array
+     */
+    private function map( array $entry, array $entryOld): array
+    {
+        $entry = array_map(function ($entry) {
+            return (array) $entry;
+        }, $entry);
+
+        $entryOld = array_map(function ($entryOld) {
+            return (array) $entryOld;
+        }, $entryOld);
+
+        return [$entry, $entryOld];
+    }
 }

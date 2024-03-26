@@ -6,11 +6,12 @@ use App\BudgetTracker\Factories\PayeeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Http\Services\UserService;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\User\Services\UserService;
 
-class Payee extends Model
+class Payee extends BaseModel
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public $hidden = [
         "created_at",
@@ -38,7 +39,7 @@ class Payee extends Model
         parent::__construct($attributes);
 
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
-        $this->attributes['uuid'] = uniqid();
+        $this->attributes['uuid'] = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 
         foreach ($attributes as $k => $v) {
             $this->$k = $v;
@@ -49,7 +50,7 @@ class Payee extends Model
         'created_at'  => 'date:Y-m-d',
         'updated_at'  => 'date:Y-m-d',
         'deletad_at'  => 'date:Y-m-d',
-        'date_time' =>  'date:Y-m-d h:i:s'
+        'date_time' =>  'date:Y-m-d H:i:s'
     ];
 
     public function account()
@@ -62,11 +63,4 @@ class Payee extends Model
         return $this->hasMany(Entry::class);
     }
 
-    /**
-     * scope user
-     */
-    public function scopeUser($query): void
-    {
-        $query->where('user_id',UserService::getCacheUserID());
-    }
 }

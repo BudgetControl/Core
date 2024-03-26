@@ -2,13 +2,16 @@
 
 namespace App\BudgetTracker\Http\Controllers;
 
-use App\BudgetTracker\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
+use App\User\Services\UserService;
 use App\BudgetTracker\Models\Category;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Services\CategoryService;
 use App\BudgetTracker\Services\IncomingService;
-use League\Config\Exception\ValidationException;
 use App\BudgetTracker\Services\ResponseService;
+use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Http\Controllers\Controller;
+use App\BudgetTracker\Interfaces\ControllerResourcesInterface;
 
 class CategoryController extends Controller implements ControllerResourcesInterface
 {
@@ -20,8 +23,8 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$cat = Category::with('subCategory')->orderBy('name')->get();
-		return response()->json(new ResponseService($cat));
+		$service = new CategoryService();
+		return response()->json($service->all());
 	}
 
 	/**
@@ -32,6 +35,21 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	 */
 	public function store(Request $request): \Illuminate\Http\Response
 	{
+		$service = new CategoryService();
+		$service->save($request);
+		return response('ok');
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, int $id): \Illuminate\Http\Response
+	{
+		$service = new CategoryService($id);
+		$service->save($request);
 		return response('nothing');
 	}
 
@@ -43,7 +61,8 @@ class CategoryController extends Controller implements ControllerResourcesInterf
 	 */
 	public function show(int $id): \Illuminate\Http\JsonResponse
 	{
-		return response()->json([],'nothing');
+		$category = SubCategory::findOrFail($id);
+		return response()->json($category);
 	}
 
 	/**

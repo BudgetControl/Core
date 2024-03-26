@@ -73,7 +73,8 @@ class ImportController extends Controller
 				$file = fopen('php://output', 'w');
 				fputcsv($file, self::header_export, ";");
 				
-				$data = EntryService::read();
+				$entryService = new EntryService();
+				$data = $entryService->read();
 				foreach ($data as $e) {
 					fputcsv($file, $this->build_csv_data($e), ";");
 				}
@@ -126,7 +127,7 @@ class ImportController extends Controller
 		$callback = function () use ($csvHeaders) {
 			$file = fopen('php://output', 'w');
 			fputcsv($file, $csvHeaders, ";");
-			$accounts = Account::all();
+			$accounts = Account::User()->get();
 			foreach ($accounts as $account) {
 				$csv = [
 					"currency" => 'eur',
