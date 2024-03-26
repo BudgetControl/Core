@@ -1,41 +1,124 @@
 version: '3'
 
 services:
-  nginx-proxy:
-    image: docker.io/nginxproxy/nginx-proxy:1.0
-    ports:
-      - 80:80
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+
   database:
-    image: mysql:latest
+    container_name: budgetcontrol-db
+    image: mysql:8.0.36-debian
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
-  femodule:
-    build:
-      context: .
-      dockerfile: ./budget-tracker_v2-FE/Dockerfile
-    environment:
-      - VIRTUAL_HOST=${FRONTEND_DOMAIN}
     volumes:
-        - ./budget-tracker_v2-FE:/usr/src/app
-        - ./budget-tracker_v2-FE/.env:/usr/src/app/.env
-    command: "npm run install:clean"
-    restart: unless-stopped
-  bemodule:
-    image: docker.io/bitnami/laravel:10
+      - mysql_persistent:/var/lib/mysql
+    networks:
+      - budgetcontrol_network
+
+  cache:
+    container_name: budgetcontrol-redis
+    image: redis:7.2-rc2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
-      - ./:/app
-      - .env:/app/.env
-    environment:
-      - VIRTUAL_HOST=${BACKEND_DOMAIN}
+      - cache:/data
+    networks:
+      - budgetcontrol_network
+
+  core:
+    container_name: budgetcontrol-core
+    image: budgetcontrol/core:v2.2
+    volumes:
+      - ./:/var/www/workdir
+      - ../logapp:/app/storage/logs
     depends_on:
       - database
+      - cache
+    networks:
+      - budgetcontrol_network
     restart: unless-stopped
-    command: bash -c "composer install && php artisan serve --host=0.0.0.0 --port=80"
+
+  proxy:
+    container_name: budgetcontrol-proxy
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./bin/nginx:/etc/nginx/conf.d
+      - ./bin/certbot/conf:/etc/letsencrypt
+      - ./bin/certbot/www:/var/www/certbot
+    networks:
+      - budgetcontrol_network
+    depends_on:
+      - core
+
+  certbot:
+    image: certbot/certbot
+    container_name: budgetcontrol-certbot
+    volumes:
+    - ./bin/certbot/conf:/etc/letsencrypt
+    - ./bin/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - budgetcontrol_network
+      
+  ms-stats:
+    container_name: budgetcontrol-ms-stats
+    image: budgetcontrol/core:v2.2
+    volumes:
+      - ./microservices/stats/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+  
+  ms-workspace:
+    container_name: budgetcontrol-ms-workspace
+    image: budgetcontrol/core:v2.2
+    volumes:
+      - ./microservices/workspace/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+  
+  gateway:
+    container_name: budgetcontrol-gateway
+    image: budgetcontrol/core:v2.2
+    volumes:
+      - ./microservices/gateway/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-authtentication:
+    container_name: budgetcontrol-ms-authtentication
+    image: budgetcontrol/core:v2.2
+    volumes:
+      - ./microservices/authtentication/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+volumes:
+  mysql_persistent:
+    name: budgetcontrol_core_database
+    external: true
+  cache:
+    name: budgetcontrol_core_cache
+    external: true
+
+networks:
+  budgetcontrol_network:
+    external: true
+    name: budgetcontrol_network

@@ -1,0 +1,39 @@
+version: '2.2'
+
+services:
+    ms-stats:
+      image: budgetcontrol/core:xdebug-v2.2
+      ports:
+        - "8084:80"
+    
+    ms-workspace:
+      image: budgetcontrol/core:xdebug-v2.2
+      ports:
+        - "8082:80"
+    
+    gateway:
+      image: budgetcontrol/core:xdebug-v2.2
+      ports:
+        - "8081:80"
+
+    ms-authtentication:
+      image: budgetcontrol/core:xdebug-v2.2
+      ports:
+        - "8083:80"
+
+    database:
+      ports:
+        - "3336:3306"
+
+    core:
+      image: budgetcontrol/core:xdebug-v2.2
+      ports:
+        - "3000:80"
+
+volumes:
+  mysql_persistent:
+    name: budgetcontrol_core_database
+    external: false
+  cache:
+    name: budgetcontrol_core_cache
+    external: false
