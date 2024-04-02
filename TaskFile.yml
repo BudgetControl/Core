@@ -9,11 +9,47 @@ tasks:
       - docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
       - docker container exec budgetcontrol-core service apache2 restart
       - docker container exec budgetcontrol-core vendor/bin/phinx migrate
+      - docker container exec budgetcontrol-ms-workspace vendor/bin/phinx migrate
   build:dev:
     desc: Build production enviroment
     cmds:
       - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-      - docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container cp bin/apache/dev-api.budgetcontrol.cloud.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+    
+  reboot-services:
+    desc: Restart services
+    cmds:
       - docker container exec budgetcontrol-core service apache2 restart
-      - docker container exec budgetcontrol-core vendor/bin/phinx migrate
+      - docker container exec budgetcontrol-ms-authtentication service apache2 restart
+      - docker container exec budgetcontrol-gateway service apache2 restart
+      - docker container exec budgetcontrol-ms-stats service apache2 restart
+      - docker container exec budgetcontrol-ms-workspace service apache2 restart
+
+  database:fresh:
+    desc: Create a new database
+    cmds:
+      - docker container exec budgetcontrol-core php artisan migrate:fresh
+      - docker container exec budgetcontrol-ms-workspace vendor/bin/phinx rollback
+      - docker container exec budgetcontrol-ms-workspace vendor/bin/phinx migrate
+
+  database:seed:
+    desc: Seed database
+    cmds:
+      - docker container exec budgetcontrol-core php artisan db:seed --class=UserSeed
+      - docker container exec budgetcontrol-ms-workspace vendor/bin/phinx seed:run
+      - docker container exec budgetcontrol-core php artisan db:seed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=AccountSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=CategorySeeders
+      - docker container exec budgetcontrol-core php artisan db:seed --class=PaymentTypeSeeders 
+      - docker container exec budgetcontrol-core php artisan db:seed --class=CurrencySeeders
+      - docker container exec budgetcontrol-core php artisan db:seed --class=LabelSeeders
+      - docker container exec budgetcontrol-core php artisan db:seed --class=IncomingSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=ExpensesSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=DebitSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=TransferSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=LabelSeeders
+      - docker container exec budgetcontrol-core php artisan db:seed --class=ModelsSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=PlannedEntriesSeed
+      - docker container exec budgetcontrol-core php artisan db:seed --class=BudgetSeed
+
   

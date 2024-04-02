@@ -17,7 +17,7 @@ return new class extends Migration
             $table->float('budget')->nullable(false);
             $table->float('amount')->nullable(false)->default(0);
             $table->json('configuration')->nullable(false);
-            $table->integer('user_id')->nullable(false);
+            $table->integer('workspace_id')->nullable(false);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -42,7 +42,7 @@ class StatsRepository
 
     public function statsMonthIncoming(?int $month = null, ?int $year = null)
     {
-        $qb = DB::table("stats_wallets_month")->select('incoming as amount')->where('user_id', $this->userId);
+        $qb = DB::table("stats_wallets_month")->select('incoming as amount')->where('workspace_id', $this->userId);
 
         if(!is_null($month)) {
             $qb->where('month', $month);
@@ -57,7 +57,7 @@ class StatsRepository
     
     public function statsMonthExpenses(?int $month = null, ?int $year = null)
     {
-        $qb = DB::table("stats_wallets_month")->select('expenses as amount')->where('user_id', $this->userId);
+        $qb = DB::table("stats_wallets_month")->select('expenses as amount')->where('workspace_id', $this->userId);
 
         if(!is_null($month)) {
             $qb->where('month', $month);

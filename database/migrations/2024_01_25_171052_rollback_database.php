@@ -13,31 +13,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('budgets', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('entries', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('labels', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('models', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('payees', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('planned_entries', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('sub_categories', function (Blueprint $table) {
-            $table->integer('user_id')->default(0);
+            $table->integer('workspace_id')->default(0);
         });
         Schema::table('user_settings', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('workspace_id');
         });
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('database_name');
@@ -49,37 +49,37 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('budgets', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('entries', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('labels', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('models', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('payees', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('planned_entries', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('sub_categories', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('user_settings', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('payments_types', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['user_id']);
+            $table->dropColumn(['workspace_id']);
         });
     }
 };

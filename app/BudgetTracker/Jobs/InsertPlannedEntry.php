@@ -77,7 +77,7 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
             foreach ($data as $request) {
 
                 $entry = $request->toArray();
-                $entryToInsert = new EntryModel(['user_id' => $entry['user_id']]);
+                $entryToInsert = new EntryModel(['workspace_id' => $entry['workspace_id']]);
                 $entryToInsert->transfer = 0;
                 $entryToInsert->amount = $entry['amount'];
                 $entryToInsert->account_id = $entry['account_id'];

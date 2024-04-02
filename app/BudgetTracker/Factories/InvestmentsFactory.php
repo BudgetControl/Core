@@ -46,7 +46,7 @@ class InvestmentsFactory extends Factory
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 0,
-            'user_id' => 1
+            'workspace_id' => 1
 
         ];
     }

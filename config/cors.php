@@ -19,11 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
     
-<<<<<<< HEAD
-    'allowed_origins' => ['http://api.budgetcontrol.cloud'], //This line means allow origin
-=======
     'allowed_origins' => ['*'],
->>>>>>> origin/stable/version2.4
     
     'allowed_origins_patterns' => ['*'],
     
