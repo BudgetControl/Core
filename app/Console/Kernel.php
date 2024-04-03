@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ActivatePlannedEntries())->hourly();
         $schedule->job(new InsertPlannedEntry())->daily();
         $schedule->job(new ExchangeRateJob())->daily();
-        $schedule->job(new ScheduleBudgetControl())->dailyAt("06:00");
+        $schedule->job(new ScheduleBudgetControl())->daily();
     }
 
     /**

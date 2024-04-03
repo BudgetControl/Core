@@ -79,6 +79,10 @@ if (!function_exists('sum')) {
     {
         $cost = (float) 0.00;
         foreach ($data as $value) {
+            if($value instanceof stdClass) {
+                $value = (array) $value;
+            }
+
             $cost += (float) $value['amount'];
         }
         return $cost;
@@ -172,5 +176,33 @@ if (!function_exists('user_ip')) {
         }
 
         return $ipaddress;
+    }
+}
+
+if (!function_exists('generateRandomPassword')) {
+    function generateRandomPassword()
+    {
+        $length = 12;  // Puoi regolare la lunghezza della password qui
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+        $specialChars = '!@#$%^&*';
+
+        // Mescola i caratteri per garantire che almeno uno di ogni tipo sia incluso
+        $allChars = $uppercase . $lowercase . $numbers . $specialChars;
+        $password = $uppercase[random_int(0, strlen($uppercase) - 1)] .
+            $lowercase[random_int(0, strlen($lowercase) - 1)] .
+            $numbers[random_int(0, strlen($numbers) - 1)] .
+            $specialChars[random_int(0, strlen($specialChars) - 1)];
+
+        // Completa la password con caratteri casuali
+        while (strlen($password) < $length) {
+            $password .= $allChars[random_int(0, strlen($allChars) - 1)];
+        }
+
+        // Mescola ulteriormente la password per rendere l'ordine casuale
+        $password = str_shuffle($password);
+
+        return $password;
     }
 }

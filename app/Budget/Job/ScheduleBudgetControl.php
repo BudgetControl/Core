@@ -4,46 +4,31 @@ namespace App\Budget\Job;
 use App\Budget\Domain\Model\Budget;
 use App\Budget\Services\BudgetMamangerService;
 use App\Budget\Services\BudgetNotificationService;
+use App\BudgetTracker\Jobs\BudgetControlJobs;
 use App\User\Services\UserService;
-use Exception;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\User\Models\User;
 
-class ScheduleBudgetControl implements ShouldQueue
+class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        $this->handle();
-    }
-
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
-    {
-        Log::info("Control of exceeded budgets");
-        $this->getBudget();
-    }
 
     /**
      * get all budget is exceeded
      */
-    private function getBudget()
+    public function job(): void
     {
+        Log::info("Control of exceeded budgets");
+
         $budgets = Budget::all();
         $service = new BudgetMamangerService();
 
         foreach($budgets as $budget)
         {
+            //setup user cache for scheduled job
+            $user = User::find($budget->user_id);
+            UserService::setUserCache($user);
+
             if($this->isValid($budget) === true) {
                 if($service->isExpired($budget->id)) {
                     Log::debug("Budget is expired with ID ".$budget->id);
@@ -59,12 +44,15 @@ class ScheduleBudgetControl implements ShouldQueue
                     );
                 }
             }
+
         }
+        UserService::clearUserCache();
     }
 
     private function alertExpired(array $budget)
     {
         $to = $budget['user_email'];
+        $budget['className'] = 'critical';
         Log::debug("budgetExpired for $to");
         BudgetNotificationService::budgetExpired($budget,$to)->send();
     }
@@ -72,6 +60,7 @@ class ScheduleBudgetControl implements ShouldQueue
     private function alertAlmostExpired(array $budget)
     {
         $to = $budget['user_email'];
+        $budget['className'] = 'warning';
         BudgetNotificationService::budgetAlmostExpired($budget,$to)->send();
     }
 
@@ -84,7 +73,8 @@ class ScheduleBudgetControl implements ShouldQueue
             "period" => $budget['config']->period,
             "difference" => $budget['difference'],
             "user_name" => $user['user_profile']['name'],
-            "user_email" => $user['user_profile']['email']->email
+            "user_email" => $user['user_profile']['email']->email,
+            "currency" => $budget['currency']
         ];
     }
 

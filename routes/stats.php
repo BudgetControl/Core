@@ -44,4 +44,4 @@ Route::get('{type}/{year?}/{month?}/{day?}/{planned?}', function (string $type, 
         \Illuminate\Support\Facades\Log::critical($e->getMessage());
         return response("Ops an error occured... check url params", 500);
     }
-})->middleware('auth.jwt');
+});

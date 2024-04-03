@@ -18,10 +18,10 @@ use App\BudgetTracker\Http\Controllers\Controller;
 class EntryController extends Controller
 {
 	use Paginate;
-	
+
 	const PAGINATION = 30;
 
-	const FILTER = ['account','category','type','label'];
+	const FILTER = ['account', 'category', 'type', 'label'];
 
 	protected Builder $builder;
 
@@ -34,9 +34,8 @@ class EntryController extends Controller
 	public function index(Request $filter): \Illuminate\Http\JsonResponse
 	{
 		$page = $filter->query('page');
-
-		$this->builder = $this->getEntry();
-
+		
+		$this->builder = Entry::User()->withRelations();
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
@@ -56,7 +55,7 @@ class EntryController extends Controller
 		$type = EntryType::from($request->type);
 		try {
 			$service = new EntryService();
-			$service->save($request->toArray(),$type,Payee::find($request->payee_id));
+			$service->save($request->toArray(), $type, Payee::find($request->payee_id));
 			return response('All data stored');
 		} catch (\Exception $e) {
 			return response($e->getMessage(), 500);
@@ -97,15 +96,15 @@ class EntryController extends Controller
 	public function destroy(string $id): \Illuminate\Http\Response
 	{
 		try {
-			$entry = Entry::where('uuid',$id)->firstOrFail();
-			
+			$entry = Entry::where('uuid', $id)->firstOrFail();
+
 			$walletService = new WalletService(
 				EntryService::create($entry->toArray(), EntryType::from($entry->type))
 			);
 			$walletService->subtract();
 
 			Entry::destroy($entry->id);
-			
+
 			return response("Resource is deleted");
 		} catch (\Exception $e) {
 			return response($e->getMessage());
@@ -121,31 +120,30 @@ class EntryController extends Controller
 	 */
 	private function filter(array $filter): void
 	{
-		foreach($filter as $key => $value) {
-			if(!in_array($key,self::FILTER)) {
-				throw new \Exception("Filter must be one of these account, type, category, label - ".$key." is not valid!");
+		foreach ($filter as $key => $value) {
+			if (!in_array($key, self::FILTER)) {
+				throw new \Exception("Filter must be one of these account, type, category, label - " . $key . " is not valid!");
 			}
 		}
 
-		if(!empty($filter['account'])) {
+		if (!empty($filter['account'])) {
 			$this->builder->where('account_id', $filter['account']);
 		}
 
-		if(!empty($filter['category'])) {
+		if (!empty($filter['category'])) {
 			$this->builder->where('category_id', $filter['category']);
 		}
 
-		if(!empty($filter['type'])) {
+		if (!empty($filter['type'])) {
 			$this->builder->where('type', $filter['type']);
 		}
 
-		if(!empty($filter['label'])) {
+		if (!empty($filter['label'])) {
 			$tags = (array) $filter['label'];
 			$this->builder->whereHas('label', function (Builder $q) use ($tags) {
 				$q->whereIn('labels.id', $tags);
 			});
 		}
-
 	}
 
 	/**
@@ -154,10 +152,10 @@ class EntryController extends Controller
 	protected function getEntry(?EntryType $type = null): Builder
 	{
 		$builder = Entry::User()->withRelations()
-		->where("date_time", "<=", DateTime::month()->endDate)
-		->orderBy("date_time","desc");
+			->where("planned", 0)
+			->orderBy("date_time", "desc");
 
-		if(!is_null($type)) {
+		if (!is_null($type)) {
 			$builder->where("type", $type->value);
 		}
 

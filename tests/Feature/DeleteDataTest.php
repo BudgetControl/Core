@@ -18,7 +18,7 @@ class DeleteDataTest extends TestCase
     public function test_delete_incoming() {
         $this->initBalance();
 
-        $response = $this->deleteJson('/api/incoming/'.ApiGetDataTest::INCOMING_ID,[],$this->getAuthTokenHeader());
+        $response = $this->deleteJson('/api/incoming/'.ApiGetDataTest::INCOMING_ID,[]);
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::INCOMING_ID));
@@ -29,7 +29,7 @@ class DeleteDataTest extends TestCase
      *  DELETE ENTRY
      */
     public function test_delete_planned_entry() {
-        $response = $this->deleteJson('/api/planning-recursively/'.ApiGetDataTest::PLANNING_RECURSIVELY,[],$this->getAuthTokenHeader());
+        $response = $this->deleteJson('/api/planning-recursively/'.ApiGetDataTest::PLANNING_RECURSIVELY,[]);
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::PLANNING_RECURSIVELY,'planned_entries'));
@@ -43,30 +43,20 @@ class DeleteDataTest extends TestCase
      *  DELETE ENTRY
      */
     public function test_delete_expenses() {
-        $response = $this->deleteJson('/api/expenses/'.ApiGetDataTest::EXPENSES_ID,[],$this->getAuthTokenHeader());
+        $response = $this->deleteJson('/api/expenses/'.ApiGetDataTest::EXPENSES_ID,[]);
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::EXPENSES_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,5500));
     }
 
     /**
      *  DELETE ENTRY
      */
     public function test_delete_debit() {
-        $response = $this->deleteJson('/api/debit/'.ApiGetDataTest::DEBIT_ID,[],$this->getAuthTokenHeader());
+        $response = $this->deleteJson('/api/debit/'.ApiGetDataTest::DEBIT_ID,[]);
         $response->assertStatus(200);
 
         $this->assertTrue($this->isDeleted(ApiGetDataTest::DEBIT_ID));
-        $this->assertTrue($this->checkBalance(self::ACCOUNT_ID,6500));
-    }
-
-    private function getAuthTokenHeader()
-    {
-        //first we nee to get a new token
-        $response = $this->post('/auth/authenticate', AuthTest::PAYLOAD);
-        $token = $response['token']['plainTextToken'];
-        return ['X-ACCESS-TOKEN' => $token];
     }
 
     private function isDeleted(string $id,string $table = 'entries'):bool

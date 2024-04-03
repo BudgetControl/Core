@@ -37,7 +37,7 @@ class Account extends BaseModel
         parent::__construct($attributes);
         
         $this->attributes['date_time'] = date('Y-m-d H:i:s',time());
-        $this->attributes['uuid'] = uniqid();
+        $this->attributes['uuid'] = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 
         foreach($attributes as $k => $v) {
             $this->$k = $v;

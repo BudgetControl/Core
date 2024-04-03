@@ -5,13 +5,20 @@ final class DateTime {
 
     public $endDate;
     public $startDate;
+    public $month;
+    public $year;
 
     private $format = 'Y-m-d';
 
     private function __construct(array $dateTime)
     {
-        $this->endDate = date($this->format, $dateTime['end_date']);
+        if(!is_null($dateTime['end_date'])) {
+            $this->endDate = date($this->format, $dateTime['end_date']);
+        }
+
         $this->startDate = date($this->format, $dateTime['start_date']);
+        $this->month = date('m', $dateTime['start_date']);
+        $this->year = date('Y', $dateTime['start_date']);
     }
 
     public static function week(?int $now = null)
@@ -50,6 +57,14 @@ final class DateTime {
         ]);
     }
 
+    public static function current()
+    {
+        return new DateTime([
+            "start_date" => time(),
+            "end_date" => time()
+        ]);
+    }
+
     public static function custom(string $start, string $end)
     {
         return new DateTime([
@@ -58,6 +73,21 @@ final class DateTime {
         ]);
     }
 
+    public static function theseMonth()
+    {
+        return ;
+    }
+
+    public static function previousMonth()
+    {
+        $now = time();
+        $firstDayYear = strtotime('-1 month', $now);
+
+        return new DateTime([
+            "start_date" => $firstDayYear,
+            "end_date" => null
+        ]);
+    }
 
     /**
      * Set the value of format

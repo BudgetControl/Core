@@ -53,11 +53,13 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
     private function getPlannedEntry(string $time)
     {
         $newDate = $this->getTimeValue($time);
+        $newDate = date('Y-m-d H:i:s', $newDate);
+        $toDay = date('Y-m-d H:i:s', time()) ;
 
-        $entry = PlannedEntries::where("date_time", "<=", date('Y-m-d H:i:s', $newDate))
+        $entry = PlannedEntries::where("date_time", "<=", $newDate)
             ->where("deleted_at", null)
             ->where("planning", $time)
-            ->where("end_date_time", ">=", date('Y-m-d H:i:s', time()))
+            ->where("end_date_time", ">=", $toDay)
             ->orWhere("end_date_time", null)->get();
         Log::info("Found " . $entry->count() . " of new entry to insert");
         return $entry;
@@ -73,17 +75,25 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
 
             /** @var EntryModel $request  */
             foreach ($data as $request) {
-                $type = EntryType::from($request->type);
 
-                $entry = $request;
+                $entry = $request->toArray();
+                $entryToInsert = new EntryModel(['user_id' => $entry['user_id']]);
+                $entryToInsert->transfer = 0;
+                $entryToInsert->amount = $entry['amount'];
+                $entryToInsert->account_id = $entry['account_id'];
+                $entryToInsert->category_id = $entry['category_id'];
+                $entryToInsert->type = $entry['type'];
+                $entryToInsert->waranty = 0;
+                $entryToInsert->confirmed = 1;
+                $entryToInsert->planned = 1;
+                $entryToInsert->date_time = $entry['date_time'];
+                $entryToInsert->note = $entry['note'];
+                $entryToInsert->currency_id = $entry['currency_id'];
+                $entryToInsert->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
-                $service = new EntryService();
-                $entryArray = $entry->toArray();
-                $entryArray['label'] = [];
-                $entryArray['transfer'] = false;
-                $service->save($entryArray, $type);
+                $entryToInsert->save();
 
-                Log::info("PLANNED INSERT:: " . json_encode($entry));
+                Log::info("PLANNED INSERT:: " . json_encode($entryToInsert));
             }
 
             $this->updatePlanningEntry($data);
@@ -154,3 +164,4 @@ class InsertPlannedEntry extends BudgetControlJobs implements ShouldQueue
         return $newDate;
     }
 }
+

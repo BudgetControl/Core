@@ -20,7 +20,7 @@ class ModelService {
     public function save(array $data): void
     {
         $model = $this->model;
-		$model->uuid = uniqid();
+		$model->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
 		$model->amount = $data['amount'];
 		$model->note = $data['note'];
 		$model->type = $data['type'];

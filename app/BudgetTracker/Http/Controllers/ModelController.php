@@ -23,7 +23,7 @@ class ModelController extends Controller
 	 */
 	public function index(): \Illuminate\Http\JsonResponse
 	{
-		$cat = Models::User()->withRelations()->get();
+		$cat = Models::User()->withRelations()->orderBy('name')->get();
 		return response()->json($cat);
 	}
 

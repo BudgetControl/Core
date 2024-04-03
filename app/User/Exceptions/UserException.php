@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
-class AuthException extends Exception
+class UserException extends Exception
 {
     public function render(): Response
     {
         $error = "An error occurred on auth process";
-        $errorCode = uniqid();
+        $errorCode = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $statusCode = empty($this->getCode()) ? 200 : $this->getCode();
         $file = $this->getFile();
 

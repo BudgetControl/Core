@@ -28,7 +28,7 @@ class PlannedEntries extends BaseModel
     {
         parent::__construct();
         
-        $this->attributes['uuid'] = uniqid();
+        $this->attributes['uuid'] = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $this->attributes['confirmed'] = 1;
         $this->attributes['planned'] = 1;
 

@@ -27,8 +27,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/incoming",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -50,8 +49,7 @@ class WalletBalanceTest extends TestCase
 
         $response = $this->postJson(
             "api/expenses",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
@@ -68,19 +66,18 @@ class WalletBalanceTest extends TestCase
      */
     public function test_add_debit_balance_data(): void
     {
-        $payload = $this->makeRequest(-1500,new DateTime("-1 day"));
+        $payload = $this->makeRequest(-700,new DateTime("-1 day"));
         $payload['payee_id'] = "Pippo";
 
         $response = $this->postJson(
             "api/debit",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
 
         $except = [
-            "balance" => 3200,
+            "balance" => 4000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -91,17 +88,16 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_planned_balance_data(): void
     {
-        $payload = $this->makeRequest(50,new DateTime("+2 day"));
+        $payload = $this->makeRequest(500,new DateTime("+2 day"));
 
         $response = $this->putJson(
-            "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            "api/incoming/64b54cc566d77_balancetest",
+            $payload
         );
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 3200,
+            "balance" => 3000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -113,14 +109,13 @@ class WalletBalanceTest extends TestCase
         $payload = $this->makeRequest(1000,new DateTime("-2 day"));
 
         $response = $this->putJson(
-            "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            "api/incoming/64b54cc566d77_balancetest",
+            $payload
         );
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 3200,
+            "balance" => 4000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -132,18 +127,17 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_confirmed_balance_data(): void
     {
-        $payload = $this->makeRequest(5000,new DateTime("-2 day"));
+        $payload = $this->makeRequest(500,new DateTime("-2 day"));
         $payload['confirmed'] = false;
 
         $response = $this->putJson(
-            "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            "api/incoming/64b54cc566d77_balancetest",
+            $payload
         );
 
         $response->assertStatus(200);
         $except = [
-            "balance" => 4200.00,
+            "balance" => 3000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -154,18 +148,17 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_confirmed_balance_v2_data(): void
     {
-        $payload = $this->makeRequest(70,new DateTime("-2 day"));
+        $payload = $this->makeRequest(1000,new DateTime("-2 day"));
         $payload['confirmed'] = true;
 
         $response = $this->putJson(
-            "api/incoming/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            "api/incoming/64b54cc566d77_balancetest",
+            $payload
         );
 
         $response->assertStatus(200);
         $except = [
-            "balance" => -1850.00,
+            "balance" => 4000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -176,17 +169,16 @@ class WalletBalanceTest extends TestCase
      */
     public function test_update_incoming_expenses_balance_data(): void
     {
-        $payload = $this->makeRequest(-700,new DateTime("-1 day"));
+        $payload = $this->makeRequest(-1000,new DateTime("-1 day"));
         
         $response = $this->putJson(
-            "api/expenses/64b54cc566d77_test",
-            $payload,
-            $this->getAuthTokenHeader()
+            "api/expenses/64b54cc566d77_balancetest",
+            $payload
         );
 
         $response->assertStatus(200);
         $except = [
-            "balance" => -1500.00,
+            "balance" => 2000,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -198,25 +190,24 @@ class WalletBalanceTest extends TestCase
      */
     public function test_add_transfer_balance_data(): void
     {
-        $payload = $this->makeRequest(300,new DateTime("-1 day"));
+        $payload = $this->makeRequest(500,new DateTime("-1 day"));
         $payload['transfer_id'] = "6";
 
         $response = $this->postJson(
             "api/transfer",
-            $payload,
-            $this->getAuthTokenHeader()
+            $payload
         );
 
         $response->assertStatus(200);
 
         $except = [
-            "balance" => -1800.00,
+            "balance" => 1500.00,
             "id" => 5
         ];
         $this->assertDatabaseHas("accounts",$except);
 
         $except = [
-            "balance" => 300,
+            "balance" => 500,
             "id" => 6
         ];
         $this->assertDatabaseHas("accounts",$except);
@@ -247,14 +238,6 @@ class WalletBalanceTest extends TestCase
         }';
 
         return (array) json_decode($request,true);
-    }
-
-    private function getAuthTokenHeader()
-    {
-        //first we nee to get a new token
-        $response = $this->post('/auth/authenticate', self::PAYLOAD);
-        $token = $response['token']['plainTextToken'];
-        return ['X-ACCESS-TOKEN' => $token];
     }
 
     private function initBalance()

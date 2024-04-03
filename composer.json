@@ -8,6 +8,7 @@
         "php": "^8.1",
         "benmajor/exchange-rates-api": "^4.2",
         "doctrine/dbal": "^3.6",
+        "ellaisys/aws-cognito": "^1.2",
         "firebase/php-jwt": "*",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
@@ -15,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "paragonie/sodium_compat": "^1.20",
         "predis/predis": "^2.1",
+        "ramsey/uuid": "^4.7",
         "sentry/sentry-laravel": "^3.4"
     },
     "require-dev": {

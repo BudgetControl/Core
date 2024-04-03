@@ -28,7 +28,7 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => uniqid(),
+            'uuid' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'date_time' => date('Y-m-d H:i:s',time()),
             'name' => fake()->text(10),
             'color' => random_color(),

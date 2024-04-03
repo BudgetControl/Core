@@ -16,6 +16,10 @@ class Entry extends BaseModel
 
     protected $table = 'entries';
 
+    public $fillable = [
+        'planned'
+    ];
+
     public $hidden = [
         "created_at",
         "updated_at",

@@ -30,7 +30,7 @@ class Mail extends Mailable implements MailInterface
     public function build(): Mailable
     {
         $this->validate();
-        return $this->from(env("MAIL_FROM", $this->fromAddress),env("APP_NAME"))->subject($this->subject)
+        return $this->from(config("app.mail_from", $this->fromAddress),config("app.name"))->subject($this->subject)
             ->view($this->view, $this->data);
     }
 

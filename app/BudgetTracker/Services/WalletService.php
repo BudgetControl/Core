@@ -30,21 +30,22 @@ class WalletService
     public function sum(): void
     {
         //first check if is confirmed
-        if ($this->checkConfirmed() === true) {
-            Log::debug($this->entry->getId()." - is confirmed");
+        if ($this->entry->getConfirmed() === true) {
+            Log::debug($this->entry->getId() . " - is confirmed");
             // now check if is planned
-            if ($this->checkPlanned() === false) {
-                Log::debug($this->entry->getId()." - is planned");
+            if ($this->entry->getPlanned() === false) {
+                Log::debug($this->entry->getId() . " - is planned");
                 $entry = $this->entry;
 
                 $amount = $entry->getAmount();
                 $account = $entry->getAccount()->id;
 
                 //update balance
-                Log::debug($this->entry->getId()." - update with ".$amount." on $account");
+                Log::debug($this->entry->getId() . " - update with " . $amount . " on $account");
                 $this->update($amount, $account);
             }
         }
+
         $this->revert();
     }
 
@@ -55,10 +56,12 @@ class WalletService
      */
     public function subtract(): void
     {
-        //first check if is confirmed
-        if ($this->checkConfirmed() === true) {
+
+        if ($this->entry->getConfirmed() === true) {
+            Log::debug($this->entry->getId() . " - is confirmed");
             // now check if is planned
-            if ($this->checkPlanned() === false) {
+            if ($this->entry->getPlanned() === false) {
+                Log::debug($this->entry->getId() . " - is planned");
                 $entry = $this->entry;
 
                 $amount = $entry->getAmount();
@@ -70,7 +73,6 @@ class WalletService
                 Log::debug("subtract balance " . $amount . " , " . $account);
             }
         }
-
     }
 
     /**
@@ -78,17 +80,14 @@ class WalletService
      */
     protected function checkPlanned(): bool
     {
-        // check only new entry
-        if (is_null($this->oldEntry)) {
-            return $this->entry->getPlanned();
+        if (!is_null($this->oldEntry)) {
+            if ($this->oldEntry->planned == false && $this->entry->getPlanned() == true) {
+                Log::debug($this->entry->getId() . " old entry was planned REVERT");
+                return true;
+            }
         }
 
-        if ($this->oldEntry->planned == false) {
-            Log::debug($this->entry->getId()." old entry was planned REVERT");
-            $this->revert = true;
-        }
-
-        return $this->entry->getPlanned();
+        return false;
     }
 
     /**
@@ -96,43 +95,56 @@ class WalletService
      */
     protected function checkConfirmed(): bool
     {
-        // check only new entry
-        if (is_null($this->oldEntry)) {
-            return $this->entry->getConfirmed();
+        if (!is_null($this->oldEntry)) {
+            if ($this->oldEntry->confirmed == true && $this->entry->getConfirmed() == false) {
+                Log::debug($this->entry->getId() . " old entry was not confirmed REVERT");
+                return true;
+            }
         }
 
-        if ($this->oldEntry->confirmed == true) {
-            Log::debug($this->entry->getId()." old entry was not confirmed REVERT");
-            $this->revert = true;
+        return false;
+    }
+
+    /**
+     * chek if entry is confirmet type
+     */
+    protected function checkAmount(): bool
+    {
+        if (!is_null($this->oldEntry)) {
+            if ($this->oldEntry->amount != $this->entry->getAmount() &&  ($this->oldEntry->confirmed == true && $this->oldEntry->planned == false)) {
+                Log::debug($this->entry->getId() . " old entry has different amount REVERT");
+                return true;
+            }
         }
 
-        return $this->entry->getConfirmed();
+        return false;
     }
 
     /**
      * is account changed
      */
-    protected function isAccountChanged()
+    protected function checkAccount()
     {
-
         if (!is_null($this->oldEntry)) {
-            $previusAccount = $this->oldEntry->account_id;
-            $account = $this->entry->getAccount()->id;
-
-            if($this->oldEntry->confirmed == true) {
-                if($this->oldEntry->planned == false) {
-                    if ($previusAccount != $account) {
-                        $this->update(
-                            $this->oldEntry->amount * -1,
-                            $previusAccount
-                        );
-                        $this->revert = false;
-                    }
-                }
+            if ($this->oldEntry->account != $this->entry->getAccount() && ($this->oldEntry->confirmed == true && $this->oldEntry->planned == false)) {
+                Log::debug($this->entry->getId() . " old entry has different account REVERT");
+                return true;
             }
-
-            
         }
+
+        return false;
+    }
+
+    /**
+     * is to revert
+     */
+    protected function isRevert(): bool
+    {
+        if ($this->checkConfirmed() || $this->checkPlanned() || $this->checkAccount() || $this->checkAmount()) { //
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -140,9 +152,10 @@ class WalletService
      */
     protected function revert()
     {
-        $this->isAccountChanged();
-        if ($this->revert === true) {
-            Log::debug($this->entry->getId()." REVERTING");
+        $revert = $this->isRevert();
+
+        if ($revert === true) {
+            Log::debug($this->entry->getId() . " REVERTING");
             AccountsService::updateBalance($this->oldEntry->amount * -1, $this->oldEntry->account_id);
         }
     }
