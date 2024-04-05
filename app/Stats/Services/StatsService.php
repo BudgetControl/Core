@@ -264,7 +264,7 @@ class StatsService
             date('Y', $previousDate),
         );
 
-        $response = $this->buildResponse($totalAmount->toArray(), $totalAmountBefore->toArray());
+        $response = $this->buildResponse($totalAmount['total'], $totalAmountBefore['total']);
 
         return $response;
     }
