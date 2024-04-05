@@ -37,7 +37,6 @@ tasks:
     cmds:
       - docker container exec budgetcontrol-core php artisan db:seed --class=UserSeed
       - docker container exec budgetcontrol-ms-workspace vendor/bin/phinx seed:run
-      - docker container exec budgetcontrol-core php artisan db:seed
       - docker container exec budgetcontrol-core php artisan db:seed --class=AccountSeed
       - docker container exec budgetcontrol-core php artisan db:seed --class=CategorySeeders
       - docker container exec budgetcontrol-core php artisan db:seed --class=PaymentTypeSeeders 
