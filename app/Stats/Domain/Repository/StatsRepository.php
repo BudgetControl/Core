@@ -9,6 +9,7 @@ namespace App\Stats\Domain\Repository;
  */
 
 use App\User\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StatsRepository
@@ -57,17 +58,33 @@ class StatsRepository
     
     public function statsMonthExpenses(?int $month = null, ?int $year = null)
     {
-        $qb = DB::table("stats_wallets_month")->select('expenses as amount')->where('user_id', $this->userId);
+        $userId = UserService::getCacheUserID();
+        $startDate = Carbon::rawParse("$year-$month-01")->startOfMonth()->toDateString();
+        $endDate = Carbon::rawParse("$year-$month-01")->endOfMonth()->toDateString();
 
-        if(!is_null($month)) {
-            $qb->where('month', $month);
-        }
+        $query = "
+            SELECT COALESCE(SUM(e.amount), 0) AS total
+            FROM entries AS e
+            JOIN accounts AS a ON e.account_id = a.id
+            WHERE e.type in ('expenses', 'debit')
+            AND e.amount < 0
+            AND a.installement = 0
+            AND e.exclude_from_stats = 0
+            AND a.exclude_from_stats = 0
+            AND a.deleted_at is null
+            AND e.deleted_at is null
+            AND e.confirmed = 1
+            AND e.planned = 0
+            AND e.date_time >= '$startDate'
+            AND e.date_time < '$endDate'
+            AND a.user_id = $userId;
+        ";
 
-        if(!is_null($year)) {
-            $qb->where('year', $year);
-        }
+        $result = DB::select($query);
 
-        return $qb->get();
+        return [
+            'total' => $result['total']
+        ];
     }
 
 }
