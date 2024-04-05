@@ -13,7 +13,7 @@ use App\BudgetTracker\Services\EntryService;
 use App\BudgetTracker\Services\WalletService;
 use App\BudgetTracker\Services\AccountsService;
 use App\BudgetTracker\Http\Controllers\Controller;
-
+use Carbon\Carbon;
 
 class EntryController extends Controller
 {
@@ -35,7 +35,7 @@ class EntryController extends Controller
 	{
 		$page = $filter->query('page');
 		
-		$this->builder = Entry::User()->withRelations();
+		$this->builder = Entry::User()->withRelations()->where("date_time", "<=", Carbon::now()->toAtomString())->orderBy("date_time", "desc");
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
