@@ -263,10 +263,13 @@ class StatsService
             date('m', $previousDate),
             date('Y', $previousDate),
         );
+	
+	return [
+            'total' => $totalAmount['total'],
+            'total_passed' => $totalAmountBefore['total'],
+            'percentage' => percentage($totalAmount['total'], $totalAmountBefore['total'])
+        ];
 
-        $response = $this->buildResponse($totalAmount['total'], $totalAmountBefore['total']);
-
-        return $response;
     }
 
     /**

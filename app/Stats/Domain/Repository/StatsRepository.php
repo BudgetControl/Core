@@ -83,7 +83,7 @@ class StatsRepository
         $result = DB::select($query);
 
         return [
-            'total' => $result['total']
+            'total' => $result[0]->total
         ];
     }
 
