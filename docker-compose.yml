@@ -70,7 +70,7 @@ services:
     container_name: budgetcontrol-ms-stats
     image: budgetcontrol/core:v3.0
     volumes:
-      - ./microservices/stats/:/var/www/workdir
+      - ./microservices/Stats/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
@@ -81,7 +81,7 @@ services:
     container_name: budgetcontrol-ms-workspace
     image: budgetcontrol/core:v3.0
     volumes:
-      - ./microservices/workspace/:/var/www/workdir
+      - ./microservices/Workspace/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
@@ -92,7 +92,7 @@ services:
     container_name: budgetcontrol-gateway
     image: budgetcontrol/core:v3.0
     volumes:
-      - ./microservices/gateway/:/var/www/workdir
+      - ./microservices/Gateway/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
@@ -103,7 +103,7 @@ services:
     container_name: budgetcontrol-ms-authtentication
     image: budgetcontrol/core:v3.0
     volumes:
-      - ./microservices/authtentication/:/var/www/workdir
+      - ./microservices/Authtentication/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
