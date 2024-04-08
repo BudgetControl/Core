@@ -36,13 +36,20 @@ class AuthLoginController extends AuthController {
 
         try {
             $result = CognitoClientService::init($toCollect['email'])->authLogin($toCollect['password']);
+
+            $token = $this->authenticateUserCognito($result);
+
+            return response()->json([
+                'success' => true,
+                'access_token' => $token->value()
+            ]);
+
             if(Auth::attempt([
                 'email' => $toCollect['crypted_email'],
                 'password' => $toCollect['password']
             ], $toCollect['rememberMe']) ) {
                 
                 /** @var AccessToken $accessToken */
-                $token = $this->authenticateUserCognito($result);
 
                 $user = User::find(Auth::id());
                 //check if user has verified email
