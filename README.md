@@ -13,7 +13,7 @@ php version >= 8.2
 ### Installations
 * Clone the repository on your computer with the command git clone git@github.com:BudgetControl/Core.git.
 * Enter the repository directory with the command cd Core.
-* checkout on the last stable version branch for dev environment
+* Checkout on the last stable version branch for dev environment or last tag version
 * Copy file .env.example on .env 
 * Creation of the dockerfile container
    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
@@ -30,10 +30,10 @@ php version >= 8.2
 "budgetcontrol-proxy" is not mandatory for dev installation
    
 ### Usage
-* Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
+* Make migration DB docker exec budgetcontrol-core php artisan migrate --seed
 
-### About budget traker
-BudgetTracker is developed by Marco De Felice, like a Open Source project
+### About budget control
+BudgetControl is developed by Marco De Felice, like a Open Source project
 
 ### Contributing
 Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.
@@ -58,7 +58,7 @@ Front-end is developed with Vue Notus template Back-end is developed with larave
     
 ## Directoy
 - App
- - BudgetTracker --> all methods of budget applications
+ - BudgetControl --> all methods of budget applications
   - Constants
   - Enums
   - Excpetions
@@ -113,6 +113,11 @@ You can set-up xdebug interactive debuging mode
 
 ### Xdebug configuration for IDE ( php storm )
 https://www.jetbrains.com/help/phpstorm/troubleshooting-php-debugging.html#no-debug-server-is-configured% 
+
+### Test with mailhog service
+You can use an fake mailhog server
+- docker run --rm -d --name mailhog -p 8025:8025 -p 1025:1025 mailhog/mailhog
+- docker network connect [network_name] mailhog
 
 ## Author
 * Marco De Felice
