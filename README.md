@@ -1,4 +1,4 @@
-# Budget tracker V2 App - BackAnd application
+# Budget Control V3 Core Application
 Opens Source MIT license project. Your Finances in One Place Set unlimited daily, weekly, monthly, or one-time budgets See every transaction, categorized automatically with tags or categories.
 
 ![version](https://img.shields.io/badge/version-2.2.2-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) <a 
@@ -8,7 +8,7 @@ href="https://github.com/budgetcontrol/services/issues?q=is%3Aopen+is%3Aissue" t
 </a><a href="https://discord.gg/TtMTeUbSpW" target="_blank">![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)</a>
 
 ## Microservice Architecture
-The Budget tracker V3.0 is designed using a microservice architecture, which allows for better scalability, flexibility, and maintainability of the application. The application is divided into multiple independent services, each responsible for a specific functionality.
+The Budget Control V3.0 is designed using a microservice architecture, which allows for better scalability, flexibility, and maintainability of the application. The application is divided into multiple independent services, each responsible for a specific functionality.
 
 ## Requirment
 php version >= 8.2
@@ -33,10 +33,7 @@ php version >= 8.2
 "budgetcontrol-proxy" is not mandatory for dev installation
    
 ### Usage
-* Make migration DB docker exec budget_tracker_v2-be-bemodule-1 php artisan migrate --seed
-
-### About budget traker
-BudgetTracker is developed by Marco De Felice, like a Open Source project
+Go to http://localhost or your desidered domain and enjoy the application
 
 ### Contributing
 Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.
@@ -45,10 +42,11 @@ Thank you for considering contributing to the Budget tracker The contribution gu
 If you discover a security vulnerability within Budget tracker, please send an e-mail to marco.defelice890@gmail.com. All security vulnerabilities will be promptly addressed.
 
 ### License
-The Budget tracker is open-sourced software licensed under the MIT license.
+The Budget Control is open-sourced software licensed under the MIT license.
 
 ### Some develop information
 Front-end is developed with Vue Notus template Back-end is developed with laravel
+- **FE-REPO** https://github.com/BudgetControl/Pwa
 
 ## Tecnology
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"$
@@ -94,6 +92,11 @@ You can set-up xdebug interactive debuging mode
 
 ### Xdebug configuration for IDE ( php storm )
 https://www.jetbrains.com/help/phpstorm/troubleshooting-php-debugging.html#no-debug-server-is-configured% 
+
+### Test with mailhog service
+You can use an fake mailhog server
+- docker run --rm -d --name mailhog -p 8025:8025 -p 1025:1025 mailhog/mailhog
+- docker network connect [network_name] mailhog
 
 ## Author
 * Marco De Felice
