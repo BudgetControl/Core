@@ -1,3 +1,12 @@
-[submodule "budget-tracker_v2-FE"]
-	path = budget-tracker_v2-FE
-	url = git@github.com:marcodefelice/budget-tracker_v2-FE.git
+[submodule "microservices/Stats"]
+	path = microservices/Stats
+	url = git@github.com:BudgetControl/Stats.git
+[submodule "microservices/Workspace"]
+	path = microservices/Workspace
+	url = git@github.com:BudgetControl/Workspace.git
+[submodule "microservices/Gateway"]
+	path = microservices/Gateway
+	url = git@github.com:BudgetControl/Gateway.git
+[submodule "microservices/Authtentication"]
+	path = microservices/Authtentication
+	url = git@github.com:BudgetControl/Authtentication.git

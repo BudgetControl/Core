@@ -13,7 +13,8 @@ RUN apt update \
             opcache \
             pdo \
             mysqli \
-            pdo_mysql 
+            pdo_mysql \
+            bcmath
 RUN a2enmod rewrite
 RUN service apache2 restart
 RUN mkdir /var/www/logs
@@ -28,6 +29,7 @@ COPY bin/apache/prod-api.budgetcontrol.cloud.conf /etc/apache2/sites-available/b
 RUN a2ensite budgetcontrol.cloud.conf
 RUN a2enmod rewrite
 
+COPY bin/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 ###########################################
 
 RUN mkdir /var/www/script

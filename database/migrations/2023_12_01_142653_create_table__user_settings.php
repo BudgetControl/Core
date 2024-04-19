@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_settings', function (Blueprint $table) {
             $table->id();
-            $table->integer("user_id");
+            $table->integer("workspace_id");
             $table->integer("currency_id");
             $table->integer("payment_type_id");
             $table->timestamps();

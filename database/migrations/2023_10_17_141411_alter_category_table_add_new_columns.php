@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('sub_categories', function (Blueprint $table) {
             $table->integer('custom')->default(0);
             $table->integer('exclude_from_stats')->default(0);
-            $table->integer('user_id')->default(0);
+            $table->integer('workspace_id')->default(0);
         });
 
         Schema::table('accounts', function (Blueprint $table) {
@@ -30,7 +30,7 @@ return new class extends Migration
         Schema::table('sub_categories', function (Blueprint $table) {
             $table->dropColumn("custom");
             $table->dropColumn("exclude_from_stats");
-            $table->dropColumn("user_id");
+            $table->dropColumn("workspace_id");
         });
     }
 };

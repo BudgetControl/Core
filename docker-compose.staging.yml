@@ -1,7 +1,0 @@
-version: '2.2'
-
-services:
-    bemodule:
-      build:
-        context: .
-        dockerfile: Dockerfile.staging

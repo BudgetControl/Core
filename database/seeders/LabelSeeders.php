@@ -22,10 +22,10 @@ class LabelSeeders extends Seeder
 
       foreach ($data[$lang] as $key => $value) {
         $db = new Labels();
-        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
+        $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
         $db->name = strtolower($value);
         $db->color = 'colors';
-        $db->user_id = 1;
+        $db->workspace_id = 1;
         $db->save();
       }
     }

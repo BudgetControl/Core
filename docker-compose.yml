@@ -1,71 +1,124 @@
-version: '2.2'
+version: '3'
 
 services:
-    database:
-      container_name: budgetcontrol-db
-      image: mysql:latest
-      restart: unless-stopped
-      env_file:
-        - .env
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        MYSQL_USER: ${MYSQL_USERNAME}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-      volumes:
-        - mysql_persistent:/var/lib/mysql
-      networks:
-        - budgetcontrol_network
-    bemodule:
-      container_name: budgetcontrol-core
-      image: budgetcontrol-core:${APP_ENV}_${APP_VERSION}
-      volumes:
-        - ./:/var/www/workdir
-        - ../logapp:/app/storage/logs
-      depends_on:
-        - database
-        - cache
-      networks:
-        - budgetcontrol_network
-      restart: unless-stopped
-    cache:
-      container_name: budgetcontrol-redis
-      image: redis:7.2-rc2-alpine
-      restart: always
-      env_file:
-        - .env
-      ports:
-        - '6379:6379'
-      command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-      networks:
-        - budgetcontrol_network
-    nginx:
-      container_name: budgetcontrol-proxy
-      image: nginx:stable-alpine
-      ports:
-        - "80:80"
-        - "443:443"
-      volumes:
-        - ./bin/nginx:/etc/nginx/conf.d
-        - ./bin/certbot/conf:/etc/letsencrypt
-        - ./bin/certbot/www:/var/www/certbot
-      networks:
-        - budgetcontrol_network
-    certbot:
-      image: certbot/certbot
-      container_name: budgetcontrol-certbot
-      volumes:
+
+  database:
+    container_name: budgetcontrol-db
+    image: mysql:8.0.36-debian
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - mysql_persistent:/var/lib/mysql
+    networks:
+      - budgetcontrol_network
+
+  cache:
+    container_name: budgetcontrol-redis
+    image: redis:7.2-rc2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+    networks:
+      - budgetcontrol_network
+
+  core:
+    container_name: budgetcontrol-core
+    image: budgetcontrol/core:v3.0
+    volumes:
+      - ./:/var/www/workdir
+      - ../logapp:/app/storage/logs
+    depends_on:
+      - database
+      - cache
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+
+  proxy:
+    container_name: budgetcontrol-proxy
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./bin/nginx:/etc/nginx/conf.d
       - ./bin/certbot/conf:/etc/letsencrypt
       - ./bin/certbot/www:/var/www/certbot
-      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-      networks:
-        - budgetcontrol_network
+    networks:
+      - budgetcontrol_network
+    depends_on:
+      - core
+
+  certbot:
+    image: certbot/certbot
+    container_name: budgetcontrol-certbot
+    volumes:
+    - ./bin/certbot/conf:/etc/letsencrypt
+    - ./bin/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - budgetcontrol_network
+      
+  ms-stats:
+    container_name: budgetcontrol-ms-stats
+    image: budgetcontrol/core:v3.0
+    volumes:
+      - ./microservices/Stats/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+  
+  ms-workspace:
+    container_name: budgetcontrol-ms-workspace
+    image: budgetcontrol/core:v3.0
+    volumes:
+      - ./microservices/Workspace/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+  
+  gateway:
+    container_name: budgetcontrol-gateway
+    image: budgetcontrol/core:v3.0
+    volumes:
+      - ./microservices/Gateway/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-authtentication:
+    container_name: budgetcontrol-ms-authtentication
+    image: budgetcontrol/core:v3.0
+    volumes:
+      - ./microservices/Authtentication/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
 
 volumes:
   mysql_persistent:
-  bc_cache:
+    name: budgetcontrol_core_database
+    external: true
+  cache:
+    name: budgetcontrol_core_cache
+    external: true
 
 networks:
   budgetcontrol_network:
-    external: false
+    external: true
     name: budgetcontrol_network

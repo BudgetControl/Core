@@ -46,17 +46,6 @@ return new class extends Migration
 
        $table->softDeletes();
      });
-     //
-     // Schema::table('entries', function (Blueprint $table) {
-     //   $table->foreign('category_id')->references('id')->on('sub_categories')->onDelete('cascade');
-     //   $table->foreign('model_id')->references('id')->on('models')->onDelete('cascade');
-     //   $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-     //   $table->foreign('transfer_id')->references('id')->on('accounts');
-     //   $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade');
-     //   $table->foreign('payment_type')->references('id')->on('payments_types')->onDelete('cascade');
-     //   $table->foreign('payee_id')->references('id')->on('payees')->onDelete('cascade');
-     //   $table->foreign('geolocation_id')->references('id')->on('geolocation')->onDelete('cascade');
-     // });
    }
 
    /**
