@@ -16,7 +16,7 @@ php version >= 8.2
 ### Installations
 * Clone the repository on your computer with the command git clone git@github.com:BudgetControl/Core.git.
 * Enter the repository directory with the command cd Core.
-* checkout on the last stable version branch for dev environment
+* Checkout on the last stable version branch for dev environment or last tag version
 * Copy file .env.example on .env 
 * Creation of the dockerfile container
    run task build:dev for dev enviroment
@@ -34,6 +34,11 @@ php version >= 8.2
    
 ### Usage
 Go to http://localhost or your desidered domain and enjoy the application
+* Make migration DB docker exec budgetcontrol-core php artisan migrate --seed
+
+### About budget control
+BudgetControl is developed by Marco De Felice, like a Open Source project
+
 
 ### Contributing
 Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.

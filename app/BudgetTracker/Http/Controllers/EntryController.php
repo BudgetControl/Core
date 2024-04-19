@@ -35,7 +35,12 @@ class EntryController extends Controller
 	{
 		$page = $filter->query('page');
 		
-		$this->builder = Entry::User()->withRelations()->where("date_time", "<=", Carbon::now()->toAtomString())->orderBy("date_time", "desc");
+
+		$this->builder = Entry::User()
+			->withRelations()
+			->where("date_time", "<=", Carbon::now()->lastOfMonth())
+			->orderBy("date_time", "desc");
+
 		if(!empty($filter->query('filter'))) {
 			$this->filter($filter->query('filter'));
 		}
