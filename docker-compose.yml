@@ -30,7 +30,7 @@ services:
 
   core:
     container_name: budgetcontrol-core
-    image: budgetcontrol/core:v3.0
+    image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./:/var/www/workdir
       - ../logapp:/app/storage/logs
@@ -68,7 +68,7 @@ services:
       
   ms-stats:
     container_name: budgetcontrol-ms-stats
-    image: budgetcontrol/core:v3.0
+    image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Stats/:/var/www/workdir
     networks:
@@ -79,7 +79,7 @@ services:
   
   ms-workspace:
     container_name: budgetcontrol-ms-workspace
-    image: budgetcontrol/core:v3.0
+    image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Workspace/:/var/www/workdir
     networks:
@@ -90,7 +90,7 @@ services:
   
   gateway:
     container_name: budgetcontrol-gateway
-    image: budgetcontrol/core:v3.0
+    image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Gateway/:/var/www/workdir
     networks:
@@ -101,7 +101,7 @@ services:
 
   ms-authtentication:
     container_name: budgetcontrol-ms-authtentication
-    image: budgetcontrol/core:v3.0
+    image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Authtentication/:/var/www/workdir
     networks:
