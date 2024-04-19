@@ -26,7 +26,7 @@ class ScheduleBudgetControl extends BudgetControlJobs implements ShouldQueue
         foreach($budgets as $budget)
         {
             //setup user cache for scheduled job
-            $user = User::find($budget->workspace_id);
+            $user = User::find($budget->user_id);
             UserService::setUserCache($user);
 
             if($this->isValid($budget) === true) {
