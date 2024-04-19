@@ -30,7 +30,6 @@ class UserService
      */
     public static function getCacheUserID(): int
     {
-        return 1;
         $cacheKey = session()->getId().'user';
         $id = Cache::create($cacheKey.'id')->get();
         return $id;
