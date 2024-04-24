@@ -31,6 +31,13 @@ class AuthCognitoMiddleware
      */
     public function handle($request, \Closure $next)
     {
+        $token = $request->header('X-BC-Token');
+        if(empty($token) || empty($authToken)) {
+            return response('Unauthorized', 401);
+        }
+        $jwtToken = JwtToken::decodeToken($token);
+        $sub = $jwtToken['sub'];
+        UserService::setUserCache(User::where('sub',$sub)->first());
 
         /** only fot php unit testting */
         $accessToken = str_replace('Bearer ', '', $request->query('auth'));
@@ -63,7 +70,6 @@ class AuthCognitoMiddleware
 
                 $response = $next($request);
                 $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);
-                UserService::setUserCache(User::where('sub',$sub)->first());
 
                 return $response;
 
