@@ -33,8 +33,6 @@ class AuthCognitoMiddleware
     {
 
         /** only fot php unit testting */
-
-
         $accessToken = str_replace('Bearer ', '', $request->query('auth'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
 
