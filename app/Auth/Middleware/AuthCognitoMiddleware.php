@@ -32,7 +32,7 @@ class AuthCognitoMiddleware
     public function handle($request, \Closure $next)
     {
         $token = $request->header('X-BC-Token');
-        if(empty($token) || empty($authToken)) {
+        if(empty($token)) {
             return response('Unauthorized', 401);
         }
         $jwtToken = JwtToken::decodeToken($token);
