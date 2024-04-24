@@ -63,6 +63,7 @@ class AuthCognitoMiddleware
 
                 $response = $next($request);
                 $response->headers->set('Authorization', "Bearer ".$newAccessToken, true);
+                UserService::setUserCache(User::where('sub',$sub)->first());
 
                 return $response;
 
