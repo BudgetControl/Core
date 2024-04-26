@@ -183,7 +183,7 @@ class Entry extends BaseModel
     // Definisci un query scope per aggiungere la condizione "where user_id = x"
     public function scopeUser($query)
     {
-        return $query->where('entries.user_id', UserService::getCacheUserID());
+        return $query->where('entries.workspace_id', UserService::getCacheUserID());
     }
 
 }
