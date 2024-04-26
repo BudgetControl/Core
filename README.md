@@ -16,7 +16,7 @@ php version >= 8.2
 ### Installations
 * Clone the repository on your computer with the command git clone git@github.com:BudgetControl/Core.git.
 * Enter the repository directory with the command cd Core.
-* checkout on the last stable version branch for dev environment
+* Checkout on the last stable version branch for dev environment or last tag version
 * Copy file .env.example on .env 
 * Creation of the dockerfile container
    run task build:dev for dev enviroment
