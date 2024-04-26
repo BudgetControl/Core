@@ -43,7 +43,7 @@ class StatsRepository
 
     public function statsMonthIncoming(?int $month = null, ?int $year = null)
     {
-        $qb = DB::table("stats_wallets_month")->select('incoming as amount')->where('user_id', $this->userId);
+        $qb = DB::table("stats_wallets_month")->select('incoming as amount')->where('workspace_id', $this->userId);
 
         if(!is_null($month)) {
             $qb->where('month', $month);
@@ -77,7 +77,7 @@ class StatsRepository
             AND e.planned = 0
             AND e.date_time >= '$startDate'
             AND e.date_time < '$endDate'
-            AND a.user_id = $userId;
+            AND a.workspace_id = $userId;
         ";
 
         $result = DB::select($query);
