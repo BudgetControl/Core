@@ -37,14 +37,14 @@ class AuthCognitoMiddleware
         }
         $jwtToken = JwtToken::decodeToken($token);
         $sub = $jwtToken['sub'];
-        UserService::setUserCache(User::where('sub',$sub)->first());
+        $user = User::where('sub',$sub)->first();
+        UserService::setUserCache($user);
 
         /** only fot php unit testting */
         $accessToken = str_replace('Bearer ', '', $request->query('auth'));
         $refreshToken = Cache::create($accessToken . 'refresh_token')->get();
 
         $accessToken = AccessToken::set($accessToken);
-        $user = Cache::create($accessToken->value())->get();
 
         try {
             $jwtToken = new JwtToken();
