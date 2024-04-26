@@ -34,11 +34,6 @@ php version >= 8.2
    
 ### Usage
 Go to http://localhost or your desidered domain and enjoy the application
-* Make migration DB docker exec budgetcontrol-core php artisan migrate --seed
-
-### About budget control
-BudgetControl is developed by Marco De Felice, like a Open Source project
-
 
 ### Contributing
 Thank you for considering contributing to the Budget tracker The contribution guide can be found in the Budget tracker documentation.

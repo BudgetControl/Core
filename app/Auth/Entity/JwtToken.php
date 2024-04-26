@@ -76,6 +76,17 @@ final class JwtToken
             throw new AuthException("Unable to decode $type token ");
         }
     }
+
+    /**
+     * @param string $token
+     * @return array
+     */
+    public static function decodeToken(string $token): array
+    {
+        $config = config('app');
+        $decoded = JWT::decode($token, new Key(base64_decode($config['key']), 'HS256'));
+        return (array) $decoded;
+    }
     
 
 }
