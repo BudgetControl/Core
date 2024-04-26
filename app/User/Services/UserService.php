@@ -40,11 +40,11 @@ class UserService
      * @param User $user
      * 
      */
-    public static function setUserCache(User $user)
+    public static function setUserCache(User $user, $wsId)
     {
         $cacheKey = session()->getId().'user';
         Cache::create($cacheKey)->set($user);
-        Cache::create($cacheKey.'id')->set($user->id);
+        Cache::create($cacheKey.'id')->set($wsId);
     }
 
     /**
