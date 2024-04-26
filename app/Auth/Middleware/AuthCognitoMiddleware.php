@@ -52,7 +52,7 @@ class AuthCognitoMiddleware
     {
         $activeWorkspace = null;
         foreach($workspaces as $workspace) {
-            if($workspace->active === 1 ) {
+            if($workspace->current === 1 ) {
                 $activeWorkspace = $workspace->workspace_id;
                 break;
             }
