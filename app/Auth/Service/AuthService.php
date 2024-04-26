@@ -24,7 +24,7 @@ class AuthService
         Log::info("Create new Account entry");
         DB::statement('
             INSERT INTO accounts
-            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats,workspace_id)
+            (uuid,date_time,name,color,type,balance,installementValue,currency,exclude_from_stats,user_id)
             VALUES
             ("' . $uuid . '","' . $dateTIme . '","Cash","#C6C6C6","Cash",0,0,"EUR",0,'.$userID.')
         ');
@@ -39,7 +39,7 @@ class AuthService
         $configurations = SettingValues::Configurations->value;
         DB::statement('
             INSERT INTO user_settings
-            (setting,data,workspace_id)
+            (setting,data,user_id)
             VALUES
             ("'.$configurations.'","{\"currency_id\":1,\"payment_type_id\":1}",'.$userID.')
         ');

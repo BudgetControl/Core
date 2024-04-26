@@ -7,6 +7,7 @@
 /storage/*.key
 storage/framework/
 /vendor
+bin/certbot/conf/*
 /bootstrap/cache
 .env
 .env

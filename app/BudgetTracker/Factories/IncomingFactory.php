@@ -46,7 +46,7 @@ class IncomingFactory extends Factory
             'payment_type' => 1,
             'confirmed' => 1,
             'planned' => 0,
-            'workspace_id' => 1
+            'user_id' => 1
         ];
     }
 }

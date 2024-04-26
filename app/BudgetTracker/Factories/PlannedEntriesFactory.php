@@ -46,7 +46,7 @@ class PlannedEntriesFactory extends Factory
             'confirmed' => 1,
             'planned' => 1,
             'planning' => 'daily',
-            'workspace_id' => 1
+            'user_id' => 1
         ];
     }
 }
