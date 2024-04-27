@@ -17,6 +17,7 @@ use App\BudgetTracker\Models\Payee;
 use App\BudgetTracker\Models\PaymentsTypes;
 use App\Helpers\Helpers;
 use Exception;
+use Illuminate\Support\Carbon;
 
 /**
  * Summary of SaveEntryService
@@ -61,7 +62,7 @@ class EntryService
       $entryModel->amount = $entry->getAmount();
       $entryModel->category_id = $entry->getCategory()->id;
       $entryModel->currency_id = $entry->getCurrency()->id;
-      $entryModel->date_time = $entry->getDateFormat();
+      $entryModel->date_time = Carbon::parse($entry->getDateFormat())->toAtomString();
       $entryModel->note = $entry->getNote();
       $entryModel->payment_type = $entry->getPaymentType()->id;
       $entryModel->planned = $entry->getPlanned();

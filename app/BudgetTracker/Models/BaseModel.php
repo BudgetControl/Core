@@ -15,18 +15,18 @@ abstract class BaseModel extends Model {
         {
             parent::__construct($attributes);
 
-            if(empty($this->attributes['user_id'])) {
-                $this->attributes['user_id'] = UserService::getCacheUserID();
+            if(empty($this->attributes['workspace_id'])) {
+                $this->attributes['workspace_id'] = UserService::getCacheUserID();
             }
             foreach($attributes as $k => $v) {
                 $this->$k = $v;
             }
         }
 
-        // Definisci un query scope per aggiungere la condizione "where user_id = x"
+        // Definisci un query scope per aggiungere la condizione "where workspace_id = x"
         public function scopeUser($query)
         {
-            return $query->where('user_id', UserService::getCacheUserID());
+            return $query->where('workspace_id', UserService::getCacheUserID());
         }
 
 }

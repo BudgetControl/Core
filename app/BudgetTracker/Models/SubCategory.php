@@ -42,9 +42,9 @@ class SubCategory extends BaseModel
         return $this->hasMany(Entry::class);
     }
 
-    // Definisci un query scope per aggiungere la condizione "where user_id = x"
+    // Definisci un query scope per aggiungere la condizione "where workspace_id = x"
     public function scopeUser($query)
     {
-        return $query->where('user_id', UserService::getCacheUserID())->where('user_id', 0);
+        return $query->where('workspace_id', UserService::getCacheUserID())->where('workspace_id', 0);
     }
 }
