@@ -2,22 +2,23 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Enums\PlanningType;
-use App\BudgetTracker\Models\PlannedEntries;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use League\Config\Exception\ValidationException;
-use App\BudgetTracker\Models\Payee;
-use App\User\Services\UserService;
-use App\BudgetTracker\Entity\Entries\PlannedEntry;
 use DateTime;
-use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\Account;
-use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\PaymentsTypes;
 use Exception;
+use Illuminate\Support\Carbon;
+use App\User\Services\UserService;
+use App\BudgetTracker\Models\Payee;
+use Illuminate\Support\Facades\Log;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Enums\PlanningType;
+use App\BudgetTracker\Models\SubCategory;
+use Illuminate\Support\Facades\Validator;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Models\PlannedEntries;
 use App\BudgetTracker\Exceptions\EntryException;
+use League\Config\Exception\ValidationException;
+use App\BudgetTracker\Entity\Entries\PlannedEntry;
 
 /**
  * Summary of SaveEntryService
@@ -54,7 +55,7 @@ class PlanningRecursivelyService extends EntryService
             $entry->amount = $entryData['amount'];
             $entry->category_id = $entryData['category_id'];
             $entry->currency_id = $entryData['currency_id'];
-            $entry->date_time = $entryData['date_time'];
+            $entry->date_time = Carbon::parse($entryData['date_time'])->toAtomString();
             $entry->note = $entryData['note'];
             $entry->payment_type = $entryData['payment_type'];
             $entry->planning = $entryData['planning'];
