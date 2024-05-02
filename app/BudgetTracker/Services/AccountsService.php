@@ -3,10 +3,12 @@
 namespace App\BudgetTracker\Services;
 
 use DateTime;
+use Illuminate\Support\Carbon;
 use App\User\Services\UserService;
 use Illuminate\Support\Facades\Log;
 use App\BudgetTracker\Entity\Wallet;
 use App\BudgetTracker\Models\Account;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use App\BudgetTracker\Entity\Accounts\BankAccount;
 use App\BudgetTracker\Entity\Accounts\CashAccount;
@@ -15,7 +17,6 @@ use App\BudgetTracker\Entity\Accounts\SavingAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardAccount;
 use App\BudgetTracker\Entity\Accounts\InvestmentAccount;
 use App\BudgetTracker\Entity\Accounts\CreditCardRevolvingAccount;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Summary of SaveEntryService
@@ -66,7 +67,7 @@ class AccountsService
             $entry->balance = $account['balance'];
             $entry->currency = $account['currency'];
             $entry->exclude_from_stats = $account['exclude_from_stats'];
-            $entry->date = empty(@$account['date']) ? null : $account['date'];
+            $entry->date = empty(@$account['date']) ? null : Carbon::parse($account['date'])->toAtomString();
 
             if(!empty($account['installement'])) {
                 $entry->installement = $account['installement'];

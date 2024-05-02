@@ -2,20 +2,21 @@
 
 namespace App\BudgetTracker\Services;
 
-use App\BudgetTracker\Entity\Entries\Entry;
-use App\BudgetTracker\Enums\EntryType;
-use App\BudgetTracker\Models\Transfer as TransferModel;
-use App\BudgetTracker\Models\Account;
-use App\BudgetTracker\Models\SubCategory;
-use App\BudgetTracker\Models\Currency;
-use App\BudgetTracker\Models\PaymentsTypes;
-use App\BudgetTracker\Entity\Entries\Transfer;
-use App\BudgetTracker\Interfaces\EntryInterface;
+use DateTime;
+use stdClass;
+use Illuminate\Support\Carbon;
 use App\User\Services\UserService;
 use App\BudgetTracker\Models\Payee;
 use Illuminate\Support\Facades\Log;
-use DateTime;
-use stdClass;
+use App\BudgetTracker\Models\Account;
+use App\BudgetTracker\Enums\EntryType;
+use App\BudgetTracker\Models\Currency;
+use App\BudgetTracker\Models\SubCategory;
+use App\BudgetTracker\Entity\Entries\Entry;
+use App\BudgetTracker\Models\PaymentsTypes;
+use App\BudgetTracker\Entity\Entries\Transfer;
+use App\BudgetTracker\Interfaces\EntryInterface;
+use App\BudgetTracker\Models\Transfer as TransferModel;
 
 /**
  * Summary of SaveEntryService
@@ -126,7 +127,7 @@ class TransferService extends EntryService
         $entryModel->amount = $entry->getAmount();
         $entryModel->category_id = $entry->getCategory()->id;
         $entryModel->currency_id = $entry->getCurrency()->id;
-        $entryModel->date_time = $entry->getDateFormat();
+        $entryModel->date_time = Carbon::parse($entry->getDateFormat())->toAtomString();
         $entryModel->note = $entry->getNote();
         $entryModel->payment_type = $entry->getPaymentType()->id;
         $entryModel->planned = $entry->getPlanned();
