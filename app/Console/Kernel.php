@@ -16,10 +16,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new ActivatePlannedEntries())->hourly();
-        $schedule->job(new InsertPlannedEntry())->daily();
-        $schedule->job(new ExchangeRateJob())->daily();
-        $schedule->job(new ScheduleBudgetControl())->daily();
     }
 
     /**
