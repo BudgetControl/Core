@@ -10,3 +10,6 @@
 [submodule "microservices/Authtentication"]
 	path = microservices/Authtentication
 	url = git@github.com:BudgetControl/Authtentication.git
+[submodule "microservices/CommandJobs"]
+	path = microservices/CommandJobs
+	url = git@github.com:BudgetControl/CommandJobs.git
