@@ -31,36 +31,9 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('stats')
-                ->prefix('api/stats')
-                ->group(base_path('routes/stats.php'));
-
-            Route::middleware('chart')
-                ->prefix('api/chart')
-                ->group(base_path('routes/chart.php'));
-
-            Route::middleware('auth')
-                ->prefix('auth')
-                ->group(base_path('app/Auth/Routes/route.php'));
-
-            Route::middleware('mailer')
-                ->prefix('api/mailer')
-                ->group(base_path('app/Mailer/Routes/api.php'));
-
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
-
-            Route::middleware('api')
-                ->prefix('search')
-                ->group(base_path('app/Search/Routes/api.php'));
-
-            Route::middleware('budget')
-                ->prefix('api/budget')
-                ->group(base_path('app/Budget/Routes/Api.php'));
-
-            Route::middleware('user')
-                ->prefix('api/user')
-                ->group(base_path('app/User/Routes/Api.php'));
+                
         });
     }
 
@@ -70,34 +43,6 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('stats', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('chart', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('mailer', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('search', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('budget', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('user', function (Request $request) {
             return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
         });
     }

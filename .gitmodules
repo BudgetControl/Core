@@ -13,3 +13,6 @@
 [submodule "microservices/CommandJobs"]
 	path = microservices/CommandJobs
 	url = git@github.com:BudgetControl/CommandJobs.git
+[submodule "microservices/Budget"]
+	path = microservices/Budget
+	url = git@github.com:BudgetControl/Budget.git
