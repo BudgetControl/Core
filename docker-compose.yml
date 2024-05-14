@@ -110,6 +110,28 @@ services:
     depends_on:
       - database
 
+  ms-jobs:
+    container_name: budgetcontrol-ms-jobs
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/CommandJobs/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-budget:
+    container_name: budgetcontrol-ms-budget
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/CommandJobs/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
 volumes:
   mysql_persistent:
     name: budgetcontrol_core_database
