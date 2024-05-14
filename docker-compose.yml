@@ -121,6 +121,7 @@ services:
     depends_on:
       - database
 
+<<<<<<< HEAD
   ms-budget:
     container_name: budgetcontrol-ms-budget
     image: mlabfactory/php8-apache:v1.0
@@ -132,6 +133,8 @@ services:
     depends_on:
       - database
 
+=======
+>>>>>>> fb1c36b696620356912b776060f657afc4590889
 volumes:
   mysql_persistent:
     name: budgetcontrol_core_database
