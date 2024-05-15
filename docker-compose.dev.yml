@@ -3,7 +3,7 @@ version: '2.2'
 services:
     proxy:
       volumes:
-        - ./bin/nginx/default.dev.conf:/etc/nginx/conf.d/default.conf
+        - ./bin/nginx/default.conf:/etc/nginx/conf.d/default.conf
         - ./bin/certbot/conf:/etc/letsencrypt
         - ./bin/certbot/www:/var/www/certbot
 
@@ -29,6 +29,11 @@ services:
       
     ms-jobs:
       image: mlabfactory/php8-apache:v1.0-xdebug
+
+    ms-budget:
+      image: mlabfactory/php8-apache:v1.0-xdebug
+      ports:
+        - "8085:80"
 
     database:
       ports:
