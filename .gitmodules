@@ -16,3 +16,12 @@
 [submodule "microservices/Budget"]
 	path = microservices/Budget
 	url = git@github.com:BudgetControl/Budget.git
+[submodule "microservices/Entries"]
+	path = microservices/Entries
+	url = git@github.com:BudgetControl/Entries.git
+[submodule "microservices/Wallets"]
+	path = microservices/Wallets
+	url = git@github.com:BudgetControl/Wallets.git
+[submodule "microservices/SearchEngine"]
+	path = microservices/SearchEngine
+	url = git@github.com:BudgetControl/SearchEngine.git
