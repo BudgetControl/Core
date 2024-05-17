@@ -133,7 +133,7 @@ services:
       - database
 
   ms-entries:
-    container_name: budgetcontrol-ms-budget
+    container_name: budgetcontrol-ms-entries
     image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Entries/:/var/www/workdir
@@ -144,7 +144,7 @@ services:
       - database
 
   ms-wallets:
-    container_name: budgetcontrol-ms-budget
+    container_name: budgetcontrol-ms-wallets
     image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/Wallets/:/var/www/workdir
@@ -155,7 +155,7 @@ services:
       - database
 
   ms-searchengine:
-    container_name: budgetcontrol-ms-budget
+    container_name: budgetcontrol-ms-searchengine
     image: mlabfactory/php8-apache:v1.0
     volumes:
       - ./microservices/SearchEngine/:/var/www/workdir

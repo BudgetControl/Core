@@ -24,6 +24,18 @@ echo "Build ms Budget"
 docker container cp microservices/Budget/bin/apache/default.conf budgetcontrol-ms-budget:/etc/apache2/sites-available/budgetcontrol.cloud.conf
 docker container exec budgetcontrol-ms-budget service apache2 restart
 
+echo "Build ms Entries"
+docker container cp microservices/Entries/bin/apache/default.conf budgetcontrol-ms-entries:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+docker container exec budgetcontrol-ms-entries service apache2 restart
+
+echo "Build ms Wallets"
+docker container cp microservices/Wallets/bin/apache/default.conf budgetcontrol-ms-wallets:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+docker container exec budgetcontrol-ms-wallets service apache2 restart
+
+echo "Build ms Search Engine"
+docker container cp microservices/SearchEngine/bin/apache/default.conf budgetcontrol-ms-searchengine:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+docker container exec budgetcontrol-ms-searchengine service apache2 restart
+
 echo "Install composer"
 docker exec budgetcontrol-core composer install
 docker exec budgetcontrol-core php artisan migrate
@@ -37,6 +49,10 @@ docker exec budgetcontrol-ms-authtentication composer install
 docker exec budgetcontrol-ms-jobs composer install
 docker exec budgetcontrol-ms-workspace composer install
 docker exec budgetcontrol-ms-budget composer install
+docker exec budgetcontrol-ms-entries composer install
+docker exec budgetcontrol-ms-wallets composer install
+docker exec budgetcontrol-ms-searchengine composer install
+
 
 echo "All done! enjoy"
 
