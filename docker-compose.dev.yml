@@ -34,6 +34,21 @@ services:
       image: mlabfactory/php8-apache:v1.0-xdebug
       ports:
         - "8085:80"
+      
+    ms-entries:
+      image: mlabfactory/php8-apache:v1.0-xdebug
+      ports:
+        - "8086:80"
+
+    ms-wallets:
+      image: mlabfactory/php8-apache:v1.0-xdebug
+      ports:
+        - "8087:80"
+
+    ms-searchengine:
+      image: mlabfactory/php8-apache:v1.0-xdebug
+      ports:
+        - "8088:80"
 
     database:
       ports:
