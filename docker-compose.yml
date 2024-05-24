@@ -121,6 +121,50 @@ services:
     depends_on:
       - database
 
+  ms-budget:
+    container_name: budgetcontrol-ms-budget
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/Budget/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-entries:
+    container_name: budgetcontrol-ms-entries
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/Entries/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-wallets:
+    container_name: budgetcontrol-ms-wallets
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/Wallets/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  ms-searchengine:
+    container_name: budgetcontrol-ms-searchengine
+    image: mlabfactory/php8-apache:v1.0
+    volumes:
+      - ./microservices/SearchEngine/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
 volumes:
   mysql_persistent:
     name: budgetcontrol_core_database

@@ -38,7 +38,7 @@ class AuthCognitoMiddleware
         $jwtToken = JwtToken::decodeToken($token);
         $sub = $jwtToken['sub'];
         $user = User::where('sub',$sub)->first();
-        UserService::setUserCache($user, $this->getActiveWorkspace($jwtToken['workspaces']));
+        UserService::setUserCache($user, $this->getActiveWorkspace($jwtToken['workspaces'], $jwtToken['current_ws']));
 
         if(empty($user)) {
             return response('Unauthorized', 401);
@@ -48,11 +48,11 @@ class AuthCognitoMiddleware
 
     }
 
-    private function getActiveWorkspace($workspaces)
+    private function getActiveWorkspace($workspaces, $current)
     {
         $activeWorkspace = null;
         foreach($workspaces as $workspace) {
-            if($workspace->current === 1 ) {
+            if($workspace->uuid === $current ) {
                 $activeWorkspace = $workspace->workspace_id;
                 break;
             }

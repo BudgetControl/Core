@@ -15,6 +15,24 @@ tasks:
     cmds:
       - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
       - docker container cp bin/apache/dev-api.budgetcontrol.cloud.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-core service apache2 restart
+  
+  build-local:
+    desc: Build local enviroment
+    cmds:
+      - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+      - docker container cp bin/apache/dev-api.budgetcontrol.local.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-core service apache2 restart
+      - docker container cp microservices/Gateway/bin/apache/default.conf budgetcontrol-gateway:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-gateway service apache2 restart
+      - docker container cp microservices/Authtentication/bin/apache/default.conf budgetcontrol-ms-authtentication:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-ms-authtentication service apache2 restart
+      - docker container cp microservices/Workspace/bin/apache/default.conf budgetcontrol-ms-workspace:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-ms-workspace service apache2 restart
+      - docker container cp microservices/Stats/bin/apache/default.conf budgetcontrol-ms-stats:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-ms-stats service apache2 restart
+      - docker container cp microservices/Budget/bin/apache/default.conf budgetcontrol-ms-budget:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-ms-budget service apache2 restart
     
   reboot-services:
     desc: Restart services
