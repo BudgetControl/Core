@@ -20,7 +20,7 @@ class Incoming extends Entry {
     public function __construct(
         float $amount,
         Currency $currency,
-        string $note,
+        ?string $note,
         DateTime $date_time,
         bool $waranty,
         bool $confirmed,
