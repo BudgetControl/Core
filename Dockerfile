@@ -1,5 +1,9 @@
 FROM php:8.2.4RC1-apache
 
+ARG BETTER_STACK_KEY
+
+ENV BETTER_STACK_KEY=${BETTER_STACK_KEY}
+
 RUN apt update \
         && apt install -y \
             g++ \
@@ -15,6 +19,7 @@ RUN apt update \
             mysqli \
             pdo_mysql \
             bcmath
+RUN apt-get -y install sudo
 RUN a2enmod rewrite
 RUN service apache2 restart
 RUN mkdir /var/www/logs
