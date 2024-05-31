@@ -22,7 +22,7 @@ services:
       ports:
         - "8081:80"
 
-    ms-authtentication:
+    ms-authentication:
       image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
       ports:
         - "8083:80"

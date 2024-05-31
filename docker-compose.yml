@@ -74,11 +74,11 @@ services:
     depends_on:
       - database
 
-  ms-authtentication:
-    container_name: budgetcontrol-ms-authtentication
+  ms-authentication:
+    container_name: budgetcontrol-ms-authentication
     image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
-      - ./microservices/Authtentication/:/var/www/workdir
+      - ./microservices/Authentication/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
