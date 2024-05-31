@@ -7,9 +7,6 @@
 [submodule "microservices/Gateway"]
 	path = microservices/Gateway
 	url = git@github.com:BudgetControl/Gateway.git
-[submodule "microservices/Authtentication"]
-	path = microservices/Authtentication
-	url = git@github.com:BudgetControl/Authtentication.git
 [submodule "microservices/CommandJobs"]
 	path = microservices/CommandJobs
 	url = git@github.com:BudgetControl/CommandJobs.git
@@ -25,3 +22,6 @@
 [submodule "microservices/SearchEngine"]
 	path = microservices/SearchEngine
 	url = git@github.com:BudgetControl/SearchEngine.git
+[submodule "microservices/Authentication"]
+	path = microservices/Authentication
+	url = git@github.com:BudgetControl/Authentication.git
