@@ -24,6 +24,7 @@ class CategorySeeders extends Seeder
           $db = new Category();
           $db->uuid = $cat->category->uuid;
           $db->name = strtolower($cat->category->label);
+          $db->slug = strtolower(str_replace(" ", "_", $cat->category->label));
           $db->icon = $cat->category->icon;
           $db->type = $cat->category->type;
           $db->save();
@@ -32,6 +33,7 @@ class CategorySeeders extends Seeder
             $dbSubCat = new SubCategory();
             $dbSubCat->uuid = $value->uuid;
             $dbSubCat->name = $value->name;
+            $dbSubCat->name = strtolower(str_replace(" ", "_", $value->name));
             $dbSubCat->category_id = $db->id;
             $dbSubCat->exclude_from_stats = (empty($value->exclude_from_stats)) ? 0 : $value->exclude_from_stats;
             $dbSubCat->save();

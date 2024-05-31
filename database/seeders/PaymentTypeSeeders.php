@@ -23,6 +23,7 @@ class PaymentTypeSeeders extends Seeder
         $db = new PaymentsTypes();
         $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $db->name = strtolower($value);
+        $db->name = strtolower(str_replace(" ", "_", $value));
         $db->save();
       }
     }
