@@ -18,19 +18,12 @@ php version >= 8.2
 * Enter the repository directory with the command cd Core.
 * Checkout on the last stable version branch for dev environment or last tag version
 * Copy file .env.example on .env 
-* Creation of the dockerfile container
-   run task build:dev for dev enviroment
-* Wait composer install into docker container are finished
-* Generate cache file
-   docker exec budgetcontrol-core php artisan config:cache
-* Make migrations
-   docker exec budgetcontrol-core php artisan migrate --seed
-* Clean cache files
-   docker exec budgetcontrol-core php artisan optimize
+* Run the install.sh bash script
+* * Params:
+* * * Enviroment variable -e dev | prod, default is dev
+* * * How serve PWA -p node | apache, default is apache
 * Enjoy
    insert url http://localhost:3000/ ( api/incoming )
-
-"budgetcontrol-proxy" is not mandatory for dev installation
    
 ### Usage
 Go to http://localhost or your desidered domain and enjoy the application

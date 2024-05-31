@@ -2,35 +2,9 @@ version: '3'
 
 services:
 
-  database:
-    container_name: budgetcontrol-db
-    image: mysql:8.0.36-debian
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USERNAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-    volumes:
-      - mysql_persistent:/var/lib/mysql
-    networks:
-      - budgetcontrol_network
-
-  cache:
-    container_name: budgetcontrol-redis
-    image: redis:7.2-rc2-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-    volumes:
-      - cache:/data
-    networks:
-      - budgetcontrol_network
-
   core:
     container_name: budgetcontrol-core
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./:/var/www/workdir
       - ../logapp:/app/storage/logs
@@ -42,6 +16,7 @@ services:
     restart: unless-stopped
 
   proxy:
+    platform: linux/x86_64
     container_name: budgetcontrol-proxy
     image: nginx:stable-alpine
     ports:
@@ -68,7 +43,7 @@ services:
       
   ms-stats:
     container_name: budgetcontrol-ms-stats
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Stats/:/var/www/workdir
     networks:
@@ -79,7 +54,7 @@ services:
   
   ms-workspace:
     container_name: budgetcontrol-ms-workspace
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Workspace/:/var/www/workdir
     networks:
@@ -90,7 +65,7 @@ services:
   
   gateway:
     container_name: budgetcontrol-gateway
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Gateway/:/var/www/workdir
     networks:
@@ -99,11 +74,11 @@ services:
     depends_on:
       - database
 
-  ms-authtentication:
-    container_name: budgetcontrol-ms-authtentication
-    image: mlabfactory/php8-apache:v1.0
+  ms-authentication:
+    container_name: budgetcontrol-ms-authentication
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
-      - ./microservices/Authtentication/:/var/www/workdir
+      - ./microservices/Authentication/:/var/www/workdir
     networks:
       - budgetcontrol_network
     restart: unless-stopped
@@ -112,7 +87,7 @@ services:
 
   ms-jobs:
     container_name: budgetcontrol-ms-jobs
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/CommandJobs/:/var/www/workdir
     networks:
@@ -123,7 +98,7 @@ services:
 
   ms-budget:
     container_name: budgetcontrol-ms-budget
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Budget/:/var/www/workdir
     networks:
@@ -134,7 +109,7 @@ services:
 
   ms-entries:
     container_name: budgetcontrol-ms-entries
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Entries/:/var/www/workdir
     networks:
@@ -145,7 +120,7 @@ services:
 
   ms-wallets:
     container_name: budgetcontrol-ms-wallets
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/Wallets/:/var/www/workdir
     networks:
@@ -156,7 +131,7 @@ services:
 
   ms-searchengine:
     container_name: budgetcontrol-ms-searchengine
-    image: mlabfactory/php8-apache:v1.0
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
     volumes:
       - ./microservices/SearchEngine/:/var/www/workdir
     networks:
@@ -164,14 +139,6 @@ services:
     restart: unless-stopped
     depends_on:
       - database
-
-volumes:
-  mysql_persistent:
-    name: budgetcontrol_core_database
-    external: true
-  cache:
-    name: budgetcontrol_core_cache
-    external: true
 
 networks:
   budgetcontrol_network:

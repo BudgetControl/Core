@@ -1,4 +1,4 @@
-FROM php:8.2.4RC1-apache
+FROM php:8.2-apache
 
 RUN apt update \
         && apt install -y \
@@ -15,17 +15,20 @@ RUN apt update \
             mysqli \
             pdo_mysql \
             bcmath
+RUN apt-get -y install sudo
 RUN a2enmod rewrite
 RUN service apache2 restart
+
 RUN mkdir /var/www/logs
 WORKDIR /var/www/workdir
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ###########################################
 # apache conf
 ###########################################
 
-COPY bin/apache/prod-api.budgetcontrol.cloud.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
+COPY bin/apache/default.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
 RUN a2ensite budgetcontrol.cloud.conf
 RUN a2enmod rewrite
 

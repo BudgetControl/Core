@@ -23,6 +23,7 @@ class CurrencySeeders extends Seeder
         $db = new Currency();
         $db->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();;
         $db->name = $value->name;
+        $db->slug = strtolower(str_replace(" ", "_", $value->name));
         $db->icon = $value->icon;
         $db->label = $value->label;
         $db->save();
