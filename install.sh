@@ -89,44 +89,16 @@ case $env in
   dev)
     echo "Setting up DEV environment"
     docker-compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.dev.yml up -d
-    
-    docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     ;;
   prod)
     echo "Setting up PROD environment"
     docker-compose -f docker-compose.yml -f docker-compose.database.yml up -d
-    
-    docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     ;;
   *)
     echo "Unknown environment: $env"
     usage
     ;;
 esac
-
-echo "Build Gateway"
-docker container cp microservices/Gateway/bin/apache/default.conf budgetcontrol-gateway:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Authentication"
-docker container cp microservices/Authentication/bin/apache/default.conf budgetcontrol-ms-authentication:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Workspace"
-docker container cp microservices/Workspace/bin/apache/default.conf budgetcontrol-ms-workspace:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Stats"
-docker container cp microservices/Stats/bin/apache/default.conf budgetcontrol-ms-stats:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Budget"
-docker container cp microservices/Budget/bin/apache/default.conf budgetcontrol-ms-budget:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Entries"
-docker container cp microservices/Entries/bin/apache/default.conf budgetcontrol-ms-entries:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Wallets"
-docker container cp microservices/Wallets/bin/apache/default.conf budgetcontrol-ms-wallets:/etc/apache2/sites-available/budgetcontrol.cloud.conf
-
-echo "Build ms Search Engine"
-docker container cp microservices/SearchEngine/bin/apache/default.conf budgetcontrol-ms-searchengine:/etc/apache2/sites-available/budgetcontrol.cloud.conf
 
 echo "Install composer and run migrations"
 docker exec budgetcontrol-core composer install
@@ -153,7 +125,6 @@ case $pwa in
   apache)
     echo "Serve PWA in Apache"
     docker-compose -f docker-compose.apache.yaml up -d
-    docker container cp ../Pwa/bin/apache/default.conf budgetcontrol-pwa:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     docker container exec budgetcontrol-pwa service apache2 restart
     ;;
   node)
