@@ -3,45 +3,45 @@ version: '3'
 services:
 
     ms-stats:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8084:80"
     
     ms-workspace:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8082:80"
     
     gateway:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8081:80"
 
     ms-authentication:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8083:80"
       
     ms-jobs:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
 
     ms-budget:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8085:80"
       
     ms-entries:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8086:80"
 
     ms-wallets:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8087:80"
 
     ms-searchengine:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "8088:80"
 
@@ -50,7 +50,7 @@ services:
         - "3336:3306"
 
     core:
-      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      image: mlabfactory/php8-apache:v1.2.1-xdebug
       ports:
         - "3000:80"
 

@@ -4,10 +4,11 @@ services:
 
   core:
     container_name: core.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./:/var/www/workdir
       - ../logapp:/app/storage/logs
+      - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     depends_on:
       - database
       - cache
@@ -23,11 +24,13 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./bin/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./bin/nginx/:/etc/nginx/conf.d/
       - ./bin/certbot/conf:/etc/letsencrypt
       - ./bin/certbot/www:/var/www/certbot
     networks:
       - budgetcontrol_network
+    depends_on:
+      - core
 
   certbot:
     image: certbot/certbot
@@ -41,7 +44,7 @@ services:
       
   ms-stats:
     container_name: stats.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Stats/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -53,7 +56,7 @@ services:
   
   ms-workspace:
     container_name: workspace.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Workspace/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -65,7 +68,7 @@ services:
   
   gateway:
     container_name: gateway.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Gateway/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -77,7 +80,7 @@ services:
 
   ms-authentication:
     container_name: authentication.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Authentication/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -89,7 +92,7 @@ services:
 
   ms-jobs:
     container_name: jobs.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/CommandJobs/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -101,7 +104,7 @@ services:
 
   ms-budget:
     container_name: budget.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Budget/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -113,7 +116,7 @@ services:
 
   ms-entries:
     container_name: entries.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Entries/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -125,7 +128,7 @@ services:
 
   ms-wallets:
     container_name: wallets.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/Wallets/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf
@@ -137,7 +140,7 @@ services:
 
   ms-searchengine:
     container_name: searchengine.ms.budgetcontrol.lan
-    image: mlabfactory/php8-fmp:v1.0
+    image: mlabfactory/php8-apache:v1.2.1
     volumes:
       - ./microservices/SearchEngine/:/var/www/workdir
       - ./bin/apache/default.conf:/etc/apache2/sites-available/budgetcontrol.cloud.conf

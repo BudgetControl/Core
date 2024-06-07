@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  core:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-stats:
+    image: mlabfactory/php8-fpm:v1.0
+  
+  ms-workspace:
+    image: mlabfactory/php8-fpm:v1.0
+  
+  gateway:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-authentication:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-jobs:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-budget:
+    image: mlabfactory/php8-fpm:v1.0
+   
+  ms-entries:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-wallets:
+    image: mlabfactory/php8-fpm:v1.0
+
+  ms-searchengine:
+    image: mlabfactory/php8-fpm:v1.0
