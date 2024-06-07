@@ -1,0 +1,40 @@
+FROM php:8.2-fpm
+
+# Install necessary packages and PHP extensions
+RUN apt-get update && apt-get install -y \
+    g++ \
+    libicu-dev \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    zlib1g-dev \
+    && docker-php-ext-install -j$(nproc) \
+    intl \
+    opcache \
+    pdo \
+    mysqli \
+    pdo_mysql \
+    bcmath
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copy custom PHP configuration
+COPY bin/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Create necessary directories
+RUN mkdir -p /var/www/logs /var/www/workdir /var/www/script
+
+# Set working directory
+WORKDIR /var/www/workdir
+
+# Copy entrypoint script and set execute permissions
+COPY bin/entrypoint.sh /var/www/script/entrypoint.sh
+RUN chmod +x /var/www/script/entrypoint.sh
+
+# Expose port 9000 (default port for PHP-FPM)
+EXPOSE 9000
+
+# Define the entrypoint
+ENTRYPOINT ["/var/www/script/entrypoint.sh"]
+
