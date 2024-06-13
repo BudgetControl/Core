@@ -55,7 +55,7 @@ class ExpensesService extends EntryService
             $entryModel->amount = $entry->getAmount();
             $entryModel->category_id = $entry->getCategory()->id;
             $entryModel->currency_id = $entry->getCurrency()->id;
-            $entryModel->date_time = Carbon::parse($entry->getDateFormat())->toAtomString();
+            $entryModel->date_time = $entry->getDateFormat();
             $entryModel->note = $entry->getNote();
             $entryModel->payment_type = $entry->getPaymentType()->id;
             $entryModel->planned = $entry->getPlanned();

@@ -71,7 +71,7 @@ class DebitService extends EntryService
             $entryModel->account_id = $entry->getAccount()->id;
             $entryModel->amount = $entry->getAmount();
             $entryModel->currency_id = $entry->getCurrency()->id;
-            $entryModel->date_time = Carbon::parse($entry->getDateFormat())->toAtomString();
+            $entryModel->date_time = $entry->getDateFormat();
             $entryModel->note = $entry->getNote();
             $entryModel->payment_type = $entry->getPaymentType()->id;
             $entryModel->planned = $entry->getPlanned();
