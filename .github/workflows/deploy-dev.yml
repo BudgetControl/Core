@@ -1,0 +1,39 @@
+name: Deploy application on DEV
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    environment: dev
+    name: deploy
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: deploy file
+          uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+          with:
+              username: ${{ secrets.SFTP_USER }} 
+              server: ${{ secrets.SFTP_HOST }} 
+              password: ${{ secrets.SFTP_PASSWORD }} 
+              port:  ${{ secrets.SFTP_PORT }}
+              local_path: '.'
+              remote_path: ${{ secrets.SFTP_PATH }}
+              sftpArgs: '-o ConnectTimeout=5'
+
+        - name: executing composer install
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.SFTP_HOST }}
+            username: ${{ secrets.SFTP_USER }}
+            password: ${{ secrets.SFTP_PASSWORD }}
+            port:  ${{ secrets.SFTP_PORT }}
+            script: docker exec budgetcontrol-core composer install && docker exec budgetcontrol-core php artisan optimize
+  

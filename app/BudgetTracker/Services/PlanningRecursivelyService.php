@@ -122,7 +122,11 @@ class PlanningRecursivelyService extends EntryService
 
     protected function makeObj(array $data): PlannedEntry
     {
-        $endDateTime = new DateTime($data['end_date_time']);
+        if(is_null($data['end_date_time'])) {
+            $endDateTime = null;
+        } else {
+            $endDateTime = new DateTime($data['end_date_time']);
+        }
         $planning = PlanningType::from($data['planning']);
         $label = empty($data['label']) ? [] : $data['label'];
 
