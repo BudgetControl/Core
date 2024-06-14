@@ -1,5 +1,5 @@
 {
-    "name": "budgetcontrol/stats",
+    "name": "budgetcontrol/core",
     "description": "defines the dependencies required for a PHP microservice in a Budget control application",
     "type": "none",
     "license": "MIT",
@@ -37,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Budgetcontrol\\MSNAME\\": "src/"
+            "Budgetcontrol\\Core\\": "src/"
         },
         "files": [
             "config/helpers.php"
