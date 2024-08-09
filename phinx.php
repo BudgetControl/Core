@@ -4,7 +4,8 @@ require_once __DIR__ . '/bootstrap/app.php';
 
 return [
     'paths' => [
-        'migrations' => 'resources/migrations',
+        'migrations' => 'vendor/budgetcontrol/schema-registry-service/resources/migrations',
+        'seeds' => 'resources/seeds'
     ],
     'environments' => [
         'default_migration_table' => 'ms_migrations',

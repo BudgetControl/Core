@@ -10,7 +10,11 @@ if(!function_exists('config')) {
 }
 
 if(!function_exists('response')) {
-    function response(array $dataResponse, int $statusCode = 200, array $headers=[]): \Psr\Http\Message\ResponseInterface {
+    function response(array|\Illuminate\Database\Eloquent\Collection $dataResponse, int $statusCode = 200, array $headers=[]): \Psr\Http\Message\ResponseInterface {
+        if($dataResponse instanceof \Illuminate\Database\Eloquent\Collection) {
+            $dataResponse = $dataResponse->toArray();
+        }
+        
         $response = new \Slim\Psr7\Response();
 
         $jsonData = json_encode($dataResponse);

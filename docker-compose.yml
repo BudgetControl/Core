@@ -1,146 +1,18 @@
-version: '3'
+version: '2.2'
 
 services:
-
-  core:
-    container_name: budgetcontrol-core
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./:/var/www/workdir
-      - ../logapp:/app/storage/logs
-    depends_on:
-      - database
-      - cache
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-
-  proxy:
-    platform: linux/x86_64
-    container_name: budgetcontrol-proxy
-    image: nginx:stable-alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./bin/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./bin/certbot/conf:/etc/letsencrypt
-      - ./bin/certbot/www:/var/www/certbot
-    networks:
-      - budgetcontrol_network
-    depends_on:
-      - core
-
-  certbot:
-    image: certbot/certbot
-    container_name: budgetcontrol-certbot
-    volumes:
-    - ./bin/certbot/conf:/etc/letsencrypt
-    - ./bin/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - budgetcontrol_network
-      
-  ms-stats:
-    container_name: budgetcontrol-ms-stats
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Stats/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-  
-  ms-workspace:
-    container_name: budgetcontrol-ms-workspace
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Workspace/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-  
-  gateway:
-    container_name: budgetcontrol-gateway
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Gateway/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-authentication:
-    container_name: budgetcontrol-ms-authentication
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Authentication/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-jobs:
-    container_name: budgetcontrol-ms-jobs
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/CommandJobs/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-budget:
-    container_name: budgetcontrol-ms-budget
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Budget/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-entries:
-    container_name: budgetcontrol-ms-entries
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Entries/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-wallets:
-    container_name: budgetcontrol-ms-wallets
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/Wallets/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
-
-  ms-searchengine:
-    container_name: budgetcontrol-ms-searchengine
-    image: mlabfactory/php8-apache:${DOCKER_TAG}
-    volumes:
-      - ./microservices/SearchEngine/:/var/www/workdir
-    networks:
-      - budgetcontrol_network
-    restart: unless-stopped
-    depends_on:
-      - database
+    bemodule:
+      container_name: budgetcontrol-core
+      image: mlabfactory/php8-apache:v1.2-xdebug
+      volumes:
+        - ./:/var/www/workdir
+      networks:
+        - budgetcontrol_network
+      restart: unless-stopped
+      ports:
+        - "8000:80"
 
 networks:
   budgetcontrol_network:
-    external: true
+    external: false
     name: budgetcontrol_network
