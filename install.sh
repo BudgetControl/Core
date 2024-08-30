@@ -4,6 +4,34 @@
 env="dev"
 pwa="apache"
 
+# List of repositories to clone
+repositories=(
+  "git@github.com:BudgetControl/Entries.git"
+  "git@github.com:BudgetControl/Authentication.git"
+  "git@github.com:BudgetControl/Workspace.git"
+  "git@github.com:BudgetControl/Stats.git"
+  "git@github.com:BudgetControl/Budget.git"
+  "git@github.com:BudgetControl/Wallets.git"
+  "git@github.com:BudgetControl/SearchEngine.git"
+  "git@github.com:BudgetControl/Labels.git"
+  "git@github.com:BudgetControl/Jobs.git"
+  "git@github.com:BudgetControl/Gateway.git"
+)
+
+git clone git@github.com:BudgetControl/Core.git
+git clone git@github.com:BudgetControl/Pwa.git
+
+# Clone repositories if they do not exist
+for repo in "${repositories[@]}"; do
+  repo_name=$(basename "$repo" .git)
+  if [ ! -d "../$repo_name" ]; then
+    echo "Cloning $repo_name..."
+    git clone "$repo" "Core/$repo_name"
+  else
+    echo "$repo_name already exists. Skipping clone."
+  fi
+done
+
 # Check if the ../Pwa directory exists at the parent level
 if [ ! -d "../Pwa" ]; then
   echo "Directory ../Pwa not found. Cloning the project from GitHub..."
@@ -61,6 +89,8 @@ docker-compose.yaml() {
     "budgetcontrol-ms-entries"
     "budgetcontrol-ms-wallets"
     "budgetcontrol-ms-searchengine"
+    "budgetcontrol-ms-labels"
+    "budgetcontrol-ms-jobs"
     "budgetcontrol-pwa"
   )
 
@@ -88,13 +118,13 @@ echo "Installing $env environment"
 case $env in
   dev)
     echo "Setting up DEV environment"
-    docker-compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.dev.yml up -d
+    docker-compose -f docker-compose.yml -f docker-compose.db.yml -f docker-compose.dev.yml up -d
     
     docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     ;;
   prod)
     echo "Setting up PROD environment"
-    docker-compose -f docker-compose.yml -f docker-compose.database.yml up -d
+    docker-compose -f docker-compose.yml -f docker-compose.db.yml up -d
     
     docker container cp bin/apache/default.conf budgetcontrol-core:/etc/apache2/sites-available/budgetcontrol.cloud.conf
     ;;
@@ -128,6 +158,14 @@ docker container cp microservices/Wallets/bin/apache/default.conf budgetcontrol-
 echo "Build ms Search Engine"
 docker container cp microservices/SearchEngine/bin/apache/default.conf budgetcontrol-ms-searchengine:/etc/apache2/sites-available/budgetcontrol.cloud.conf
 
+echo "Build ms Entry"
+docker container cp microservices/Entries/bin/apache/default.conf budgetcontrol-ms-entries:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+
+echo "Build ms Labels"
+docker container cp microservices/Labels/bin/apache/default.conf budgetcontrol-ms-labels:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+
+echo "Build ms Jobs"
+
 echo "Install composer and run migrations"
 docker exec budgetcontrol-core composer install
 docker exec budgetcontrol-core php artisan migrate
@@ -144,6 +182,7 @@ docker exec budgetcontrol-ms-budget composer install
 docker exec budgetcontrol-ms-entries composer install
 docker exec budgetcontrol-ms-wallets composer install
 docker exec budgetcontrol-ms-searchengine composer install
+docker exec budgetcontrol-ms-labels composer install
 
 cd ../Pwa || { echo "Directory ../Pwa not found"; exit 1; }
 docker-compose down
@@ -177,6 +216,7 @@ docker container exec budgetcontrol-ms-budget service apache2 restart
 docker container exec budgetcontrol-ms-entries service apache2 restart
 docker container exec budgetcontrol-ms-wallets service apache2 restart
 docker container exec budgetcontrol-ms-searchengine service apache2 restart
+docker container exec budgetcontrol-ms-labels service apache2 restart
 
 docker container restart budgetcontrol-proxy
 
