@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "created_at": "2024-08-13T12:04:39.000000Z",
+        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "date_time": null,
+        "uuid": "761ea314-2ce3-4367-9438-c69745bb93b4",
+        "name": "Credit Card",
+        "deleted_at": null,
+        "slug": "credit-card"
+    },
+    {
+        "id": 2,
+        "created_at": "2024-08-13T12:04:39.000000Z",
+        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "date_time": null,
+        "uuid": "16122dfb-910b-4486-958a-de08b829567e",
+        "name": "Debit Card",
+        "deleted_at": null,
+        "slug": "debit-card"
+    },
+    {
+        "id": 3,
+        "created_at": "2024-08-13T12:04:39.000000Z",
+        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "date_time": null,
+        "uuid": "6819c796-8d22-428f-8bc4-68b44c6a7f64",
+        "name": "Bank Transfer",
+        "deleted_at": null,
+        "slug": "bank-transfer"
+    },
+    {
+        "id": 4,
+        "created_at": "2024-08-13T12:04:39.000000Z",
+        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "date_time": null,
+        "uuid": "2501b9a9-e962-41c5-8599-2602ac470943",
+        "name": "Cash",
+        "deleted_at": null,
+        "slug": "cash"
+    },
+    {
+        "id": 5,
+        "created_at": "2024-08-13T12:04:39.000000Z",
+        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "date_time": null,
+        "uuid": "05a3c607-fca9-4103-af84-567ceac24c2c",
+        "name": "Check",
+        "deleted_at": null,
+        "slug": "check"
+    }
+]
