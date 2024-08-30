@@ -8,10 +8,7 @@ class MainSeeds extends AbstractSeed
 
     public function run(): void
     {
-        $dateTime = new DateTime();
-
         $seeds = new Seed();
         $seeds->runAllSeeds();
-
     }
 }
