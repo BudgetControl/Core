@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b502228ea6a71c10d3f630195249f9f",
+    "content-hash": "4ee6adebaeb702a76992247676aa5051",
     "packages": [
         {
             "name": "brick/math",
@@ -5303,16 +5303,16 @@
         },
         {
             "name": "mlabfactory/phpunit-self-api-integration",
-            "version": "v1.1.1-beta",
+            "version": "v1.1-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlabfactory/phpunit-self-api-integration.git",
-                "reference": "b29aa320c657a85dd57ccdb56fa5ab54c88d4367"
+                "reference": "bd3eaea18672acc76cc4ea08c71b4b25b42d3c80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlabfactory/phpunit-self-api-integration/zipball/b29aa320c657a85dd57ccdb56fa5ab54c88d4367",
-                "reference": "b29aa320c657a85dd57ccdb56fa5ab54c88d4367",
+                "url": "https://api.github.com/repos/mlabfactory/phpunit-self-api-integration/zipball/bd3eaea18672acc76cc4ea08c71b4b25b42d3c80",
+                "reference": "bd3eaea18672acc76cc4ea08c71b4b25b42d3c80",
                 "shasum": ""
             },
             "require": {
@@ -5342,10 +5342,10 @@
             ],
             "description": "PHPUnit extension designed for conducting integration tests on self-contained APIs within PHP applications. This extension facilitates seamless testing of API endpoints within the same system, ensuring smooth integration and functionality.",
             "support": {
-                "source": "https://github.com/mlabfactory/phpunit-self-api-integration/tree/v1.1.1-beta",
+                "source": "https://github.com/mlabfactory/phpunit-self-api-integration/tree/v1.1-beta",
                 "issues": "https://github.com/mlabfactory/phpunit-self-api-integration/issues"
             },
-            "time": "2024-08-30T12:53:55+00:00"
+            "time": "2024-08-26T13:28:11+00:00"
         },
         {
             "name": "myclabs/deep-copy",
