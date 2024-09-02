@@ -47,7 +47,7 @@
         "nikic/php-parser": "^5.0",
         "fakerphp/faker": "^1.23",
         "phpunit/phpunit": "^10.0",
-        "mlabfactory/phpunit-self-api-integration": "v1.1.1-beta",
+        "mlabfactory/phpunit-self-api-integration": "v1.1-beta",
         "budgetcontrol/seeds": "v0.1-beta"
     },
     "autoload": {

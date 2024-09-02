@@ -53,7 +53,12 @@ services:
     ms-searchengine:
       image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
       ports:
-        - "8088:80"
+        - "8089:80"
+
+    ms-debt:
+      image: mlabfactory/php8-apache:${DOCKER_TAG}-xdebug
+      ports:
+        - "8090:80"
 
     database:
       ports:
