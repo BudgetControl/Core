@@ -151,6 +151,17 @@ services:
     depends_on:
       - database
 
+  ms-debt:
+    container_name: budgetcontrol-ms-debt
+    image: mlabfactory/php8-apache:${DOCKER_TAG}
+    volumes:
+      - ./microservices/Debt/:/var/www/workdir
+    networks:
+      - budgetcontrol_network
+    restart: unless-stopped
+    depends_on:
+      - database
+
 networks:
   budgetcontrol_network:
     external: true
