@@ -8,8 +8,6 @@ services:
     volumes:
       - ./:/var/www/workdir
       - ../logapp:/app/storage/logs
-    depends_on:
-      - cache
     networks:
       - budgetcontrol_network
     restart: unless-stopped
