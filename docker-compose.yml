@@ -9,7 +9,6 @@ services:
       - ./:/var/www/workdir
       - ../logapp:/app/storage/logs
     depends_on:
-      - database
       - cache
     networks:
       - budgetcontrol_network
@@ -49,8 +48,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
   
   ms-workspace:
     container_name: budgetcontrol-ms-workspace
@@ -60,8 +57,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
   
   gateway:
     container_name: budgetcontrol-gateway
@@ -71,8 +66,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-authentication:
     container_name: budgetcontrol-ms-authentication
@@ -82,8 +75,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-jobs:
     container_name: budgetcontrol-ms-jobs
@@ -93,8 +84,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-budget:
     container_name: budgetcontrol-ms-budget
@@ -104,8 +93,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-entries:
     container_name: budgetcontrol-ms-entries
@@ -115,8 +102,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-wallets:
     container_name: budgetcontrol-ms-wallets
@@ -126,8 +111,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-searchengine:
     container_name: budgetcontrol-ms-searchengine
@@ -137,8 +120,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-labels:
     container_name: budgetcontrol-ms-labels
@@ -148,8 +129,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
   ms-debt:
     container_name: budgetcontrol-ms-debt
@@ -159,8 +138,6 @@ services:
     networks:
       - budgetcontrol_network
     restart: unless-stopped
-    depends_on:
-      - database
 
 networks:
   budgetcontrol_network:
