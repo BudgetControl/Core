@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69204d8a44106a7de3bcc0517da32c26",
+    "content-hash": "4ae33e28b55935992a8b7ec59ee64121",
     "packages": [
         {
             "name": "brick/math",
@@ -5353,16 +5353,16 @@
         },
         {
             "name": "mlabfactory/phpunit-self-api-integration",
-            "version": "v1.1-beta",
+            "version": "v1.1.1-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlabfactory/phpunit-self-api-integration.git",
-                "reference": "bd3eaea18672acc76cc4ea08c71b4b25b42d3c80"
+                "reference": "b29aa320c657a85dd57ccdb56fa5ab54c88d4367"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlabfactory/phpunit-self-api-integration/zipball/bd3eaea18672acc76cc4ea08c71b4b25b42d3c80",
-                "reference": "bd3eaea18672acc76cc4ea08c71b4b25b42d3c80",
+                "url": "https://api.github.com/repos/mlabfactory/phpunit-self-api-integration/zipball/b29aa320c657a85dd57ccdb56fa5ab54c88d4367",
+                "reference": "b29aa320c657a85dd57ccdb56fa5ab54c88d4367",
                 "shasum": ""
             },
             "require": {
@@ -5392,10 +5392,10 @@
             ],
             "description": "PHPUnit extension designed for conducting integration tests on self-contained APIs within PHP applications. This extension facilitates seamless testing of API endpoints within the same system, ensuring smooth integration and functionality.",
             "support": {
-                "source": "https://github.com/mlabfactory/phpunit-self-api-integration/tree/v1.1-beta",
+                "source": "https://github.com/mlabfactory/phpunit-self-api-integration/tree/v1.1.1-beta",
                 "issues": "https://github.com/mlabfactory/phpunit-self-api-integration/issues"
             },
-            "time": "2024-08-26T13:28:11+00:00"
+            "time": "2024-08-30T12:53:55+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7082,5 +7082,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
