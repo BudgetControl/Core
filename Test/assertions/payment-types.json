@@ -1,50 +1,50 @@
 [
     {
         "id": 1,
-        "created_at": "2024-08-13T12:04:39.000000Z",
-        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "created_at": "2024-09-27T15:30:36.000000Z",
+        "updated_at": "2024-09-27T15:30:36.000000Z",
         "date_time": null,
-        "uuid": "761ea314-2ce3-4367-9438-c69745bb93b4",
+        "uuid": "a2fbd91a-372d-4f47-a90d-6078d92efecb",
         "name": "Credit Card",
         "deleted_at": null,
-        "slug": "credit-card"
+        "slug": "credit_card"
     },
     {
         "id": 2,
-        "created_at": "2024-08-13T12:04:39.000000Z",
-        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "created_at": "2024-09-27T15:30:36.000000Z",
+        "updated_at": "2024-09-27T15:30:36.000000Z",
         "date_time": null,
-        "uuid": "16122dfb-910b-4486-958a-de08b829567e",
+        "uuid": "d1ca529e-5ad4-474f-85f5-0c0835fda214",
         "name": "Debit Card",
         "deleted_at": null,
-        "slug": "debit-card"
+        "slug": "debit_card"
     },
     {
         "id": 3,
-        "created_at": "2024-08-13T12:04:39.000000Z",
-        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "created_at": "2024-09-27T15:30:36.000000Z",
+        "updated_at": "2024-09-27T15:30:36.000000Z",
         "date_time": null,
-        "uuid": "6819c796-8d22-428f-8bc4-68b44c6a7f64",
+        "uuid": "e8d8582f-d57f-4be6-9417-7613285ecdf9",
         "name": "Bank Transfer",
         "deleted_at": null,
-        "slug": "bank-transfer"
+        "slug": "bank_transfer"
     },
     {
         "id": 4,
-        "created_at": "2024-08-13T12:04:39.000000Z",
-        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "created_at": "2024-09-27T15:30:36.000000Z",
+        "updated_at": "2024-09-27T15:30:36.000000Z",
         "date_time": null,
-        "uuid": "2501b9a9-e962-41c5-8599-2602ac470943",
+        "uuid": "87a32efc-5bc3-4fe4-8dc3-feabfb8fcb21",
         "name": "Cash",
         "deleted_at": null,
         "slug": "cash"
     },
     {
         "id": 5,
-        "created_at": "2024-08-13T12:04:39.000000Z",
-        "updated_at": "2024-08-13T12:04:39.000000Z",
+        "created_at": "2024-09-27T15:30:36.000000Z",
+        "updated_at": "2024-09-27T15:30:36.000000Z",
         "date_time": null,
-        "uuid": "05a3c607-fca9-4103-af84-567ceac24c2c",
+        "uuid": "79fa088c-7042-43a5-bcf5-a0649046a927",
         "name": "Check",
         "deleted_at": null,
         "slug": "check"

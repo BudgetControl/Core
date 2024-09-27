@@ -19,6 +19,10 @@
         "budgetcontrol/schema-registry-service": {
             "type": "vcs",
             "url": "git@github.com:BudgetControl/Schema-Registry-Service.git"
+        },
+        "budgetcontrol/libs-cryptable": {
+            "type":"vcs",
+            "url":"git@github.com:BudgetControl/LibsCryptable.git"
         }
     },
     "require": {
@@ -41,14 +45,14 @@
         "nesbot/carbon": "^3.2",
         "logtail/monolog-logtail": "^3.1",
         "budgetcontrol/schema-registry-service": "v1.0-beta",
-        "budgetcontrol/library": "v1.0"
+        "budgetcontrol/library": "^v1.2"
     },
     "require-dev": {
         "nikic/php-parser": "^5.0",
         "fakerphp/faker": "^1.23",
         "phpunit/phpunit": "^10.0",
-        "mlabfactory/phpunit-self-api-integration": "v1.1-beta",
-        "budgetcontrol/seeds": "v0.1-beta"
+        "mlabfactory/phpunit-self-api-integration": "^v1.1-beta",
+        "budgetcontrol/seeds": "^v0.2"
     },
     "autoload": {
         "psr-4": {
