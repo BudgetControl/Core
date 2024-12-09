@@ -11,7 +11,7 @@ return [
         'default_migration_table' => 'ms_migrations',
         'default_environment' => 'development',
         'development' => [
-            'adapter'   => 'mysql',
+            'adapter'   => env('DB_CONNECTION','mysql'),
             'host' => env('DB_HOST'),
             'name' => env('DB_DATABASE'),
             'user' => env('DB_USERNAME'),
