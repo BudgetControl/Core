@@ -1,0 +1,6 @@
+.env
+vendor/*
+sroze/logs/*
+.vscode/*
+.git/*
+.github/*
