@@ -1,49 +1,56 @@
 <?php
+$logChannel = env('LOG_CHANNEL', 'file');
 
+// Configurazione dei livelli di log con mappatura più efficiente
+$logLevels = [
+    'debug' => \Monolog\Level::Debug,
+    'info' => \Monolog\Level::Info,
+    'notice' => \Monolog\Level::Notice,
+    'warning' => \Monolog\Level::Warning,
+    'error' => \Monolog\Level::Error,
+    'critical' => \Monolog\Level::Critical,
+    'alert' => \Monolog\Level::Alert,
+    'emergency' => \Monolog\Level::Emergency,
+];
 
-//setup log level from env
-switch(env('APP_LOG_LEVEL','debug')) {
-    case 'debug':
-        $logLevel = \Monolog\Level::Debug;
-        break;
-    case 'info':
-        $logLevel = \Monolog\Level::Info;
-        break;
-    case 'notice':
-        $logLevel = \Monolog\Level::Notice;
-        break;
-    case 'warning':
-        $logLevel = \Monolog\Level::Warning;
-        break;
-    case 'error':
-        $logLevel = \Monolog\Level::Error;
-        break;
-    case 'critical':
-        $logLevel = \Monolog\Level::Critical;
-        break;
-    case 'alert':
-        $logLevel = \Monolog\Level::Alert;
-        break;
-    case 'emergency':
-        $logLevel = \Monolog\Level::Emergency;
-        break;
-    default:
-        $logLevel = \Monolog\Level::Debug;
+$logLevel = $logLevels[strtolower(env('APP_LOG_LEVEL', 'debug'))] ?? \Monolog\Level::Debug;
+
+// Inizializzazione logger con controllo più robusto sul nome dell'app
+$appName = env("APP_NAME", "BudgetControl");
+if (empty(trim($appName))) {
+    $appName = "BudgetControl";
+}
+$logger = new \Monolog\Logger($appName);
+
+// Configurazione handler per file di log
+if($logChannel === 'file') {
+    $logPath = env('APP_LOG_PATH', __DIR__.'/../storage/logs/log-'.date("Y-m-d").'.log');
+    $streamHandler = new \Monolog\Handler\StreamHandler($logPath, $logLevel);
 }
 
-//setup log with BetterStack
-$logName = env('APP_NAME','BudgetControl');
-$logger = new \Monolog\Logger(env('LOG_NAME', $logName));
+if($logChannel === 'stderr') {
+    $streamHandler = new \Monolog\Handler\StreamHandler('php://stderr', $logLevel); // Scrivi su stderr
+} 
 
-// log on FS
-$logPath = env('APP_LOG_PATH',__DIR__.'/../storage/logs/log-'.date("Ymd").'.log');
-$streamHandler = new \Monolog\Handler\StreamHandler($logPath, $logLevel);
+// Configurazione Logtail solo in produzione con controllo più robusto
+if ($logChannel === 'logtail' && env('APP_ENV') === 'production') {
+    $logtailApiKey = env('LOGTAIL_API_KEY');
+    if (!empty($logtailApiKey)) {
+        $streamHandler = new \Logtail\Monolog\LogtailHandler($logtailApiKey, $logLevel);
+    } else {
+        $logger->warning('Logtail API key is missing - skipping Logtail integration');
+    }
+}
 
-$formatter = new \Monolog\Formatter\LineFormatter('[%channel%][%level_name%] %message% %context% %extra%\n');
+$formatter = new \Monolog\Formatter\LineFormatter(
+    "[%datetime%] %level_name%: %message% %context% %extra%\n",
+    "Y-m-d H:i:s.v", // Formato timestamp più preciso
+    true, // Allow inline line breaks
+    true  // Ignore empty context and extra
+);
+
+$formatter->includeStacktraces(true);
+$formatter->setJsonPrettyPrint(true);
 $streamHandler->setFormatter($formatter);
 $logger->pushHandler($streamHandler);
 
-// log on Logtail only in prod
-if(env('APP_ENV') == 'prod') {
-    $logger->pushHandler(new \Logtail\Monolog\LogtailHandler(env('LOGTAIL_API_KEY'), $logLevel));
-}

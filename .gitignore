@@ -1,31 +1,14 @@
 .DS_Store
-/.phpunit.cache
-/node_modules
-/public/build
-/public/hot
-/public/storage
-/storage/*.key
-storage/framework/
 /vendor
-bin/certbot/conf/*
 /bootstrap/cache
 .env
-.env
-.env.bk
-.env.testing
-.env.production
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
 auth.json
-npm-debug.log
-yarn-error.log
 /.fleet
 /.idea
 /.vscode
 
 ## laravel
-
 /vendor/
 node_modules/
 npm-debug.log
@@ -43,21 +26,12 @@ public/hot
 public_html/storage
 public_html/hot
 
-storage/*.key
-.env
-.env.docker
-Homestead.yaml
-Homestead.json
-/.vagrant
-.phpunit.result.cache
-bootstrap/cache/*
-config/cors.php
-bin/certbot/*
 *.log
+.env.*
 
 ## IMAGES
 .jpeg
 .png
 .gif
-
-microservices/*
+.phpunit*
+.serverless/*

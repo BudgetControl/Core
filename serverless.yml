@@ -1,0 +1,29 @@
+service: budgetcontrol-ms-core
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: provided.al2
+  deploymentBucket:
+    name: serverless-framework-deployments-eu-west-1-41d5edce-535f
+plugins:
+  - ./vendor/bref/bref
+functions:
+  web:
+    handler: public/index.php
+    layers:
+      - arn:aws:lambda:eu-west-1:534081306603:layer:php-82-fpm:99
+    events:
+      - httpApi: '*'
+package:
+  exclude:
+    - '.git/**'
+    - '.idea/**'
+    - 'node_modules/**'
+    - 'tests/**'
+    - 'storage/logs/**'
+    - '.env.*'
+  include:
+    - 'public/**'
+    - 'vendor/**'
+    - 'bootstrap/**'
+    - 'storage/**'
