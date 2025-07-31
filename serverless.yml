@@ -3,6 +3,29 @@ provider:
   name: aws
   region: eu-west-1
   runtime: provided.al2
+  environment:
+    APP_NAME: "Budget Control"
+    APP_ENV: dev
+    APP_VERSION: 0.0.1
+    APP_KEY: base64:zVJ1li+LYDx/qPoa8BnFf/5ExiMFgoNya/HrVgLgkBg=
+    DB_CONNECTION: pgsql
+    DB_HOST: dev-pgsql-aukgadvdsklsmst.budgetcontrol.cloud
+    DB_PORT: 5432
+    DB_DATABASE: dt56qwjeg7
+    DB_USERNAME: root
+    DB_PASSWORD: f8E4p3EgLDe8VOBZlS05nE4td7uFEw3CGg2hj
+    MAIL_DRIVER: aruba
+    MAIL_HOST: smtps.aruba.it
+    MAIL_USER: postmaster@budgetcontrol.cloud
+    MAIL_PASSWORD: 0363489133@Mdf
+    MAIL_FROM_ADDRESS: "Budget Control <noreply@budgetcontrol.cloud>"
+    LOGTAIL_API_KEY: FBotDemBJ6FWxBjhuJj8oEoF
+    REDIS_PASSWORD: 1234567890
+    MYSQL_ROOT_PASSWORD: rootpasswordmaster
+    MYSQL_USERNAME: rootuser
+    MYSQL_PASSWORD: passwordroot
+    DOCKER_TAG: v1.2.2
+    LOG_CHANNEL: stderr
   deploymentBucket:
     name: serverless-framework-deployments-eu-west-1-41d5edce-535f
 plugins:

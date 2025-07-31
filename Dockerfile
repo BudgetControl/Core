@@ -1,8 +1,7 @@
-FROM mlabfactory/php8-apache:v1.3
+FROM mlabfactory/php8-apache:v1.4.1
 
 # Copy the application files
 COPY . /var/www/workdir
-COPY ./bin/apache/default.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
 
 # Set the working directory
 WORKDIR /var/www/workdir
